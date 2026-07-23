@@ -78,7 +78,8 @@ def transcribe_audio(audio_path: str | Path, settings: Settings) -> TranscriptRe
             )
             response.raise_for_status()
         except httpx.HTTPError as exc:
-            detail = getattr(exc.response, "text", "") if exc.response is not None else str(exc)
+            error_response = getattr(exc, "response", None)
+            detail = getattr(error_response, "text", "") or str(exc)
             raise TranscriptionError(detail[-2_000:]) from exc
 
     payload = response.json()
