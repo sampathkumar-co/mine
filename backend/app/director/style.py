@@ -103,6 +103,7 @@ def compile_production_style(
     reference: ReferenceStyleProfile | None,
     *,
     default_caption_margin: int = 260,
+    default_caption_max_words: int = 5,
     default_music_volume: float = 0.16,
     default_ducking_threshold: float = 0.035,
     default_music_fade_seconds: float = 0.8,
@@ -129,7 +130,9 @@ def compile_production_style(
         margin_vertical=_integer(
             brand_rules.get("caption_margin_vertical"), default_caption_margin, 80, 700
         ),
-        max_words=_integer(brand_rules.get("caption_max_words"), 5, 1, 10),
+        max_words=_integer(
+            brand_rules.get("caption_max_words"), default_caption_max_words, 1, 10
+        ),
         all_caps=_bool(brand_rules.get("caption_all_caps"), False),
         animation=animation,
     )
