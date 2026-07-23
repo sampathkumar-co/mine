@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from app.core.config import Settings
+from app.director.edit_graph import EditDecisionGraph
 
 
 class MediaCommandError(RuntimeError):
@@ -65,6 +66,32 @@ def probe_media(path: str | Path, settings: Settings) -> MediaProbe:
     )
 
 
+def extract_transcription_audio(
+    source_path: str | Path,
+    output_path: str | Path,
+    settings: Settings,
+) -> None:
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    _run(
+        [
+            settings.ffmpeg_binary,
+            "-y",
+            "-i",
+            str(source_path),
+            "-vn",
+            "-ac",
+            "1",
+            "-ar",
+            "16000",
+            "-c:a",
+            "pcm_s16le",
+            str(output),
+        ],
+        timeout_seconds=settings.render_timeout_seconds,
+    )
+
+
 def render_vertical_baseline(
     source_path: str | Path,
     output_path: str | Path,
@@ -103,6 +130,73 @@ def render_vertical_baseline(
         ],
         timeout_seconds=settings.render_timeout_seconds,
     )
+
+
+def render_edit_decision_graph(
+    source_path: str | Path,
+    output_path: str | Path,
+    graph: EditDecisionGraph,
+    *,
+    has_audio: bool,
+    settings: Settings,
+) -> None:
+    if not graph.segments:
+        raise MediaCommandError("Edit Decision Graph contains no renderable segments")
+
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    filters: list[str] = []
+    concat_inputs: list[str] = []
+    scale = (
+        "scale=1080:1920:force_original_aspect_ratio=decrease,"
+        "pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,setsar=1"
+    )
+
+    for index, segment in enumerate(graph.segments):
+        filters.append(
+            f"[0:v]trim=start={segment.source_start}:end={segment.source_end},"
+            f"setpts=PTS-STARTPTS,{scale}[v{index}]"
+        )
+        concat_inputs.append(f"[v{index}]")
+        if has_audio:
+            filters.append(
+                f"[0:a]atrim=start={segment.source_start}:end={segment.source_end},"
+                f"asetpts=PTS-STARTPTS[a{index}]"
+            )
+            concat_inputs.append(f"[a{index}]")
+
+    audio_count = 1 if has_audio else 0
+    filters.append(
+        "".join(concat_inputs)
+        + f"concat=n={len(graph.segments)}:v=1:a={audio_count}[vout]"
+        + ("[aout]" if has_audio else "")
+    )
+    command = [
+        settings.ffmpeg_binary,
+        "-y",
+        "-i",
+        str(source_path),
+        "-filter_complex",
+        ";".join(filters),
+        "-map",
+        "[vout]",
+    ]
+    if has_audio:
+        command.extend(["-map", "[aout]", "-c:a", "aac", "-b:a", "160k"])
+    command.extend(
+        [
+            "-c:v",
+            "libx264",
+            "-preset",
+            "veryfast",
+            "-crf",
+            "21",
+            "-movflags",
+            "+faststart",
+            str(output),
+        ]
+    )
+    _run(command, timeout_seconds=settings.render_timeout_seconds)
 
 
 def validate_vertical_output(probe: MediaProbe) -> None:

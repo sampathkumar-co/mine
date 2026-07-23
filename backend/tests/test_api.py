@@ -61,6 +61,11 @@ def test_project_upload_and_queue(client: TestClient, monkeypatch: pytest.Monkey
     project_id = created.json()["id"]
     assert created.json()["status"] == "created"
 
+    intelligence = client.get(f"/api/v1/projects/{project_id}/intelligence")
+    assert intelligence.status_code == 200
+    assert intelligence.json()["analysis"] is None
+    assert intelligence.json()["edit_decision_graph"] is None
+
     uploaded = client.post(
         f"/api/v1/projects/{project_id}/assets",
         data={"kind": "source_video"},
