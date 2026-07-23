@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 
 from app.director.edit_graph import EditDecisionGraph, EditSegment
 from app.sensory.models import TranscriptResult, TranscriptWord
 
 VOCAL_FILLERS = {"ah", "erm", "hmm", "uh", "um"}
+TranscriptCollection = TranscriptResult | Mapping[str, TranscriptResult] | None
 
 
 def _normalise_word(value: str) -> str:
@@ -14,6 +16,17 @@ def _normalise_word(value: str) -> str:
 
 def _is_filler(word: TranscriptWord) -> bool:
     return _normalise_word(word.word) in VOCAL_FILLERS
+
+
+def _resolve_transcript(
+    segment: EditSegment,
+    transcripts: TranscriptCollection,
+) -> TranscriptResult | None:
+    if transcripts is None or isinstance(transcripts, TranscriptResult):
+        return transcripts
+    if segment.source_asset_id is None:
+        return next(iter(transcripts.values()), None)
+    return transcripts.get(segment.source_asset_id)
 
 
 def _words_inside(
@@ -56,18 +69,14 @@ def _speech_runs(
 
 def refine_graph_with_word_timings(
     graph: EditDecisionGraph,
-    transcript: TranscriptResult | None,
+    transcript: TranscriptCollection,
     *,
     silence_threshold_seconds: float = 0.55,
     speech_padding_seconds: float = 0.08,
     minimum_clip_seconds: float = 0.28,
 ) -> EditDecisionGraph:
-    """Remove vocal fillers and long internal pauses using word timestamps.
-
-    The operation is conservative: when word timings are unavailable or a selected
-    segment cannot produce a stable speech run, the original graph is preserved.
-    """
-    if transcript is None or not transcript.words:
+    """Remove vocal fillers and long internal pauses using per-source word timestamps."""
+    if transcript is None:
         return graph
 
     output_cursor = 0.0
@@ -75,8 +84,22 @@ def refine_graph_with_word_timings(
     removed_regions = 0
 
     for selected in graph.segments:
+        selected_transcript = _resolve_transcript(selected, transcript)
+        if selected_transcript is None or not selected_transcript.words:
+            duration = selected.source_end - selected.source_start
+            refined.append(
+                selected.model_copy(
+                    update={
+                        "output_start": round(output_cursor, 3),
+                        "output_end": round(output_cursor + duration, 3),
+                    }
+                )
+            )
+            output_cursor += duration
+            continue
+
         source_words = _words_inside(
-            transcript,
+            selected_transcript,
             start=selected.source_start,
             end=selected.source_end,
         )
@@ -86,13 +109,14 @@ def refine_graph_with_word_timings(
         )
         if not runs:
             duration = selected.source_end - selected.source_start
-            selected_copy = selected.model_copy(
-                update={
-                    "output_start": round(output_cursor, 3),
-                    "output_end": round(output_cursor + duration, 3),
-                }
+            refined.append(
+                selected.model_copy(
+                    update={
+                        "output_start": round(output_cursor, 3),
+                        "output_end": round(output_cursor + duration, 3),
+                    }
+                )
             )
-            refined.append(selected_copy)
             output_cursor += duration
             continue
 
@@ -109,18 +133,20 @@ def refine_graph_with_word_timings(
 
             text = " ".join(word.word.strip() for word in run if word.word.strip()).strip()
             refined.append(
-                EditSegment(
-                    source_start=round(start, 3),
-                    source_end=round(end, 3),
-                    output_start=round(output_cursor, 3),
-                    output_end=round(output_cursor + duration, 3),
-                    score=selected.score,
-                    confidence=min(selected.confidence, 0.92),
-                    transition="cut",
-                    reason=(
-                        f"{selected.reason}; tightened with word-level filler and silence cleanup"
-                    ),
-                    transcript_text=text or selected.transcript_text,
+                selected.model_copy(
+                    update={
+                        "source_start": round(start, 3),
+                        "source_end": round(end, 3),
+                        "output_start": round(output_cursor, 3),
+                        "output_end": round(output_cursor + duration, 3),
+                        "score": selected.score,
+                        "confidence": min(selected.confidence, 0.92),
+                        "transition": "cut",
+                        "reason": (
+                            f"{selected.reason}; tightened with word-level filler and silence cleanup"
+                        ),
+                        "transcript_text": text or selected.transcript_text,
+                    }
                 )
             )
             output_cursor += duration
@@ -147,9 +173,12 @@ def refine_graph_with_word_timings(
             f"Word-level cleanup tightened {removed_regions} selected region(s) by removing vocal fillers or long pauses."
         )
 
+    strategy = graph.strategy
+    if "word_precision" not in strategy:
+        strategy = f"{strategy}_with_word_precision"
     return graph.model_copy(
         update={
-            "strategy": "tier1_retention_cleanup_with_word_precision",
+            "strategy": strategy,
             "selected_duration_seconds": round(output_cursor, 3),
             "segments": refined,
             "notes": notes,
