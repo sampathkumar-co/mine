@@ -22,6 +22,14 @@ class MediaProbe:
     has_audio: bool
 
 
+@dataclass(frozen=True, slots=True)
+class RenderSource:
+    asset_id: str
+    path: str
+    probe: MediaProbe
+    subject_center_x: float = 0.5
+
+
 def _run(command: list[str], *, timeout_seconds: int) -> subprocess.CompletedProcess[str]:
     try:
         return subprocess.run(
@@ -180,18 +188,30 @@ def _music_filter(
     return ",".join(filters)
 
 
-def render_edit_decision_graph(
-    source_path: str | Path,
+def _source_for_segment(
+    segment,
+    sources: list[RenderSource],
+) -> tuple[int, RenderSource]:
+    by_asset_id = {source.asset_id: (index, source) for index, source in enumerate(sources)}
+    if segment.source_asset_id and segment.source_asset_id in by_asset_id:
+        return by_asset_id[segment.source_asset_id]
+    if 0 <= segment.source_index < len(sources):
+        return segment.source_index, sources[segment.source_index]
+    return 0, sources[0]
+
+
+def render_multiclip_edit_decision_graph(
+    sources: list[RenderSource],
     output_path: str | Path,
     graph: EditDecisionGraph,
     *,
-    media_probe: MediaProbe,
-    subject_center_x: float = 0.5,
     caption_path: str | Path | None = None,
     music_path: str | Path | None = None,
     style: ProductionStyle | None = None,
     settings: Settings,
 ) -> None:
+    if not sources:
+        raise MediaCommandError("No render sources were supplied")
     if not graph.segments:
         raise MediaCommandError("Edit Decision Graph contains no renderable segments")
 
@@ -200,7 +220,6 @@ def render_edit_decision_graph(
     output.parent.mkdir(parents=True, exist_ok=True)
     filters: list[str] = []
     concat_inputs: list[str] = []
-    vertical_filter = _vertical_filter(media_probe, subject_center_x)
     visual_finish = (
         f"eq=contrast={production_style.visual.contrast:.4f}:"
         f"saturation={production_style.visual.saturation:.4f}:"
@@ -208,23 +227,29 @@ def render_edit_decision_graph(
     )
 
     for index, segment in enumerate(graph.segments):
+        source_index, source = _source_for_segment(segment, sources)
+        vertical_filter = _vertical_filter(source.probe, source.subject_center_x)
+        duration = max(0.01, segment.source_end - segment.source_start)
         filters.append(
-            f"[0:v]trim=start={segment.source_start}:end={segment.source_end},"
+            f"[{source_index}:v]trim=start={segment.source_start}:end={segment.source_end},"
             f"setpts=PTS-STARTPTS,{vertical_filter},{visual_finish}[v{index}]"
         )
         concat_inputs.append(f"[v{index}]")
-        if media_probe.has_audio:
+        if source.probe.has_audio:
             filters.append(
-                f"[0:a]atrim=start={segment.source_start}:end={segment.source_end},"
+                f"[{source_index}:a]atrim=start={segment.source_start}:end={segment.source_end},"
                 f"asetpts=PTS-STARTPTS[a{index}]"
             )
-            concat_inputs.append(f"[a{index}]")
+        else:
+            filters.append(
+                f"anullsrc=r=48000:cl=stereo,atrim=duration={duration:.3f},"
+                f"asetpts=PTS-STARTPTS[a{index}]"
+            )
+        concat_inputs.append(f"[a{index}]")
 
-    audio_count = 1 if media_probe.has_audio else 0
-    concat_outputs = "[vconcat]" + ("[aconcat]" if media_probe.has_audio else "")
     filters.append(
         "".join(concat_inputs)
-        + f"concat=n={len(graph.segments)}:v=1:a={audio_count}{concat_outputs}"
+        + f"concat=n={len(graph.segments)}:v=1:a=1[vconcat][aconcat]"
     )
 
     if caption_path is not None and Path(caption_path).exists():
@@ -233,18 +258,20 @@ def render_edit_decision_graph(
     else:
         filters.append("[vconcat]null[vout]")
 
-    command = [settings.ffmpeg_binary, "-y", "-i", str(source_path)]
+    command = [settings.ffmpeg_binary, "-y"]
+    for source in sources:
+        command.extend(["-i", source.path])
+
     has_music = music_path is not None and production_style.music.enabled
     music_input_index: int | None = None
     if has_music:
-        music_input_index = 1
+        music_input_index = len(sources)
         command.extend(["-stream_loop", "-1", "-i", str(music_path)])
 
-    if media_probe.has_audio:
-        filters.append(
-            "[aconcat]highpass=f=80,lowpass=f=12000,afftdn=nf=-25,"
-            "loudnorm=I=-16:TP=-1.5:LRA=11[voiceclean]"
-        )
+    filters.append(
+        "[aconcat]highpass=f=80,lowpass=f=12000,afftdn=nf=-25,"
+        "loudnorm=I=-16:TP=-1.5:LRA=11[voiceclean]"
+    )
 
     if has_music and music_input_index is not None:
         filters.append(
@@ -254,24 +281,21 @@ def render_edit_decision_graph(
                 style=production_style,
             )
         )
-        if media_probe.has_audio:
-            filters.extend(
-                [
-                    "[voiceclean]asplit=2[voicekey][voicemix]",
-                    (
-                        "[musicbed][voicekey]sidechaincompress="
-                        f"threshold={production_style.music.ducking_threshold:.4f}:"
-                        "ratio=10:attack=20:release=350[ducked]"
-                    ),
-                    (
-                        "[voicemix][ducked]amix=inputs=2:duration=first:normalize=0,"
-                        "loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
-                    ),
-                ]
-            )
-        else:
-            filters.append("[musicbed]loudnorm=I=-16:TP=-1.5:LRA=11[aout]")
-    elif media_probe.has_audio:
+        filters.extend(
+            [
+                "[voiceclean]asplit=2[voicekey][voicemix]",
+                (
+                    "[musicbed][voicekey]sidechaincompress="
+                    f"threshold={production_style.music.ducking_threshold:.4f}:"
+                    "ratio=10:attack=20:release=350[ducked]"
+                ),
+                (
+                    "[voicemix][ducked]amix=inputs=2:duration=first:normalize=0,"
+                    "loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
+                ),
+            ]
+        )
+    else:
         filters.append("[voiceclean]anull[aout]")
 
     command.extend(
@@ -280,12 +304,12 @@ def render_edit_decision_graph(
             ";".join(filters),
             "-map",
             "[vout]",
-        ]
-    )
-    if media_probe.has_audio or has_music:
-        command.extend(["-map", "[aout]", "-c:a", "aac", "-b:a", "160k"])
-    command.extend(
-        [
+            "-map",
+            "[aout]",
+            "-c:a",
+            "aac",
+            "-b:a",
+            "160k",
             "-c:v",
             "libx264",
             "-preset",
@@ -303,6 +327,37 @@ def render_edit_decision_graph(
         ]
     )
     _run(command, timeout_seconds=settings.render_timeout_seconds)
+
+
+def render_edit_decision_graph(
+    source_path: str | Path,
+    output_path: str | Path,
+    graph: EditDecisionGraph,
+    *,
+    media_probe: MediaProbe,
+    subject_center_x: float = 0.5,
+    caption_path: str | Path | None = None,
+    music_path: str | Path | None = None,
+    style: ProductionStyle | None = None,
+    settings: Settings,
+) -> None:
+    source_asset_id = graph.segments[0].source_asset_id or "source-0"
+    render_multiclip_edit_decision_graph(
+        [
+            RenderSource(
+                asset_id=source_asset_id,
+                path=str(source_path),
+                probe=media_probe,
+                subject_center_x=subject_center_x,
+            )
+        ],
+        output_path,
+        graph,
+        caption_path=caption_path,
+        music_path=music_path,
+        style=style,
+        settings=settings,
+    )
 
 
 def validate_vertical_output(probe: MediaProbe, *, expect_audio: bool | None = None) -> None:
