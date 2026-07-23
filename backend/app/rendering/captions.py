@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
 from app.director.edit_graph import EditDecisionGraph, EditSegment
 from app.director.style import CaptionStyle, hex_to_ass
 from app.sensory.models import TranscriptResult, TranscriptWord
+
+TranscriptCollection = TranscriptResult | Mapping[str, TranscriptResult] | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,6 +33,17 @@ def _escape_ass_text(value: str) -> str:
     return escaped.replace(line_break_token, r"\N")
 
 
+def _resolve_transcript(
+    segment: EditSegment,
+    transcripts: TranscriptCollection,
+) -> TranscriptResult | None:
+    if transcripts is None or isinstance(transcripts, TranscriptResult):
+        return transcripts
+    if segment.source_asset_id is None:
+        return next(iter(transcripts.values()), None)
+    return transcripts.get(segment.source_asset_id)
+
+
 def _words_for_segment(
     transcript: TranscriptResult,
     *,
@@ -45,18 +59,21 @@ def _words_for_segment(
 
 def build_caption_cues(
     graph: EditDecisionGraph,
-    transcript: TranscriptResult | None,
+    transcript: TranscriptCollection,
     *,
     max_words: int = 5,
     max_cue_seconds: float = 2.2,
 ) -> list[CaptionCue]:
-    if transcript is None or not transcript.words:
+    if transcript is None:
         return []
 
     cues: list[CaptionCue] = []
     for segment in graph.segments:
+        segment_transcript = _resolve_transcript(segment, transcript)
+        if segment_transcript is None or not segment_transcript.words:
+            continue
         words = _words_for_segment(
-            transcript,
+            segment_transcript,
             source_start=segment.source_start,
             source_end=segment.source_end,
         )
@@ -102,7 +119,7 @@ def _animation(style: CaptionStyle) -> str:
 def write_ass_captions(
     path: str | Path,
     graph: EditDecisionGraph,
-    transcript: TranscriptResult | None,
+    transcript: TranscriptCollection,
     *,
     style: CaptionStyle | None = None,
     max_words: int | None = None,
