@@ -32,3 +32,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+ignore = [
+  "E501", # Long URLs and infrastructure strings are clearer when kept intact.
+  "B008", # FastAPI/Pydantic declarations intentionally use call expressions.
+]
