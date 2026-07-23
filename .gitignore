@@ -6,6 +6,8 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+test_director.db
+.test-data/
 
 # Environment
 .env
