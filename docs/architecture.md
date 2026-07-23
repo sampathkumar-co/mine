@@ -12,14 +12,16 @@ Director OS accepts footage plus a Director Contract and is designed to produce 
 
 ## Implemented control plane
 
-- **FastAPI API**: project creation, Director Contract validation, asset upload, queueing, and status reads
-- **PostgreSQL**: durable project state, Director Contract data, task identifiers, assets, errors, and output availability
+- **FastAPI API**: project creation, Director Contract validation, asset upload, queueing, status reads, and intelligence inspection
+- **PostgreSQL**: durable project state, assets, analyses, Edit Decision Graphs, task identifiers, errors, and output availability
 - **Streamed storage**: bounded chunks, server-generated filenames, content-type rules, SHA-256 hashes, and partial-file cleanup
 - **Celery worker**: Redis-backed sequential processing with persisted stage transitions and bounded retries
-- **FFmpeg boundary**: source probing, baseline vertical rendering, output probing, and technical validation
+- **Sensory boundary**: FFmpeg media probing, speech extraction, provider-backed timestamped transcription, and local scene detection
+- **Director boundary**: deterministic Tier 1 scoring, target-duration selection, reasons, confidence, and versioned Edit Decision Graphs
+- **FFmpeg boundary**: graph-driven segment trimming, vertical rendering, output probing, and duration/dimension validation
 - **Docker Compose**: PostgreSQL and Redis readiness checks before API and worker startup
 
-## Current baseline pipeline
+## Current Tier 1 pipeline
 
 ```text
 created
@@ -27,26 +29,39 @@ created
   -> ready_to_queue
   -> queued
   -> analyzing
+       -> media probe
+       -> scene boundaries
+       -> optional timestamped transcript
+       -> persisted analysis
   -> planning
+       -> candidate scoring
+       -> target-duration selection
+       -> persisted Edit Decision Graph
   -> rendering
+       -> graph-driven FFmpeg trim/concat
+       -> 1080x1920 output
   -> quality_check
+       -> dimension validation
+       -> duration-to-graph validation
   -> ready | failed
 ```
 
-The current worker renders the first source video to a standard 1080x1920 deliverable. This proves upload, persistence, queueing, rendering, retry, and QC boundaries. It is not yet the autonomous editorial system.
+When transcription credentials are absent and transcription is not mandatory, the planner uses conservative visual scene ranges. This keeps local development and non-speech footage runnable without pretending that transcript-level judgment occurred.
 
 ## Next production milestones
 
-1. Resumable multipart uploads and signed downloads
-2. Alembic database migrations
-3. Authentication and project ownership enforcement
-4. Credit reservation and usage ledger
-5. Transcription and word-level timing
-6. Scene, face, speaker, motion, audio, and take-quality analysis
-7. Director Contract compiler and conflict resolution
-8. Edit Decision Graph with reversible decisions
-9. Tier 1 autonomous cuts, captions, audio cleanup, music, reframing, and final QC
-10. Director Camera pickup missions and continuity metadata
+1. Alembic database migrations
+2. Authentication and project ownership enforcement
+3. Credit reservation and usage ledger
+4. Word-precise silence, filler, repetition, and bad-take removal
+5. Caption generation and safe-zone composition
+6. Face-aware and product-aware reframing
+7. Audio cleanup, music selection, ducking, and beat alignment
+8. Reference-video style fingerprinting
+9. Director Contract compilation across references, brand rules, and locked clips
+10. Editorial and instruction-compliance critic passes
+11. Resumable multipart uploads and signed downloads
+12. Director Camera pickup missions and continuity metadata
 
 ## Safety and reliability rules
 
@@ -59,10 +74,12 @@ The current worker renders the first source video to a standard 1080x1920 delive
 - AI providers sit behind replaceable adapters.
 - API responses never expose private server storage paths.
 - A failed queue submission restores the project to a retryable state.
+- Analysis and edit decisions remain inspectable and versioned.
+- A visual-only fallback must be labelled as lower-confidence behavior.
 
-## Planned modules
+## Module boundaries
 
-- `app/director`: Director Contract compiler, style compiler, editorial agents, and decision graph
+- `app/director`: Director Contract compiler, style compiler, editorial agents, and decision graphs
 - `app/sensory`: transcription, scenes, speakers, faces, objects, emotion, motion, and quality analysis
 - `app/rendering`: deterministic timeline compilation and FFmpeg execution
 - `app/quality`: technical, editorial, brand, and instruction-compliance checks
