@@ -1,0 +1,123 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+from app.director.edit_graph import EditDecisionGraph
+from app.sensory.models import TranscriptResult, TranscriptWord
+
+
+@dataclass(frozen=True, slots=True)
+class CaptionCue:
+    start: float
+    end: float
+    text: str
+
+
+def _ass_time(seconds: float) -> str:
+    centiseconds = max(0, round(seconds * 100))
+    hours, remainder = divmod(centiseconds, 360_000)
+    minutes, remainder = divmod(remainder, 6_000)
+    whole_seconds, cs = divmod(remainder, 100)
+    return f"{hours}:{minutes:02d}:{whole_seconds:02d}.{cs:02d}"
+
+
+def _escape_ass_text(value: str) -> str:
+    return value.replace("\\", r"\\").replace("{", r"\{").replace("}", r"\}")
+
+
+def _words_for_segment(
+    transcript: TranscriptResult,
+    *,
+    source_start: float,
+    source_end: float,
+) -> list[TranscriptWord]:
+    return [
+        word
+        for word in transcript.words
+        if word.end > source_start and word.start < source_end and word.end > word.start
+    ]
+
+
+def build_caption_cues(
+    graph: EditDecisionGraph,
+    transcript: TranscriptResult | None,
+    *,
+    max_words: int = 5,
+    max_cue_seconds: float = 2.2,
+) -> list[CaptionCue]:
+    if transcript is None or not transcript.words:
+        return []
+
+    cues: list[CaptionCue] = []
+    for segment in graph.segments:
+        words = _words_for_segment(
+            transcript,
+            source_start=segment.source_start,
+            source_end=segment.source_end,
+        )
+        if not words:
+            continue
+
+        group: list[TranscriptWord] = []
+        for word in words:
+            if group:
+                projected_duration = word.end - group[0].start
+                if len(group) >= max_words or projected_duration > max_cue_seconds:
+                    cues.append(_cue_from_words(group, segment))
+                    group = []
+            group.append(word)
+        if group:
+            cues.append(_cue_from_words(group, segment))
+
+    return [cue for cue in cues if cue.end - cue.start >= 0.12 and cue.text]
+
+
+def _cue_from_words(words: list[TranscriptWord], segment) -> CaptionCue:
+    start = segment.output_start + max(0.0, words[0].start - segment.source_start)
+    end = segment.output_start + max(0.0, words[-1].end - segment.source_start)
+    end = min(end, segment.output_end)
+    text_words = [word.word.strip() for word in words if word.word.strip()]
+    if len(text_words) > 3:
+        split_at = (len(text_words) + 1) // 2
+        text = " ".join(text_words[:split_at]) + r"\N" + " ".join(text_words[split_at:])
+    else:
+        text = " ".join(text_words)
+    return CaptionCue(start=round(start, 3), end=round(end, 3), text=text)
+
+
+def write_ass_captions(
+    path: str | Path,
+    graph: EditDecisionGraph,
+    transcript: TranscriptResult | None,
+    *,
+    max_words: int = 5,
+    margin_vertical: int = 260,
+) -> int:
+    cues = build_caption_cues(graph, transcript, max_words=max_words)
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    header = f"""[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Director,Arial,72,&H00FFFFFF,&H0000E7FF,&H00101010,&H80000000,-1,0,0,0,100,100,0,0,1,6,0,2,90,90,{margin_vertical},1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+    animation = r"{\an2\fad(60,80)\fscx108\fscy108\t(0,120,\fscx100\fscy100)}"
+    event_lines = [
+        "Dialogue: 0,"
+        f"{_ass_time(cue.start)},{_ass_time(cue.end)},Director,,0,0,0,,"
+        f"{animation}{_escape_ass_text(cue.text)}"
+        for cue in cues
+    ]
+    output.write_text(header + "\n".join(event_lines) + ("\n" if event_lines else ""), encoding="utf-8")
+    return len(cues)
