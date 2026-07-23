@@ -41,6 +41,8 @@ class Settings(BaseSettings):
     music_default_volume: float = Field(default=0.16, ge=0, le=0.5)
     music_ducking_threshold: float = Field(default=0.035, ge=0.005, le=0.2)
     music_fade_seconds: float = Field(default=0.8, ge=0, le=5)
+    max_source_clips: int = Field(default=8, ge=1, le=24)
+    duplicate_hash_distance: int = Field(default=6, ge=0, le=24)
     auto_create_schema: bool = True
     cors_origins: str = "http://localhost:3000"
 
