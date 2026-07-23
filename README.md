@@ -14,13 +14,17 @@ The repository now contains a runnable Tier 1 backend path with:
 - FFmpeg media probing, local scene-boundary detection, audio extraction, and 9:16 rendering
 - Provider-backed transcription with word and segment timestamps
 - Explainable Tier 1 segment scoring with reasons and confidence
+- Word-timed removal of vocal fillers and long internal pauses
+- Animated burned-in captions positioned above common social-platform UI zones
+- Sampled face detection for stable subject-aware vertical crops with a centre fallback
+- Voice cleanup, noise reduction, and social-video loudness normalization
 - FFmpeg rendering driven by the stored Edit Decision Graph
 - Persisted processing states and retry/failure reporting
-- Automated output dimension and duration checks
+- Automated output dimension, duration, and audio-presence checks
 - Docker Compose development stack
 - Backend linting and tests in GitHub Actions
 
-This is the first deterministic editorial engine, not the finished autonomous director. It selects high-value transcript or scene ranges and produces a traceable cut. Captions, silence precision, face-aware reframing, music, reference-style compilation, billing, and Director Camera remain upcoming milestones.
+This is a deterministic Tier 1 production engine, not yet the finished autonomous director. It can create a traceable cleaned talking-head cut with captions, framing, and finished audio. Music selection, reference-style compilation, brand graphics, advanced caption design, revisions, billing, and Director Camera remain upcoming milestones.
 
 ## Run locally
 
@@ -35,7 +39,7 @@ The API will be available at `http://localhost:8000`.
 curl http://localhost:8000/api/v1/health
 ```
 
-To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use the conservative scene-based fallback when credentials are absent.
+To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use the conservative scene-based fallback when credentials are absent. Word cleanup and captions require timestamped transcription; subject framing can operate locally.
 
 ## Project workflow
 
@@ -87,7 +91,7 @@ curl http://localhost:8000/api/v1/projects/<PROJECT_ID>
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/intelligence
 ```
 
-The response includes the media/transcript/scene analysis and the versioned Edit Decision Graph used for rendering.
+The response includes media metadata, transcript and scene analysis, subject-framing confidence, and the versioned Edit Decision Graph used for rendering.
 
 Project states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
 

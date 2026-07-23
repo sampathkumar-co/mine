@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "director-os-backend"
-version = "0.3.0"
+version = "0.4.0"
 description = "Backend control plane for Director OS"
 requires-python = ">=3.12"
 dependencies = [
@@ -17,6 +17,7 @@ dependencies = [
   "psycopg[binary]>=3.2,<4",
   "python-multipart>=0.0.20,<1",
   "httpx>=0.28,<1",
+  "opencv-python-headless>=4.10,<5",
 ]
 
 [project.optional-dependencies]

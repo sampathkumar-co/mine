@@ -32,7 +32,16 @@ class SceneRange(BaseModel):
     confidence: float = Field(default=0.7, ge=0, le=1)
 
 
+class SubjectFraming(BaseModel):
+    normalized_center_x: float = Field(default=0.5, ge=0, le=1)
+    confidence: float = Field(default=0, ge=0, le=1)
+    detector: str = "center_fallback"
+    sampled_frames: int = Field(default=0, ge=0)
+    detected_frames: int = Field(default=0, ge=0)
+
+
 class AnalysisBundle(BaseModel):
     media: dict[str, object]
     transcript: TranscriptResult | None = None
     scenes: list[SceneRange] = Field(default_factory=list)
+    subject_framing: SubjectFraming = Field(default_factory=SubjectFraming)

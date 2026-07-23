@@ -27,6 +27,14 @@ class Settings(BaseSettings):
     require_transcription: bool = False
     openai_api_key: str | None = None
     openai_base_url: str = "https://api.openai.com/v1"
+    enable_word_cleanup: bool = True
+    silence_threshold_seconds: float = Field(default=0.55, ge=0.2, le=3)
+    speech_padding_seconds: float = Field(default=0.08, ge=0, le=0.5)
+    enable_captions: bool = True
+    caption_max_words: int = Field(default=5, ge=1, le=10)
+    caption_margin_vertical: int = Field(default=260, ge=80, le=700)
+    enable_subject_framing: bool = True
+    subject_frame_samples: int = Field(default=24, ge=4, le=120)
     auto_create_schema: bool = True
     cors_origins: str = "http://localhost:3000"
 

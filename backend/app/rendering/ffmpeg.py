@@ -92,6 +92,34 @@ def extract_transcription_audio(
     )
 
 
+def _vertical_filter(probe: MediaProbe, subject_center_x: float) -> str:
+    if probe.width <= 0 or probe.height <= 0:
+        raise MediaCommandError("Source dimensions are unavailable")
+
+    target_ratio = 9 / 16
+    source_ratio = probe.width / probe.height
+    if source_ratio > target_ratio:
+        crop_width = min(probe.width, round(probe.height * target_ratio))
+        crop_width -= crop_width % 2
+        maximum_x = max(0, probe.width - crop_width)
+        crop_x = round(subject_center_x * probe.width - crop_width / 2)
+        crop_x = min(maximum_x, max(0, crop_x))
+        crop_x -= crop_x % 2
+        return (
+            f"crop={crop_width}:{probe.height}:{crop_x}:0,"
+            "scale=1080:1920:flags=lanczos,setsar=1"
+        )
+
+    return (
+        "scale=1080:1920:force_original_aspect_ratio=decrease:flags=lanczos,"
+        "pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,setsar=1"
+    )
+
+
+def _escape_filter_path(path: str | Path) -> str:
+    return str(Path(path).resolve()).replace("\\", "/").replace(":", r"\:").replace("'", r"\'")
+
+
 def render_vertical_baseline(
     source_path: str | Path,
     output_path: str | Path,
@@ -137,7 +165,9 @@ def render_edit_decision_graph(
     output_path: str | Path,
     graph: EditDecisionGraph,
     *,
-    has_audio: bool,
+    media_probe: MediaProbe,
+    subject_center_x: float = 0.5,
+    caption_path: str | Path | None = None,
     settings: Settings,
 ) -> None:
     if not graph.segments:
@@ -147,30 +177,41 @@ def render_edit_decision_graph(
     output.parent.mkdir(parents=True, exist_ok=True)
     filters: list[str] = []
     concat_inputs: list[str] = []
-    scale = (
-        "scale=1080:1920:force_original_aspect_ratio=decrease,"
-        "pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,setsar=1"
-    )
+    vertical_filter = _vertical_filter(media_probe, subject_center_x)
+    visual_finish = "eq=contrast=1.03:saturation=1.04:brightness=0.005"
 
     for index, segment in enumerate(graph.segments):
         filters.append(
             f"[0:v]trim=start={segment.source_start}:end={segment.source_end},"
-            f"setpts=PTS-STARTPTS,{scale}[v{index}]"
+            f"setpts=PTS-STARTPTS,{vertical_filter},{visual_finish}[v{index}]"
         )
         concat_inputs.append(f"[v{index}]")
-        if has_audio:
+        if media_probe.has_audio:
             filters.append(
                 f"[0:a]atrim=start={segment.source_start}:end={segment.source_end},"
                 f"asetpts=PTS-STARTPTS[a{index}]"
             )
             concat_inputs.append(f"[a{index}]")
 
-    audio_count = 1 if has_audio else 0
+    audio_count = 1 if media_probe.has_audio else 0
+    concat_outputs = "[vconcat]" + ("[aconcat]" if media_probe.has_audio else "")
     filters.append(
         "".join(concat_inputs)
-        + f"concat=n={len(graph.segments)}:v=1:a={audio_count}[vout]"
-        + ("[aout]" if has_audio else "")
+        + f"concat=n={len(graph.segments)}:v=1:a={audio_count}{concat_outputs}"
     )
+
+    if caption_path is not None and Path(caption_path).exists():
+        escaped_caption_path = _escape_filter_path(caption_path)
+        filters.append(f"[vconcat]ass=filename='{escaped_caption_path}'[vout]")
+    else:
+        filters.append("[vconcat]null[vout]")
+
+    if media_probe.has_audio:
+        filters.append(
+            "[aconcat]highpass=f=80,lowpass=f=12000,afftdn=nf=-25,"
+            "loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
+        )
+
     command = [
         settings.ffmpeg_binary,
         "-y",
@@ -181,7 +222,7 @@ def render_edit_decision_graph(
         "-map",
         "[vout]",
     ]
-    if has_audio:
+    if media_probe.has_audio:
         command.extend(["-map", "[aout]", "-c:a", "aac", "-b:a", "160k"])
     command.extend(
         [
@@ -191,6 +232,10 @@ def render_edit_decision_graph(
             "veryfast",
             "-crf",
             "21",
+            "-pix_fmt",
+            "yuv420p",
+            "-r",
+            "30",
             "-movflags",
             "+faststart",
             str(output),
@@ -199,10 +244,12 @@ def render_edit_decision_graph(
     _run(command, timeout_seconds=settings.render_timeout_seconds)
 
 
-def validate_vertical_output(probe: MediaProbe) -> None:
+def validate_vertical_output(probe: MediaProbe, *, expect_audio: bool | None = None) -> None:
     if probe.duration_seconds <= 0:
         raise MediaCommandError("Rendered output has no measurable duration")
     if (probe.width, probe.height) != (1080, 1920):
         raise MediaCommandError(
             f"Rendered output dimensions are {probe.width}x{probe.height}, expected 1080x1920"
         )
+    if expect_audio is True and not probe.has_audio:
+        raise MediaCommandError("Rendered output unexpectedly lost its audio stream")
