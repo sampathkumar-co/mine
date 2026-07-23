@@ -1,4 +1,4 @@
-from app.director.edit_graph import EditDecisionGraph, EditSegment, build_multiclip_edit_graph
+from app.director.edit_graph import EditSegment, build_multiclip_edit_graph
 from app.director.semantic_overlays import (
     ProductionEditDecisionGraph,
     VisualOverlay,
