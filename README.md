@@ -15,10 +15,14 @@ The repository contains a runnable Tier 1 backend path with:
 - Exact and perceptual duplicate detection across uploaded clips
 - Clip-role classification for primary speech, B-roll, evidence, and rejected takes
 - Quality scoring and explainable rejection reasons for every source clip
-- Cross-clip story construction with explicit source asset IDs in every edit segment
-- Multi-input FFmpeg rendering with silent audio continuity for visual-only clips
+- Local semantic tags from filenames, transcripts, composition, motion, light, colour, and subject framing
+- Narration-first cross-clip story construction with explicit source asset IDs
+- Claim-to-evidence matching for timed B-roll and evidence overlays
+- Continuity scoring across adjacent narration sources
+- A pre-render editorial critic with must-include and must-avoid enforcement
+- Two-pass FFmpeg rendering that preserves narration while placing full-frame visual overlays
 - Word-timed filler and pause cleanup across multiple source transcripts
-- Multi-source brand-aware captions in social-platform safe zones
+- Multi-source brand-aware captions rendered above visual overlays
 - Reference-video fingerprints for pace, brightness, saturation, and motion
 - Safe compilation of brand caption, visual, and music rules
 - Selection among user-uploaded licensed music tracks by energy fit
@@ -26,7 +30,7 @@ The repository contains a runnable Tier 1 backend path with:
 - Automated output dimension, duration, and audio-presence checks
 - Docker Compose development stack and GitHub Actions tests
 
-This is a deterministic Tier 1 production engine, not yet the finished autonomous director. It can now construct one traceable story from several uploaded clips while rejecting duplicates and weak footage. Semantic object detection, overlay B-roll, continuity repair, revisions, billing, performance learning, and Director Camera remain future milestones.
+This remains a deterministic Tier 1 production engine, not the finished autonomous director. Semantic tags are inspectable heuristics rather than an opaque object-recognition claim. The current overlay system uses full-frame evidence/B-roll cutaways while retaining narration; advanced object tracking, optical continuity repair, revisions, billing, performance learning, and Director Camera remain future milestones.
 
 ## Run locally
 
@@ -41,7 +45,7 @@ The API will be available at `http://localhost:8000`.
 curl http://localhost:8000/api/v1/health
 ```
 
-To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use conservative visual-scene fallbacks. Word cleanup and captions require timestamped transcription; reference analysis, subject framing, duplicate fingerprints, and uploaded-music analysis run locally.
+To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use conservative visual-scene fallbacks. Word cleanup and captions require timestamped transcription; reference analysis, semantic frame sampling, subject framing, duplicate fingerprints, and uploaded-music analysis run locally.
 
 ## Project workflow
 
@@ -53,10 +57,11 @@ curl -X POST http://localhost:8000/api/v1/projects \
   -d '{
     "user_id": "9afc424f-91af-4f13-b917-44f778f18b9d",
     "contract": {
-      "objective": "Create a calm luxury property reel",
-      "target_audience": "first-time buyers",
+      "objective": "Explain the result and show proof from the dashboard",
+      "target_audience": "small-business owners",
       "tier": 1,
       "target_duration_seconds": 45,
+      "must_include": ["dashboard proof"],
       "must_avoid": ["emojis"],
       "brand_rules": {
         "caption_font": "Inter",
@@ -79,11 +84,11 @@ Replace `<PROJECT_ID>` with the returned project ID. Upload `source_video` more 
 ```bash
 curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/assets \
   -F 'kind=source_video' \
-  -F 'file=@./hook.mp4;type=video/mp4'
+  -F 'file=@./talking-head.mp4;type=video/mp4'
 
 curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/assets \
   -F 'kind=source_video' \
-  -F 'file=@./proof.mp4;type=video/mp4'
+  -F 'file=@./dashboard-proof.mp4;type=video/mp4'
 ```
 
 Optional reference video:
@@ -122,7 +127,7 @@ curl http://localhost:8000/api/v1/projects/<PROJECT_ID>
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/intelligence
 ```
 
-The response includes every source clip's media metadata, role, quality score, duplicate relationship, rejection reasons, transcript, scenes, framing confidence, reference fingerprint, music profiles, compiled production style, selected music asset ID, and the versioned multi-source Edit Decision Graph used for rendering.
+The response includes every source clip's role, quality score, duplicate relationship, semantic tags with confidence/source, continuity profile, transcripts and scenes, reference fingerprint, music profiles, compiled production style, visual overlay matches, continuity decisions, critic report, and the versioned production graph used for rendering.
 
 Project states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
 
