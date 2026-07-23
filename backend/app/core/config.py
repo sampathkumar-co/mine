@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     transcription_provider: str = "openai"
     transcription_model: str = "whisper-1"
     transcription_timeout_seconds: int = Field(default=600, ge=30, le=3_600)
+    require_transcription: bool = False
     openai_api_key: str | None = None
     openai_base_url: str = "https://api.openai.com/v1"
     auto_create_schema: bool = True
