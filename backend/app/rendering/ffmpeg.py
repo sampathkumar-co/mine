@@ -6,6 +6,7 @@ from typing import Any
 
 from app.core.config import Settings
 from app.director.edit_graph import EditDecisionGraph
+from app.director.style import ProductionStyle
 
 
 class MediaCommandError(RuntimeError):
@@ -160,6 +161,25 @@ def render_vertical_baseline(
     )
 
 
+def _music_filter(
+    *,
+    input_index: int,
+    duration_seconds: float,
+    style: ProductionStyle,
+) -> str:
+    filters = [
+        f"[{input_index}:a]atrim=duration={duration_seconds:.3f}",
+        "asetpts=PTS-STARTPTS",
+    ]
+    fade = min(style.music.fade_seconds, max(0.0, duration_seconds / 3))
+    if fade > 0.01:
+        filters.append(f"afade=t=in:st=0:d={fade:.3f}")
+        fade_out_start = max(0.0, duration_seconds - fade)
+        filters.append(f"afade=t=out:st={fade_out_start:.3f}:d={fade:.3f}")
+    filters.append(f"volume={style.music.volume:.4f}[musicbed]")
+    return ",".join(filters)
+
+
 def render_edit_decision_graph(
     source_path: str | Path,
     output_path: str | Path,
@@ -168,17 +188,24 @@ def render_edit_decision_graph(
     media_probe: MediaProbe,
     subject_center_x: float = 0.5,
     caption_path: str | Path | None = None,
+    music_path: str | Path | None = None,
+    style: ProductionStyle | None = None,
     settings: Settings,
 ) -> None:
     if not graph.segments:
         raise MediaCommandError("Edit Decision Graph contains no renderable segments")
 
+    production_style = style or ProductionStyle()
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     filters: list[str] = []
     concat_inputs: list[str] = []
     vertical_filter = _vertical_filter(media_probe, subject_center_x)
-    visual_finish = "eq=contrast=1.03:saturation=1.04:brightness=0.005"
+    visual_finish = (
+        f"eq=contrast={production_style.visual.contrast:.4f}:"
+        f"saturation={production_style.visual.saturation:.4f}:"
+        f"brightness={production_style.visual.brightness:.4f}"
+    )
 
     for index, segment in enumerate(graph.segments):
         filters.append(
@@ -206,23 +233,56 @@ def render_edit_decision_graph(
     else:
         filters.append("[vconcat]null[vout]")
 
+    command = [settings.ffmpeg_binary, "-y", "-i", str(source_path)]
+    has_music = music_path is not None and production_style.music.enabled
+    music_input_index: int | None = None
+    if has_music:
+        music_input_index = 1
+        command.extend(["-stream_loop", "-1", "-i", str(music_path)])
+
     if media_probe.has_audio:
         filters.append(
             "[aconcat]highpass=f=80,lowpass=f=12000,afftdn=nf=-25,"
-            "loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
+            "loudnorm=I=-16:TP=-1.5:LRA=11[voiceclean]"
         )
 
-    command = [
-        settings.ffmpeg_binary,
-        "-y",
-        "-i",
-        str(source_path),
-        "-filter_complex",
-        ";".join(filters),
-        "-map",
-        "[vout]",
-    ]
-    if media_probe.has_audio:
+    if has_music and music_input_index is not None:
+        filters.append(
+            _music_filter(
+                input_index=music_input_index,
+                duration_seconds=graph.selected_duration_seconds,
+                style=production_style,
+            )
+        )
+        if media_probe.has_audio:
+            filters.extend(
+                [
+                    "[voiceclean]asplit=2[voicekey][voicemix]",
+                    (
+                        "[musicbed][voicekey]sidechaincompress="
+                        f"threshold={production_style.music.ducking_threshold:.4f}:"
+                        "ratio=10:attack=20:release=350[ducked]"
+                    ),
+                    (
+                        "[voicemix][ducked]amix=inputs=2:duration=first:normalize=0,"
+                        "loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
+                    ),
+                ]
+            )
+        else:
+            filters.append("[musicbed]loudnorm=I=-16:TP=-1.5:LRA=11[aout]")
+    elif media_probe.has_audio:
+        filters.append("[voiceclean]anull[aout]")
+
+    command.extend(
+        [
+            "-filter_complex",
+            ";".join(filters),
+            "-map",
+            "[vout]",
+        ]
+    )
+    if media_probe.has_audio or has_music:
         command.extend(["-map", "[aout]", "-c:a", "aac", "-b:a", "160k"])
     command.extend(
         [
@@ -236,6 +296,7 @@ def render_edit_decision_graph(
             "yuv420p",
             "-r",
             "30",
+            "-shortest",
             "-movflags",
             "+faststart",
             str(output),
