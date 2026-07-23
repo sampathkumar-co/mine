@@ -5,7 +5,7 @@ from collections.abc import Iterable
 
 from pydantic import BaseModel, Field
 
-from app.sensory.models import AnalysisBundle, TranscriptSegment
+from app.sensory.models import AnalysisBundle, ClipAnalysis, TranscriptSegment
 
 FILLER_WORDS = {
     "ah",
@@ -34,6 +34,9 @@ HOOK_TERMS = {
 
 
 class EditSegment(BaseModel):
+    source_asset_id: str | None = None
+    source_index: int = Field(default=0, ge=0)
+    clip_role: str = "primary_speech"
     source_start: float = Field(ge=0)
     source_end: float = Field(ge=0)
     output_start: float = Field(ge=0)
@@ -58,7 +61,11 @@ def _tokens(text: str) -> list[str]:
     return re.findall(r"[a-z0-9']+", text.casefold())
 
 
-def _segment_score(segment: TranscriptSegment, objective_terms: set[str], source_duration: float) -> float:
+def _segment_score(
+    segment: TranscriptSegment,
+    objective_terms: set[str],
+    source_duration: float,
+) -> float:
     tokens = _tokens(segment.text)
     if not tokens:
         return 0.05
@@ -114,6 +121,9 @@ def build_tier1_edit_graph(
     *,
     objective: str,
     target_duration_seconds: float,
+    source_asset_id: str | None = None,
+    source_index: int = 0,
+    clip_role: str = "primary_speech",
 ) -> EditDecisionGraph:
     source_duration = float(analysis.media.get("duration_seconds", 0) or 0)
     candidates = list(analysis.transcript.segments) if analysis.transcript else []
@@ -171,6 +181,9 @@ def build_tier1_edit_graph(
             reason = "Selected as an early high-value hook or setup"
         graph_segments.append(
             EditSegment(
+                source_asset_id=source_asset_id,
+                source_index=source_index,
+                clip_role=clip_role,
                 source_start=round(segment.start, 3),
                 source_end=round(segment.end, 3),
                 output_start=round(output_cursor, 3),
@@ -187,5 +200,147 @@ def build_tier1_edit_graph(
         target_duration_seconds=target_duration_seconds,
         selected_duration_seconds=round(output_cursor, 3),
         segments=graph_segments,
+        notes=notes,
+    )
+
+
+def _clip_bundle(clip: ClipAnalysis) -> AnalysisBundle:
+    return AnalysisBundle(
+        media=clip.media,
+        transcript=clip.transcript,
+        scenes=clip.scenes,
+        subject_framing=clip.subject_framing,
+    )
+
+
+def _candidate_segments(
+    clips: list[ClipAnalysis],
+    *,
+    objective: str,
+    target_duration_seconds: float,
+) -> list[EditSegment]:
+    candidates: list[EditSegment] = []
+    for source_index, clip in enumerate(clips):
+        if clip.role == "rejected" or clip.duplicate_of_asset_id:
+            continue
+        duration = float(clip.media.get("duration_seconds", 0) or 0)
+        clip_graph = build_tier1_edit_graph(
+            _clip_bundle(clip),
+            objective=objective,
+            target_duration_seconds=min(target_duration_seconds, max(duration, 0.1)),
+            source_asset_id=clip.asset_id,
+            source_index=source_index,
+            clip_role=clip.role,
+        )
+        for segment in clip_graph.segments:
+            role_bonus = 0.04 if clip.role == "evidence" else 0.02 if clip.role == "b_roll" else 0
+            adjusted = min(1.0, segment.score * 0.76 + clip.quality_score * 0.24 + role_bonus)
+            candidates.append(
+                segment.model_copy(
+                    update={
+                        "score": round(adjusted, 3),
+                        "confidence": round(
+                            min(segment.confidence, max(0.25, clip.quality_score)),
+                            3,
+                        ),
+                        "reason": (
+                            f"{segment.reason}; selected from {clip.filename} "
+                            f"({clip.role}, clip quality {clip.quality_score:.2f})"
+                        ),
+                    }
+                )
+            )
+    return candidates
+
+
+def build_multiclip_edit_graph(
+    analysis: AnalysisBundle,
+    *,
+    objective: str,
+    target_duration_seconds: float,
+) -> EditDecisionGraph:
+    clips = analysis.source_clips
+    if not clips:
+        return build_tier1_edit_graph(
+            analysis,
+            objective=objective,
+            target_duration_seconds=target_duration_seconds,
+        )
+
+    candidates = _candidate_segments(
+        clips,
+        objective=objective,
+        target_duration_seconds=target_duration_seconds,
+    )
+    if not candidates:
+        return EditDecisionGraph(
+            strategy="tier1_multiclip_story",
+            target_duration_seconds=target_duration_seconds,
+            selected_duration_seconds=0,
+            segments=[],
+            notes=["All uploaded source clips were rejected or identified as duplicates."],
+        )
+
+    speech = [item for item in candidates if item.clip_role == "primary_speech"]
+    visual = [item for item in candidates if item.clip_role in {"b_roll", "evidence"}]
+    speech.sort(key=lambda item: (-item.score, item.source_index, item.source_start))
+    visual.sort(key=lambda item: (-item.score, item.source_index, item.source_start))
+
+    ordered: list[EditSegment] = []
+    if speech:
+        ordered.append(speech.pop(0))
+
+    while speech or visual:
+        use_visual = bool(visual) and bool(ordered) and len(ordered) % 3 == 2
+        pool = visual if use_visual else speech or visual
+        last_asset = ordered[-1].source_asset_id if ordered else None
+        different_source = next(
+            (item for item in pool if item.source_asset_id != last_asset),
+            None,
+        )
+        selected = different_source or pool[0]
+        pool.remove(selected)
+        ordered.append(selected)
+
+    output_cursor = 0.0
+    selected_segments: list[EditSegment] = []
+    for item in ordered:
+        remaining = target_duration_seconds - output_cursor
+        if remaining <= 0.2:
+            break
+        duration = item.source_end - item.source_start
+        if duration > remaining:
+            item = item.model_copy(update={"source_end": item.source_start + remaining})
+            duration = remaining
+        transition = "cut"
+        if selected_segments and selected_segments[-1].source_asset_id != item.source_asset_id:
+            transition = "source_change_cut"
+        selected_segments.append(
+            item.model_copy(
+                update={
+                    "output_start": round(output_cursor, 3),
+                    "output_end": round(output_cursor + duration, 3),
+                    "transition": transition,
+                }
+            )
+        )
+        output_cursor += duration
+
+    rejected = sum(1 for clip in clips if clip.role == "rejected")
+    duplicates = sum(1 for clip in clips if clip.duplicate_of_asset_id)
+    notes = [
+        f"Built one story from {len(clips) - rejected} accepted source clip(s).",
+        f"Rejected {rejected} clip(s), including {duplicates} duplicate or near-duplicate clip(s).",
+    ]
+    if any(segment.clip_role == "evidence" for segment in selected_segments):
+        notes.append("Inserted evidence-oriented footage where it strengthened the selected story.")
+    if any(segment.clip_role == "b_roll" for segment in selected_segments):
+        notes.append("Inserted B-roll candidates to add visual coverage and pacing contrast.")
+
+    return EditDecisionGraph(
+        strategy="tier1_multiclip_story",
+        target_duration_seconds=target_duration_seconds,
+        selected_duration_seconds=round(output_cursor, 3),
+        segments=selected_segments,
         notes=notes,
     )
