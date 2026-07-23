@@ -9,8 +9,15 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - redis
-      - postgres
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   worker:
     build: ./backend
@@ -20,14 +27,21 @@ services:
       - ./backend:/app
       - director_data:/data
     depends_on:
-      - redis
-      - postgres
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
 
   redis:
     image: redis:7-alpine
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   postgres:
     image: postgres:16-alpine
@@ -37,6 +51,11 @@ services:
       POSTGRES_PASSWORD: director
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U director -d director"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   director_data:
