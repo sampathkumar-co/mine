@@ -9,19 +9,26 @@ from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.core.enums import AssetKind, ProjectStatus
 from app.director.cleanup import refine_graph_with_word_timings
-from app.director.edit_graph import build_tier1_edit_graph
+from app.director.edit_graph import build_multiclip_edit_graph
 from app.director.style import compile_production_style
 from app.models.analysis import EditDecisionGraphRecord, ProjectAnalysis
 from app.models.project import Project, ProjectAsset
 from app.rendering.captions import write_ass_captions
 from app.rendering.ffmpeg import (
+    MediaProbe,
+    RenderSource,
     extract_transcription_audio,
     probe_media,
-    render_edit_decision_graph,
+    render_multiclip_edit_decision_graph,
     validate_vertical_output,
 )
 from app.sensory.framing import detect_primary_subject
-from app.sensory.models import AnalysisBundle, MusicProfile, SubjectFraming
+from app.sensory.models import AnalysisBundle, ClipAnalysis, MusicProfile, SubjectFraming
+from app.sensory.multiclip import (
+    analyze_source_clip,
+    compute_perceptual_hash,
+    mark_duplicate_clips,
+)
 from app.sensory.music import analyze_music, choose_music
 from app.sensory.reference import analyze_reference_style
 from app.sensory.scenes import detect_scenes
@@ -84,48 +91,103 @@ def _all_assets(db: Session, project_id: UUID, kind: AssetKind) -> list[ProjectA
     )
 
 
+def _analyze_source_assets(
+    source_assets: list[ProjectAsset],
+    *,
+    project_output_dir: Path,
+    analysis_notes: list[str],
+) -> tuple[list[ClipAnalysis], dict[str, MediaProbe], list[Path]]:
+    clip_analyses: list[ClipAnalysis] = []
+    probes: dict[str, MediaProbe] = {}
+    temporary_audio_paths: list[Path] = []
+
+    for asset in source_assets:
+        asset_id = str(asset.id)
+        media_probe = probe_media(asset.storage_path, settings)
+        probes[asset_id] = media_probe
+        scenes = detect_scenes(
+            asset.storage_path,
+            duration_seconds=media_probe.duration_seconds,
+            settings=settings,
+        )
+
+        subject_framing = SubjectFraming()
+        if settings.enable_subject_framing:
+            try:
+                subject_framing = detect_primary_subject(
+                    asset.storage_path,
+                    max_samples=settings.subject_frame_samples,
+                )
+            except Exception as exc:
+                analysis_notes.append(
+                    f"Subject framing for {asset.original_filename} used centre fallback: {str(exc)[:180]}"
+                )
+
+        transcript = None
+        if media_probe.has_audio and settings.openai_api_key:
+            audio_path = project_output_dir / "analysis" / f"speech-{asset_id}.wav"
+            temporary_audio_paths.append(audio_path)
+            extract_transcription_audio(asset.storage_path, audio_path, settings)
+            transcript = transcribe_audio(audio_path, settings)
+        elif media_probe.has_audio and settings.require_transcription:
+            raise ValueError(
+                f"Transcription is required but no provider credentials are configured for {asset.original_filename}"
+            )
+
+        clip_analyses.append(
+            analyze_source_clip(
+                asset_id=asset_id,
+                filename=asset.original_filename,
+                sha256=asset.sha256,
+                media=asdict(media_probe),
+                transcript=transcript,
+                scenes=scenes,
+                subject_framing=subject_framing,
+                perceptual_hash=compute_perceptual_hash(asset.storage_path),
+            )
+        )
+
+    return (
+        mark_duplicate_clips(
+            clip_analyses,
+            perceptual_distance_threshold=settings.duplicate_hash_distance,
+        ),
+        probes,
+        temporary_audio_paths,
+    )
+
+
 @celery_app.task(bind=True, max_retries=3)
 def run_project_pipeline(self, project_id: str) -> dict[str, str]:
     project_uuid = UUID(project_id)
+    temporary_audio_paths: list[Path] = []
     with SessionLocal() as db:
         project = db.get(Project, project_uuid)
         if project is None:
             return {"project_id": project_id, "status": "missing"}
 
         project_output_dir = Path(settings.output_dir) / project_id
-        audio_path = project_output_dir / "analysis" / "speech.wav"
         caption_path = project_output_dir / "analysis" / "captions.ass"
         try:
-            source = _first_asset(db, project.id, AssetKind.SOURCE_VIDEO)
-            if source is None:
+            source_assets = _all_assets(db, project.id, AssetKind.SOURCE_VIDEO)
+            if not source_assets:
                 raise ValueError("Project has no source video")
+            if len(source_assets) > settings.max_source_clips:
+                raise ValueError(
+                    f"Project has {len(source_assets)} source clips; maximum is {settings.max_source_clips}"
+                )
             reference = _first_asset(db, project.id, AssetKind.REFERENCE_VIDEO)
             music_assets = _all_assets(db, project.id, AssetKind.MUSIC)
 
             _set_status(db, project, ProjectStatus.ANALYZING)
             self.update_state(state="ANALYZING", meta={"project_id": project_id})
-            media_probe = probe_media(source.storage_path, settings)
-            scenes = detect_scenes(
-                source.storage_path,
-                duration_seconds=media_probe.duration_seconds,
-                settings=settings,
+            analysis_notes: list[str] = []
+            clip_analyses, probes, temporary_audio_paths = _analyze_source_assets(
+                source_assets,
+                project_output_dir=project_output_dir,
+                analysis_notes=analysis_notes,
             )
 
-            subject_framing = SubjectFraming()
-            if settings.enable_subject_framing:
-                subject_framing = detect_primary_subject(
-                    source.storage_path,
-                    max_samples=settings.subject_frame_samples,
-                )
-
-            transcript = None
-            if media_probe.has_audio and settings.openai_api_key:
-                extract_transcription_audio(source.storage_path, audio_path, settings)
-                transcript = transcribe_audio(audio_path, settings)
-            elif media_probe.has_audio and settings.require_transcription:
-                raise ValueError("Transcription is required but no provider credentials are configured")
-
-            analysis_notes: list[str] = []
             reference_style = None
             if reference is not None and settings.enable_reference_style:
                 try:
@@ -181,11 +243,17 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 selected_music.asset_id if selected_music is not None else None
             )
             style_payload["analysis_notes"] = analysis_notes
+
+            first_accepted = next(
+                (clip for clip in clip_analyses if clip.role != "rejected"),
+                clip_analyses[0],
+            )
             analysis = AnalysisBundle(
-                media=asdict(media_probe),
-                transcript=transcript,
-                scenes=scenes,
-                subject_framing=subject_framing,
+                media=first_accepted.media,
+                transcript=first_accepted.transcript,
+                scenes=first_accepted.scenes,
+                subject_framing=first_accepted.subject_framing,
+                source_clips=clip_analyses,
                 reference_style=reference_style,
                 music_profiles=music_profiles,
                 production_style=style_payload,
@@ -194,15 +262,20 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
 
             _set_status(db, project, ProjectStatus.PLANNING)
             self.update_state(state="PLANNING", meta={"project_id": project_id})
-            graph = build_tier1_edit_graph(
+            graph = build_multiclip_edit_graph(
                 analysis,
                 objective=str(contract.get("objective", "Create a clear professional video")),
                 target_duration_seconds=float(contract.get("target_duration_seconds", 45)),
             )
+            transcripts_by_asset = {
+                clip.asset_id: clip.transcript
+                for clip in clip_analyses
+                if clip.transcript is not None
+            }
             if settings.enable_word_cleanup:
                 graph = refine_graph_with_word_timings(
                     graph,
-                    transcript,
+                    transcripts_by_asset,
                     silence_threshold_seconds=settings.silence_threshold_seconds,
                     speech_padding_seconds=settings.speech_padding_seconds,
                 )
@@ -225,11 +298,11 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
 
             caption_count = 0
             render_caption_path: Path | None = None
-            if settings.enable_captions and transcript is not None:
+            if settings.enable_captions and transcripts_by_asset:
                 caption_count = write_ass_captions(
                     caption_path,
                     graph,
-                    transcript,
+                    transcripts_by_asset,
                     style=production_style.caption,
                 )
                 if caption_count:
@@ -238,21 +311,30 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                         update={
                             "notes": [
                                 *graph.notes,
-                                f"Generated {caption_count} brand-aware safe-zone caption cue(s).",
+                                f"Generated {caption_count} multi-source brand-aware caption cue(s).",
                             ]
                         }
                     )
             _save_edit_graph(db, project.id, graph.model_dump(mode="json"))
 
+            clip_by_asset_id = {clip.asset_id: clip for clip in clip_analyses}
+            render_sources = [
+                RenderSource(
+                    asset_id=str(asset.id),
+                    path=asset.storage_path,
+                    probe=probes[str(asset.id)],
+                    subject_center_x=clip_by_asset_id[str(asset.id)].subject_framing.normalized_center_x,
+                )
+                for asset in source_assets
+            ]
+
             output_path = project_output_dir / "final.mp4"
             _set_status(db, project, ProjectStatus.RENDERING)
             self.update_state(state="RENDERING", meta={"project_id": project_id})
-            render_edit_decision_graph(
-                source.storage_path,
+            render_multiclip_edit_decision_graph(
+                render_sources,
                 output_path,
                 graph,
-                media_probe=media_probe,
-                subject_center_x=subject_framing.normalized_center_x,
                 caption_path=render_caption_path,
                 music_path=(selected_music_asset.storage_path if selected_music_asset else None),
                 style=production_style,
@@ -262,7 +344,14 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
             _set_status(db, project, ProjectStatus.QUALITY_CHECK)
             self.update_state(state="QUALITY_CHECK", meta={"project_id": project_id})
             output_probe = probe_media(output_path, settings)
-            expect_audio = media_probe.has_audio or selected_music_asset is not None
+            expect_audio = any(
+                source.probe.has_audio
+                for source in render_sources
+                if any(
+                    segment.source_asset_id == source.asset_id
+                    for segment in graph.segments
+                )
+            ) or selected_music_asset is not None
             validate_vertical_output(output_probe, expect_audio=expect_audio)
             expected_duration = graph.selected_duration_seconds
             if abs(output_probe.duration_seconds - expected_duration) > max(
@@ -272,11 +361,13 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
 
             project.output_path = str(output_path)
             _set_status(db, project, ProjectStatus.READY)
+            rejected_count = sum(1 for clip in clip_analyses if clip.role == "rejected")
             return {
                 "project_id": project_id,
                 "status": ProjectStatus.READY.value,
+                "source_clips": str(len(source_assets)),
+                "rejected_clips": str(rejected_count),
                 "caption_cues": str(caption_count),
-                "framing_detector": subject_framing.detector,
                 "reference_pace": reference_style.pace if reference_style else "none",
                 "music_asset_id": selected_music.asset_id if selected_music else "none",
             }
@@ -302,4 +393,5 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 raise self.retry(exc=exc, countdown=2 ** (self.request.retries + 1)) from exc
             raise
         finally:
-            audio_path.unlink(missing_ok=True)
+            for audio_path in temporary_audio_paths:
+                audio_path.unlink(missing_ok=True)
