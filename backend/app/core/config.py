@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     upload_dir: str = "/data/uploads"
     output_dir: str = "/data/outputs"
     max_upload_bytes: int = Field(default=2_147_483_648, ge=1)
+    upload_chunk_bytes: int = Field(default=1_048_576, ge=65_536, le=16_777_216)
+    render_timeout_seconds: int = Field(default=3_600, ge=30)
+    ffmpeg_binary: str = "ffmpeg"
+    ffprobe_binary: str = "ffprobe"
+    auto_create_schema: bool = True
     cors_origins: str = "http://localhost:3000"
 
     @property
