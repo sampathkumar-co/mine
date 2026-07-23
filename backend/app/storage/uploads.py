@@ -44,6 +44,8 @@ def _validate_content_type(kind: AssetKind, content_type: str) -> None:
         normalized.startswith("image/") or normalized == "application/pdf"
     ):
         raise UnsupportedAssetError("brand_asset requires an image or PDF content type")
+    if kind == AssetKind.MUSIC and not normalized.startswith("audio/"):
+        raise UnsupportedAssetError("music requires an audio content type")
 
 
 async def store_upload(

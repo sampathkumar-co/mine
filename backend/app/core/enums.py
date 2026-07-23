@@ -19,3 +19,4 @@ class AssetKind(StrEnum):
     REFERENCE_VIDEO = "reference_video"
     LOGO = "logo"
     BRAND_ASSET = "brand_asset"
+    MUSIC = "music"
