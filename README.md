@@ -4,20 +4,23 @@ Director OS is an autonomous video production agent that turns raw footage, crea
 
 ## Current implementation
 
-The repository now contains a runnable backend control plane with:
+The repository now contains a runnable Tier 1 backend path with:
 
-- FastAPI project and upload APIs
+- FastAPI project, upload, queue, status, and intelligence APIs
 - Typed Director Contract with six-tier validation
-- PostgreSQL persistence for projects and assets
+- PostgreSQL persistence for projects, assets, analyses, and Edit Decision Graphs
 - Streamed uploads with size, type, and SHA-256 validation
 - Durable Celery + Redis processing with sequential worker execution
-- FFmpeg media inspection and a baseline 9:16 render
+- FFmpeg media probing, local scene-boundary detection, audio extraction, and 9:16 rendering
+- Provider-backed transcription with word and segment timestamps
+- Explainable Tier 1 segment scoring with reasons and confidence
+- FFmpeg rendering driven by the stored Edit Decision Graph
 - Persisted processing states and retry/failure reporting
 - Automated output dimension and duration checks
 - Docker Compose development stack
 - Backend linting and tests in GitHub Actions
 
-The current FFmpeg renderer is deliberately a deterministic baseline. Transcription, multimodal footage understanding, editorial planning, captions, intelligent cuts, reference-style compilation, Director Camera, billing, and autonomous repair remain upcoming milestones.
+This is the first deterministic editorial engine, not the finished autonomous director. It selects high-value transcript or scene ranges and produces a traceable cut. Captions, silence precision, face-aware reframing, music, reference-style compilation, billing, and Director Camera remain upcoming milestones.
 
 ## Run locally
 
@@ -31,6 +34,8 @@ The API will be available at `http://localhost:8000`.
 ```bash
 curl http://localhost:8000/api/v1/health
 ```
+
+To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use the conservative scene-based fallback when credentials are absent.
 
 ## Project workflow
 
@@ -62,12 +67,7 @@ curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/assets \
   -F 'file=@./raw-footage.mp4;type=video/mp4'
 ```
 
-Supported asset kinds are:
-
-- `source_video`
-- `reference_video`
-- `logo`
-- `brand_asset`
+Supported asset kinds are `source_video`, `reference_video`, `logo`, and `brand_asset`.
 
 ### 3. Queue production
 
@@ -81,6 +81,14 @@ curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/start
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>
 ```
 
-Project states currently include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
+### 5. Inspect what the director understood and selected
+
+```bash
+curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/intelligence
+```
+
+The response includes the media/transcript/scene analysis and the versioned Edit Decision Graph used for rendering.
+
+Project states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
 
 See [`docs/architecture.md`](docs/architecture.md) for system boundaries and the next production milestones.
