@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from app.director.edit_graph import EditDecisionGraph
+from app.director.edit_graph import EditDecisionGraph, EditSegment
 from app.sensory.models import TranscriptResult, TranscriptWord
 
 
@@ -23,7 +23,10 @@ def _ass_time(seconds: float) -> str:
 
 
 def _escape_ass_text(value: str) -> str:
-    return value.replace("\\", r"\\").replace("{", r"\{").replace("}", r"\}")
+    line_break_token = "__DIRECTOR_LINE_BREAK__"
+    escaped = value.replace(r"\N", line_break_token)
+    escaped = escaped.replace("\\", r"\\").replace("{", r"\{").replace("}", r"\}")
+    return escaped.replace(line_break_token, r"\N")
 
 
 def _words_for_segment(
@@ -73,7 +76,7 @@ def build_caption_cues(
     return [cue for cue in cues if cue.end - cue.start >= 0.12 and cue.text]
 
 
-def _cue_from_words(words: list[TranscriptWord], segment) -> CaptionCue:
+def _cue_from_words(words: list[TranscriptWord], segment: EditSegment) -> CaptionCue:
     start = segment.output_start + max(0.0, words[0].start - segment.source_start)
     end = segment.output_start + max(0.0, words[-1].end - segment.source_start)
     end = min(end, segment.output_end)
