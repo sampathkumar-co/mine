@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from app.director.edit_graph import EditDecisionGraph, EditSegment
+from app.director.style import CaptionStyle, hex_to_ass
 from app.sensory.models import TranscriptResult, TranscriptWord
 
 
@@ -89,18 +90,42 @@ def _cue_from_words(words: list[TranscriptWord], segment: EditSegment) -> Captio
     return CaptionCue(start=round(start, 3), end=round(end, 3), text=text)
 
 
+def _animation(style: CaptionStyle) -> str:
+    alignment = {"lower": 2, "center": 5, "upper": 8}[style.position]
+    if style.animation == "none":
+        return rf"{{\an{alignment}}}"
+    if style.animation == "fade":
+        return rf"{{\an{alignment}\fad(100,120)}}"
+    return rf"{{\an{alignment}\fad(60,80)\fscx108\fscy108\t(0,120,\fscx100\fscy100)}}"
+
+
 def write_ass_captions(
     path: str | Path,
     graph: EditDecisionGraph,
     transcript: TranscriptResult | None,
     *,
-    max_words: int = 5,
-    margin_vertical: int = 260,
+    style: CaptionStyle | None = None,
+    max_words: int | None = None,
+    margin_vertical: int | None = None,
 ) -> int:
-    cues = build_caption_cues(graph, transcript, max_words=max_words)
+    caption_style = style or CaptionStyle()
+    if max_words is not None or margin_vertical is not None:
+        caption_style = caption_style.model_copy(
+            update={
+                "max_words": max_words if max_words is not None else caption_style.max_words,
+                "margin_vertical": (
+                    margin_vertical if margin_vertical is not None else caption_style.margin_vertical
+                ),
+            }
+        )
+
+    cues = build_caption_cues(graph, transcript, max_words=caption_style.max_words)
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
 
+    primary = hex_to_ass(caption_style.primary_color)
+    accent = hex_to_ass(caption_style.accent_color)
+    outline = hex_to_ass(caption_style.outline_color)
     header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
@@ -110,17 +135,20 @@ WrapStyle: 2
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Director,Arial,72,&H00FFFFFF,&H0000E7FF,&H00101010,&H80000000,-1,0,0,0,100,100,0,0,1,6,0,2,90,90,{margin_vertical},1
+Style: Director,{caption_style.font_name},{caption_style.font_size},{primary},{accent},{outline},&H80000000,-1,0,0,0,100,100,0,0,1,6,0,2,90,90,{caption_style.margin_vertical},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
-    animation = r"{\an2\fad(60,80)\fscx108\fscy108\t(0,120,\fscx100\fscy100)}"
-    event_lines = [
-        "Dialogue: 0,"
-        f"{_ass_time(cue.start)},{_ass_time(cue.end)},Director,,0,0,0,,"
-        f"{animation}{_escape_ass_text(cue.text)}"
-        for cue in cues
-    ]
+    animation = _animation(caption_style)
+    event_lines = []
+    for cue in cues:
+        text = cue.text.upper() if caption_style.all_caps else cue.text
+        event_lines.append(
+            "Dialogue: 0,"
+            f"{_ass_time(cue.start)},{_ass_time(cue.end)},Director,,0,0,0,,"
+            f"{animation}{_escape_ass_text(text)}"
+        )
+
     output.write_text(header + "\n".join(event_lines) + ("\n" if event_lines else ""), encoding="utf-8")
     return len(cues)
