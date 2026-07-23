@@ -10,18 +10,20 @@ from app.core.database import SessionLocal
 from app.core.enums import AssetKind, ProjectStatus
 from app.director.cleanup import refine_graph_with_word_timings
 from app.director.edit_graph import build_multiclip_edit_graph
+from app.director.semantic_overlays import enhance_graph_with_semantic_overlays
 from app.director.style import compile_production_style
 from app.models.analysis import EditDecisionGraphRecord, ProjectAnalysis
 from app.models.project import Project, ProjectAsset
+from app.quality.editorial import review_and_repair_edit_graph
 from app.rendering.captions import write_ass_captions
 from app.rendering.ffmpeg import (
     MediaProbe,
     RenderSource,
     extract_transcription_audio,
     probe_media,
-    render_multiclip_edit_decision_graph,
     validate_vertical_output,
 )
+from app.rendering.semantic_overlays import render_semantic_production_graph
 from app.sensory.framing import detect_primary_subject
 from app.sensory.models import AnalysisBundle, ClipAnalysis, MusicProfile, SubjectFraming
 from app.sensory.multiclip import (
@@ -32,6 +34,7 @@ from app.sensory.multiclip import (
 from app.sensory.music import analyze_music, choose_music
 from app.sensory.reference import analyze_reference_style
 from app.sensory.scenes import detect_scenes
+from app.sensory.semantics import analyze_visual_semantics, extract_text_semantic_tags
 from app.sensory.transcription import transcribe_audio
 from app.worker.celery_app import celery_app
 
@@ -134,6 +137,13 @@ def _analyze_source_assets(
                 f"Transcription is required but no provider credentials are configured for {asset.original_filename}"
             )
 
+        text_tags = extract_text_semantic_tags(asset.original_filename, transcript)
+        visual_tags, continuity = analyze_visual_semantics(
+            asset.storage_path,
+            media=asdict(media_probe),
+            subject_framing=subject_framing,
+            max_samples=settings.semantic_frame_samples,
+        )
         clip_analyses.append(
             analyze_source_clip(
                 asset_id=asset_id,
@@ -144,6 +154,8 @@ def _analyze_source_assets(
                 scenes=scenes,
                 subject_framing=subject_framing,
                 perceptual_hash=compute_perceptual_hash(asset.storage_path),
+                semantic_tags=[*text_tags, *visual_tags],
+                continuity=continuity,
             )
         )
 
@@ -202,6 +214,8 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                     analysis_notes.append(f"Reference style analysis skipped: {str(exc)[:240]}")
 
             contract = project.contract
+            objective = str(contract.get("objective", "Create a clear professional video"))
+            target_duration = float(contract.get("target_duration_seconds", 45))
             production_style = compile_production_style(
                 contract,
                 reference_style,
@@ -264,8 +278,8 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
             self.update_state(state="PLANNING", meta={"project_id": project_id})
             graph = build_multiclip_edit_graph(
                 analysis,
-                objective=str(contract.get("objective", "Create a clear professional video")),
-                target_duration_seconds=float(contract.get("target_duration_seconds", 45)),
+                objective=objective,
+                target_duration_seconds=target_duration,
             )
             transcripts_by_asset = {
                 clip.asset_id: clip.transcript
@@ -278,6 +292,26 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                     transcripts_by_asset,
                     silence_threshold_seconds=settings.silence_threshold_seconds,
                     speech_padding_seconds=settings.speech_padding_seconds,
+                )
+            graph = enhance_graph_with_semantic_overlays(
+                graph,
+                analysis,
+                objective=objective,
+                target_duration_seconds=target_duration,
+                max_overlays=(settings.max_visual_overlays if settings.enable_semantic_overlays else 0),
+                minimum_match_score=settings.minimum_overlay_match_score,
+            )
+            graph, critic_report = review_and_repair_edit_graph(graph, analysis, contract)
+            analysis = analysis.model_copy(
+                update={"editorial_report": critic_report.model_dump(mode="json")}
+            )
+            _save_analysis(db, project.id, analysis.model_dump(mode="json"))
+            if settings.require_editorial_critic_pass and not critic_report.passed:
+                blocking_messages = [
+                    issue.message for issue in critic_report.issues if issue.severity == "blocking"
+                ]
+                raise ValueError(
+                    "Editorial critic blocked rendering: " + "; ".join(blocking_messages[:5])
                 )
             if not graph.segments:
                 raise ValueError("Director could not identify a usable edit segment")
@@ -331,7 +365,7 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
             output_path = project_output_dir / "final.mp4"
             _set_status(db, project, ProjectStatus.RENDERING)
             self.update_state(state="RENDERING", meta={"project_id": project_id})
-            render_multiclip_edit_decision_graph(
+            render_semantic_production_graph(
                 render_sources,
                 output_path,
                 graph,
@@ -367,6 +401,8 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 "status": ProjectStatus.READY.value,
                 "source_clips": str(len(source_assets)),
                 "rejected_clips": str(rejected_count),
+                "semantic_overlays": str(len(graph.overlays)),
+                "critic_score": f"{critic_report.score:.3f}",
                 "caption_cues": str(caption_count),
                 "reference_pace": reference_style.pace if reference_style else "none",
                 "music_asset_id": selected_music.asset_id if selected_music else "none",
