@@ -1,5 +1,6 @@
 import re
 import subprocess
+from itertools import pairwise
 from pathlib import Path
 
 from app.core.config import Settings
@@ -58,7 +59,7 @@ def detect_scenes(
     boundaries = sorted(set(round(value, 3) for value in boundaries))
 
     scenes: list[SceneRange] = []
-    for start, end in zip(boundaries, boundaries[1:]):
+    for start, end in pairwise(boundaries):
         if end - start >= settings.minimum_scene_seconds:
             scenes.append(SceneRange(start=start, end=end, confidence=0.72))
 
