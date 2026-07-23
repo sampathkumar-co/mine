@@ -117,6 +117,7 @@ def build_tier1_edit_graph(
 ) -> EditDecisionGraph:
     source_duration = float(analysis.media.get("duration_seconds", 0) or 0)
     candidates = list(analysis.transcript.segments) if analysis.transcript else []
+    uses_transcript = bool(candidates)
     notes: list[str] = []
     if not candidates:
         candidates = _fallback_candidates(analysis)
@@ -140,7 +141,7 @@ def build_tier1_edit_graph(
         if remaining <= 0.2:
             break
         duration = candidate.end - candidate.start
-        if score < 0.34 and chosen:
+        if uses_transcript and score < 0.34 and chosen:
             continue
         if duration > remaining:
             candidate = candidate.model_copy(update={"end": candidate.start + remaining})
@@ -150,7 +151,11 @@ def build_tier1_edit_graph(
 
     if not chosen and scored:
         candidate = scored[0][0]
-        chosen = [candidate.model_copy(update={"end": min(candidate.end, candidate.start + target_duration_seconds)})]
+        chosen = [
+            candidate.model_copy(
+                update={"end": min(candidate.end, candidate.start + target_duration_seconds)}
+            )
+        ]
 
     merged = _merge_adjacent(chosen)
     output_cursor = 0.0
@@ -160,7 +165,9 @@ def build_tier1_edit_graph(
         duration = segment.end - segment.start
         score = score_lookup.get((segment.start, segment.end), 0.62)
         reason = "Selected for clarity and information density"
-        if segment.start <= 15:
+        if not uses_transcript:
+            reason = "Selected as conservative visual coverage without transcript evidence"
+        elif segment.start <= 15:
             reason = "Selected as an early high-value hook or setup"
         graph_segments.append(
             EditSegment(
