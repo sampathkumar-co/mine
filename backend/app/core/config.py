@@ -35,6 +35,12 @@ class Settings(BaseSettings):
     caption_margin_vertical: int = Field(default=260, ge=80, le=700)
     enable_subject_framing: bool = True
     subject_frame_samples: int = Field(default=24, ge=4, le=120)
+    enable_reference_style: bool = True
+    reference_frame_samples: int = Field(default=24, ge=4, le=120)
+    enable_music: bool = True
+    music_default_volume: float = Field(default=0.16, ge=0, le=0.5)
+    music_ducking_threshold: float = Field(default=0.035, ge=0.005, le=0.2)
+    music_fade_seconds: float = Field(default=0.8, ge=0, le=5)
     auto_create_schema: bool = True
     cors_origins: str = "http://localhost:3000"
 
