@@ -11,19 +11,22 @@ The repository contains a runnable Tier 1 backend path with:
 - PostgreSQL persistence for projects, assets, analyses, and Edit Decision Graphs
 - Streamed uploads with size, type, and SHA-256 validation
 - Durable Celery + Redis processing with sequential worker execution
-- Provider-backed transcription with word and segment timestamps
-- Local scene detection and sampled subject framing
-- Explainable segment scoring, filler removal, and pause cleanup
+- Per-source probing, transcription, scene detection, and subject framing
+- Exact and perceptual duplicate detection across uploaded clips
+- Clip-role classification for primary speech, B-roll, evidence, and rejected takes
+- Quality scoring and explainable rejection reasons for every source clip
+- Cross-clip story construction with explicit source asset IDs in every edit segment
+- Multi-input FFmpeg rendering with silent audio continuity for visual-only clips
+- Word-timed filler and pause cleanup across multiple source transcripts
+- Multi-source brand-aware captions in social-platform safe zones
 - Reference-video fingerprints for pace, brightness, saturation, and motion
 - Safe compilation of brand caption, visual, and music rules
 - Selection among user-uploaded licensed music tracks by energy fit
 - Music fades, speech-aware ducking, and final loudness normalization
-- Brand-aware animated captions in social-platform safe zones
-- FFmpeg rendering driven by the stored Edit Decision Graph
 - Automated output dimension, duration, and audio-presence checks
 - Docker Compose development stack and GitHub Actions tests
 
-This is a deterministic Tier 1 production engine, not yet the finished autonomous director. It creates a traceable talking-head cut with cleanup, captions, framing, reference-informed styling, and optional licensed music. Brand graphics, revisions, billing, performance learning, and Director Camera remain future milestones.
+This is a deterministic Tier 1 production engine, not yet the finished autonomous director. It can now construct one traceable story from several uploaded clips while rejecting duplicates and weak footage. Semantic object detection, overlay B-roll, continuity repair, revisions, billing, performance learning, and Director Camera remain future milestones.
 
 ## Run locally
 
@@ -38,7 +41,7 @@ The API will be available at `http://localhost:8000`.
 curl http://localhost:8000/api/v1/health
 ```
 
-To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use the conservative scene-based fallback. Word cleanup and captions require timestamped transcription; reference analysis, subject framing, and uploaded-music analysis run locally.
+To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use conservative visual-scene fallbacks. Word cleanup and captions require timestamped transcription; reference analysis, subject framing, duplicate fingerprints, and uploaded-music analysis run locally.
 
 ## Project workflow
 
@@ -69,14 +72,18 @@ curl -X POST http://localhost:8000/api/v1/projects \
   }'
 ```
 
-### 2. Upload assets
+### 2. Upload source clips and optional assets
 
-Replace `<PROJECT_ID>` with the returned project ID.
+Replace `<PROJECT_ID>` with the returned project ID. Upload `source_video` more than once to create a multi-clip project. The default VPS-safe limit is eight source clips.
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/assets \
   -F 'kind=source_video' \
-  -F 'file=@./raw-footage.mp4;type=video/mp4'
+  -F 'file=@./hook.mp4;type=video/mp4'
+
+curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/assets \
+  -F 'kind=source_video' \
+  -F 'file=@./proof.mp4;type=video/mp4'
 ```
 
 Optional reference video:
@@ -115,7 +122,7 @@ curl http://localhost:8000/api/v1/projects/<PROJECT_ID>
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/intelligence
 ```
 
-The response includes source analysis, transcript and scenes, subject-framing confidence, reference fingerprint, music profiles, compiled production style, selected music asset ID, and the versioned Edit Decision Graph used for rendering.
+The response includes every source clip's media metadata, role, quality score, duplicate relationship, rejection reasons, transcript, scenes, framing confidence, reference fingerprint, music profiles, compiled production style, selected music asset ID, and the versioned multi-source Edit Decision Graph used for rendering.
 
 Project states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
 
