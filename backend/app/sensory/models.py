@@ -63,6 +63,25 @@ class MusicProfile(BaseModel):
     energy: float = Field(default=0.5, ge=0, le=1)
 
 
+SemanticTagSource = Literal["filename", "transcript", "vision_heuristic"]
+
+
+class SemanticTag(BaseModel):
+    label: str
+    confidence: float = Field(default=0.5, ge=0, le=1)
+    source: SemanticTagSource
+    evidence: str | None = None
+
+
+class ContinuityProfile(BaseModel):
+    brightness: float = Field(default=0.5, ge=0, le=1)
+    saturation: float = Field(default=0.5, ge=0, le=1)
+    motion_energy: float = Field(default=0.2, ge=0, le=1)
+    subject_center_x: float = Field(default=0.5, ge=0, le=1)
+    aspect_ratio: float = Field(default=9 / 16, gt=0)
+    sampled_frames: int = Field(default=0, ge=0)
+
+
 ClipRole = Literal["primary_speech", "b_roll", "evidence", "rejected"]
 
 
@@ -80,6 +99,8 @@ class ClipAnalysis(BaseModel):
     quality_score: float = Field(default=0.5, ge=0, le=1)
     rejection_reasons: list[str] = Field(default_factory=list)
     evidence_terms: list[str] = Field(default_factory=list)
+    semantic_tags: list[SemanticTag] = Field(default_factory=list)
+    continuity: ContinuityProfile = Field(default_factory=ContinuityProfile)
 
 
 class AnalysisBundle(BaseModel):
@@ -92,3 +113,4 @@ class AnalysisBundle(BaseModel):
     reference_style: ReferenceStyleProfile | None = None
     music_profiles: list[MusicProfile] = Field(default_factory=list)
     production_style: dict[str, object] = Field(default_factory=dict)
+    editorial_report: dict[str, object] = Field(default_factory=dict)
