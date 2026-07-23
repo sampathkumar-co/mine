@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -61,11 +63,32 @@ class MusicProfile(BaseModel):
     energy: float = Field(default=0.5, ge=0, le=1)
 
 
-class AnalysisBundle(BaseModel):
+ClipRole = Literal["primary_speech", "b_roll", "evidence", "rejected"]
+
+
+class ClipAnalysis(BaseModel):
+    asset_id: str
+    filename: str
+    sha256: str
     media: dict[str, object]
     transcript: TranscriptResult | None = None
     scenes: list[SceneRange] = Field(default_factory=list)
     subject_framing: SubjectFraming = Field(default_factory=SubjectFraming)
+    perceptual_hash: str | None = None
+    duplicate_of_asset_id: str | None = None
+    role: ClipRole = "primary_speech"
+    quality_score: float = Field(default=0.5, ge=0, le=1)
+    rejection_reasons: list[str] = Field(default_factory=list)
+    evidence_terms: list[str] = Field(default_factory=list)
+
+
+class AnalysisBundle(BaseModel):
+    # Legacy mirrors of the first accepted source clip remain for API compatibility.
+    media: dict[str, object]
+    transcript: TranscriptResult | None = None
+    scenes: list[SceneRange] = Field(default_factory=list)
+    subject_framing: SubjectFraming = Field(default_factory=SubjectFraming)
+    source_clips: list[ClipAnalysis] = Field(default_factory=list)
     reference_style: ReferenceStyleProfile | None = None
     music_profiles: list[MusicProfile] = Field(default_factory=list)
     production_style: dict[str, object] = Field(default_factory=dict)
