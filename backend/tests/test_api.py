@@ -92,6 +92,33 @@ def test_project_upload_and_queue(client: TestClient, monkeypatch: pytest.Monkey
     assert len(fetched.json()["assets"]) == 1
 
 
+def test_accepts_audio_music_assets(client: TestClient) -> None:
+    created = client.post("/api/v1/projects", json=project_payload())
+    project_id = created.json()["id"]
+
+    response = client.post(
+        f"/api/v1/projects/{project_id}/assets",
+        data={"kind": "music"},
+        files={"file": ("licensed-track.mp3", b"audio-bytes", "audio/mpeg")},
+    )
+
+    assert response.status_code == 201
+    assert response.json()["kind"] == "music"
+
+
+def test_rejects_non_audio_music_assets(client: TestClient) -> None:
+    created = client.post("/api/v1/projects", json=project_payload())
+    project_id = created.json()["id"]
+
+    response = client.post(
+        f"/api/v1/projects/{project_id}/assets",
+        data={"kind": "music"},
+        files={"file": ("not-music.mp4", b"video-bytes", "video/mp4")},
+    )
+
+    assert response.status_code == 415
+
+
 def test_rejects_non_video_source_asset(client: TestClient) -> None:
     created = client.post("/api/v1/projects", json=project_payload())
     project_id = created.json()["id"]
