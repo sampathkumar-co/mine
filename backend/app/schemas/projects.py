@@ -67,3 +67,10 @@ class ProjectAccepted(BaseModel):
     status: ProjectStatus
     task_id: str
     message: str = "Project queued for autonomous production."
+
+
+class ProjectIntelligenceRead(BaseModel):
+    project_id: UUID
+    analysis: dict[str, Any] | None
+    edit_decision_graph: dict[str, Any] | None
+    graph_version: int | None
