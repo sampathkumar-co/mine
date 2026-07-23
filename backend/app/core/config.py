@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     music_fade_seconds: float = Field(default=0.8, ge=0, le=5)
     max_source_clips: int = Field(default=8, ge=1, le=24)
     duplicate_hash_distance: int = Field(default=6, ge=0, le=24)
+    enable_semantic_overlays: bool = True
+    semantic_frame_samples: int = Field(default=10, ge=2, le=48)
+    max_visual_overlays: int = Field(default=4, ge=0, le=12)
+    minimum_overlay_match_score: float = Field(default=0.3, ge=0, le=1)
+    require_editorial_critic_pass: bool = True
     auto_create_schema: bool = True
     cors_origins: str = "http://localhost:3000"
 
