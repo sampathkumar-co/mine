@@ -9,8 +9,15 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.database import get_db
 from app.core.enums import AssetKind, ProjectStatus
+from app.models.analysis import EditDecisionGraphRecord, ProjectAnalysis
 from app.models.project import Project, ProjectAsset
-from app.schemas.projects import ProjectAccepted, ProjectAssetRead, ProjectCreate, ProjectRead
+from app.schemas.projects import (
+    ProjectAccepted,
+    ProjectAssetRead,
+    ProjectCreate,
+    ProjectIntelligenceRead,
+    ProjectRead,
+)
 from app.storage.uploads import (
     EmptyUploadError,
     UnsupportedAssetError,
@@ -62,6 +69,28 @@ def create_project(payload: ProjectCreate, db: Session = Depends(get_db)) -> Pro
 @router.get("/projects/{project_id}", response_model=ProjectRead, tags=["projects"])
 def get_project(project_id: UUID, db: Session = Depends(get_db)) -> Project:
     return _get_project(db, project_id)
+
+
+@router.get(
+    "/projects/{project_id}/intelligence",
+    response_model=ProjectIntelligenceRead,
+    tags=["projects"],
+)
+def get_project_intelligence(
+    project_id: UUID,
+    db: Session = Depends(get_db),
+) -> ProjectIntelligenceRead:
+    _get_project(db, project_id)
+    analysis = db.scalar(select(ProjectAnalysis).where(ProjectAnalysis.project_id == project_id))
+    graph = db.scalar(
+        select(EditDecisionGraphRecord).where(EditDecisionGraphRecord.project_id == project_id)
+    )
+    return ProjectIntelligenceRead(
+        project_id=project_id,
+        analysis=analysis.payload if analysis else None,
+        edit_decision_graph=graph.payload if graph else None,
+        graph_version=graph.version if graph else None,
+    )
 
 
 @router.post(
