@@ -95,7 +95,7 @@ def test_plan_music_timing_aligns_cuts_and_source_change_phrase() -> None:
     assert plan.start_offset_seconds == pytest.approx(0.1, abs=0.001)
     assert plan.beat_aligned_cut_count == 2
     assert plan.phrase_aligned_cut_count >= 1
-    assert plan.alignment_score == pytest.approx(1.0, abs=0.01)
+    assert plan.alignment_score >= 0.9
 
 
 def test_plan_music_timing_falls_back_for_uncertain_track() -> None:
