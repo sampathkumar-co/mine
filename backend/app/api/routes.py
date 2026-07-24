@@ -1,7 +1,7 @@
 from pathlib import Path
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
 from sqlalchemy import func, select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -11,6 +11,7 @@ from app.core.database import get_db
 from app.core.enums import AssetKind, ProjectStatus
 from app.director.revision_engine import compare_revision_graphs, normalize_revision_graph
 from app.models.analysis import EditDecisionGraphRecord, EditGraphRevision, ProjectAnalysis
+from app.models.platform import WorkspaceMembership
 from app.models.project import Project, ProjectAsset
 from app.schemas.projects import (
     ProjectAccepted,
@@ -42,6 +43,13 @@ EDITABLE_STATUSES = {
     ProjectStatus.READY_TO_QUEUE,
     ProjectStatus.FAILED,
 }
+
+
+def _current_user_id(request: Request) -> UUID:
+    user_id = getattr(request.state, "user_id", None)
+    if not isinstance(user_id, UUID):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
+    return user_id
 
 
 def _get_project(db: Session, project_id: UUID) -> Project:
@@ -112,9 +120,23 @@ def health() -> dict[str, str]:
     status_code=status.HTTP_201_CREATED,
     tags=["projects"],
 )
-def create_project(payload: ProjectCreate, db: Session = Depends(get_db)) -> Project:
+def create_project(
+    payload: ProjectCreate,
+    request: Request,
+    db: Session = Depends(get_db),
+) -> Project:
+    user_id = _current_user_id(request)
+    membership = db.scalar(
+        select(WorkspaceMembership).where(
+            WorkspaceMembership.workspace_id == payload.workspace_id,
+            WorkspaceMembership.user_id == user_id,
+        )
+    )
+    if membership is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Workspace not found")
     project = Project(
-        user_id=payload.user_id,
+        user_id=user_id,
+        workspace_id=payload.workspace_id,
         status=ProjectStatus.CREATED,
         contract=payload.contract.model_dump(mode="json"),
     )
@@ -246,10 +268,7 @@ def create_project_revision(
     base_version = payload.base_version or graph.version
     base_revision = _get_revision(db, project_id, base_version)
     if base_revision.status != "ready":
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Base revision is not ready",
-        )
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Base revision is not ready")
 
     highest_version = db.scalar(
         select(func.max(EditGraphRevision.version)).where(
@@ -377,19 +396,22 @@ async def upload_project_asset(
         project.status = previous_status
         db.commit()
         raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail=str(exc)
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=str(exc),
         ) from exc
     except EmptyUploadError as exc:
         project.status = previous_status
         db.commit()
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
         ) from exc
     except UnsupportedAssetError as exc:
         project.status = previous_status
         db.commit()
         raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail=str(exc)
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=str(exc),
         ) from exc
     except OSError as exc:
         project.status = previous_status
