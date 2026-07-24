@@ -16,7 +16,7 @@ PEAK_VOLUME = re.compile(r"max_volume:\s*(-?[0-9]+(?:\.[0-9]+)?)\s*dB")
 _RHYTHM_SAMPLE_RATE = 8_000
 _RHYTHM_FRAMES_PER_SECOND = 50
 _RHYTHM_ANALYSIS_SECONDS = 600
-_PROFILE_CACHE: dict[tuple[str, int, int, str, str], MusicProfile] = {}
+_PROFILE_CACHE: dict[tuple[str, int, int], MusicProfile] = {}
 
 
 class MusicAnalysisError(RuntimeError):
@@ -64,9 +64,9 @@ def _energy_from_volume(mean_volume_db: float, filename: str) -> float:
     return min(1.0, max(0.0, energy))
 
 
-def _cache_key(path: Path, *, asset_id: str, filename: str) -> tuple[str, int, int, str, str]:
+def _cache_key(path: Path) -> tuple[str, int, int]:
     stat = path.stat()
-    return str(path.resolve()), stat.st_size, stat.st_mtime_ns, asset_id, filename
+    return str(path.resolve()), stat.st_size, stat.st_mtime_ns
 
 
 def _estimate_music_rhythm(
@@ -127,10 +127,13 @@ def analyze_music(
     settings: Settings,
 ) -> MusicProfile:
     music_path = Path(path)
-    cache_key = _cache_key(music_path, asset_id=asset_id, filename=filename)
+    cache_key = _cache_key(music_path)
     cached = _PROFILE_CACHE.get(cache_key)
     if cached is not None:
-        return cached.model_copy(deep=True)
+        return cached.model_copy(
+            update={"asset_id": asset_id, "filename": filename},
+            deep=True,
+        )
 
     probe = _run(
         [
