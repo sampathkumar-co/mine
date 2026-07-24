@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/components/auth-provider";
+import { PrivacyPanel } from "@/components/privacy-panel";
 import {
   createWorkspaceInvitation,
   getBillingAccount,
@@ -194,7 +195,7 @@ export function WorkspaceSettings() {
           <Link className="back" href="/">← Production library</Link>
           <div className="eyebrow">WORKSPACE OPERATIONS</div>
           <h1>{workspace.name}</h1>
-          <p>Role: {workspace.role} · account security, team access, plan limits, credits, and audit history.</p>
+          <p>Role: {workspace.role} · account security, team access, plan limits, credits, privacy, and audit history.</p>
         </div>
       </header>
 
@@ -293,6 +294,8 @@ export function WorkspaceSettings() {
           </div>
         </section>
       )}
+
+      <PrivacyPanel workspaceId={workspaceId} workspaceSlug={workspace.slug} role={workspace.role} />
 
       {canManage && (
         <section className="panel operation-card full-width">
