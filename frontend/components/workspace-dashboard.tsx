@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AuthPanel } from "@/components/auth-panel";
 import { useAuth } from "@/components/auth-provider";
 import { ProjectLauncher } from "@/components/project-launcher";
-import { createWorkspace, listWorkspaceProjects } from "@/lib/api";
+import { createWorkspace, listWorkspaceProjects, requestEmailVerification } from "@/lib/api";
 import type { WorkspaceProject } from "@/lib/types";
 
 function statusLabel(value: string): string {
@@ -17,6 +17,7 @@ export function WorkspaceDashboard() {
   const [workspaceId, setWorkspaceId] = useState("");
   const [projects, setProjects] = useState<WorkspaceProject[]>([]);
   const [libraryLoading, setLibraryLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -58,6 +59,15 @@ export function WorkspaceDashboard() {
     }
   }
 
+  async function sendVerification() {
+    try {
+      const response = await requestEmailVerification();
+      setMessage(response.message);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not request verification.");
+    }
+  }
+
   if (loading) return <main className="shell"><div className="panel loading">Opening Director OS…</div></main>;
   if (!session) return <AuthPanel />;
 
@@ -73,16 +83,25 @@ export function WorkspaceDashboard() {
           <select value={workspaceId} onChange={(event) => setWorkspaceId(event.target.value)} aria-label="Workspace">
             {session.workspaces.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
+          {workspace && <Link className="secondary button-link" href={`/workspaces/${workspace.id}/settings`}>Settings</Link>}
           <button className="secondary" type="button" onClick={addWorkspace}>New workspace</button>
-          <button className="secondary" type="button" onClick={logout}>Sign out</button>
+          <button className="secondary" type="button" onClick={() => void logout()}>Sign out</button>
         </div>
       </header>
 
+      {!session.user.email_verified && (
+        <div className="alert progress verification-banner">
+          <div><strong>Email verification pending</strong><p>Verify your address to secure recovery and team invitations.</p></div>
+          <button className="primary" type="button" onClick={() => void sendVerification()}>Send verification</button>
+        </div>
+      )}
+      {message && <div className="alert success">{message}</div>}
       {error && <div className="alert error">{error}</div>}
 
       <section className="library-section">
         <div className="panel-title">
           <div><div className="eyebrow">PRODUCTION LIBRARY</div><h2>{projects.length} production{projects.length === 1 ? "" : "s"}</h2></div>
+          {workspace && <span className="status-pill">{workspace.role}</span>}
         </div>
         {libraryLoading ? (
           <div className="panel loading">Loading productions…</div>
@@ -102,7 +121,8 @@ export function WorkspaceDashboard() {
         )}
       </section>
 
-      {workspaceId && <ProjectLauncher workspaceId={workspaceId} />}
+      {workspaceId && workspace?.role !== "viewer" && <ProjectLauncher workspaceId={workspaceId} />}
+      {workspace?.role === "viewer" && <div className="panel empty-library"><h3>Viewer access</h3><p>You can inspect projects and outputs, while editors manage production changes.</p></div>}
     </main>
   );
 }
