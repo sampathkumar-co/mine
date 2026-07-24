@@ -17,8 +17,11 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    if settings.environment.casefold() == "production" and settings.auth_secret == "development-only-change-me":
-        raise RuntimeError("DIRECTOR_AUTH_SECRET must be changed in production")
+    if settings.environment.casefold() == "production":
+        if settings.auth_secret == "development-only-change-me":
+            raise RuntimeError("DIRECTOR_AUTH_SECRET must be changed in production")
+        if not settings.auth_required:
+            raise RuntimeError("DIRECTOR_AUTH_REQUIRED must remain enabled in production")
     Path(settings.upload_dir).mkdir(parents=True, exist_ok=True)
     Path(settings.output_dir).mkdir(parents=True, exist_ok=True)
     if settings.auto_create_schema:
