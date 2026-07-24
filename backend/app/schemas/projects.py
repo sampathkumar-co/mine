@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Self
+from typing import Any, Literal, Self
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -26,6 +26,8 @@ class DirectorContract(BaseModel):
         pattern=r"^[A-Za-z0-9_-]+$",
     )
     use_director_memory: bool = True
+    director_camera_mode: Literal["off", "advisory", "required"] = "advisory"
+    production_readiness_threshold: float = Field(default=0.72, ge=0.4, le=0.95)
 
     @model_validator(mode="after")
     def requirements_must_not_conflict(self) -> Self:
@@ -81,6 +83,57 @@ class ProjectIntelligenceRead(BaseModel):
     analysis: dict[str, Any] | None
     edit_decision_graph: dict[str, Any] | None
     graph_version: int | None
+
+
+class CameraMissionRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    mission_type: str
+    priority: str
+    title: str
+    reason: str
+    status: str
+    specification: dict[str, Any]
+    target_terms: list[str]
+    submitted_asset_id: UUID | None
+    accepted_asset_id: UUID | None
+    validation: dict[str, Any]
+    error_message: str | None
+    created_at: datetime
+    updated_at: datetime
+
+
+class DirectorCameraRead(BaseModel):
+    project_id: UUID
+    project_status: ProjectStatus
+    audit_id: UUID | None = None
+    audit_version: int | None = None
+    mode: str = "off"
+    readiness_score: float | None = None
+    threshold: float | None = None
+    ready: bool | None = None
+    report: dict[str, Any] | None = None
+    missions: list[CameraMissionRead] = Field(default_factory=list)
+
+
+class PickupSubmissionAccepted(BaseModel):
+    project_id: UUID
+    mission_id: UUID
+    asset: ProjectAssetRead
+    mission_status: str = "submitted"
+    message: str = "Pickup uploaded. Resume Director Camera to validate and continue production."
+
+
+class CameraOverrideRequest(BaseModel):
+    reason: str = Field(min_length=3, max_length=1_000)
+
+
+class CameraOverrideAccepted(BaseModel):
+    project_id: UUID
+    status: ProjectStatus
+    override_recorded: bool = True
+    message: str = "Director Camera blocking missions were overridden for this production run."
 
 
 class RevisionLockedRange(BaseModel):
