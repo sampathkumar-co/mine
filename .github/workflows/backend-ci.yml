@@ -34,4 +34,16 @@ jobs:
           alembic upgrade head
           alembic current
           rm -f migration_test.db
-      - run: pytest --cov=app --cov-report=term-missing
+      - name: Run pytest
+        id: pytest
+        continue-on-error: true
+        run: set -o pipefail; pytest --cov=app --cov-report=term-missing 2>&1 | tee pytest-report.txt
+      - name: Upload pytest report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: authorization-pytest-report
+          path: backend/pytest-report.txt
+      - name: Enforce pytest result
+        if: steps.pytest.outcome == 'failure'
+        run: exit 1
