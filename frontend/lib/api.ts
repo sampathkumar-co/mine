@@ -42,6 +42,11 @@ function authHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+function apiOrigin(): string {
+  if (typeof window === "undefined") return "";
+  return new URL(API_URL, window.location.origin).origin;
+}
+
 async function responseError(response: Response): Promise<ApiError> {
   let message = `Request failed with status ${response.status}`;
   try {
@@ -251,13 +256,15 @@ export function createRevision(projectId: string, instruction: string): Promise<
   });
 }
 
-export function createDeliveryLink(
+export async function createDeliveryLink(
   projectId: string,
   options: { version?: number; download?: boolean } = {},
 ): Promise<DeliveryLink> {
   const search = new URLSearchParams();
   if (options.version) search.set("version", String(options.version));
   if (options.download) search.set("download", "true");
-  const query = search.size ? `?${search.toString()}` : "";
-  return request<DeliveryLink>(`/projects/${projectId}/delivery${query}`, { method: "POST" });
+  const query = search.toString() ? `?${search.toString()}` : "";
+  const link = await request<DeliveryLink>(`/projects/${projectId}/delivery${query}`, { method: "POST" });
+  if (!link.url.startsWith("http")) link.url = new URL(link.url, apiOrigin()).toString();
+  return link;
 }
