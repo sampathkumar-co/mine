@@ -7,6 +7,7 @@ class ProjectStatus(StrEnum):
     READY_TO_QUEUE = "ready_to_queue"
     QUEUED = "queued"
     ANALYZING = "analyzing"
+    NEEDS_PICKUPS = "needs_pickups"
     PLANNING = "planning"
     RENDERING = "rendering"
     QUALITY_CHECK = "quality_check"
@@ -16,6 +17,7 @@ class ProjectStatus(StrEnum):
 
 class AssetKind(StrEnum):
     SOURCE_VIDEO = "source_video"
+    PICKUP_VIDEO = "pickup_video"
     REFERENCE_VIDEO = "reference_video"
     LOGO = "logo"
     BRAND_ASSET = "brand_asset"
