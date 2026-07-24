@@ -21,7 +21,12 @@ def get_db() -> Generator[Session, None, None]:
 
 
 def init_database() -> None:
-    from app.models.analysis import EditDecisionGraphRecord, ProjectAnalysis  # noqa: F401
+    from app.models.analysis import EditDecisionGraphRecord, EditGraphRevision, ProjectAnalysis  # noqa: F401
+    from app.models.memory import (  # noqa: F401
+        DirectorMemoryEvidence,
+        DirectorMemoryProfile,
+        ProjectPerformanceSignal,
+    )
     from app.models.project import Project, ProjectAsset  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
