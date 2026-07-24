@@ -24,7 +24,6 @@ from app.director.style import compile_production_style
 from app.models.analysis import EditDecisionGraphRecord, ProjectAnalysis
 from app.models.camera import DirectorCameraAudit, PickupMission
 from app.models.project import Project, ProjectAsset
-from app.services.jobs import claim_job, finish_job, heartbeat_job
 from app.quality.editorial import review_and_repair_edit_graph
 from app.rendering.captions import write_ass_captions
 from app.rendering.ffmpeg import (
@@ -47,6 +46,7 @@ from app.sensory.reference import analyze_reference_style
 from app.sensory.scenes import detect_scenes
 from app.sensory.semantics import analyze_visual_semantics, extract_text_semantic_tags
 from app.sensory.transcription import transcribe_audio
+from app.services.jobs import claim_job, finish_job, heartbeat_job
 from app.worker.celery_app import celery_app
 
 settings = get_settings()

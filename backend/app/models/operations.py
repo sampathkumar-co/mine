@@ -8,17 +8,17 @@ from uuid import UUID, uuid4
 from sqlalchemy import (
     JSON,
     BigInteger,
-    Integer,
     Boolean,
     DateTime,
     ForeignKey,
+    Index,
+    Integer,
     Numeric,
     String,
     Text,
-    Index,
     UniqueConstraint,
-    text,
     Uuid,
+    text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 

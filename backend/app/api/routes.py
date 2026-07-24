@@ -2,7 +2,7 @@ from pathlib import Path
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
-from sqlalchemy import func, select, update
+from sqlalchemy import select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -13,7 +13,6 @@ from app.director.revision_engine import compare_revision_graphs, normalize_revi
 from app.models.analysis import EditDecisionGraphRecord, EditGraphRevision, ProjectAnalysis
 from app.models.platform import WorkspaceMembership
 from app.models.project import Project, ProjectAsset
-from app.services.jobs import JobConflictError, enqueue_project_job, enqueue_revision_job
 from app.schemas.projects import (
     ProjectAccepted,
     ProjectAssetRead,
@@ -27,6 +26,7 @@ from app.schemas.projects import (
     RevisionDetail,
     RevisionSummary,
 )
+from app.services.jobs import JobConflictError, enqueue_project_job, enqueue_revision_job
 from app.storage.uploads import (
     EmptyUploadError,
     UnsupportedAssetError,

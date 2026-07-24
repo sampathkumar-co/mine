@@ -11,7 +11,6 @@ from app.core.enums import ProjectStatus
 from app.models.operations import ProductionJob
 from app.models.project import Project
 
-
 ACTIVE_JOB_STATUSES = {"queued", "dispatching", "dispatched", "running", "stalled"}
 
 

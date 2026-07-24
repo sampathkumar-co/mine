@@ -89,7 +89,7 @@ def create_project(client: TestClient, session: dict[str, object]) -> str:
 
 
 def test_refresh_rotation_detects_reuse_and_revokes_family(client: TestClient) -> None:
-    session = refreshable_session(client, register(client, "sessions@example.com"))
+    refreshable_session(client, register(client, "sessions@example.com"))
     old_refresh = client.cookies.get("director_refresh")
     old_csrf = client.cookies.get("director_csrf")
     assert old_refresh and old_csrf

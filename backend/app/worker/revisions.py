@@ -19,12 +19,12 @@ from app.director.revisions import LockedRange
 from app.director.style import ProductionStyle
 from app.models.analysis import EditDecisionGraphRecord, EditGraphRevision, ProjectAnalysis
 from app.models.project import Project, ProjectAsset
-from app.services.jobs import claim_job, finish_job, heartbeat_job
 from app.quality.editorial import review_and_repair_edit_graph
 from app.rendering.captions import write_ass_captions
 from app.rendering.ffmpeg import RenderSource, probe_media, validate_vertical_output
 from app.rendering.semantic_overlays import render_semantic_production_graph
 from app.sensory.models import AnalysisBundle
+from app.services.jobs import claim_job, finish_job
 from app.worker.celery_app import celery_app
 
 settings = get_settings()

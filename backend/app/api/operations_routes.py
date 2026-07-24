@@ -50,7 +50,6 @@ from app.services.email import (
     AccountTokenError,
     consume_account_token,
     email_is_verified,
-    ensure_email_status,
     mark_email_verified,
     queue_email,
     queue_password_reset_email,

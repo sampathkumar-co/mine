@@ -18,10 +18,15 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.database import get_db
 from app.core.enums import AssetKind, ProjectStatus
-from app.core.security import InvalidTokenError, hash_password, sign_payload, verify_password, verify_signed_payload
+from app.core.security import (
+    InvalidTokenError,
+    hash_password,
+    sign_payload,
+    verify_password,
+    verify_signed_payload,
+)
 from app.models.analysis import EditGraphRevision
 from app.models.camera import PickupMission
-from app.models.operations import BillingEntry
 from app.models.platform import ResumableUpload, User, Workspace, WorkspaceMembership
 from app.models.project import Project, ProjectAsset
 from app.schemas.platform import (
