@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.camera import router as camera_router
 from app.api.memory_routes import router as memory_router
 from app.api.routes import router
 from app.core.config import get_settings
@@ -21,7 +22,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title=settings.app_name, version="0.9.0", lifespan=lifespan)
+app = FastAPI(title=settings.app_name, version="0.10.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
@@ -31,3 +32,4 @@ app.add_middleware(
 )
 app.include_router(router, prefix=settings.api_v1_prefix)
 app.include_router(memory_router, prefix=settings.api_v1_prefix)
+app.include_router(camera_router, prefix=settings.api_v1_prefix)

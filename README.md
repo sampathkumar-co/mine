@@ -6,9 +6,9 @@ Director OS is an autonomous video production agent that turns raw footage, crea
 
 The repository contains a runnable Tier 1 backend path with:
 
-- FastAPI project, upload, queue, status, intelligence, revision, feedback, performance, and memory APIs
-- Typed Director Contract with six-tier validation and named Director Memory profiles
-- PostgreSQL persistence for projects, assets, analyses, active graphs, append-only revisions, feedback evidence, memory profiles, and performance samples
+- FastAPI project, upload, queue, status, intelligence, revision, feedback, performance, memory, and Director Camera APIs
+- Typed Director Contract with six-tier validation, named Director Memory profiles, and advisory/required camera modes
+- PostgreSQL persistence for projects, assets, analyses, active graphs, append-only revisions, feedback evidence, memory profiles, performance samples, readiness audits, and pickup missions
 - Streamed uploads with size, type, and SHA-256 validation
 - Durable Celery + Redis processing with sequential worker execution
 - Per-source probing, transcription, scene detection, and subject framing
@@ -19,6 +19,9 @@ The repository contains a runnable Tier 1 backend path with:
 - Narration-first cross-clip story construction with explicit source asset IDs
 - Claim-to-evidence matching for timed B-roll and evidence overlays
 - Continuity scoring across adjacent narration sources
+- Production Readiness scoring across narrative, audio, visual quality, coverage, evidence, and continuity
+- Precise pickup missions for hooks, CTAs, evidence, B-roll, clean audio, and continuity bridges
+- Mission-specific pickup validation with automatic promotion and graph insertion
 - A pre-render editorial critic with must-include and must-avoid enforcement
 - Two-pass FFmpeg rendering that preserves narration while placing full-frame visual overlays
 - Word-timed filler and pause cleanup across multiple source transcripts
@@ -36,7 +39,7 @@ The repository contains a runnable Tier 1 backend path with:
 - Automated output dimension, duration, and audio-presence checks
 - Docker Compose development stack and GitHub Actions tests
 
-This remains a deterministic Tier 1 production engine, not the finished autonomous director. Semantic tags, revision interpretation, and preference extraction are inspectable rules rather than opaque claims of universal understanding. Performance signals are deliberately weak evidence and only repeated or explicit preferences affect future projects. Model-backed interpretation, advanced object tracking, optical continuity repair, billing, Director Camera, and cross-account benchmark learning remain future milestones.
+This remains a deterministic Tier 1 production engine, not the finished autonomous director. Semantic tags, revision interpretation, preference extraction, and Director Camera diagnostics are inspectable rules rather than opaque claims of universal understanding. Performance signals are deliberately weak evidence and only repeated or explicit preferences affect future projects. Model-backed interpretation, advanced object tracking, live ghost-frame capture guidance, optical continuity repair, billing, and cross-account benchmark learning remain future milestones.
 
 ## Run locally
 
@@ -51,7 +54,7 @@ The API will be available at `http://localhost:8000`.
 curl http://localhost:8000/api/v1/health
 ```
 
-To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use conservative visual-scene fallbacks. Word cleanup and captions require timestamped transcription; reference analysis, semantic frame sampling, subject framing, duplicate fingerprints, and uploaded-music analysis run locally.
+To enable speech transcription, set `DIRECTOR_OPENAI_API_KEY` in `.env`. With `DIRECTOR_REQUIRE_TRANSCRIPTION=false`, footage can still use conservative visual-scene fallbacks. Word cleanup and captions require timestamped transcription; reference analysis, semantic frame sampling, subject framing, duplicate fingerprints, uploaded-music analysis, and non-speech camera validation run locally.
 
 ## Project workflow
 
@@ -69,6 +72,8 @@ curl -X POST http://localhost:8000/api/v1/projects \
       "target_duration_seconds": 45,
       "director_profile_key": "founder-brand",
       "use_director_memory": true,
+      "director_camera_mode": "required",
+      "production_readiness_threshold": 0.72,
       "must_include": ["dashboard proof"],
       "must_avoid": ["emojis"],
       "brand_rules": {
@@ -83,11 +88,11 @@ curl -X POST http://localhost:8000/api/v1/projects \
   }'
 ```
 
-Explicit `brand_rules`, must-do rules, prohibitions, and duration requirements always override remembered preferences. Set `use_director_memory=false` to create a clean project without profile application.
+Explicit `brand_rules`, must-do rules, prohibitions, and duration requirements always override remembered preferences. Set `use_director_memory=false` to create a clean project without profile application. Director Camera modes are `off`, `advisory`, and `required`.
 
 ### 2. Upload source clips and optional assets
 
-Replace `<PROJECT_ID>` with the returned project ID. Upload `source_video` more than once to create a multi-clip project. The default VPS-safe limit is eight source clips.
+Replace `<PROJECT_ID>` with the returned project ID. Upload `source_video` more than once to create a multi-clip project. The default VPS-safe limit is eight total source and pickup clips.
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/assets \
@@ -112,7 +117,40 @@ curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/start
 ```bash
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/intelligence
+curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/director-camera
 ```
+
+## Director Camera workflow
+
+Required mode pauses an incomplete project in `needs_pickups` without treating the audit as a failed job. The camera response contains the latest score, dimension findings, and complete mission history.
+
+### Submit a requested pickup
+
+```bash
+curl -X POST \
+  http://localhost:8000/api/v1/projects/<PROJECT_ID>/director-camera/missions/<MISSION_ID>/submit \
+  -F 'file=@./pickup.mp4;type=video/mp4'
+```
+
+### Validate and resume production
+
+```bash
+curl -X POST \
+  http://localhost:8000/api/v1/projects/<PROJECT_ID>/director-camera/resume
+```
+
+Accepted hook and CTA pickups enter the narration story. Accepted proof, B-roll, and continuity pickups become narration-preserving overlays. Clean primary retakes become eligible narration sources. Rejected takes retain their validation reasons and can be resubmitted.
+
+### Explicitly override a required gate
+
+```bash
+curl -X POST \
+  http://localhost:8000/api/v1/projects/<PROJECT_ID>/director-camera/override \
+  -H 'Content-Type: application/json' \
+  -d '{"reason":"Publish the current cut for the scheduled campaign."}'
+```
+
+The override reason and timestamp are preserved in the Director Contract and Edit Decision Graph notes. Advisory missions remain actionable after a ready render; submitting one starts an improvement pass while the prior output remains stored until replacement succeeds.
 
 ## Revision workflow
 
@@ -211,6 +249,6 @@ curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/director-memory
 
 A non-explicit preference must receive repeated support and sufficient confidence before it is eligible for future projects. One explicit preference can become eligible immediately. Current-project rules always win.
 
-Project states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`. Revision states include `queued`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
+Project states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `needs_pickups`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`. Revision states include `queued`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
 
-See [`docs/architecture.md`](docs/architecture.md) for system boundaries and upcoming milestones.
+See [`docs/architecture.md`](docs/architecture.md) for system boundaries and [`docs/director-camera.md`](docs/director-camera.md) for the readiness and pickup workflow.
