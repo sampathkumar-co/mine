@@ -43,7 +43,7 @@ jobs:
           if ! git diff --quiet; then
             git config user.name "director-os-ci"
             git config user.email "director-os-ci@users.noreply.github.com"
-            git add .
+            git add -u
             git commit -m "Normalize v1.0.1 backend sources"
             git push
           fi
