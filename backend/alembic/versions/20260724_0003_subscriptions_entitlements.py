@@ -6,7 +6,6 @@ Revises: 20260724_0002
 from __future__ import annotations
 
 from alembic import op
-
 from app.core.database import Base, import_models
 
 revision = "20260724_0003"
