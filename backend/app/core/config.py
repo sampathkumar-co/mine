@@ -31,6 +31,22 @@ class Settings(BaseSettings):
     invitation_days: int = Field(default=7, ge=1, le=30)
     delivery_link_minutes: int = Field(default=20, ge=1, le=1_440)
 
+    rate_limit_enabled: bool = True
+    rate_limit_backend: str = "memory"
+    rate_limit_fail_closed: bool = False
+    rate_limit_window_seconds: int = Field(default=60, ge=10, le=3_600)
+    auth_rate_limit_requests: int = Field(default=20, ge=1, le=10_000)
+    mutation_rate_limit_requests: int = Field(default=120, ge=1, le=100_000)
+    webhook_rate_limit_requests: int = Field(default=240, ge=1, le=100_000)
+    rate_limit_redis_prefix: str = "director:rate-limit"
+    trust_proxy_headers: bool = False
+
+    log_level: str = "INFO"
+    log_format: str = "json"
+    metrics_enabled: bool = True
+    metrics_token: str | None = None
+    readiness_require_redis: bool = False
+
     email_provider: str = "database"
     smtp_host: str | None = None
     smtp_port: int = Field(default=587, ge=1, le=65_535)
@@ -69,6 +85,8 @@ class Settings(BaseSettings):
     stripe_webhook_secret: str | None = None
     stripe_portal_configuration_id: str | None = None
     audit_retention_days: int = Field(default=365, ge=30, le=3_650)
+    data_export_retention_hours: int = Field(default=48, ge=1, le=720)
+    workspace_deletion_grace_days: int = Field(default=7, ge=1, le=30)
     run_migrations_on_startup: bool = False
     auto_create_schema: bool = True
 
