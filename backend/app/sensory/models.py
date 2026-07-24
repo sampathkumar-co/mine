@@ -114,3 +114,4 @@ class AnalysisBundle(BaseModel):
     music_profiles: list[MusicProfile] = Field(default_factory=list)
     production_style: dict[str, object] = Field(default_factory=dict)
     editorial_report: dict[str, object] = Field(default_factory=dict)
+    director_camera: dict[str, object] = Field(default_factory=dict)
