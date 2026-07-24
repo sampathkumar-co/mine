@@ -1,0 +1,88 @@
+name: Release Qualification
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "ops/**"
+      - "docker-compose.yml"
+      - "compose.production.yml"
+      - ".github/workflows/release-qualification.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: release-qualification-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  media-render:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pip install ".[dev]"
+      - name: Render real multi-input media
+        env:
+          DIRECTOR_ENVIRONMENT: test
+          DIRECTOR_AUTH_REQUIRED: "false"
+          DIRECTOR_AUTH_SECRET: release-qualification-secret-change-me
+          DIRECTOR_DATABASE_URL: sqlite+pysqlite:///./release_media.db
+          DIRECTOR_RUN_MEDIA_SMOKE: "1"
+        run: pytest -q tests/test_ffmpeg_integration.py
+
+  stack-rehearsal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure qualification environment
+        run: |
+          cp .env.example .env
+          cat >> .env <<'EOF'
+          DIRECTOR_AUTH_SECRET=release-qualification-secret-change-me
+          DIRECTOR_METRICS_TOKEN=release-qualification-metrics-token
+          DIRECTOR_RATE_LIMIT_BACKEND=redis
+          DIRECTOR_RATE_LIMIT_FAIL_CLOSED=true
+          DIRECTOR_READINESS_REQUIRE_REDIS=true
+          EOF
+      - name: Start full development stack
+        run: docker compose up --build -d postgres redis api worker frontend
+      - name: Wait for dependency readiness
+        run: |
+          timeout 240 bash -c 'until curl -fsS http://127.0.0.1:8000/api/v1/health/ready | grep -q '"'"'"status":"ready"'"'"'; do sleep 4; done'
+      - name: Run deployment smoke
+        env:
+          DIRECTOR_METRICS_TOKEN: release-qualification-metrics-token
+        run: bash ops/smoke.sh http://127.0.0.1:8000
+      - name: Verify worker connectivity
+        run: docker compose exec -T worker celery -A app.worker.celery_app.celery_app inspect ping --timeout=15
+      - name: Run bounded concurrency probe
+        run: >-
+          python3 ops/load_probe.py
+          --url http://127.0.0.1:8000/api/v1/health/live
+          --requests 240
+          --concurrency 24
+          --p95-ms 1000
+      - name: Capture service logs
+        if: always()
+        run: docker compose logs --no-color > release-stack.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-stack-logs
+          path: release-stack.log
+          retention-days: 14
+      - name: Stop stack
+        if: always()
+        run: docker compose down -v --remove-orphans
