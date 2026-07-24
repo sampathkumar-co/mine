@@ -34,7 +34,7 @@ def test_estimate_rhythm_detects_regular_120_bpm_grid() -> None:
 
     assert estimate.tempo_bpm == pytest.approx(120, abs=2)
     assert estimate.beat_interval_seconds == pytest.approx(0.5, abs=0.03)
-    assert estimate.rhythm_confidence >= 0.2
+    assert estimate.confidence >= 0.2
     assert len(estimate.beat_times) >= 40
     assert estimate.phrase_times
 
