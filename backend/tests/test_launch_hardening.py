@@ -80,7 +80,7 @@ def test_fixed_window_rate_limiter_blocks_after_limit() -> None:
 def test_liveness_readiness_and_prometheus_metrics(client: TestClient) -> None:
     live = client.get("/api/v1/health/live")
     assert live.status_code == 200
-    assert live.json()["version"] == "0.14.0"
+    assert live.json()["version"] == "0.15.0"
 
     ready = client.get("/api/v1/health/ready")
     assert ready.status_code == 200
