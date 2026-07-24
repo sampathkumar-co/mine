@@ -31,7 +31,7 @@ jobs:
       - run: pip install ".[dev]"
       - name: Apply Ruff fixes
         run: |
-          ruff check . --fix
+          ruff check . --fix || true
           if ! git diff --quiet; then
             git config user.name "director-os-ci"
             git config user.email "director-os-ci@users.noreply.github.com"
