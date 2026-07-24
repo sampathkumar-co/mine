@@ -42,6 +42,7 @@ UNVERIFIED_PATHS = {
     "/api/v1/invitations/accept",
 }
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
+INTERNAL_ONLY_PATHS = {"/api/v1/operations/uploads/cleanup"}
 
 
 def _error(detail: str, status_code: int) -> JSONResponse:
@@ -70,6 +71,28 @@ def _authorize_workspace_request(request: Request, role: str) -> JSONResponse | 
             return _error("Workspace administrator permission is required", status.HTTP_403_FORBIDDEN)
         return None
     if not can_edit(role):
+        return _error("Workspace editor permission is required", status.HTTP_403_FORBIDDEN)
+    return None
+
+
+async def _authorize_project_creation(
+    request: Request,
+    db,
+    user_id: UUID,
+) -> JSONResponse | None:
+    if request.method != "POST" or request.url.path != "/api/v1/projects":
+        return None
+    try:
+        payload = await request.json()
+        workspace_id = UUID(str(payload["workspace_id"]))
+    except (KeyError, TypeError, ValueError):
+        return None
+    membership = _membership(db, workspace_id, user_id)
+    if membership is None:
+        return _error("Workspace not found", status.HTTP_404_NOT_FOUND)
+    request.state.workspace_id = workspace_id
+    request.state.workspace_role = membership.role
+    if not can_edit(membership.role):
         return _error("Workspace editor permission is required", status.HTTP_403_FORBIDDEN)
     return None
 
@@ -111,6 +134,12 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                     "Email verification is required before this action",
                     status.HTTP_403_FORBIDDEN,
                 )
+            if path in INTERNAL_ONLY_PATHS:
+                return _error("Not found", status.HTTP_404_NOT_FOUND)
+
+            project_create_denied = await _authorize_project_creation(request, db, user.id)
+            if project_create_denied is not None:
+                return project_create_denied
 
             project_match = PROJECT_PATH.match(path)
             if project_match:
