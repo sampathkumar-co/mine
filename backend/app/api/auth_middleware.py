@@ -15,6 +15,7 @@ from app.models.operations import MultipartUpload
 from app.models.platform import ResumableUpload, User, WorkspaceMembership
 from app.models.project import Project
 from app.services.email import email_is_verified
+from app.services.entitlements import EntitlementError, enforce_contract_entitlements
 from app.services.permissions import can_edit, can_manage_billing, can_manage_members
 from app.services.sessions import session_is_active
 
@@ -32,6 +33,7 @@ PUBLIC_PATHS = {
     "/api/v1/auth/password-reset/request",
     "/api/v1/auth/password-reset/confirm",
     "/api/v1/auth/email-verification/confirm",
+    "/api/v1/billing/webhooks/stripe",
 }
 UNVERIFIED_PATHS = {
     "/api/v1/auth/account",
@@ -68,7 +70,10 @@ def _authorize_workspace_request(request: Request, role: str) -> JSONResponse | 
         return _error("Workspace owner permission is required", status.HTTP_403_FORBIDDEN)
     if any(marker in path for marker in ("/members", "/invitations", "/audit-events")):
         if not can_manage_members(role):
-            return _error("Workspace administrator permission is required", status.HTTP_403_FORBIDDEN)
+            return _error(
+                "Workspace administrator permission is required",
+                status.HTTP_403_FORBIDDEN,
+            )
         return None
     if not can_edit(role):
         return _error("Workspace editor permission is required", status.HTTP_403_FORBIDDEN)
@@ -94,6 +99,12 @@ async def _authorize_project_creation(
     request.state.workspace_role = membership.role
     if not can_edit(membership.role):
         return _error("Workspace editor permission is required", status.HTTP_403_FORBIDDEN)
+    contract = payload.get("contract")
+    if isinstance(contract, dict):
+        try:
+            enforce_contract_entitlements(db, workspace_id, contract, settings)
+        except EntitlementError as exc:
+            return _error(str(exc), status.HTTP_402_PAYMENT_REQUIRED)
     return None
 
 
@@ -120,9 +131,15 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         with SessionLocal() as db:
             user = db.get(User, user_id)
             if user is None:
-                return _error("Authentication session is no longer valid", status.HTTP_401_UNAUTHORIZED)
+                return _error(
+                    "Authentication session is no longer valid",
+                    status.HTTP_401_UNAUTHORIZED,
+                )
             if session_id is not None and not session_is_active(db, session_id, user_id):
-                return _error("Authentication session has been revoked", status.HTTP_401_UNAUTHORIZED)
+                return _error(
+                    "Authentication session has been revoked",
+                    status.HTTP_401_UNAUTHORIZED,
+                )
             request.state.user_id = user.id
             request.state.session_id = session_id
             if (
@@ -190,7 +207,10 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 if upload is None or project is None or membership is None:
                     return _error("Upload session not found", status.HTTP_404_NOT_FOUND)
                 if request.method not in SAFE_METHODS and not can_edit(membership.role):
-                    return _error("Workspace editor permission is required", status.HTTP_403_FORBIDDEN)
+                    return _error(
+                        "Workspace editor permission is required",
+                        status.HTTP_403_FORBIDDEN,
+                    )
 
             multipart_match = MULTIPART_PATH.match(path)
             if multipart_match:
@@ -204,7 +224,10 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 if upload is None or project is None or membership is None:
                     return _error("Multipart upload not found", status.HTTP_404_NOT_FOUND)
                 if request.method not in SAFE_METHODS and not can_edit(membership.role):
-                    return _error("Workspace editor permission is required", status.HTTP_403_FORBIDDEN)
+                    return _error(
+                        "Workspace editor permission is required",
+                        status.HTTP_403_FORBIDDEN,
+                    )
 
             user_match = USER_PATH.match(path)
             if user_match:
