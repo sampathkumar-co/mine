@@ -115,7 +115,10 @@ def compile_memory_for_new_project(
     brand_rules = dict(effective_contract.get("brand_rules") or {})
     if application.captions_enabled is not None:
         brand_rules["captions_enabled"] = application.captions_enabled
-    if application.max_visual_overlays is not None:
+    if (
+        application.max_visual_overlays is not None
+        and "max_visual_overlays" not in brand_rules
+    ):
         brand_rules["max_visual_overlays"] = application.max_visual_overlays
     effective_contract["brand_rules"] = brand_rules
     effective_contract["_director_memory_application"] = {
