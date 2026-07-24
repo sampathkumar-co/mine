@@ -24,6 +24,7 @@ def init_database() -> None:
     import app.models.analysis  # noqa: F401
     import app.models.camera  # noqa: F401
     import app.models.memory  # noqa: F401
+    import app.models.platform  # noqa: F401
     import app.models.project  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
