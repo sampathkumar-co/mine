@@ -60,7 +60,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title=settings.app_name, version="0.15.0", lifespan=lifespan)
+app = FastAPI(title=settings.app_name, version="1.0.0", lifespan=lifespan)
 app.add_middleware(BillingReservationMiddleware)
 app.add_middleware(AuditMiddleware)
 app.add_middleware(RateLimitMiddleware)
