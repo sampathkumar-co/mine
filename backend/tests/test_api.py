@@ -1,4 +1,3 @@
-import os
 from collections.abc import Generator
 from pathlib import Path
 from types import SimpleNamespace
@@ -6,14 +5,9 @@ from types import SimpleNamespace
 import pytest
 from fastapi.testclient import TestClient
 
-os.environ["DIRECTOR_DATABASE_URL"] = "sqlite+pysqlite:///./test_director.db"
-os.environ["DIRECTOR_UPLOAD_DIR"] = "./.test-data/uploads"
-os.environ["DIRECTOR_OUTPUT_DIR"] = "./.test-data/outputs"
-os.environ["DIRECTOR_MAX_UPLOAD_BYTES"] = "64"
-
-from app.api import routes  # noqa: E402
-from app.core.database import Base, engine  # noqa: E402
-from app.main import app  # noqa: E402
+from app.api import routes
+from app.core.database import Base, engine
+from app.main import app
 
 
 @pytest.fixture(autouse=True)
