@@ -12,6 +12,7 @@ celery_app = Celery(
         "app.worker.tasks",
         "app.worker.revisions",
         "app.worker.maintenance",
+        "app.worker.governance",
     ],
 )
 
@@ -30,6 +31,10 @@ celery_app.conf.update(
         "cleanup-expired-operations": {
             "task": "app.worker.maintenance.cleanup_expired_operations",
             "schedule": 3_600.0,
+        },
+        "process-privacy-lifecycle": {
+            "task": "app.worker.governance.process_privacy_lifecycle",
+            "schedule": 900.0,
         },
     },
 )
