@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Generator
 from pathlib import Path
+from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
@@ -58,8 +59,8 @@ def auth(value: dict[str, object]) -> dict[str, str]:
 def test_viewer_cannot_create_project_in_workspace(client: TestClient) -> None:
     owner = session(client, "owner-edge@example.com")
     viewer = session(client, "viewer-edge@example.com")
-    workspace_id = owner["workspaces"][0]["id"]  # type: ignore[index]
-    viewer_id = viewer["user"]["id"]  # type: ignore[index]
+    workspace_id = UUID(str(owner["workspaces"][0]["id"]))  # type: ignore[index]
+    viewer_id = UUID(str(viewer["user"]["id"]))  # type: ignore[index]
 
     with SessionLocal() as db:
         db.add(
@@ -75,7 +76,7 @@ def test_viewer_cannot_create_project_in_workspace(client: TestClient) -> None:
         "/api/v1/projects",
         headers=auth(viewer),
         json={
-            "workspace_id": workspace_id,
+            "workspace_id": str(workspace_id),
             "contract": {
                 "objective": "A viewer must not create this production",
                 "target_duration_seconds": 30,
@@ -89,7 +90,7 @@ def test_viewer_cannot_create_project_in_workspace(client: TestClient) -> None:
         "/api/v1/projects",
         headers=auth(owner),
         json={
-            "workspace_id": workspace_id,
+            "workspace_id": str(workspace_id),
             "contract": {
                 "objective": "An owner can create this production",
                 "target_duration_seconds": 30,
