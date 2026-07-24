@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 from app.core.config import Settings
-from app.director.rhythm import plan_music_timing, prepare_aligned_music
+from app.director.rhythm import MusicTimingPlan, prepare_aligned_music
 from app.director.semantic_overlays import ProductionEditDecisionGraph, VisualOverlay
 from app.director.style import ProductionStyle
 from app.rendering.ffmpeg import (
@@ -16,7 +16,6 @@ from app.rendering.ffmpeg import (
     _vertical_filter,
     render_multiclip_edit_decision_graph,
 )
-from app.sensory.music import analyze_music
 
 
 def _source_for_overlay(
@@ -46,14 +45,8 @@ def _prepare_render_music(
     if not source.exists():
         return music_path, None
     try:
-        profile = analyze_music(
-            source,
-            asset_id=f"render:{source.resolve()}",
-            filename=source.name,
-            settings=settings,
-        )
-        plan = plan_music_timing(graph, profile)
-        if not plan.usable:
+        plan = MusicTimingPlan.from_dict(graph.music_timing)
+        if plan is None or not plan.usable:
             return music_path, None
         aligned_path = output.with_name(f"{output.stem}.beat-aligned.m4a")
         prepare_aligned_music(
@@ -62,9 +55,6 @@ def _prepare_render_music(
             plan=plan,
             duration_seconds=graph.selected_duration_seconds,
             settings=settings,
-        )
-        graph.notes.append(
-            f"Beat-synced music at {profile.tempo_bpm or 0:.1f} BPM: {plan.reason}"
         )
         return aligned_path, aligned_path
     except Exception as exc:

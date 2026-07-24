@@ -6,6 +6,7 @@ from typing import Any
 
 from app.core.config import Settings
 from app.director.edit_graph import EditDecisionGraph
+from app.director.rhythm import SoundDesignPlan
 from app.director.style import ProductionStyle
 
 
@@ -175,12 +176,13 @@ def _audio_format_filter() -> str:
 
 def _music_filter(
     *,
-    input_index: int,
+    input_label: str,
     duration_seconds: float,
     style: ProductionStyle,
+    sound_design: SoundDesignPlan | None = None,
 ) -> str:
     filters = [
-        f"[{input_index}:a]atrim=duration={duration_seconds:.3f}",
+        f"[{input_label}]atrim=duration={duration_seconds:.3f}",
         "asetpts=PTS-STARTPTS",
         _audio_format_filter(),
     ]
@@ -189,7 +191,19 @@ def _music_filter(
         filters.append(f"afade=t=in:st=0:d={fade:.3f}")
         fade_out_start = max(0.0, duration_seconds - fade)
         filters.append(f"afade=t=out:st={fade_out_start:.3f}:d={fade:.3f}")
-    filters.append(f"volume={style.music.volume:.4f}[musicbed]")
+    filters.append(f"volume={style.music.volume:.4f}")
+    if sound_design is not None and sound_design.usable:
+        for window in sound_design.ducking_windows:
+            filters.append(
+                f"volume={window.multiplier:.4f}:"
+                f"enable='between(t,{window.start_seconds:.3f},{window.end_seconds:.3f})'"
+            )
+        for window in sound_design.lift_windows:
+            filters.append(
+                f"volume={window.multiplier:.4f}:"
+                f"enable='between(t,{window.start_seconds:.3f},{window.end_seconds:.3f})'"
+            )
+    filters.append("[musicbed]")
     return ",".join(filters)
 
 
@@ -280,18 +294,59 @@ def render_multiclip_edit_decision_graph(
     )
 
     if has_music and music_input_index is not None:
+        sound_design = SoundDesignPlan.from_dict(getattr(graph, "sound_design", {}))
+        stings = sound_design.stings if sound_design is not None and sound_design.usable else ()
+        music_input_label = f"{music_input_index}:a"
+        sting_raw_labels: list[str] = []
+        if stings:
+            sting_raw_labels = [f"stingraw{index}" for index in range(len(stings))]
+            filters.append(
+                f"[{music_input_index}:a]asplit={len(stings) + 1}"
+                + "[musicraw]"
+                + "".join(f"[{label}]" for label in sting_raw_labels)
+            )
+            music_input_label = "musicraw"
         filters.append(
             _music_filter(
-                input_index=music_input_index,
+                input_label=music_input_label,
                 duration_seconds=graph.selected_duration_seconds,
                 style=production_style,
+                sound_design=sound_design,
             )
         )
+        sting_labels: list[str] = []
+        for index, sting in enumerate(stings):
+            end = min(
+                graph.selected_duration_seconds,
+                sting.start_seconds + sting.duration_seconds,
+            )
+            duration = max(0.08, end - sting.start_seconds)
+            fade = min(0.08, duration / 3)
+            label = f"sting{index}"
+            sting_labels.append(label)
+            filters.append(
+                f"[{sting_raw_labels[index]}]atrim=start={sting.start_seconds:.3f}:"
+                f"end={end:.3f},asetpts=PTS-STARTPTS+{sting.start_seconds:.3f}/TB,"
+                f"{audio_format},highpass=f={sting.highpass_hz},lowpass=f=9000,"
+                f"afade=t=in:st=0:d={fade:.3f},"
+                f"afade=t=out:st={max(0.0, duration - fade):.3f}:d={fade:.3f},"
+                f"volume={production_style.music.volume * sting.gain_multiplier:.4f}"
+                f"[{label}]"
+            )
+        if sting_labels:
+            filters.append(
+                "[musicbed]"
+                + "".join(f"[{label}]" for label in sting_labels)
+                + f"amix=inputs={len(sting_labels) + 1}:duration=first:normalize=0"
+                "[musicdirected]"
+            )
+        else:
+            filters.append("[musicbed]anull[musicdirected]")
         filters.extend(
             [
                 "[voiceclean]asplit=2[voicekey][voicemix]",
                 (
-                    "[musicbed][voicekey]sidechaincompress="
+                    "[musicdirected][voicekey]sidechaincompress="
                     f"threshold={production_style.music.ducking_threshold:.4f}:"
                     "ratio=10:attack=20:release=350[ducked]"
                 ),
