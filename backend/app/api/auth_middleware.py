@@ -14,6 +14,7 @@ from app.core.security import InvalidTokenError, decode_access_session
 from app.models.operations import MultipartUpload
 from app.models.platform import ResumableUpload, User, WorkspaceMembership
 from app.models.project import Project
+from app.services.email import email_is_verified
 from app.services.permissions import can_edit, can_manage_billing, can_manage_members
 from app.services.sessions import session_is_active
 
@@ -31,6 +32,14 @@ PUBLIC_PATHS = {
     "/api/v1/auth/password-reset/request",
     "/api/v1/auth/password-reset/confirm",
     "/api/v1/auth/email-verification/confirm",
+}
+UNVERIFIED_PATHS = {
+    "/api/v1/auth/account",
+    "/api/v1/auth/session",
+    "/api/v1/auth/logout",
+    "/api/v1/auth/logout-all",
+    "/api/v1/auth/email-verification/request",
+    "/api/v1/invitations/accept",
 }
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 
@@ -93,6 +102,15 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 return _error("Authentication session has been revoked", status.HTTP_401_UNAUTHORIZED)
             request.state.user_id = user.id
             request.state.session_id = session_id
+            if (
+                settings.require_verified_email
+                and path not in UNVERIFIED_PATHS
+                and not email_is_verified(db, user.id)
+            ):
+                return _error(
+                    "Email verification is required before this action",
+                    status.HTTP_403_FORBIDDEN,
+                )
 
             project_match = PROJECT_PATH.match(path)
             if project_match:
