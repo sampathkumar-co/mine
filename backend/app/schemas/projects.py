@@ -19,6 +19,13 @@ class DirectorContract(BaseModel):
     reference_rules: dict[str, str] = Field(default_factory=dict)
     brand_rules: dict[str, Any] = Field(default_factory=dict)
     creative_freedom: float = Field(default=0.5, ge=0, le=1)
+    director_profile_key: str = Field(
+        default="default",
+        min_length=1,
+        max_length=100,
+        pattern=r"^[A-Za-z0-9_-]+$",
+    )
+    use_director_memory: bool = True
 
     @model_validator(mode="after")
     def requirements_must_not_conflict(self) -> Self:
