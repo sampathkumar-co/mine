@@ -5,10 +5,10 @@ import threading
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 from app.core.config import get_settings
-from app.core.database import Base, SessionLocal, engine
+from app.core.database import Base, SessionLocal, engine, import_models
 from app.core.enums import ProjectStatus
 from app.models.operations import AuthSessionRecord, ProductionJob
 from app.models.platform import User, Workspace, WorkspaceMembership
@@ -23,12 +23,19 @@ pytestmark = pytest.mark.skipif(
 settings = get_settings()
 
 
+def _reset_public_schema() -> None:
+    with engine.begin() as connection:
+        connection.execute(text("DROP SCHEMA IF EXISTS public CASCADE"))
+        connection.execute(text("CREATE SCHEMA public"))
+
+
 @pytest.fixture(autouse=True)
 def reset_postgres_schema():
-    Base.metadata.drop_all(bind=engine)
+    import_models()
+    _reset_public_schema()
     Base.metadata.create_all(bind=engine)
     yield
-    Base.metadata.drop_all(bind=engine)
+    _reset_public_schema()
 
 
 def _identity() -> tuple[User, Workspace, Project]:
