@@ -61,6 +61,12 @@ class MusicProfile(BaseModel):
     mean_volume_db: float = -24
     peak_volume_db: float = -6
     energy: float = Field(default=0.5, ge=0, le=1)
+    tempo_bpm: float | None = Field(default=None, ge=40, le=240)
+    beat_interval_seconds: float | None = Field(default=None, gt=0)
+    beat_offset_seconds: float = Field(default=0, ge=0)
+    beat_times: list[float] = Field(default_factory=list)
+    phrase_times: list[float] = Field(default_factory=list)
+    rhythm_confidence: float = Field(default=0, ge=0, le=1)
 
 
 SemanticTagSource = Literal["filename", "transcript", "vision_heuristic"]
