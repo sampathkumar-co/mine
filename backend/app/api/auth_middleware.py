@@ -53,6 +53,8 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         authorization = request.headers.get("authorization", "")
         scheme, _, token = authorization.partition(" ")
         if scheme.casefold() != "bearer" or not token:
+            if not settings.auth_required:
+                return await call_next(request)
             return _error("Authentication required", status.HTTP_401_UNAUTHORIZED)
 
         try:
@@ -106,7 +108,12 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                     return _error("Upload session not found", status.HTTP_404_NOT_FOUND)
 
             user_match = USER_PATH.match(path)
-            if user_match and UUID(user_match.group(1)) != user.id:
-                return _error("User not found", status.HTTP_404_NOT_FOUND)
+            if user_match:
+                try:
+                    requested_user_id = UUID(user_match.group(1))
+                except ValueError:
+                    return _error("User not found", status.HTTP_404_NOT_FOUND)
+                if requested_user_id != user.id:
+                    return _error("User not found", status.HTTP_404_NOT_FOUND)
 
         return await call_next(request)
