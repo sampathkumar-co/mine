@@ -6,7 +6,6 @@ import os
 import re
 import tempfile
 import threading
-import time
 from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -51,7 +50,11 @@ def configure_logging(settings: Settings) -> None:
     root = logging.getLogger()
     root.setLevel(getattr(logging, settings.log_level.upper(), logging.INFO))
     handler = logging.StreamHandler()
-    handler.setFormatter(JsonFormatter() if settings.log_format == "json" else logging.Formatter("%(levelname)s %(name)s %(message)s"))
+    handler.setFormatter(
+        JsonFormatter()
+        if settings.log_format == "json"
+        else logging.Formatter("%(levelname)s %(name)s %(message)s")
+    )
     root.handlers.clear()
     root.addHandler(handler)
 
@@ -165,7 +168,10 @@ def readiness_snapshot(settings: Settings) -> tuple[str, dict[str, dict[str, str
         ("object_storage", settings.object_storage_local_dir),
     ):
         if name == "object_storage" and settings.object_storage_provider.casefold() != "local":
-            components[name] = {"status": "ok", "detail": f"provider={settings.object_storage_provider}"}
+            components[name] = {
+                "status": "ok",
+                "detail": f"provider={settings.object_storage_provider}",
+            }
             continue
         component_status, detail = _directory_status(value)
         components[name] = {"status": component_status, "detail": detail}
