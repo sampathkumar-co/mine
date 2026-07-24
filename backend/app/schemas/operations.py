@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Literal
+from typing import Literal, Self
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 
 from app.core.enums import AssetKind
+from app.schemas.platform import UserRead, WorkspaceRead
 
 WorkspaceRole = Literal["owner", "admin", "editor", "viewer"]
 
@@ -37,6 +38,11 @@ class SimpleMessage(BaseModel):
     message: str
 
 
+class AccountContextRead(BaseModel):
+    user: UserRead
+    workspaces: list[WorkspaceRead]
+
+
 class WorkspaceMemberRead(BaseModel):
     id: UUID
     user_id: UUID
@@ -55,7 +61,7 @@ class WorkspaceInvitationCreate(BaseModel):
     role: WorkspaceRole = "editor"
 
     @model_validator(mode="after")
-    def owner_invites_are_not_allowed(self):
+    def owner_invites_are_not_allowed(self) -> Self:
         if self.role == "owner":
             raise ValueError("Ownership must be transferred explicitly, not invited")
         return self
@@ -178,7 +184,7 @@ class MultipartCompleteRequest(BaseModel):
     parts: list[MultipartPartRegister] = Field(min_length=1, max_length=10_000)
 
     @model_validator(mode="after")
-    def parts_must_be_unique(self):
+    def parts_must_be_unique(self) -> Self:
         numbers = [part.part_number for part in self.parts]
         if len(numbers) != len(set(numbers)):
             raise ValueError("Multipart part numbers must be unique")
