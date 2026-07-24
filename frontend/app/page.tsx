@@ -1,5 +1,5 @@
-import { ProjectLauncher } from "@/components/project-launcher";
+import { WorkspaceDashboard } from "@/components/workspace-dashboard";
 
 export default function HomePage() {
-  return <ProjectLauncher />;
+  return <WorkspaceDashboard />;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { submitPickup } from "@/lib/api";
+import { getGhostFrame, submitPickup } from "@/lib/api";
 import type { PickupMission } from "@/lib/types";
 
 interface CaptureStudioProps {
@@ -40,6 +40,7 @@ export function CaptureStudio({ projectId, mission, onClose, onSubmitted }: Capt
   const audioContextRef = useRef<AudioContext | null>(null);
   const [signals, setSignals] = useState<CaptureSignals>({ audio: 0, light: 0.5, stability: 1, level: null });
   const [ghost, setGhost] = useState<string | null>(null);
+  const [ghostLabel, setGhostLabel] = useState("Loading continuity reference…");
   const [recording, setRecording] = useState(false);
   const [recorded, setRecorded] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -55,6 +56,23 @@ export function CaptureStudio({ projectId, mission, onClose, onSubmitted }: Capt
     void audioContextRef.current?.close();
     audioContextRef.current = null;
   }, []);
+
+  useEffect(() => {
+    let objectUrl = "";
+    let disposed = false;
+    getGhostFrame(projectId, mission.id)
+      .then((blob) => {
+        if (disposed) return;
+        objectUrl = URL.createObjectURL(blob);
+        setGhost(objectUrl);
+        setGhostLabel("Project continuity frame");
+      })
+      .catch(() => setGhostLabel("No project continuity frame available"));
+    return () => {
+      disposed = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [mission.id, projectId]);
 
   useEffect(() => {
     let disposed = false;
@@ -157,7 +175,7 @@ export function CaptureStudio({ projectId, mission, onClose, onSubmitted }: Capt
     [preview],
   );
 
-  function setGhostFrame() {
+  function setLocalGhostFrame() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas || video.videoWidth === 0) return;
@@ -165,6 +183,7 @@ export function CaptureStudio({ projectId, mission, onClose, onSubmitted }: Capt
     canvas.height = video.videoHeight;
     canvas.getContext("2d")?.drawImage(video, 0, 0);
     setGhost(canvas.toDataURL("image/jpeg", 0.72));
+    setGhostLabel("Frozen live alignment frame");
   }
 
   function startRecording() {
@@ -235,6 +254,7 @@ export function CaptureStudio({ projectId, mission, onClose, onSubmitted }: Capt
           <div className="camera-stage">
             <video ref={videoRef} muted playsInline />
             {ghost && <img className="ghost-frame" src={ghost} alt="Ghost alignment reference" />}
+            <div className="ghost-label">{ghostLabel}</div>
             <div className="safe-zone"><span>SAFE</span></div>
             <div className="thirds vertical-one" /><div className="thirds vertical-two" />
             <div className="thirds horizontal-one" /><div className="thirds horizontal-two" />
@@ -250,7 +270,7 @@ export function CaptureStudio({ projectId, mission, onClose, onSubmitted }: Capt
               <div className={signals.level != null && Math.abs(signals.level) >= 4 ? "signal warn" : "signal good"}><span>LEVEL</span><strong>{levelLabel}</strong></div>
             </div>
             <div className="mission-brief"><h3>Shot brief</h3><ul>{guidance(mission.specification).map((item) => <li key={item}>{item}</li>)}{mission.target_terms.length > 0 && <li>Show or say: {mission.target_terms.join(", ")}</li>}</ul></div>
-            <div className="capture-actions"><button className="secondary" onClick={setGhostFrame}>Set ghost frame</button>{!recording ? <button className="record-button" onClick={startRecording} disabled={!streamRef.current}>Record</button> : <button className="stop-button" onClick={stopRecording}>Stop</button>}</div>
+            <div className="capture-actions"><button className="secondary" onClick={setLocalGhostFrame}>Freeze live frame</button>{!recording ? <button className="record-button" onClick={startRecording} disabled={!streamRef.current}>Record</button> : <button className="stop-button" onClick={stopRecording}>Stop</button>}</div>
             {preview && <div className="take-review"><video src={preview} controls playsInline /><div><button className="secondary" onClick={startRecording}>Retake</button><button className="primary" onClick={submit} disabled={submitting}>{submitting ? "Uploading…" : "Submit pickup"}</button></div></div>}
             {error && <div className="alert error">{error}</div>}
           </aside>

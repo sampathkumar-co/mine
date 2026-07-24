@@ -40,7 +40,7 @@ class DirectorContract(BaseModel):
 
 
 class ProjectCreate(BaseModel):
-    user_id: UUID
+    workspace_id: UUID
     contract: DirectorContract
 
 
@@ -61,6 +61,7 @@ class ProjectRead(BaseModel):
 
     id: UUID
     user_id: UUID
+    workspace_id: UUID | None
     status: ProjectStatus
     contract: DirectorContract
     task_id: str | None

@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { createProject, startProject, uploadAsset } from "@/lib/api";
+import { FormEvent, useMemo, useState } from "react";
+import { createProject, startProject, uploadAssetResumable } from "@/lib/api";
 import type { CameraMode } from "@/lib/types";
 
 function splitRules(value: string): string[] {
@@ -12,18 +12,8 @@ function splitRules(value: string): string[] {
     .filter(Boolean);
 }
 
-function defaultUserId(): string {
-  if (typeof window === "undefined") return "";
-  const existing = window.localStorage.getItem("director-user-id");
-  if (existing) return existing;
-  const created = crypto.randomUUID();
-  window.localStorage.setItem("director-user-id", created);
-  return created;
-}
-
-export function ProjectLauncher() {
+export function ProjectLauncher({ workspaceId }: { workspaceId: string }) {
   const router = useRouter();
-  const [userId, setUserId] = useState("");
   const [objective, setObjective] = useState("Turn these clips into a clear 45-second video with a strong hook and proof.");
   const [audience, setAudience] = useState("Prospective customers");
   const [platform, setPlatform] = useState("instagram_reels");
@@ -37,7 +27,6 @@ export function ProjectLauncher() {
   const [progress, setProgress] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => setUserId(defaultUserId()), []);
   const totalSize = useMemo(() => files.reduce((sum, file) => sum + file.size, 0), [files]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -51,7 +40,7 @@ export function ProjectLauncher() {
     try {
       setProgress("Creating the Director Contract…");
       const project = await createProject({
-        userId,
+        workspaceId,
         objective,
         audience,
         platform,
@@ -62,8 +51,11 @@ export function ProjectLauncher() {
         mustAvoid: splitRules(mustAvoid),
       });
       for (const [index, file] of files.entries()) {
-        setProgress(`Uploading source ${index + 1} of ${files.length}: ${file.name}`);
-        await uploadAsset(project.id, file);
+        await uploadAssetResumable(project.id, file, "source_video", (fraction) => {
+          setProgress(
+            `Uploading source ${index + 1} of ${files.length}: ${file.name} · ${Math.round(fraction * 100)}%`,
+          );
+        });
       }
       setProgress("Starting autonomous production…");
       await startProject(project.id);
@@ -77,11 +69,11 @@ export function ProjectLauncher() {
   }
 
   return (
-    <main className="shell launch-shell">
-      <header className="hero">
-        <div className="eyebrow">DIRECTOR OS / PRODUCTION INTAKE</div>
+    <section className="launch-shell">
+      <header className="hero compact-hero">
+        <div className="eyebrow">NEW PRODUCTION</div>
         <h1>Give the director footage and an outcome.</h1>
-        <p>Director OS audits what you shot, edits what is usable, and asks for precise pickups when the story is incomplete.</p>
+        <p>Uploads are chunked and resumable. Director OS audits what you shot and requests precise pickups when the story is incomplete.</p>
       </header>
 
       <form className="panel launch-form" onSubmit={submit}>
@@ -92,7 +84,6 @@ export function ProjectLauncher() {
             <label>Audience<input value={audience} onChange={(event) => setAudience(event.target.value)} /></label>
             <label>Platform<select value={platform} onChange={(event) => setPlatform(event.target.value)}><option value="instagram_reels">Instagram Reels</option><option value="tiktok">TikTok</option><option value="youtube_shorts">YouTube Shorts</option><option value="linkedin">LinkedIn</option></select></label>
             <label>Target duration<input type="number" min={5} max={600} value={duration} onChange={(event) => setDuration(Number(event.target.value))} /></label>
-            <label>User ID<input value={userId} onChange={(event) => setUserId(event.target.value)} required /></label>
           </div>
         </section>
 
@@ -112,15 +103,15 @@ export function ProjectLauncher() {
         </section>
 
         <section className="form-section">
-          <div className="section-heading"><span>04</span><div><h2>Footage</h2><p>Upload up to the backend-configured source limit.</p></div></div>
+          <div className="section-heading"><span>04</span><div><h2>Footage</h2><p>Large files resume from the last server-confirmed byte.</p></div></div>
           <label className="drop-zone"><input type="file" accept="video/*" multiple onChange={(event) => setFiles(Array.from(event.target.files ?? []))} /><strong>Choose source videos</strong><span>{files.length ? `${files.length} file(s), ${(totalSize / 1024 / 1024).toFixed(1)} MB` : "MP4, MOV, WebM, or another browser-supported video"}</span></label>
           {files.length > 0 && <ul className="file-list">{files.map((file) => <li key={`${file.name}-${file.size}`}><span>{file.name}</span><small>{(file.size / 1024 / 1024).toFixed(1)} MB</small></li>)}</ul>}
         </section>
 
         {error && <div className="alert error">{error}</div>}
         {progress && <div className="alert progress">{progress}</div>}
-        <button className="primary action" disabled={busy || !userId} type="submit">{busy ? "Directing…" : "Start production"}</button>
+        <button className="primary action" disabled={busy} type="submit">{busy ? "Directing…" : "Start production"}</button>
       </form>
-    </main>
+    </section>
   );
 }

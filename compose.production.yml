@@ -1,0 +1,107 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DIRECTOR_DOMAIN: ${DIRECTOR_DOMAIN:?Set DIRECTOR_DOMAIN}
+      DIRECTOR_ACME_EMAIL: ${DIRECTOR_ACME_EMAIL:?Set DIRECTOR_ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      frontend:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_DIRECTOR_API_URL: /api/v1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      api:
+        condition: service_healthy
+
+  api:
+    build: ./backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
+      DIRECTOR_CORS_ORIGINS: https://${DIRECTOR_DOMAIN:?Set DIRECTOR_DOMAIN}
+    volumes:
+      - director_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  worker:
+    build: ./backend
+    command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --concurrency=1
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
+    volumes:
+      - director_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: director
+      POSTGRES_USER: director
+      POSTGRES_PASSWORD: ${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U director -d director"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  director_data:
+  redis_data:
+  postgres_data:
+  caddy_data:
+  caddy_config:
