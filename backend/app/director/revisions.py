@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import hashlib
-import json
 import re
 from typing import Literal
 
@@ -95,7 +93,10 @@ def parse_revision_intent(
     ]
 
     overlay_action: Literal["keep", "remove", "less", "more"] = "keep"
-    if any(term in text for term in ("remove b-roll", "remove broll", "no b-roll", "no broll", "remove overlays")):
+    if any(
+        term in text
+        for term in ("remove b-roll", "remove broll", "no b-roll", "no broll", "remove overlays")
+    ):
         overlay_action = "remove"
     elif any(term in text for term in ("less b-roll", "less broll", "fewer overlays")):
         overlay_action = "less"
@@ -245,7 +246,9 @@ def _limit_duration(
         if cursor >= target and not _overlaps(segment.output_start, segment.output_end, locked):
             continue
         if cursor + duration > target and not _overlaps(
-            segment.output_start, segment.output_end, locked
+            segment.output_start,
+            segment.output_end,
+            locked,
         ):
             duration = max(0.0, target - cursor)
             if duration < 0.12:
@@ -254,12 +257,6 @@ def _limit_duration(
         result.append(segment)
         cursor += max(0.0, segment.source_end - segment.source_start)
     return result
-
-
-def _fingerprint(graph: ProductionEditDecisionGraph) -> str:
-    payload = graph.model_dump(mode="json", exclude={"notes", "critic_report"})
-    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    return hashlib.sha256(encoded).hexdigest()
 
 
 def _segment_signature(segment: EditSegment) -> tuple[object, ...]:
@@ -279,150 +276,3 @@ def _overlay_signature(overlay: VisualOverlay) -> tuple[object, ...]:
         round(overlay.output_start, 3),
         round(overlay.output_end, 3),
     )
-
-
-def compare_graphs(
-    base: ProductionEditDecisionGraph,
-    revised: ProductionEditDecisionGraph,
-) -> RevisionRenderPlan:
-    changed_components: list[str] = []
-    changed_ranges: list[ChangedRange] = []
-
-    base_segments = [_segment_signature(item) for item in base.segments]
-    revised_segments = [_segment_signature(item) for item in revised.segments]
-    if base_segments != revised_segments:
-        changed_components.append("narration")
-        end = max(base.selected_duration_seconds, revised.selected_duration_seconds)
-        changed_ranges.append(ChangedRange(start=0, end=end, reason="Narration graph changed"))
-
-    base_overlays = [_overlay_signature(item) for item in base.overlays]
-    revised_overlays = [_overlay_signature(item) for item in revised.overlays]
-    if base_overlays != revised_overlays:
-        changed_components.append("overlays")
-        ranges = [
-            ChangedRange(start=item.output_start, end=item.output_end, reason="Visual overlay changed")
-            for item in revised.overlays
-            if _overlay_signature(item) not in set(base_overlays)
-        ]
-        changed_ranges.extend(ranges)
-
-    base_overrides = base.render_overrides
-    revised_overrides = revised.render_overrides
-    for component, keys in {
-        "captions": {"captions_enabled", "caption_all_caps", "caption_size_delta"},
-        "music": {"music_enabled"},
-    }.items():
-        if any(base_overrides.get(key) != revised_overrides.get(key) for key in keys):
-            changed_components.append(component)
-
-    changed_components = sorted(set(changed_components))
-    if not changed_components:
-        scope: Literal["metadata_only", "component_partial", "full_master"] = "metadata_only"
-    elif set(changed_components) <= {"overlays", "captions"}:
-        scope = "component_partial"
-    else:
-        scope = "full_master"
-
-    reuse_narration = scope in {"metadata_only", "component_partial"}
-    reused_ranges = []
-    if reuse_narration and revised.selected_duration_seconds > 0:
-        reused_ranges.append(
-            ChangedRange(
-                start=0,
-                end=revised.selected_duration_seconds,
-                reason="Narration master is unchanged and can be reused",
-            )
-        )
-
-    return RevisionRenderPlan(
-        scope=scope,
-        changed_components=changed_components,
-        changed_ranges=changed_ranges,
-        reused_ranges=reused_ranges,
-        reuse_narration_master=reuse_narration,
-        base_graph_fingerprint=_fingerprint(base),
-        revised_graph_fingerprint=_fingerprint(revised),
-        notes=[],
-    )
-
-
-def apply_revision(
-    base_graph: ProductionEditDecisionGraph,
-    instruction: str,
-    *,
-    next_version: int,
-    locked_ranges: list[LockedRange] | None = None,
-) -> RevisionApplication:
-    locked = locked_ranges or []
-    intent = parse_revision_intent(
-        instruction,
-        base_duration_seconds=base_graph.selected_duration_seconds,
-    )
-    segments = list(base_graph.segments)
-
-    segments = _trim_intro(segments, intent.trim_intro_seconds, locked)
-    segments = _trim_outro(
-        segments,
-        intent.trim_outro_seconds,
-        base_graph.selected_duration_seconds,
-        locked,
-    )
-    if intent.remove_terms:
-        terms = [term.casefold() for term in intent.remove_terms]
-        segments = [
-            segment
-            for segment in segments
-            if _overlaps(segment.output_start, segment.output_end, locked)
-            or not any(term in (segment.transcript_text or "").casefold() for term in terms)
-        ]
-    if intent.target_duration_seconds is not None:
-        segments = _limit_duration(segments, intent.target_duration_seconds, locked)
-    segments = _reflow_segments(segments)
-
-    overlays = list(base_graph.overlays)
-    if intent.overlay_action == "remove":
-        overlays = []
-    elif intent.overlay_action == "less":
-        overlays = overlays[: max(0, (len(overlays) + 1) // 2)]
-
-    duration = segments[-1].output_end if segments else 0.0
-    overlays = [
-        overlay
-        for overlay in overlays
-        if overlay.output_start < duration and overlay.output_end <= duration
-    ]
-
-    overrides = dict(base_graph.render_overrides)
-    if intent.captions_enabled is not None:
-        overrides["captions_enabled"] = intent.captions_enabled
-    if intent.caption_all_caps is not None:
-        overrides["caption_all_caps"] = intent.caption_all_caps
-    if intent.caption_size_delta:
-        overrides["caption_size_delta"] = intent.caption_size_delta
-    if intent.music_enabled is not None:
-        overrides["music_enabled"] = intent.music_enabled
-
-    notes = [
-        *base_graph.notes,
-        f"Revision v{next_version}: {instruction.strip()}",
-        *intent.warnings,
-    ]
-    revised = base_graph.model_copy(
-        update={
-            "version": next_version,
-            "selected_duration_seconds": round(duration, 3),
-            "target_duration_seconds": (
-                intent.target_duration_seconds
-                if intent.target_duration_seconds is not None
-                else base_graph.target_duration_seconds
-            ),
-            "segments": segments,
-            "overlays": overlays,
-            "render_overrides": overrides,
-            "notes": notes,
-            "critic_report": {},
-        }
-    )
-    render_plan = compare_graphs(base_graph, revised)
-    render_plan.notes.extend(intent.warnings)
-    return RevisionApplication(graph=revised, intent=intent, render_plan=render_plan)
