@@ -16,7 +16,7 @@ from sqlalchemy import text
 from app.core.config import Settings
 from app.core.database import engine
 
-VERSION = "0.14.0"
+VERSION = "0.15.0"
 _UUID_SEGMENT = re.compile(r"/[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,36}(?=/|$)")
 _NUMBER_SEGMENT = re.compile(r"/\d+(?=/|$)")
 
