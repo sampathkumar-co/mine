@@ -4,16 +4,17 @@ Director OS is an autonomous video production agent that turns raw footage, crea
 
 ## Current system
 
-The repository now contains a runnable authenticated platform and Tier 1 production engine:
+The repository contains a runnable authenticated platform and Tier 1 production engine:
 
-- Next.js workspace client with account recovery, team administration, subscription controls, production library, revision chat, secure delivery, and guided browser capture
-- FastAPI control plane with Director Contracts, Director Camera, Director Memory, immutable revisions, audit events, subscription entitlements, and credit metering
+- Next.js workspace client with account recovery, team administration, subscription controls, privacy operations, production library, revision chat, secure delivery, and guided browser capture
+- FastAPI control plane with Director Contracts, Director Camera, Director Memory, immutable revisions, audit events, subscription entitlements, credit metering, rate limits, readiness, and Prometheus metrics
 - Optional Stripe Checkout subscriptions, signed webhook processing, and customer-portal sessions
 - PostgreSQL persistence with Alembic migrations
-- Redis and Celery workers for durable production, revisions, email delivery, and lifecycle cleanup
+- Redis and Celery workers for durable production, revisions, email delivery, privacy requests, and lifecycle cleanup
 - Local or S3-compatible multipart object storage
 - FFmpeg rendering, scene analysis, subject framing, captions, audio cleanup, music ducking, semantic overlays, and final quality checks
 - HTTPS production deployment through Caddy
+- Verified backup, restore, and deployment-smoke scripts
 
 ### Editorial capabilities
 
@@ -28,7 +29,7 @@ The repository now contains a runnable authenticated platform and Tier 1 product
 - Director Memory from accepted/rejected edits and weakly weighted performance evidence
 - Director Camera readiness scoring, pickup missions, mission validation, continuity ghost frames, and automatic pickup insertion
 
-The current semantic and revision layers are deliberately inspectable. They do not claim universal object understanding or unconstrained natural-language editing.
+The semantic and revision layers are deliberately inspectable. They do not claim universal object understanding or unconstrained natural-language editing.
 
 ## Run locally
 
@@ -40,7 +41,8 @@ docker compose up --build
 Open:
 
 - Web client: `http://localhost:3000`
-- API health: `http://localhost:8000/api/v1/health`
+- API liveness: `http://localhost:8000/api/v1/health/live`
+- API readiness: `http://localhost:8000/api/v1/health/ready`
 - API docs: `http://localhost:8000/docs`
 
 The development API runs `alembic upgrade head` before startup. Set `DIRECTOR_OPENAI_API_KEY` to enable timestamped speech transcription; conservative visual fallbacks remain available when transcription is optional.
@@ -54,7 +56,8 @@ Register or sign in through the web client. The platform uses:
 - rotating refresh tokens stored as hashes;
 - session-family revocation when refresh-token reuse is detected;
 - single-use email verification, password-reset, and invitation tokens;
-- owner, admin, editor, and viewer workspace roles.
+- owner, admin, editor, and viewer workspace roles;
+- configurable fixed-window rate limits for authentication, webhooks, and mutations.
 
 Production can require verified email with:
 
@@ -120,12 +123,27 @@ The internal ledger remains the production-usage source of truth:
 
 See [`docs/subscriptions-and-entitlements.md`](docs/subscriptions-and-entitlements.md) for Stripe setup, required events, plan configuration, and launch rehearsal.
 
-## Email and cleanup workers
+## Data and privacy operations
+
+Workspace administrators can create expiring signed ZIP exports containing workspace metadata, project contracts, edit decisions, usage records, and a content manifest. Secrets and private server paths are excluded; large raw media files are not duplicated into the archive.
+
+Workspace owners can schedule permanent deletion after typing the workspace slug. Deletion is blocked while production is active or a paid subscription remains live. During the grace period, mutations are locked and the owner can cancel. The lifecycle worker removes local/S3 content, outputs, caches, and the workspace database graph when the request becomes due.
+
+## Health, metrics, and logging
+
+- `/api/v1/health/live` reports process liveness.
+- `/api/v1/health/ready` checks PostgreSQL, Redis, and writable runtime storage.
+- `/api/v1/metrics` emits Prometheus text and should be protected by `DIRECTOR_METRICS_TOKEN`.
+- Request logs are structured JSON and carry normalized paths, status, duration, request ID, user, and workspace context.
+- Production requires Redis-backed, fail-closed rate limiting and Redis-backed readiness.
+
+## Email and lifecycle workers
 
 Celery Beat schedules:
 
 - pending outbox delivery every minute;
-- expired upload/token/session/invitation/audit cleanup every hour.
+- expired upload/token/session/invitation/audit cleanup every hour;
+- privacy export expiration and scheduled workspace deletion every 15 minutes.
 
 Local development uses the database outbox. Production can configure SMTP using the variables in `.env.example`.
 
@@ -133,11 +151,12 @@ Local development uses the database outbox. Production can configure SMTP using 
 
 ```bash
 cp .env.example .env
-# Fill production secrets, domain, database password, email, storage, and billing settings.
+# Fill production secrets, domain, database password, email, storage, billing, metrics, and rate-limit settings.
 docker compose -f compose.production.yml up --build -d
+DIRECTOR_METRICS_TOKEN=<token> bash ops/smoke.sh https://director.example.com
 ```
 
-The production stack runs a one-shot migration service before API and worker startup. Only Caddy ports 80/443 are public.
+The production stack runs a one-shot migration service before API and worker startup. Only Caddy ports 80/443 are public. The API healthcheck uses dependency readiness rather than process liveness.
 
 For a database created before Alembic:
 
@@ -149,6 +168,15 @@ alembic upgrade head
 
 Rehearse that migration against a restored backup before deploying it to the live database.
 
+### Backup and restore
+
+```bash
+bash ops/backup.sh
+bash ops/restore.sh ./backups/<timestamp> --confirm
+```
+
+The scripts cover PostgreSQL, persistent Director media/output data, Redis state, manifests, and SHA-256 integrity verification. Backups must be copied to encrypted off-host storage; restoration is destructive and must be rehearsed before launch.
+
 ## Documentation
 
 - [`docs/architecture.md`](docs/architecture.md)
@@ -156,3 +184,4 @@ Rehearse that migration against a restored backup before deploying it to the liv
 - [`docs/platform-workspaces.md`](docs/platform-workspaces.md)
 - [`docs/production-operations.md`](docs/production-operations.md)
 - [`docs/subscriptions-and-entitlements.md`](docs/subscriptions-and-entitlements.md)
+- [`docs/launch-readiness.md`](docs/launch-readiness.md)
