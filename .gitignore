@@ -15,6 +15,9 @@ test_director.db
 # Media and runtime data
 data/
 vps_storage/
+backups/
+*.dump
+*.tar.gz
 *.mp4
 *.mov
 *.mkv
