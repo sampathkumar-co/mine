@@ -41,4 +41,13 @@ jobs:
           alembic upgrade head
           alembic current
           rm -f migration_test.db
-      - run: pytest --cov=app --cov-report=term-missing
+      - name: Run backend suite
+        run: |
+          set -o pipefail
+          pytest --cov=app --cov-report=term-missing 2>&1 | tee ../backend-test.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-test-log
+          path: backend-test.log
+          retention-days: 14
