@@ -5,6 +5,8 @@ on:
     paths:
       - "backend/**"
       - "ops/**"
+      - "VERSION"
+      - ".env.production.example"
       - "compose.production.yml"
       - ".github/workflows/backend-ci.yml"
   push:
@@ -12,6 +14,8 @@ on:
     paths:
       - "backend/**"
       - "ops/**"
+      - "VERSION"
+      - ".env.production.example"
       - "compose.production.yml"
       - ".github/workflows/backend-ci.yml"
 
@@ -31,7 +35,9 @@ jobs:
       - run: ruff check .
       - name: Validate operations scripts
         working-directory: .
-        run: bash -n ops/backup.sh ops/restore.sh ops/smoke.sh
+        run: |
+          bash -n ops/backup.sh ops/restore.sh ops/smoke.sh ops/go_live.sh
+          python3 -m py_compile ops/release_doctor.py ops/release_manifest.py
       - name: Validate Alembic migrations
         env:
           DIRECTOR_ENVIRONMENT: test
