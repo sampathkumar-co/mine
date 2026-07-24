@@ -1,0 +1,97 @@
+name: Security and Supply Chain
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "ops/**"
+      - "VERSION"
+      - ".github/workflows/security-supply-chain.yml"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend-security:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install ".[dev]" pip-audit cyclonedx-bom
+      - run: mkdir -p ../dist && python -m pip check
+      - name: Audit Python dependencies
+        run: pip-audit --format json --output ../dist/backend-audit.json
+      - name: Generate Python CycloneDX SBOM
+        run: cyclonedx-py environment --output-format JSON --output-file ../dist/backend.cdx.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-security-evidence
+          path: |
+            dist/backend-audit.json
+            dist/backend.cdx.json
+          retention-days: 30
+
+  frontend-security:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm install --no-audit --no-fund
+      - run: mkdir -p ../dist
+      - name: Audit production npm dependencies
+        run: |
+          set -o pipefail
+          npm audit --omit=dev --audit-level=high --json | tee ../dist/frontend-audit.json
+      - name: Generate npm CycloneDX SBOM
+        run: npm sbom --sbom-format=cyclonedx --sbom-type=application > ../dist/frontend.cdx.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-security-evidence
+          path: |
+            dist/frontend-audit.json
+            dist/frontend.cdx.json
+          retention-days: 30
+
+  release-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate production template and build release manifest
+        env:
+          DIRECTOR_AUTH_SECRET: ci-release-secret-00000000000000000000000000000000
+          DIRECTOR_METRICS_TOKEN: ci-metrics-token-000000000000000000000000000000
+          DIRECTOR_DATABASE_URL: postgresql+psycopg://release_ci:strong-ci-password@postgres:5432/director
+        run: |
+          python3 ops/release_doctor.py \
+            --env-file .env.production.example \
+            --allow-external-pending \
+            --json-output dist/release-doctor-template.json \
+            --markdown-output dist/release-doctor-template.md
+          python3 ops/release_manifest.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-template-evidence
+          path: |
+            dist/release-doctor-template.json
+            dist/release-doctor-template.md
+            dist/release-manifest.json
+            dist/CHECKSUMS.sha256
+          retention-days: 30
