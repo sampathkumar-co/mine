@@ -1,13 +1,14 @@
 from collections.abc import Generator
 from pathlib import Path
-from types import SimpleNamespace
+from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app.api import routes
-from app.core.database import Base, engine
+from app.core.database import Base, SessionLocal, engine
 from app.main import app
+from app.models.operations import ProductionJob
 
 
 @pytest.fixture(autouse=True)
@@ -99,15 +100,17 @@ def test_project_upload_and_queue(
     assert uploaded.json()["kind"] == "source_video"
     assert uploaded.json()["size_bytes"] == 11
 
-    monkeypatch.setattr(
-        routes.run_project_pipeline,
-        "delay",
-        lambda project_id: SimpleNamespace(id=f"task-{project_id}"),
-    )
+    monkeypatch.setattr(routes.dispatch_pending_jobs, "delay", lambda: None)
     queued = client.post(f"/api/v1/projects/{project_id}/start", headers=headers)
     assert queued.status_code == 202
     assert queued.json()["status"] == "queued"
-    assert queued.json()["task_id"] == f"task-{project_id}"
+    assert queued.json()["task_id"]
+    duplicate = client.post(f"/api/v1/projects/{project_id}/start", headers=headers)
+    assert duplicate.status_code == 409
+    with SessionLocal() as db:
+        jobs = list(db.query(ProductionJob).filter_by(project_id=UUID(project_id)).all())
+        assert len(jobs) == 1
+        assert str(jobs[0].id) == queued.json()["task_id"]
 
     fetched = client.get(f"/api/v1/projects/{project_id}", headers=headers)
     assert fetched.status_code == 200

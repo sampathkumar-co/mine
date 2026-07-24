@@ -172,6 +172,14 @@ def local_checks(env: dict[str, str]) -> list[Check]:
             "Generate a random authentication secret of at least 32 characters.",
         ),
         (
+            "auth.secure_cookie",
+            truthy(env.get("DIRECTOR_AUTH_COOKIE_SECURE"))
+            and env.get("DIRECTOR_AUTH_COOKIE_SAMESITE", "").casefold() == "strict",
+            "Refresh cookies are Secure and SameSite=Strict.",
+            "Refresh-cookie security is not strict.",
+            "Set DIRECTOR_AUTH_COOKIE_SECURE=true and DIRECTOR_AUTH_COOKIE_SAMESITE=strict.",
+        ),
+        (
             "auth.email_verification",
             truthy(env.get("DIRECTOR_REQUIRE_VERIFIED_EMAIL")),
             "Email verification is required.",
@@ -247,6 +255,7 @@ def local_checks(env: dict[str, str]) -> list[Check]:
                 "DIRECTOR_SMTP_USERNAME",
                 "DIRECTOR_SMTP_PASSWORD",
                 "DIRECTOR_SMTP_FROM_EMAIL",
+                "DIRECTOR_EMAIL_BODY_ENCRYPTION_KEY",
             ),
         )
         and bool(EMAIL_PATTERN.fullmatch(env.get("DIRECTOR_SMTP_FROM_EMAIL", "")))

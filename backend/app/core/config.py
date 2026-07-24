@@ -22,6 +22,13 @@ class Settings(BaseSettings):
 
     auth_required: bool = True
     auth_secret: str = Field(default="development-only-change-me", min_length=16)
+    auth_previous_secret: str | None = None
+    auth_key_id: str = "primary"
+    auth_previous_key_id: str | None = None
+    refresh_cookie_name: str = "director_refresh"
+    csrf_cookie_name: str = "director_csrf"
+    auth_cookie_secure: bool = False
+    auth_cookie_samesite: str = "strict"
     auth_session_minutes: int = Field(default=15, ge=5, le=1_440)
     access_token_minutes: int = Field(default=15, ge=5, le=1_440)
     refresh_token_days: int = Field(default=30, ge=1, le=365)
@@ -54,6 +61,8 @@ class Settings(BaseSettings):
     smtp_username: str | None = None
     smtp_password: str | None = None
     smtp_from_email: str | None = None
+    email_body_retention_hours: int = Field(default=24, ge=0, le=720)
+    email_body_encryption_key: str | None = None
 
     object_storage_provider: str = "local"
     object_storage_local_dir: str = "/data/object-storage"
@@ -66,6 +75,8 @@ class Settings(BaseSettings):
     s3_secret_access_key: str | None = None
 
     starter_credits: float = Field(default=100, ge=0, le=1_000_000)
+    max_workspaces_per_user: int = Field(default=3, ge=1, le=100)
+    starter_grants_per_user: int = Field(default=1, ge=0, le=1)
     billing_enabled: bool = True
     entitlements_enabled: bool = True
     subscriptions_enabled: bool = False
@@ -87,6 +98,7 @@ class Settings(BaseSettings):
     audit_retention_days: int = Field(default=365, ge=30, le=3_650)
     data_export_retention_hours: int = Field(default=48, ge=1, le=720)
     workspace_deletion_grace_days: int = Field(default=7, ge=1, le=30)
+    workspace_deletion_retry_limit: int = Field(default=10, ge=1, le=100)
     run_migrations_on_startup: bool = False
     auto_create_schema: bool = True
 

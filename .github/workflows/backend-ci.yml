@@ -57,3 +57,43 @@ jobs:
           name: backend-test-log
           path: backend-test.log
           retention-days: 14
+
+  postgres-concurrency:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: director_test
+          POSTGRES_USER: director_test
+          POSTGRES_PASSWORD: director_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U director_test -d director_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DIRECTOR_ENVIRONMENT: test
+      DIRECTOR_AUTH_REQUIRED: "false"
+      DIRECTOR_AUTH_SECRET: postgres-concurrency-secret-change-me
+      DIRECTOR_DATABASE_URL: postgresql+psycopg://director_test:director_test_password@127.0.0.1:5432/director_test
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
+      DIRECTOR_RUN_POSTGRES_TESTS: "1"
+      DIRECTOR_RATE_LIMIT_ENABLED: "false"
+      DIRECTOR_READINESS_REQUIRE_REDIS: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install ".[dev]"
+      - name: Rehearse PostgreSQL migrations
+        run: alembic upgrade head
+      - name: Run PostgreSQL concurrency suite
+        run: pytest -q tests/test_postgres_concurrency.py

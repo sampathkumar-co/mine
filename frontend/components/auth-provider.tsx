@@ -12,7 +12,6 @@ import {
 import { getAccountContext } from "@/lib/account";
 import {
   getAccessToken,
-  getRefreshToken,
   getSession,
   login as apiLogin,
   logout as apiLogout,
@@ -47,11 +46,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    if (!getAccessToken() && !getRefreshToken()) {
-      setSession(null);
-      setLoading(false);
-      return;
-    }
     try {
       setSession(await hydrateSession(await getSession()));
     } catch {
@@ -65,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void refresh();
     const changed = () => {
-      if (!getAccessToken() && !getRefreshToken()) setSession(null);
+      if (!getAccessToken()) setSession(null);
     };
     window.addEventListener("director-auth-changed", changed);
     return () => window.removeEventListener("director-auth-changed", changed);

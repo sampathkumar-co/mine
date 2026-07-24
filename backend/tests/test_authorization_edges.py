@@ -34,7 +34,7 @@ def client() -> Generator[TestClient, None, None]:
 
 
 def session(client: TestClient, email: str) -> dict[str, object]:
-    bootstrap = client.post(
+    registered = client.post(
         "/api/v1/auth/register",
         json={
             "email": email,
@@ -43,13 +43,10 @@ def session(client: TestClient, email: str) -> dict[str, object]:
             "workspace_name": f"{email} workspace",
         },
     )
-    assert bootstrap.status_code == 201
-    refreshable = client.post(
-        "/api/v1/auth/session",
-        headers={"Authorization": f"Bearer {bootstrap.json()['access_token']}"},
-    )
-    assert refreshable.status_code == 200
-    return refreshable.json()
+    assert registered.status_code == 201
+    assert registered.json()["refresh_token"] is None
+    assert client.cookies.get("director_refresh")
+    return registered.json()
 
 
 def auth(value: dict[str, object]) -> dict[str, str]:

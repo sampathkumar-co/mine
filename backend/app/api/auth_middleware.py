@@ -17,7 +17,7 @@ from app.models.project import Project
 from app.services.email import email_is_verified
 from app.services.entitlements import EntitlementError, enforce_contract_entitlements
 from app.services.governance import workspace_pending_deletion
-from app.services.permissions import can_edit, can_manage_billing, can_manage_members
+from app.services.permissions import can_edit, can_manage_members
 from app.services.sessions import session_is_active
 
 settings = get_settings()
@@ -83,8 +83,6 @@ def _authorize_workspace_request(request: Request, role: str) -> JSONResponse | 
         return None
     if path.endswith("/delivery"):
         return None
-    if "/billing/adjustments" in path and not can_manage_billing(role):
-        return _error("Workspace owner permission is required", status.HTTP_403_FORBIDDEN)
     if any(marker in path for marker in ("/members", "/invitations", "/audit-events", "/privacy")):
         if not can_manage_members(role):
             return _error(
@@ -158,7 +156,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                     "Authentication session is no longer valid",
                     status.HTTP_401_UNAUTHORIZED,
                 )
-            if session_id is not None and not session_is_active(db, session_id, user_id):
+            if not session_is_active(db, session_id, user_id):
                 return _error(
                     "Authentication session has been revoked",
                     status.HTTP_401_UNAUTHORIZED,

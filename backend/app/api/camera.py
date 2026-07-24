@@ -15,6 +15,7 @@ from app.core.database import get_db
 from app.core.enums import AssetKind, ProjectStatus
 from app.models.camera import DirectorCameraAudit, PickupMission
 from app.models.project import Project, ProjectAsset
+from app.services.jobs import JobConflictError, enqueue_project_job
 from app.schemas.projects import (
     CameraOverrideRequest,
     DirectorCameraRead,
@@ -27,7 +28,7 @@ from app.storage.uploads import (
     UploadTooLargeError,
     store_upload,
 )
-from app.worker.tasks import run_project_pipeline
+from app.worker.dispatch import dispatch_pending_jobs
 
 router = APIRouter(tags=["director-camera"])
 settings = get_settings()
@@ -69,34 +70,25 @@ def _preserve_ready_output(project: Project, mission_id: UUID) -> None:
 
 def _queue_project(db: Session, project: Project) -> ProjectAccepted:
     previous_status = project.status
-    project.status = ProjectStatus.QUEUED
-    project.error_message = None
-    db.commit()
     try:
-        task_result = run_project_pipeline.delay(str(project.id))
-    except Exception as exc:
-        project.status = previous_status
-        project.error_message = "Director Camera queue unavailable"
-        db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Director Camera processing queue is unavailable",
-        ) from exc
-    task_id = str(getattr(task_result, "id", ""))
-    if not task_id:
-        project.status = previous_status
-        project.error_message = "Queue did not return a task identifier"
-        db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Director Camera queue did not accept the project",
+        job = enqueue_project_job(
+            db,
+            project.id,
+            kind="camera_resume",
+            allowed_statuses={previous_status},
         )
-    project.task_id = task_id
-    db.commit()
+        db.commit()
+    except JobConflictError as exc:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    try:
+        dispatch_pending_jobs.delay()
+    except Exception:
+        pass
     return ProjectAccepted(
         project_id=project.id,
-        status=project.status,
-        task_id=task_id,
+        status=ProjectStatus.QUEUED,
+        task_id=str(job.id),
         message="Director Camera validation and production resumed.",
     )
 

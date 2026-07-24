@@ -53,12 +53,9 @@ def session(client: TestClient, email: str) -> dict[str, object]:
         },
     )
     assert registered.status_code == 201
-    refreshable = client.post(
-        "/api/v1/auth/session",
-        headers={"Authorization": f"Bearer {registered.json()['access_token']}"},
-    )
-    assert refreshable.status_code == 200
-    return refreshable.json()
+    assert registered.json()["refresh_token"] is None
+    assert client.cookies.get("director_refresh")
+    return registered.json()
 
 
 def auth(value: dict[str, object]) -> dict[str, str]:

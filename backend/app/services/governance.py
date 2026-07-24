@@ -18,12 +18,13 @@ from app.core.config import Settings
 from app.core.enums import ProjectStatus
 from app.models.analysis import EditDecisionGraphRecord, EditGraphRevision, ProjectAnalysis
 from app.models.camera import DirectorCameraAudit, PickupMission
-from app.models.governance import PrivacyRequest
+from app.models.governance import PrivacyRequest, WorkspaceDeletionTombstone
 from app.models.memory import DirectorMemoryEvidence, ProjectPerformanceSignal
 from app.models.operations import (
     AuditEvent,
     BillingAccount,
     BillingEntry,
+    ProductionJob,
     ProjectBillingReservation,
     StoredObject,
 )
@@ -89,7 +90,7 @@ def workspace_pending_deletion(db: Session, workspace_id: UUID) -> bool:
         select(PrivacyRequest).where(
             PrivacyRequest.workspace_id == workspace_id,
             PrivacyRequest.kind == "deletion",
-            PrivacyRequest.status.in_(["scheduled", "processing"]),
+            PrivacyRequest.status.in_(["scheduled", "processing", "retrying"]),
         )
     )
     return request is not None
@@ -103,7 +104,16 @@ def workspace_deletion_blockers(db: Session, workspace_id: UUID) -> list[str]:
             Project.status.in_(ACTIVE_PROJECT_STATUSES),
         ).limit(1)
     )
-    if active_project is not None:
+    active_job = db.scalar(
+        select(ProductionJob.id)
+        .join(Project, Project.id == ProductionJob.project_id)
+        .where(
+            Project.workspace_id == workspace_id,
+            ProductionJob.status.in_(["queued", "dispatching", "dispatched", "running"]),
+        )
+        .limit(1)
+    )
+    if active_project is not None or active_job is not None:
         blockers.append("Wait for active production and revision jobs to finish.")
     subscription = db.get(WorkspaceSubscription, workspace_id)
     if subscription and subscription.status in ACTIVE_SUBSCRIPTION_STATUSES:
@@ -245,7 +255,13 @@ def generate_workspace_export(
         raise
 
 
-def purge_workspace(db: Session, workspace_id: UUID, settings: Settings) -> dict[str, int]:
+def purge_workspace(
+    db: Session,
+    workspace_id: UUID,
+    settings: Settings,
+    *,
+    privacy_request: PrivacyRequest | None = None,
+) -> dict[str, int]:
     blockers = workspace_deletion_blockers(db, workspace_id)
     if blockers:
         raise GovernanceError(" ".join(blockers))
@@ -255,6 +271,7 @@ def purge_workspace(db: Session, workspace_id: UUID, settings: Settings) -> dict
     projects, project_ids = _project_rows(db, workspace_id)
     files: set[str] = set()
     objects: list[StoredObject] = []
+    assets: list[ProjectAsset] = []
     if project_ids:
         assets = _query_for_projects(db, ProjectAsset, project_ids)
         for asset in assets:
@@ -273,6 +290,9 @@ def purge_workspace(db: Session, workspace_id: UUID, settings: Settings) -> dict
             objects = list(
                 db.scalars(select(StoredObject).where(StoredObject.asset_id.in_(asset_ids))).all()
             )
+
+    # External deletion is intentionally idempotent. A database rollback leaves the
+    # relational records available so a later lifecycle pass can safely retry it.
     for stored in objects:
         delete_stored_object(settings, stored)
     deleted_files = 0
@@ -281,6 +301,24 @@ def purge_workspace(db: Session, workspace_id: UUID, settings: Settings) -> dict
         if path.exists():
             path.unlink(missing_ok=True)
             deleted_files += 1
+
+    request_id = privacy_request.id if privacy_request else UUID(int=0)
+    if privacy_request is not None:
+        db.add(
+            WorkspaceDeletionTombstone(
+                request_id=request_id,
+                workspace_id=workspace.id,
+                requested_by_user_id=privacy_request.requested_by_user_id,
+                workspace_slug=workspace.slug,
+                summary={
+                    "projects": len(projects),
+                    "assets": len(assets),
+                    "files": deleted_files,
+                    "objects": len(objects),
+                    "reason": privacy_request.request_metadata.get("reason"),
+                },
+            )
+        )
     db.delete(workspace)
     db.flush()
     return {"projects": len(projects), "files": deleted_files, "objects": len(objects)}

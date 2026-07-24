@@ -61,6 +61,7 @@ def cleanup_expired_operations() -> dict[str, int]:
         "sessions": 0,
         "invitations": 0,
         "audit_events": 0,
+        "email_bodies": 0,
     }
     with SessionLocal() as db:
         multipart = list(
@@ -102,6 +103,19 @@ def cleanup_expired_operations() -> dict[str, int]:
             )
         )
         counters["sessions"] = int(session_result.rowcount or 0)
+
+        email_result = db.execute(
+            update(EmailOutbox)
+            .where(
+                EmailOutbox.status == "sent",
+                EmailOutbox.sent_at.is_not(None),
+                EmailOutbox.sent_at <= now - timedelta(hours=settings.email_body_retention_hours),
+                EmailOutbox.body_text != "[redacted after retention]",
+                EmailOutbox.body_text != "[redacted after delivery]",
+            )
+            .values(body_text="[redacted after retention]")
+        )
+        counters["email_bodies"] = int(email_result.rowcount or 0)
 
         invitation_result = db.execute(
             update(WorkspaceInvitation)

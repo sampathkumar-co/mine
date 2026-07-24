@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
@@ -49,8 +49,14 @@ def process_privacy_lifecycle() -> dict[str, int]:
                 select(PrivacyRequest)
                 .where(
                     PrivacyRequest.kind == "deletion",
-                    PrivacyRequest.status == "scheduled",
                     PrivacyRequest.execute_after <= now,
+                    (
+                        PrivacyRequest.status.in_(["scheduled", "retrying"])
+                        | (
+                            (PrivacyRequest.status == "processing")
+                            & (PrivacyRequest.updated_at <= now - timedelta(minutes=10))
+                        )
+                    ),
                 )
                 .order_by(PrivacyRequest.execute_after)
                 .limit(25)
@@ -68,14 +74,27 @@ def process_privacy_lifecycle() -> dict[str, int]:
             if request is None:
                 continue
             try:
-                purge_workspace(db, request.workspace_id, settings)
+                purge_workspace(
+                    db,
+                    request.workspace_id,
+                    settings,
+                    privacy_request=request,
+                )
                 db.commit()
                 counters["deleted_workspaces"] += 1
             except Exception as exc:
                 db.rollback()
                 request = db.get(PrivacyRequest, request_id)
                 if request is not None:
-                    request.status = "failed"
+                    metadata = dict(request.request_metadata)
+                    attempts = int(metadata.get("deletion_attempts", 0)) + 1
+                    metadata["deletion_attempts"] = attempts
+                    request.request_metadata = metadata
+                    request.status = (
+                        "failed"
+                        if attempts >= settings.workspace_deletion_retry_limit
+                        else "retrying"
+                    )
                     request.error_message = str(exc)[:2_000]
                     db.commit()
                 counters["failed_deletions"] += 1

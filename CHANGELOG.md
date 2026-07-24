@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.1 — 2026-07-24
+
+Security and reliability hardening for the v1 launch candidate:
+
+- Removed customer-accessible credit adjustments and made starter grants user-scoped
+- Made all access tokens session-backed with atomic refresh rotation and secure cookies
+- Added durable production jobs, duplicate suppression, queue isolation, and recovery dispatch
+- Froze Alembic migrations and added schema-drift validation
+- Hardened multipart completion, deletion retries, email-token retention, CSP, and containers
+- Added resumable browser uploads with IndexedDB recovery and parallel part retries
+
+
 ## 1.0.0 — 2026-07-24
 
 Director OS v1.0 delivers the complete code-owned autonomous video-production platform:

@@ -57,6 +57,9 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     restart: unless-stopped
     stop_grace_period: 30s
+    read_only: true
+    tmpfs:
+      - /tmp
     security_opt:
       - no-new-privileges:true
     env_file: .env
@@ -89,9 +92,62 @@ services:
 
   worker:
     build: ./backend
-    command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --concurrency=1
+    command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --queues=director.render --concurrency=1
     restart: unless-stopped
     stop_grace_period: 2m
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    env_file: .env
+    environment:
+      DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
+      DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
+    volumes:
+      - director_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  revision_worker:
+    build: ./backend
+    command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --queues=director.revisions --concurrency=1
+    restart: unless-stopped
+    stop_grace_period: 2m
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    env_file: .env
+    environment:
+      DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
+      DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
+    volumes:
+      - director_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  service_worker:
+    build: ./backend
+    command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --queues=director.email,director.maintenance,director.governance --concurrency=2
+    restart: unless-stopped
+    stop_grace_period: 1m
+    read_only: true
+    tmpfs:
+      - /tmp
     security_opt:
       - no-new-privileges:true
     env_file: .env
@@ -113,6 +169,9 @@ services:
     build: ./backend
     command: celery -A app.worker.celery_app.celery_app beat --loglevel=INFO
     restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
     security_opt:
       - no-new-privileges:true
     env_file: .env

@@ -10,14 +10,13 @@ from starlette.responses import JSONResponse, Response
 
 from app.core.config import get_settings
 from app.core.database import SessionLocal
-from app.models.operations import BillingAccount
+from app.models.operations import ProjectBillingReservation
 from app.models.platform import WorkspaceMembership
 from app.models.project import Project
 from app.services.billing import (
     BillingError,
     InsufficientCreditsError,
-    ensure_billing_account,
-    post_adjustment,
+    ensure_workspace_billing,
     release_project_reservation,
     reserve_project_credits,
 )
@@ -81,21 +80,12 @@ class BillingReservationMiddleware(BaseHTTPMiddleware):
                 except EntitlementError as exc:
                     return _error(str(exc), status.HTTP_402_PAYMENT_REQUIRED)
             if settings.billing_enabled:
-                if db.get(BillingAccount, project.workspace_id) is None:
-                    ensure_billing_account(db, project.workspace_id)
-                    post_adjustment(
-                        db,
-                        project.workspace_id,
-                        settings.starter_credits,
-                        idempotency_key=f"workspace:{project.workspace_id}:starter-grant",
-                        description="Starter credits granted when billing was first activated",
-                        actor_user_id=actor_user_id,
-                        kind="grant",
-                    )
+                ensure_workspace_billing(db, project.workspace_id, settings)
                 try:
+                    existing_reservation = db.get(ProjectBillingReservation, project.id)
                     reserve_project_credits(db, project, actor_user_id=actor_user_id)
                     db.commit()
-                    reservation_created = True
+                    reservation_created = existing_reservation is None
                 except InsufficientCreditsError as exc:
                     db.rollback()
                     return _error(str(exc), status.HTTP_402_PAYMENT_REQUIRED)

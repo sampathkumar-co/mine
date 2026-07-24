@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import JSON, BigInteger, DateTime, Enum, ForeignKey, String, Text, Uuid
+from sqlalchemy import JSON, BigInteger, DateTime, Enum, ForeignKey, Integer, String, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -30,6 +30,8 @@ class Project(Base):
     )
     contract: Mapped[dict[str, Any]] = mapped_column(JSON)
     task_id: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    run_generation: Mapped[int] = mapped_column(Integer, default=0)
+    revision_generation: Mapped[int] = mapped_column(Integer, default=1)
     output_path: Mapped[str | None] = mapped_column(Text, nullable=True)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
