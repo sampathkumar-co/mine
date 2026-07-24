@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Generator
 from decimal import Decimal
 from pathlib import Path
+from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
@@ -64,15 +65,19 @@ def auth(value: dict[str, object]) -> dict[str, str]:
     return {"Authorization": f"Bearer {value['access_token']}"}
 
 
+def workspace_id(value: dict[str, object]) -> UUID:
+    return UUID(str(value["workspaces"][0]["id"]))  # type: ignore[index]
+
+
 def test_starter_plan_contract_and_seat_limits_are_enforced(client: TestClient) -> None:
     owner = session(client, "plan-owner@example.com")
-    workspace_id = owner["workspaces"][0]["id"]  # type: ignore[index]
+    target_workspace_id = workspace_id(owner)
 
     too_long = client.post(
         "/api/v1/projects",
         headers=auth(owner),
         json={
-            "workspace_id": workspace_id,
+            "workspace_id": str(target_workspace_id),
             "contract": {
                 "objective": "This production exceeds the starter duration",
                 "target_duration_seconds": 181,
@@ -86,7 +91,7 @@ def test_starter_plan_contract_and_seat_limits_are_enforced(client: TestClient) 
         "/api/v1/projects",
         headers=auth(owner),
         json={
-            "workspace_id": workspace_id,
+            "workspace_id": str(target_workspace_id),
             "contract": {
                 "objective": "This production fits the starter duration",
                 "target_duration_seconds": 180,
@@ -97,13 +102,13 @@ def test_starter_plan_contract_and_seat_limits_are_enforced(client: TestClient) 
 
     for index in range(2):
         invited = client.post(
-            f"/api/v1/workspaces/{workspace_id}/invitations",
+            f"/api/v1/workspaces/{target_workspace_id}/invitations",
             headers=auth(owner),
             json={"email": f"seat-{index}@example.com", "role": "editor"},
         )
         assert invited.status_code == 201
     blocked = client.post(
-        f"/api/v1/workspaces/{workspace_id}/invitations",
+        f"/api/v1/workspaces/{target_workspace_id}/invitations",
         headers=auth(owner),
         json={"email": "seat-overflow@example.com", "role": "editor"},
     )
@@ -113,12 +118,12 @@ def test_starter_plan_contract_and_seat_limits_are_enforced(client: TestClient) 
 
 def test_invoice_credit_grant_and_webhook_event_are_idempotent(client: TestClient) -> None:
     owner = session(client, "invoice-owner@example.com")
-    workspace_id = owner["workspaces"][0]["id"]  # type: ignore[index]
+    target_workspace_id = workspace_id(owner)
 
     with SessionLocal() as db:
-        account = ensure_billing_account(db, workspace_id)
+        account = ensure_billing_account(db, target_workspace_id)
         account.balance_credits = Decimal("0")
-        subscription = ensure_subscription(db, workspace_id)
+        subscription = ensure_subscription(db, target_workspace_id)
         subscription.provider_customer_id = "cus_director_test"
         subscription.provider_subscription_id = "sub_director_test"
         subscription.plan_key = "creator"
@@ -144,7 +149,7 @@ def test_invoice_credit_grant_and_webhook_event_are_idempotent(client: TestClien
 
         assert first.duplicate is False
         assert second.duplicate is True
-        account = ensure_billing_account(db, workspace_id)
+        account = ensure_billing_account(db, target_workspace_id)
         assert account.balance_credits == Decimal("250.0000")
         entries = list(
             db.scalars(
@@ -167,11 +172,11 @@ def test_invoice_credit_grant_and_webhook_event_are_idempotent(client: TestClien
 
 def test_subscription_updates_activate_and_cancel_plan(client: TestClient) -> None:
     owner = session(client, "subscription-owner@example.com")
-    workspace_id = owner["workspaces"][0]["id"]  # type: ignore[index]
+    target_workspace_id = workspace_id(owner)
     assert load_plan_catalog(settings)["creator"].max_tier == 3
 
     with SessionLocal() as db:
-        subscription = ensure_subscription(db, workspace_id)
+        subscription = ensure_subscription(db, target_workspace_id)
         subscription.provider_customer_id = "cus_subscription_test"
         db.commit()
 
@@ -185,7 +190,7 @@ def test_subscription_updates_activate_and_cancel_plan(client: TestClient) -> No
                     "customer": "cus_subscription_test",
                     "status": "active",
                     "metadata": {
-                        "workspace_id": str(workspace_id),
+                        "workspace_id": str(target_workspace_id),
                         "plan_key": "creator",
                     },
                     "items": {"data": []},
@@ -197,7 +202,7 @@ def test_subscription_updates_activate_and_cancel_plan(client: TestClient) -> No
         }
         process_billing_event(db, activated, settings)
         db.commit()
-        account = ensure_billing_account(db, workspace_id)
+        account = ensure_billing_account(db, target_workspace_id)
         assert account.plan == "creator"
 
         cancelled = {
@@ -210,7 +215,7 @@ def test_subscription_updates_activate_and_cancel_plan(client: TestClient) -> No
                     "customer": "cus_subscription_test",
                     "status": "canceled",
                     "metadata": {
-                        "workspace_id": str(workspace_id),
+                        "workspace_id": str(target_workspace_id),
                         "plan_key": "creator",
                     },
                     "items": {"data": []},
@@ -219,5 +224,5 @@ def test_subscription_updates_activate_and_cancel_plan(client: TestClient) -> No
         }
         process_billing_event(db, cancelled, settings)
         db.commit()
-        account = ensure_billing_account(db, workspace_id)
+        account = ensure_billing_account(db, target_workspace_id)
         assert account.plan == "starter"
