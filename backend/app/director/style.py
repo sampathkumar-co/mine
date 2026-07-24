@@ -12,6 +12,7 @@ SAFE_FONT = re.compile(r"[^A-Za-z0-9 _-]")
 
 
 class CaptionStyle(BaseModel):
+    enabled: bool = True
     font_name: str = "Arial"
     font_size: int = Field(default=72, ge=36, le=120)
     primary_color: str = "#FFFFFF"
@@ -42,6 +43,7 @@ class ProductionStyle(BaseModel):
     caption: CaptionStyle = Field(default_factory=CaptionStyle)
     visual: VisualStyle = Field(default_factory=VisualStyle)
     music: MusicStyle = Field(default_factory=MusicStyle)
+    max_visual_overlays: int | None = Field(default=None, ge=0, le=12)
     reference_pace: str = "balanced"
     source: list[str] = Field(default_factory=lambda: ["tier1_defaults"])
 
@@ -121,6 +123,7 @@ def compile_production_style(
         animation = "pop" if reference is None or reference.pace != "slow" else "fade"
 
     caption = CaptionStyle(
+        enabled=_bool(brand_rules.get("captions_enabled"), True),
         font_name=_font(brand_rules.get("caption_font")),
         font_size=_integer(brand_rules.get("caption_font_size"), 72, 36, 120),
         primary_color=_color(brand_rules.get("caption_primary_color"), "#FFFFFF"),
@@ -176,11 +179,18 @@ def compile_production_style(
         source.append("reference_style")
     if brand_rules:
         source.append("brand_rules")
+    if contract.get("_director_memory_application"):
+        source.append("director_memory")
+
+    max_visual_overlays = None
+    if "max_visual_overlays" in brand_rules:
+        max_visual_overlays = _integer(brand_rules.get("max_visual_overlays"), 4, 0, 12)
 
     return ProductionStyle(
         caption=caption,
         visual=visual,
         music=music,
+        max_visual_overlays=max_visual_overlays,
         reference_pace=reference.pace if reference else "balanced",
         source=source,
     )
