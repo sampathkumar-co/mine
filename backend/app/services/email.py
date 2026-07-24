@@ -11,6 +11,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
+from app.core.time import is_expired_at
 from app.models.operations import AccountToken, EmailOutbox, UserEmailStatus
 from app.models.platform import User
 
@@ -59,7 +60,7 @@ def consume_account_token(db: Session, raw_token: str, purpose: str) -> User:
     )
     if token is None or token.consumed_at is not None:
         raise AccountTokenError("Token is invalid or has already been used")
-    if token.expires_at <= now:
+    if is_expired_at(token.expires_at, now=now):
         token.consumed_at = now
         db.flush()
         raise AccountTokenError("Token has expired")
