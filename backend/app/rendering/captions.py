@@ -126,6 +126,10 @@ def write_ass_captions(
     margin_vertical: int | None = None,
 ) -> int:
     caption_style = style or CaptionStyle()
+    output = Path(path)
+    if not caption_style.enabled:
+        output.unlink(missing_ok=True)
+        return 0
     if max_words is not None or margin_vertical is not None:
         caption_style = caption_style.model_copy(
             update={
@@ -137,7 +141,6 @@ def write_ass_captions(
         )
 
     cues = build_caption_cues(graph, transcript, max_words=caption_style.max_words)
-    output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
 
     primary = hex_to_ass(caption_style.primary_color)
