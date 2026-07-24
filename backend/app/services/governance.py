@@ -30,7 +30,7 @@ from app.models.operations import (
 from app.models.platform import User, Workspace, WorkspaceMembership
 from app.models.project import Project, ProjectAsset
 from app.models.subscriptions import WorkspaceSubscription
-from app.services.storage import delete_stored_object
+from app.services.storage_lifecycle import delete_stored_object
 
 ACTIVE_PROJECT_STATUSES = {
     ProjectStatus.QUEUED,
