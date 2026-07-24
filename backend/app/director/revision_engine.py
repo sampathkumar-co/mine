@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from typing import Literal
 
 from pydantic import Field
@@ -35,6 +36,18 @@ def _fingerprint(graph: RevisionEditDecisionGraph) -> str:
     payload = graph.model_dump(mode="json", exclude={"notes", "critic_report"})
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
+
+
+def _normalize_revision_phrasing(instruction: str) -> str:
+    normalized = instruction
+    replacements = {
+        r"\bmake\s+(?:the\s+)?captions?\s+larger\b": "larger captions",
+        r"\bmake\s+(?:the\s+)?captions?\s+bigger\b": "bigger captions",
+        r"\bmake\s+(?:the\s+)?captions?\s+smaller\b": "smaller captions",
+    }
+    for pattern, replacement in replacements.items():
+        normalized = re.sub(pattern, replacement, normalized, flags=re.IGNORECASE)
+    return normalized
 
 
 def compare_revision_graphs(
@@ -120,10 +133,12 @@ def apply_graph_revision(
     locked_ranges: list[LockedRange] | None = None,
 ) -> RevisionApplication:
     locked = locked_ranges or []
+    parser_instruction = _normalize_revision_phrasing(instruction)
     intent = parse_revision_intent(
-        instruction,
+        parser_instruction,
         base_duration_seconds=base_graph.selected_duration_seconds,
     )
+    intent.instruction = instruction
     segments = list(base_graph.segments)
     segments = _trim_intro(segments, intent.trim_intro_seconds, locked)
     segments = _trim_outro(
