@@ -87,24 +87,35 @@ def verify_signed_payload(token: str, settings: Settings) -> dict[str, Any]:
         raise InvalidTokenError("Malformed token") from exc
 
 
-def create_access_token(user_id: UUID, settings: Settings) -> tuple[str, datetime]:
-    expires_at = datetime.now(UTC) + timedelta(minutes=settings.auth_session_minutes)
-    token = sign_payload(
-        {
-            "purpose": "access",
-            "sub": str(user_id),
-            "exp": int(expires_at.timestamp()),
-        },
-        settings,
-    )
-    return token, expires_at
+def create_access_token(
+    user_id: UUID,
+    settings: Settings,
+    *,
+    session_id: UUID | None = None,
+) -> tuple[str, datetime]:
+    expires_at = datetime.now(UTC) + timedelta(minutes=settings.access_token_minutes)
+    payload: dict[str, Any] = {
+        "purpose": "access",
+        "sub": str(user_id),
+        "exp": int(expires_at.timestamp()),
+    }
+    if session_id is not None:
+        payload["sid"] = str(session_id)
+    return sign_payload(payload, settings), expires_at
 
 
-def decode_access_token(token: str, settings: Settings) -> UUID:
+def decode_access_session(token: str, settings: Settings) -> tuple[UUID, UUID | None]:
     payload = verify_signed_payload(token, settings)
     if payload.get("purpose") != "access":
         raise InvalidTokenError("Token is not an access session")
     try:
-        return UUID(str(payload["sub"]))
+        user_id = UUID(str(payload["sub"]))
+        session_id = UUID(str(payload["sid"])) if payload.get("sid") else None
     except (KeyError, ValueError) as exc:
-        raise InvalidTokenError("Access token has no valid subject") from exc
+        raise InvalidTokenError("Access token has invalid session claims") from exc
+    return user_id, session_id
+
+
+def decode_access_token(token: str, settings: Settings) -> UUID:
+    user_id, _ = decode_access_session(token, settings)
+    return user_id
