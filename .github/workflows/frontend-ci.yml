@@ -5,12 +5,16 @@ on:
     paths:
       - "frontend/**"
       - "docker-compose.yml"
+      - "compose.production.yml"
+      - "deploy/**"
       - ".github/workflows/frontend-ci.yml"
   push:
     branches: [main]
     paths:
       - "frontend/**"
       - "docker-compose.yml"
+      - "compose.production.yml"
+      - "deploy/**"
       - ".github/workflows/frontend-ci.yml"
 
 jobs:
@@ -27,6 +31,13 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run build
-      - name: Validate Docker Compose
+      - name: Validate development stack
         working-directory: .
         run: cp .env.example .env && docker compose config >/dev/null
+      - name: Validate HTTPS production stack
+        working-directory: .
+        env:
+          DIRECTOR_DOMAIN: video.example.com
+          DIRECTOR_ACME_EMAIL: ops@example.com
+          DIRECTOR_POSTGRES_PASSWORD: test-production-password
+        run: docker compose -f compose.production.yml config >/dev/null
