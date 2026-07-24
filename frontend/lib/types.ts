@@ -13,6 +13,29 @@ export type ProjectStatus =
 
 export type CameraMode = "off" | "advisory" | "required";
 
+export interface User {
+  id: string;
+  email: string;
+  display_name: string;
+  created_at: string;
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  slug: string;
+  role: string;
+  created_at: string;
+}
+
+export interface AuthSession {
+  access_token: string;
+  token_type: "bearer";
+  expires_at: string;
+  user: User;
+  workspaces: Workspace[];
+}
+
 export interface DirectorContract {
   objective: string;
   target_audience?: string | null;
@@ -44,6 +67,7 @@ export interface ProjectAsset {
 export interface Project {
   id: string;
   user_id: string;
+  workspace_id: string | null;
   status: ProjectStatus;
   contract: DirectorContract;
   task_id: string | null;
@@ -52,6 +76,64 @@ export interface Project {
   created_at: string;
   updated_at: string;
   assets: ProjectAsset[];
+}
+
+export interface WorkspaceProject {
+  id: string;
+  workspace_id: string;
+  status: ProjectStatus;
+  objective: string;
+  target_platform: string;
+  target_duration_seconds: number;
+  output_available: boolean;
+  asset_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ResumableUpload {
+  id: string;
+  project_id: string;
+  asset_id: string | null;
+  kind: string;
+  original_filename: string;
+  content_type: string;
+  total_bytes: number;
+  received_bytes: number;
+  status: string;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DeliveryLink {
+  project_id: string;
+  revision_version: number | null;
+  url: string;
+  expires_at: string;
+  download: boolean;
+}
+
+export interface RevisionSummary {
+  version: number;
+  base_version: number | null;
+  instruction: string | null;
+  status: string;
+  task_id: string | null;
+  is_active: boolean;
+  output_available: boolean;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RevisionAccepted {
+  project_id: string;
+  version: number;
+  base_version: number;
+  status: string;
+  task_id: string;
+  message: string;
 }
 
 export interface CameraDimension {
