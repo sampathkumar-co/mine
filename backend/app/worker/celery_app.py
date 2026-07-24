@@ -8,7 +8,7 @@ celery_app = Celery(
     "director_os",
     broker=settings.redis_url,
     backend=settings.redis_url,
-    include=["app.worker.tasks"],
+    include=["app.worker.tasks", "app.worker.revisions"],
 )
 
 celery_app.conf.update(

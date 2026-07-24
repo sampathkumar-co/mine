@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 
 from app.core.config import Settings
@@ -37,26 +38,44 @@ def render_semantic_production_graph(
     caption_path: str | Path | None = None,
     music_path: str | Path | None = None,
     style: ProductionStyle | None = None,
+    narration_cache_path: str | Path | None = None,
+    reuse_narration_base_path: str | Path | None = None,
     settings: Settings,
 ) -> None:
     production_style = style or ProductionStyle()
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
-    base_path = output.with_name(f"{output.stem}.narration-base{output.suffix}")
 
-    render_multiclip_edit_decision_graph(
-        sources,
-        base_path,
-        graph,
-        caption_path=None,
-        music_path=music_path,
-        style=production_style,
-        settings=settings,
+    reusable_base = (
+        Path(reuse_narration_base_path)
+        if reuse_narration_base_path is not None
+        and Path(reuse_narration_base_path).exists()
+        else None
     )
+    persistent_cache = Path(narration_cache_path) if narration_cache_path is not None else None
+    base_path = reusable_base or persistent_cache or output.with_name(
+        f"{output.stem}.narration-base{output.suffix}"
+    )
+    temporary_base = reusable_base is None and persistent_cache is None
+
+    if reusable_base is None:
+        base_path.parent.mkdir(parents=True, exist_ok=True)
+        render_multiclip_edit_decision_graph(
+            sources,
+            base_path,
+            graph,
+            caption_path=None,
+            music_path=music_path,
+            style=production_style,
+            settings=settings,
+        )
 
     has_captions = caption_path is not None and Path(caption_path).exists()
     if not graph.overlays and not has_captions:
-        os.replace(base_path, output)
+        if temporary_base:
+            os.replace(base_path, output)
+        else:
+            shutil.copy2(base_path, output)
         return
 
     command = [settings.ffmpeg_binary, "-y", "-i", str(base_path)]
@@ -140,4 +159,5 @@ def render_semantic_production_graph(
     try:
         _run(command, timeout_seconds=settings.render_timeout_seconds)
     finally:
-        base_path.unlink(missing_ok=True)
+        if temporary_base:
+            base_path.unlink(missing_ok=True)
