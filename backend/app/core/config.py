@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     max_upload_bytes: int = Field(default=2_147_483_648, ge=1)
     upload_chunk_bytes: int = Field(default=1_048_576, ge=65_536, le=16_777_216)
     resumable_request_bytes: int = Field(default=16_777_216, ge=65_536, le=67_108_864)
+    auth_required: bool = True
     auth_secret: str = Field(default="development-only-change-me", min_length=16)
     auth_session_minutes: int = Field(default=720, ge=15, le=43_200)
     delivery_link_minutes: int = Field(default=20, ge=1, le=1_440)
