@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from app.core.database import Base
+from app.director.edit_graph import EditDecisionGraph, EditSegment
 from app.director.memory import (
     MemorySignal,
     apply_director_memory,
@@ -12,8 +13,17 @@ from app.director.memory import (
     extract_text_memory_signals,
     update_memory_state,
 )
+from app.director.semantic_overlays import enhance_graph_with_semantic_overlays
 from app.models.memory import DirectorMemoryProfile
 from app.models.project import Project
+from app.sensory.models import (
+    AnalysisBundle,
+    ClipAnalysis,
+    SceneRange,
+    SubjectFraming,
+    TranscriptResult,
+    TranscriptSegment,
+)
 
 
 def test_repeated_feedback_becomes_eligible_memory() -> None:
@@ -180,3 +190,96 @@ def test_project_insert_compiles_selected_memory_profile() -> None:
     assert project.contract["brand_rules"]["music_enabled"] is False
     assert project.contract["brand_rules"]["max_visual_overlays"] == 2
     assert project.contract["_director_memory_application"]["profile_key"] == "founder-brand"
+
+
+def test_memory_overlay_limit_reaches_semantic_planner() -> None:
+    transcript = TranscriptResult(
+        text="Here is the dashboard proof",
+        provider="fixture",
+        model="fixture",
+        segments=[
+            TranscriptSegment(
+                start=0,
+                end=4,
+                text="Here is the dashboard proof",
+                confidence=0.95,
+            )
+        ],
+    )
+    speech = ClipAnalysis(
+        asset_id="speech-1",
+        filename="talking-head.mp4",
+        sha256="speech",
+        media={
+            "duration_seconds": 4.0,
+            "width": 1920,
+            "height": 1080,
+            "has_audio": True,
+        },
+        transcript=transcript,
+        scenes=[SceneRange(start=0, end=4)],
+        subject_framing=SubjectFraming(normalized_center_x=0.5, confidence=0.9),
+        role="primary_speech",
+        quality_score=0.9,
+    )
+    evidence = ClipAnalysis(
+        asset_id="evidence-1",
+        filename="dashboard-proof.mp4",
+        sha256="evidence",
+        media={
+            "duration_seconds": 4.0,
+            "width": 1080,
+            "height": 1920,
+            "has_audio": False,
+        },
+        scenes=[SceneRange(start=0, end=4)],
+        role="evidence",
+        quality_score=0.9,
+        evidence_terms=["dashboard", "proof"],
+    )
+    fallback = EditDecisionGraph(
+        target_duration_seconds=4,
+        selected_duration_seconds=4,
+        segments=[
+            EditSegment(
+                source_asset_id="speech-1",
+                source_index=0,
+                source_start=0,
+                source_end=4,
+                output_start=0,
+                output_end=4,
+                score=0.9,
+                confidence=0.95,
+                reason="Fixture narration",
+                transcript_text="Here is the dashboard proof",
+            )
+        ],
+    )
+    analysis = AnalysisBundle(
+        media=speech.media,
+        transcript=transcript,
+        scenes=speech.scenes,
+        source_clips=[speech, evidence],
+        production_style={"max_visual_overlays": 4},
+    )
+
+    normal = enhance_graph_with_semantic_overlays(
+        fallback,
+        analysis,
+        objective="Show dashboard proof",
+        target_duration_seconds=4,
+        max_overlays=4,
+        minimum_match_score=0.2,
+    )
+    disabled = enhance_graph_with_semantic_overlays(
+        fallback,
+        analysis.model_copy(update={"production_style": {"max_visual_overlays": 0}}),
+        objective="Show dashboard proof",
+        target_duration_seconds=4,
+        max_overlays=4,
+        minimum_match_score=0.2,
+    )
+
+    assert len(normal.overlays) == 1
+    assert disabled.overlays == []
+    assert any("maximum of 0 visual overlay" in note for note in disabled.notes)
