@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.database import get_db
 from app.core.security import InvalidTokenError, sign_payload, verify_signed_payload
+from app.core.time import as_utc, is_expired_at
 from app.models.governance import PrivacyRequest
 from app.models.platform import Workspace
 from app.schemas.governance import (
@@ -19,11 +20,7 @@ from app.schemas.governance import (
     PrivacyDeliveryRead,
     PrivacyRequestRead,
 )
-from app.services.governance import (
-    GovernanceError,
-    generate_workspace_export,
-    workspace_deletion_blockers,
-)
+from app.services.governance import generate_workspace_export, workspace_deletion_blockers
 from app.services.permissions import can_manage_members, membership_for
 from app.worker.governance import generate_workspace_export_task
 
@@ -143,18 +140,21 @@ def create_privacy_delivery(
     if privacy_request is None or privacy_request.workspace_id != workspace_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Privacy request not found")
     now = datetime.now(UTC)
+    available_until = (
+        as_utc(privacy_request.available_until) if privacy_request.available_until else None
+    )
     if (
         privacy_request.status != "ready"
         or not privacy_request.result_path
         or not privacy_request.result_sha256
         or privacy_request.result_size_bytes is None
-        or not privacy_request.available_until
-        or privacy_request.available_until <= now
+        or available_until is None
+        or is_expired_at(available_until, now=now)
         or not Path(privacy_request.result_path).is_file()
     ):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Export is not available")
     expires_at = min(
-        privacy_request.available_until,
+        available_until,
         now + timedelta(minutes=settings.delivery_link_minutes),
     )
     token = sign_payload(
@@ -184,13 +184,12 @@ def download_privacy_export(token: str, db: Session = Depends(get_db)) -> FileRe
     except (InvalidTokenError, KeyError, ValueError) as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Export not found") from exc
     privacy_request = db.get(PrivacyRequest, request_id)
-    now = datetime.now(UTC)
     if (
         privacy_request is None
         or privacy_request.status != "ready"
         or not privacy_request.result_path
         or not privacy_request.available_until
-        or privacy_request.available_until <= now
+        or is_expired_at(privacy_request.available_until)
     ):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Export not found")
     path = Path(privacy_request.result_path)
