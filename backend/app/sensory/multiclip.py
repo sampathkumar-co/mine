@@ -3,7 +3,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from app.sensory.models import ClipAnalysis, SceneRange, SubjectFraming, TranscriptResult
+from app.sensory.models import (
+    ClipAnalysis,
+    ContinuityProfile,
+    SceneRange,
+    SemanticTag,
+    SubjectFraming,
+    TranscriptResult,
+)
 
 EVIDENCE_HINTS = {
     "before",
@@ -11,6 +18,7 @@ EVIDENCE_HINTS = {
     "chart",
     "dashboard",
     "demo",
+    "document",
     "evidence",
     "proof",
     "product",
@@ -19,6 +27,19 @@ EVIDENCE_HINTS = {
     "screenshot",
 }
 BROLL_HINTS = {"broll", "b-roll", "detail", "establishing", "insert", "room", "wide"}
+EVIDENCE_TAGS = {
+    "before_after",
+    "chart",
+    "demo",
+    "document",
+    "measurable_claim",
+    "product",
+    "proof",
+    "screen",
+    "screen_or_document",
+    "testimonial",
+}
+BROLL_TAGS = {"detail_or_product", "environment", "location", "motion_demo"}
 
 
 def _terms(value: str) -> set[str]:
@@ -70,6 +91,8 @@ def analyze_source_clip(
     scenes: list[SceneRange],
     subject_framing: SubjectFraming,
     perceptual_hash: str | None,
+    semantic_tags: list[SemanticTag] | None = None,
+    continuity: ContinuityProfile | None = None,
 ) -> ClipAnalysis:
     duration = float(media.get("duration_seconds", 0) or 0)
     width = int(media.get("width", 0) or 0)
@@ -78,14 +101,19 @@ def analyze_source_clip(
     transcript_words = len(transcript.words) if transcript else 0
     speech_density = transcript_words / max(duration, 1.0)
 
+    tags = semantic_tags or []
+    tag_labels = {tag.label for tag in tags}
     filename_terms = _terms(Path(filename).stem)
     transcript_terms = _terms(transcript.text if transcript else "")
-    evidence_terms = sorted((filename_terms | transcript_terms) & EVIDENCE_HINTS)
+    evidence_terms = sorted(
+        ((filename_terms | transcript_terms) & EVIDENCE_HINTS)
+        | {label for label in tag_labels if label in EVIDENCE_TAGS}
+    )
 
     role = "primary_speech"
-    if filename_terms & EVIDENCE_HINTS:
+    if filename_terms & EVIDENCE_HINTS or tag_labels & EVIDENCE_TAGS:
         role = "evidence"
-    elif filename_terms & BROLL_HINTS or not has_audio:
+    elif filename_terms & BROLL_HINTS or tag_labels & BROLL_TAGS or not has_audio:
         role = "b_roll"
     elif transcript is None or speech_density < 0.25:
         role = "b_roll"
@@ -110,6 +138,8 @@ def analyze_source_clip(
         score += min(0.06, (len(scenes) - 1) * 0.01)
     if role in {"b_roll", "evidence"}:
         score += 0.04
+    if any(tag.confidence >= 0.7 for tag in tags):
+        score += 0.04
     if duration <= 0:
         rejection_reasons.append("Clip has no measurable duration.")
         score = 0
@@ -131,6 +161,8 @@ def analyze_source_clip(
         quality_score=round(score, 3),
         rejection_reasons=rejection_reasons,
         evidence_terms=evidence_terms,
+        semantic_tags=tags,
+        continuity=continuity or ContinuityProfile(subject_center_x=subject_framing.normalized_center_x),
     )
 
 
@@ -150,7 +182,6 @@ def mark_duplicate_clips(
             if exact_match or visual_match:
                 duplicate_of = previous.asset_id
                 break
-
         if duplicate_of:
             result.append(
                 clip.model_copy(
