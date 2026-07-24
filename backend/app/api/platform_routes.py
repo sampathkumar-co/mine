@@ -4,6 +4,7 @@ import hashlib
 import os
 import re
 import subprocess
+from contextlib import suppress
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from uuid import UUID, uuid4
@@ -11,7 +12,7 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, status
 from fastapi.responses import FileResponse
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
@@ -36,7 +37,6 @@ from app.schemas.platform import (
     RegisterRequest,
     ResumableUploadCreate,
     ResumableUploadRead,
-    UserRead,
     WorkspaceCreate,
     WorkspaceProjectRead,
     WorkspaceRead,
@@ -271,11 +271,20 @@ def create_resumable_upload(
         total_bytes=payload.total_bytes,
         storage_path=str(upload_dir / f"{uuid4().hex}.part"),
     )
-    Path(upload.storage_path).touch(exist_ok=False)
-    project.status = ProjectStatus.UPLOADING
-    project.error_message = None
-    db.add(upload)
-    db.commit()
+    partial = Path(upload.storage_path)
+    try:
+        partial.touch(exist_ok=False)
+        project.status = ProjectStatus.UPLOADING
+        project.error_message = None
+        db.add(upload)
+        db.commit()
+    except (OSError, SQLAlchemyError) as exc:
+        db.rollback()
+        partial.unlink(missing_ok=True)
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Upload session could not be created",
+        ) from exc
     db.refresh(upload)
     return upload
 
@@ -346,25 +355,33 @@ async def append_resumable_upload(
             headers={"Upload-Offset": str(upload.received_bytes)},
         )
 
-    received_this_request = 0
+    payload = bytearray()
+    async for chunk in request.stream():
+        if not chunk:
+            continue
+        if len(payload) + len(chunk) > settings.resumable_request_bytes:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail="Upload chunk exceeds the configured request limit",
+            )
+        if upload.received_bytes + len(payload) + len(chunk) > upload.total_bytes:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail="Upload exceeds its declared total size",
+            )
+        payload.extend(chunk)
+
+    storage_path = Path(upload.storage_path)
+    original_size = storage_path.stat().st_size
     try:
-        with Path(upload.storage_path).open("ab") as output:
-            async for chunk in request.stream():
-                if not chunk:
-                    continue
-                received_this_request += len(chunk)
-                if received_this_request > settings.resumable_request_bytes:
-                    raise HTTPException(
-                        status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                        detail="Upload chunk exceeds the configured request limit",
-                    )
-                if upload.received_bytes + received_this_request > upload.total_bytes:
-                    raise HTTPException(
-                        status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                        detail="Upload exceeds its declared total size",
-                    )
-                output.write(chunk)
+        with storage_path.open("ab") as output:
+            output.write(payload)
+            output.flush()
+            os.fsync(output.fileno())
     except OSError as exc:
+        with suppress(OSError):
+            with storage_path.open("r+b") as output:
+                output.truncate(original_size)
         upload.status = "failed"
         upload.error_message = "Upload storage is unavailable"
         db.commit()
@@ -373,7 +390,7 @@ async def append_resumable_upload(
             detail="Upload storage is unavailable",
         ) from exc
 
-    upload.received_bytes += received_this_request
+    upload.received_bytes += len(payload)
     if upload.received_bytes == upload.total_bytes:
         try:
             _complete_upload(db, upload)
@@ -420,7 +437,6 @@ def _delivery_path(db: Session, project_id: UUID, version: int | None) -> tuple[
 )
 def create_delivery_link(
     project_id: UUID,
-    request: Request,
     version: int | None = Query(default=None, ge=1),
     download: bool = False,
     db: Session = Depends(get_db),
@@ -437,11 +453,10 @@ def create_delivery_link(
         },
         settings,
     )
-    base = str(request.base_url).rstrip("/")
     return DeliveryLinkRead(
         project_id=project_id,
         revision_version=version,
-        url=f"{base}{settings.api_v1_prefix}/deliveries/{token}",
+        url=f"{settings.api_v1_prefix}/deliveries/{token}",
         expires_at=expires_at,
         download=download,
     )
