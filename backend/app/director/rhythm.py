@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import subprocess
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import median
@@ -48,7 +49,7 @@ class MusicTimingPlan:
 
 
 def pcm_energy_envelope(
-    samples: list[int] | tuple[int, ...],
+    samples: Sequence[int],
     *,
     sample_rate: int,
     frames_per_second: int = 50,
