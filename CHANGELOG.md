@@ -9,6 +9,7 @@ Director OS v1.1 development has started with beat-aware sound direction:
 - Rendering chooses a deterministic playback phase that aligns edit boundaries to beats and source changes to musical phrases
 - Low-confidence or failed rhythm analysis falls back to the proven v1.0 music mix instead of blocking production
 - Beat detection, timing-plan selection, and bounded aligned-music preparation are covered by unit tests
+- The selected timing plan is now persisted in project intelligence and reused by rendering without a second analysis pass
 
 ## 1.0.0 — 2026-07-24
 
