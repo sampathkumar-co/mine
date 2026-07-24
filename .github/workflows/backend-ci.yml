@@ -37,4 +37,13 @@ jobs:
       - name: Enforce Ruff result
         if: steps.ruff.outcome == 'failure'
         run: exit 1
+      - name: Validate Alembic migrations
+        env:
+          DIRECTOR_ENVIRONMENT: test
+          DIRECTOR_DATABASE_URL: sqlite+pysqlite:///./migration_test.db
+          DIRECTOR_AUTH_SECRET: migration-test-secret-change-me
+        run: |
+          alembic upgrade head
+          alembic current
+          rm -f migration_test.db
       - run: pytest --cov=app --cov-report=term-missing
