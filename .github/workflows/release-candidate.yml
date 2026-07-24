@@ -1,0 +1,84 @@
+name: Director OS v1 Release Candidate
+
+on:
+  pull_request:
+    paths:
+      - "VERSION"
+      - "backend/**"
+      - "frontend/**"
+      - "ops/**"
+      - ".env.production.example"
+      - "compose.production.yml"
+      - ".github/workflows/release-candidate.yml"
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Validate backend
+        working-directory: backend
+        env:
+          DIRECTOR_ENVIRONMENT: test
+          DIRECTOR_AUTH_REQUIRED: "false"
+          DIRECTOR_AUTH_SECRET: release-candidate-secret-change-me
+          DIRECTOR_DATABASE_URL: sqlite+pysqlite:///./release_candidate.db
+        run: |
+          pip install ".[dev]"
+          ruff check .
+          alembic upgrade head
+          pytest --cov=app --cov-report=term-missing
+          DIRECTOR_RUN_MEDIA_SMOKE=1 pytest -q tests/test_ffmpeg_integration.py
+      - name: Validate frontend
+        working-directory: frontend
+        run: |
+          npm install --no-audit --no-fund
+          npm run check
+      - name: Validate deployment definitions
+        env:
+          DIRECTOR_DOMAIN: video.example.com
+          DIRECTOR_ACME_EMAIL: ops@example.com
+          DIRECTOR_POSTGRES_PASSWORD: test-production-password
+          DIRECTOR_METRICS_TOKEN: test-metrics-token-change-me
+        run: |
+          cp .env.example .env
+          docker compose config >/dev/null
+          docker compose -f compose.production.yml config >/dev/null
+          bash -n ops/backup.sh ops/restore.sh ops/smoke.sh ops/go_live.sh
+      - name: Build release evidence
+        env:
+          DIRECTOR_AUTH_SECRET: ci-release-secret-00000000000000000000000000000000
+          DIRECTOR_METRICS_TOKEN: ci-metrics-token-000000000000000000000000000000
+          DIRECTOR_DATABASE_URL: postgresql+psycopg://release_ci:strong-ci-password@postgres:5432/director
+        run: |
+          python3 ops/release_doctor.py \
+            --env-file .env.production.example \
+            --allow-external-pending \
+            --json-output dist/release-doctor-template.json \
+            --markdown-output dist/release-doctor-template.md
+          python3 ops/release_manifest.py
+          VERSION="$(cat VERSION)"
+          git archive --format=tar.gz --prefix="director-os-${VERSION}/" \
+            --output="dist/director-os-${VERSION}-source.tar.gz" HEAD
+          sha256sum "dist/director-os-${VERSION}-source.tar.gz" >> dist/CHECKSUMS.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: director-os-release-candidate
+          path: dist/
+          retention-days: 90
