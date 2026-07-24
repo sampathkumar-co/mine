@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID
@@ -49,6 +50,21 @@ def _mission(db: Session, project_id: UUID, mission_id: UUID) -> PickupMission:
     if mission is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pickup mission not found")
     return mission
+
+
+def _preserve_ready_output(project: Project, mission_id: UUID) -> None:
+    if project.status != ProjectStatus.READY or not project.output_path:
+        return
+    source = Path(project.output_path)
+    if not source.exists():
+        return
+    backup_dir = Path(settings.output_dir) / str(project.id) / "camera-backups"
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
+    suffix = source.suffix or ".mp4"
+    backup = backup_dir / f"before-{mission_id}-{timestamp}{suffix}"
+    shutil.copy2(source, backup)
+    project.output_path = str(backup)
 
 
 def _queue_project(db: Session, project: Project) -> ProjectAccepted:
@@ -149,6 +165,16 @@ async def submit_pickup(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"Mission is already {mission.status}",
         )
+
+    try:
+        _preserve_ready_output(project, mission.id)
+        db.commit()
+    except OSError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="The current ready output could not be preserved for the improvement pass",
+        ) from exc
 
     try:
         stored = await store_upload(
