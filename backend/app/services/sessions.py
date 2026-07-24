@@ -4,7 +4,7 @@ import hashlib
 import secrets
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
@@ -60,7 +60,7 @@ def issue_session(
     user_agent, ip_address = _request_details(request)
     record = AuthSessionRecord(
         user_id=user.id,
-        family_id=family_id,
+        family_id=family_id or uuid4(),
         refresh_token_hash=token_hash(refresh_token),
         expires_at=now + timedelta(days=settings.refresh_token_days),
         user_agent=user_agent,
