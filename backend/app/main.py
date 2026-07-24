@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.account_routes import router as account_router
 from app.api.auth_middleware import AuthenticationMiddleware
 from app.api.billing_middleware import BillingReservationMiddleware
 from app.api.camera import router as camera_router
@@ -50,6 +51,7 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["Upload-Offset", "X-Request-ID"],
 )
+app.include_router(account_router, prefix=settings.api_v1_prefix)
 app.include_router(operations_router, prefix=settings.api_v1_prefix)
 app.include_router(platform_router, prefix=settings.api_v1_prefix)
 app.include_router(router, prefix=settings.api_v1_prefix)
