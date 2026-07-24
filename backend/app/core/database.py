@@ -22,6 +22,7 @@ def get_db() -> Generator[Session, None, None]:
 
 def init_database() -> None:
     import app.models.analysis  # noqa: F401
+    import app.models.camera  # noqa: F401
     import app.models.memory  # noqa: F401
     import app.models.project  # noqa: F401
 
