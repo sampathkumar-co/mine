@@ -108,7 +108,7 @@ def _estimate_music_rhythm(
     if sys.byteorder != "little":
         samples.byteswap()
     envelope = pcm_energy_envelope(
-        samples.tolist(),
+        samples,
         sample_rate=_RHYTHM_SAMPLE_RATE,
         frames_per_second=_RHYTHM_FRAMES_PER_SECOND,
     )
