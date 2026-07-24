@@ -6,8 +6,8 @@ Revises: 20260724_0001
 from __future__ import annotations
 
 import sqlalchemy as sa
-from alembic import op
 
+from alembic import op
 from app.core.database import Base, import_models
 
 revision = "20260724_0002"

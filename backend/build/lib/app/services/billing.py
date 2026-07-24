@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from uuid import UUID
 
 from sqlalchemy import select

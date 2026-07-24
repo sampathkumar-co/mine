@@ -11,8 +11,6 @@ from sqlalchemy import select
 from app.core.database import Base, SessionLocal, engine
 from app.main import app
 from app.models.operations import AuthSessionRecord, EmailOutbox
-from app.models.platform import WorkspaceMembership
-from app.models.project import Project
 
 
 @pytest.fixture(autouse=True)

@@ -36,9 +36,8 @@ def init_database() -> None:
 
 
 def migrate_database(revision: str = "head") -> None:
-    from alembic.config import Config
-
     from alembic import command
+    from alembic.config import Config
 
     config_path = Path(__file__).resolve().parents[2] / "alembic.ini"
     config = Config(str(config_path))

@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import secrets
 from datetime import UTC, datetime, timedelta
+from decimal import Decimal
 from pathlib import Path
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, Response, status
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
@@ -14,9 +16,11 @@ from app.core.database import get_db
 from app.core.security import hash_password
 from app.models.operations import (
     AuditEvent,
+    BillingAccount,
     BillingEntry,
     MultipartUpload,
     MultipartUploadPart,
+    UserEmailStatus,
     WorkspaceInvitation,
 )
 from app.models.platform import User, WorkspaceMembership
