@@ -34,7 +34,7 @@ services:
 
   worker:
     build: ./backend
-    command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --concurrency=1
+    command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --concurrency=1 --queues=director.render,director.revisions,director.email,director.maintenance,director.governance
     env_file: .env
     environment:
       DIRECTOR_AUTO_CREATE_SCHEMA: "false"

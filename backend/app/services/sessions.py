@@ -24,6 +24,7 @@ class SessionError(ValueError):
 class IssuedSession:
     access_token: str
     refresh_token: str
+    csrf_token: str
     access_expires_at: datetime
     refresh_expires_at: datetime
     record: AuthSessionRecord
@@ -33,7 +34,7 @@ def token_hash(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
-def _refresh_secret() -> str:
+def _secret() -> str:
     return secrets.token_urlsafe(48)
 
 
@@ -57,12 +58,14 @@ def issue_session(
     family_id: UUID | None = None,
 ) -> IssuedSession:
     now = datetime.now(UTC)
-    refresh_token = _refresh_secret()
+    refresh_token = _secret()
+    csrf_token = _secret()
     user_agent, ip_address = _request_details(request)
     record = AuthSessionRecord(
         user_id=user.id,
         family_id=family_id or uuid4(),
         refresh_token_hash=token_hash(refresh_token),
+        csrf_token_hash=token_hash(csrf_token),
         expires_at=now + timedelta(days=settings.refresh_token_days),
         user_agent=user_agent,
         ip_address=ip_address,
@@ -70,14 +73,11 @@ def issue_session(
     )
     db.add(record)
     db.flush()
-    access_token, access_expires_at = create_access_token(
-        user.id,
-        settings,
-        session_id=record.id,
-    )
+    access_token, access_expires_at = create_access_token(user.id, settings, session_id=record.id)
     return IssuedSession(
         access_token=access_token,
         refresh_token=refresh_token,
+        csrf_token=csrf_token,
         access_expires_at=access_expires_at,
         refresh_expires_at=as_utc(record.expires_at),
         record=record,
@@ -87,6 +87,7 @@ def issue_session(
 def rotate_session(
     db: Session,
     refresh_token: str,
+    csrf_token: str,
     settings: Settings,
     *,
     request=None,
@@ -98,6 +99,11 @@ def rotate_session(
     )
     if record is None:
         raise SessionError("Refresh session is invalid")
+    if record.csrf_token_hash is None or not secrets.compare_digest(
+        record.csrf_token_hash,
+        token_hash(csrf_token),
+    ):
+        raise SessionError("Refresh session CSRF check failed")
     if record.rotated_at is not None or record.replaced_by_session_id is not None:
         db.execute(
             update(AuthSessionRecord)
@@ -116,21 +122,35 @@ def rotate_session(
         db.flush()
         raise SessionError("Refresh session has expired")
 
+    claimed = db.execute(
+        update(AuthSessionRecord)
+        .where(
+            AuthSessionRecord.id == record.id,
+            AuthSessionRecord.rotated_at.is_(None),
+            AuthSessionRecord.replaced_by_session_id.is_(None),
+            AuthSessionRecord.revoked_at.is_(None),
+        )
+        .values(rotated_at=now, last_used_at=now)
+    )
+    if int(claimed.rowcount or 0) != 1:
+        db.execute(
+            update(AuthSessionRecord)
+            .where(
+                AuthSessionRecord.family_id == record.family_id,
+                AuthSessionRecord.revoked_at.is_(None),
+            )
+            .values(revoked_at=now)
+        )
+        db.flush()
+        raise SessionError("Refresh session reuse was detected; the session family was revoked")
+
     user = db.get(User, record.user_id)
     if user is None:
         record.revoked_at = now
         db.flush()
         raise SessionError("Refresh session user no longer exists")
 
-    issued = issue_session(
-        db,
-        user,
-        settings,
-        request=request,
-        family_id=record.family_id,
-    )
-    record.rotated_at = now
-    record.last_used_at = now
+    issued = issue_session(db, user, settings, request=request, family_id=record.family_id)
     record.replaced_by_session_id = issued.record.id
     db.flush()
     return issued

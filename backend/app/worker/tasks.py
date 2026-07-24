@@ -46,6 +46,7 @@ from app.sensory.reference import analyze_reference_style
 from app.sensory.scenes import detect_scenes
 from app.sensory.semantics import analyze_visual_semantics, extract_text_semantic_tags
 from app.sensory.transcription import transcribe_audio
+from app.services.jobs import claim_job, finish_job, heartbeat_job
 from app.worker.celery_app import celery_app
 
 settings = get_settings()
@@ -60,6 +61,11 @@ def _set_status(
 ) -> None:
     project.status = status
     project.error_message = error_message
+    if project.task_id:
+        try:
+            heartbeat_job(db, UUID(project.task_id))
+        except ValueError:
+            pass
     db.commit()
 
 
@@ -306,12 +312,27 @@ def _save_camera_audit(
 
 
 @celery_app.task(bind=True, max_retries=3)
-def run_project_pipeline(self, project_id: str) -> dict[str, str]:
+def run_project_pipeline(self, project_id: str, job_id: str | None = None) -> dict[str, str]:
     project_uuid = UUID(project_id)
+    job_uuid = UUID(job_id) if job_id else None
     temporary_audio_paths: list[Path] = []
     with SessionLocal() as db:
+        if job_uuid is not None:
+            job = claim_job(
+                db,
+                job_uuid,
+                {"production", "camera_resume"},
+                celery_task_id=str(getattr(self.request, "id", "") or ""),
+            )
+            if job is None:
+                db.rollback()
+                return {"project_id": project_id, "status": "duplicate"}
+            db.commit()
         project = db.get(Project, project_uuid)
         if project is None:
+            if job_uuid is not None:
+                finish_job(db, job_uuid, succeeded=False, error="Project no longer exists")
+                db.commit()
             return {"project_id": project_id, "status": "missing"}
 
         project_output_dir = Path(settings.output_dir) / project_id
@@ -473,6 +494,9 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                         "missions": len(camera_report.missions),
                     },
                 )
+                if job_uuid is not None:
+                    finish_job(db, job_uuid, succeeded=True)
+                    db.commit()
                 return {
                     "project_id": project_id,
                     "status": ProjectStatus.NEEDS_PICKUPS.value,
@@ -616,6 +640,9 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
 
             project.output_path = str(output_path)
             _set_status(db, project, ProjectStatus.READY)
+            if job_uuid is not None:
+                finish_job(db, job_uuid, succeeded=True)
+                db.commit()
             rejected_count = sum(1 for clip in clip_analyses if clip.role == "rejected")
             return {
                 "project_id": project_id,
@@ -650,6 +677,18 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                         ProjectStatus.FAILED,
                         error_message=str(exc)[:2_000],
                     )
+            if job_uuid is not None:
+                if self.request.retries < self.max_retries:
+                    from app.models.operations import ProductionJob
+
+                    job = db.get(ProductionJob, job_uuid)
+                    if job is not None:
+                        job.status = "dispatched"
+                        job.last_error = str(exc)[:2_000]
+                        db.commit()
+                else:
+                    finish_job(db, job_uuid, succeeded=False, error=str(exc))
+                    db.commit()
             if self.request.retries < self.max_retries:
                 raise self.retry(exc=exc, countdown=2 ** (self.request.retries + 1)) from exc
             raise

@@ -110,6 +110,18 @@ class LocalMultipartStorage:
     ) -> CompletedObject:
         destination = self._object_path(upload)
         destination.parent.mkdir(parents=True, exist_ok=True)
+        if destination.exists() and destination.stat().st_size == upload.total_bytes:
+            digest = hashlib.sha256()
+            with destination.open("rb") as source:
+                while chunk := source.read(self.settings.upload_chunk_bytes):
+                    digest.update(chunk)
+            return CompletedObject(
+                provider="local",
+                bucket=None,
+                object_key=upload.object_key,
+                local_path=destination,
+                checksum_sha256=digest.hexdigest(),
+            )
         temporary = destination.with_suffix(destination.suffix + ".assembling")
         digest = hashlib.sha256()
         total = 0
@@ -204,17 +216,22 @@ class S3MultipartStorage:
         parts: list[MultipartUploadPart],
     ) -> CompletedObject:
         ordered = sorted(parts, key=lambda item: item.part_number)
-        self.client.complete_multipart_upload(
-            Bucket=self.settings.s3_bucket,
-            Key=upload.object_key,
-            UploadId=upload.provider_upload_id,
-            MultipartUpload={
-                "Parts": [
-                    {"ETag": part.etag, "PartNumber": part.part_number}
-                    for part in ordered
-                ]
-            },
-        )
+        try:
+            self.client.complete_multipart_upload(
+                Bucket=self.settings.s3_bucket,
+                Key=upload.object_key,
+                UploadId=upload.provider_upload_id,
+                MultipartUpload={
+                    "Parts": [
+                        {"ETag": part.etag, "PartNumber": part.part_number}
+                        for part in ordered
+                    ]
+                },
+            )
+        except Exception:
+            # Completion is retried after crashes. If the provider already committed
+            # the object, HEAD succeeds and the verified cache download below resumes.
+            self.client.head_object(Bucket=self.settings.s3_bucket, Key=upload.object_key)
         cache_path = (
             Path(self.settings.upload_dir)
             / str(upload.project_id)
@@ -318,6 +335,10 @@ def finalize_upload_asset(
     project = db.get(Project, upload.project_id)
     if project is None:
         raise StorageError("Upload project no longer exists")
+    if upload.asset_id is not None:
+        existing = db.get(ProjectAsset, upload.asset_id)
+        if existing is not None:
+            return existing
     asset = ProjectAsset(
         project_id=project.id,
         kind=AssetKind(upload.kind),

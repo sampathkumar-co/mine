@@ -24,6 +24,7 @@ from app.rendering.captions import write_ass_captions
 from app.rendering.ffmpeg import RenderSource, probe_media, validate_vertical_output
 from app.rendering.semantic_overlays import render_semantic_production_graph
 from app.sensory.models import AnalysisBundle
+from app.services.jobs import claim_job, finish_job
 from app.worker.celery_app import celery_app
 
 settings = get_settings()
@@ -126,9 +127,22 @@ def run_revision_pipeline(
     self,
     project_id: str,
     version: int,
+    job_id: str | None = None,
 ) -> dict[str, str]:
     project_uuid = UUID(project_id)
+    job_uuid = UUID(job_id) if job_id else None
     with SessionLocal() as db:
+        if job_uuid is not None:
+            job = claim_job(
+                db,
+                job_uuid,
+                {"revision"},
+                celery_task_id=str(getattr(self.request, "id", "") or ""),
+            )
+            if job is None:
+                db.rollback()
+                return {"project_id": project_id, "version": str(version), "status": "duplicate"}
+            db.commit()
         project = db.get(Project, project_uuid)
         revision = db.scalar(
             select(EditGraphRevision).where(
@@ -137,6 +151,9 @@ def run_revision_pipeline(
             )
         )
         if project is None or revision is None:
+            if job_uuid is not None:
+                finish_job(db, job_uuid, succeeded=False, error="Project or revision no longer exists")
+                db.commit()
             return {"project_id": project_id, "status": "missing"}
 
         try:
@@ -296,6 +313,8 @@ def run_revision_pipeline(
             revision.status = "ready"
             revision.render_plan = application.render_plan.model_dump(mode="json")
             _activate_revision(db, project, revision, graph)
+            if job_uuid is not None:
+                finish_job(db, job_uuid, succeeded=True)
             db.commit()
             return {
                 "project_id": project_id,
@@ -322,6 +341,18 @@ def run_revision_pipeline(
                     revision.status = "failed"
                     revision.error_message = str(exc)[:2_000]
                 db.commit()
+            if job_uuid is not None:
+                if self.request.retries < self.max_retries:
+                    from app.models.operations import ProductionJob
+
+                    job = db.get(ProductionJob, job_uuid)
+                    if job is not None:
+                        job.status = "dispatched"
+                        job.last_error = str(exc)[:2_000]
+                        db.commit()
+                else:
+                    finish_job(db, job_uuid, succeeded=False, error=str(exc))
+                    db.commit()
             if self.request.retries < self.max_retries:
                 raise self.retry(
                     exc=exc,

@@ -29,6 +29,8 @@ def production_env() -> dict[str, str]:
         "DIRECTOR_CORS_ORIGINS": "https://director.example.test",
         "DIRECTOR_AUTH_REQUIRED": "true",
         "DIRECTOR_AUTH_SECRET": "a-secure-release-secret-with-more-than-32-characters",
+        "DIRECTOR_AUTH_COOKIE_SECURE": "true",
+        "DIRECTOR_AUTH_COOKIE_SAMESITE": "strict",
         "DIRECTOR_REQUIRE_VERIFIED_EMAIL": "true",
         "DIRECTOR_AUTO_CREATE_SCHEMA": "false",
         "DIRECTOR_DATABASE_URL": "postgresql+psycopg://release:strong-password@postgres/director",
@@ -45,6 +47,7 @@ def production_env() -> dict[str, str]:
         "DIRECTOR_SMTP_USERNAME": "director",
         "DIRECTOR_SMTP_PASSWORD": "smtp-password",
         "DIRECTOR_SMTP_FROM_EMAIL": "deliver@example.test",
+        "DIRECTOR_EMAIL_BODY_ENCRYPTION_KEY": "MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=",
         "DIRECTOR_ACME_EMAIL": "operator@example.test",
         "DIRECTOR_OBJECT_STORAGE_PROVIDER": "s3",
         "DIRECTOR_S3_BUCKET": "director-production",
@@ -121,9 +124,9 @@ def test_release_doctor_keeps_external_credentials_visible_as_pending() -> None:
 
 def test_release_manifest_is_versioned_and_content_addressed() -> None:
     manifest = release_manifest.build_manifest(ROOT)
-    assert manifest["version"] == "1.0.0"
-    assert manifest["backend"]["version"] == "1.0.0"
-    assert manifest["frontend"]["version"] == "1.0.0"
+    assert manifest["version"] == "1.0.1"
+    assert manifest["backend"]["version"] == "1.0.1"
+    assert manifest["frontend"]["version"] == "1.0.1"
     assert manifest["source_file_count"] > 50
     assert len(manifest["manifest_sha256"]) == 64
     paths = {item["path"] for item in manifest["source_files"]}

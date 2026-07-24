@@ -115,6 +115,10 @@ export interface MultipartUpload {
   updated_at: string;
 }
 
+export interface MultipartUploadDetail extends MultipartUpload {
+  parts: MultipartPart[];
+}
+
 export interface MultipartPartTarget {
   upload_id: string;
   part_number: number;

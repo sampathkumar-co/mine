@@ -33,8 +33,18 @@ async def lifespan(_: FastAPI):
             raise RuntimeError("DIRECTOR_AUTH_SECRET must be changed in production")
         if not settings.auth_required:
             raise RuntimeError("DIRECTOR_AUTH_REQUIRED must remain enabled in production")
+        if not settings.auth_cookie_secure:
+            raise RuntimeError("DIRECTOR_AUTH_COOKIE_SECURE must be enabled in production")
+        if settings.auth_cookie_samesite.casefold() != "strict":
+            raise RuntimeError("DIRECTOR_AUTH_COOKIE_SAMESITE must be strict in production")
+        if not settings.public_app_url.casefold().startswith("https://"):
+            raise RuntimeError("DIRECTOR_PUBLIC_APP_URL must use HTTPS in production")
         if settings.auto_create_schema:
             raise RuntimeError("DIRECTOR_AUTO_CREATE_SCHEMA must be disabled in production")
+        if settings.email_provider.casefold() == "smtp" and not settings.email_body_encryption_key:
+            raise RuntimeError(
+                "DIRECTOR_EMAIL_BODY_ENCRYPTION_KEY is required for production SMTP"
+            )
         if settings.subscriptions_enabled and (
             not settings.stripe_secret_key or not settings.stripe_webhook_secret
         ):
@@ -60,7 +70,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title=settings.app_name, version="1.0.0", lifespan=lifespan)
+app = FastAPI(title=settings.app_name, version="1.0.1", lifespan=lifespan)
 app.add_middleware(BillingReservationMiddleware)
 app.add_middleware(AuditMiddleware)
 app.add_middleware(RateLimitMiddleware)

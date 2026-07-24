@@ -5,7 +5,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, Response, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -25,10 +25,8 @@ from app.models.project import Project
 from app.schemas.operations import (
     AuditEventRead,
     BillingAccountRead,
-    BillingAdjustmentCreate,
     BillingEntryRead,
     InvitationAcceptRequest,
-    LogoutRequest,
     MultipartCompleteRequest,
     MultipartPartRegister,
     MultipartPartTargetRead,
@@ -37,7 +35,6 @@ from app.schemas.operations import (
     MultipartUploadRead,
     PasswordResetConfirm,
     PasswordResetRequest,
-    RefreshRequest,
     SimpleMessage,
     VerificationConfirm,
     WorkspaceInvitationAccepted,
@@ -48,23 +45,22 @@ from app.schemas.operations import (
 )
 from app.schemas.platform import AuthSession, UserRead, WorkspaceRead
 from app.services.audit import record_audit
-from app.services.billing import (
-    InsufficientCreditsError,
-    credits,
-    ensure_billing_account,
-    post_adjustment,
-)
+from app.services.billing import credits, ensure_workspace_billing
 from app.services.email import (
     AccountTokenError,
     consume_account_token,
     email_is_verified,
-    ensure_email_status,
     mark_email_verified,
     queue_email,
     queue_password_reset_email,
     queue_verification_email,
 )
 from app.services.permissions import can_manage_members, membership_for, normalize_role
+from app.services.session_cookies import (
+    clear_session_cookies,
+    session_cookie_values,
+    set_session_cookies,
+)
 from app.services.sessions import (
     SessionError,
     issue_session,
@@ -123,7 +119,7 @@ def _session_response(db: Session, user: User, issued) -> AuthSession:
     )
     return AuthSession(
         access_token=issued.access_token,
-        refresh_token=issued.refresh_token,
+        refresh_token=None,
         expires_at=issued.access_expires_at,
         refresh_expires_at=issued.refresh_expires_at,
         session_id=issued.record.id,
@@ -165,64 +161,67 @@ def _last_owner(db: Session, workspace_id: UUID, membership: WorkspaceMembership
 @router.post("/auth/session", response_model=AuthSession, tags=["authentication"])
 def create_refreshable_session(
     request: Request,
+    response: Response,
     db: Session = Depends(get_db),
 ) -> AuthSession:
     user = db.get(User, _current_user_id(request))
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-    email_status = ensure_email_status(db, user.id)
-    if email_status.verified_at is None and email_status.verification_sent_at is None:
-        queue_verification_email(db, user, settings)
+    session_id = _current_session_id(request)
+    if session_id is not None:
+        revoke_session(db, session_id, user.id)
     issued = issue_session(db, user, settings, request=request)
     db.commit()
+    set_session_cookies(response, issued, settings)
     return _session_response(db, user, issued)
 
 
 @router.post("/auth/refresh", response_model=AuthSession, tags=["authentication"])
 def refresh_session(
-    payload: RefreshRequest,
     request: Request,
+    response: Response,
     db: Session = Depends(get_db),
 ) -> AuthSession:
     try:
-        issued = rotate_session(db, payload.refresh_token, settings, request=request)
-    except SessionError as exc:
+        refresh_token, csrf_token = session_cookie_values(request, settings)
+        issued = rotate_session(db, refresh_token, csrf_token, settings, request=request)
+    except (SessionError, ValueError) as exc:
         db.commit()
+        clear_session_cookies(response, settings)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
     user = db.get(User, issued.record.user_id)
     if user is None:
+        clear_session_cookies(response, settings)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     db.commit()
+    set_session_cookies(response, issued, settings)
     return _session_response(db, user, issued)
 
 
 @router.post("/auth/logout", response_model=SimpleMessage, tags=["authentication"])
 def logout(
-    payload: LogoutRequest,
     request: Request,
+    response: Response,
     db: Session = Depends(get_db),
 ) -> SimpleMessage:
     user_id = _current_user_id(request)
     session_id = _current_session_id(request)
     if session_id is not None:
         revoke_session(db, session_id, user_id)
-    elif payload.refresh_token:
-        digest = token_hash(payload.refresh_token)
-        from app.models.operations import AuthSessionRecord
-
-        record = db.scalar(
-            select(AuthSessionRecord).where(AuthSessionRecord.refresh_token_hash == digest)
-        )
-        if record and record.user_id == user_id:
-            revoke_session(db, record.id, user_id)
     db.commit()
+    clear_session_cookies(response, settings)
     return SimpleMessage(message="Session revoked.")
 
 
 @router.post("/auth/logout-all", response_model=SimpleMessage, tags=["authentication"])
-def logout_all(request: Request, db: Session = Depends(get_db)) -> SimpleMessage:
+def logout_all(
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> SimpleMessage:
     count = revoke_all_sessions(db, _current_user_id(request))
     db.commit()
+    clear_session_cookies(response, settings)
     return SimpleMessage(message=f"Revoked {count} session(s).")
 
 
@@ -438,6 +437,7 @@ def create_workspace_invitation(
         recipient=email,
         subject="You were invited to a Director OS workspace",
         body_text=f"Accept your Director OS workspace invitation:\n{invite_url}",
+        settings=settings,
     )
     db.commit()
     db.refresh(invitation)
@@ -559,7 +559,7 @@ def get_billing_account(
     membership = membership_for(db, workspace_id, _current_user_id(request))
     if membership is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Workspace not found")
-    account = ensure_billing_account(db, workspace_id)
+    account = ensure_workspace_billing(db, workspace_id, settings)
     db.commit()
     return BillingAccountRead(
         workspace_id=workspace_id,
@@ -593,39 +593,6 @@ def list_billing_entries(
             .limit(limit)
         ).all()
     )
-
-
-@router.post(
-    "/workspaces/{workspace_id}/billing/adjustments",
-    response_model=BillingEntryRead,
-    status_code=status.HTTP_201_CREATED,
-    tags=["billing"],
-)
-def create_billing_adjustment(
-    workspace_id: UUID,
-    payload: BillingAdjustmentCreate,
-    request: Request,
-    db: Session = Depends(get_db),
-) -> BillingEntry:
-    membership = membership_for(db, workspace_id, _current_user_id(request))
-    if membership is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Workspace not found")
-    if membership.role != "owner":
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Workspace owner permission is required")
-    try:
-        entry = post_adjustment(
-            db,
-            workspace_id,
-            payload.amount_credits,
-            idempotency_key=payload.idempotency_key,
-            description=payload.description,
-            actor_user_id=membership.user_id,
-        )
-    except InsufficientCreditsError as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
-    db.commit()
-    db.refresh(entry)
-    return entry
 
 
 @router.post(
@@ -790,6 +757,8 @@ def register_remote_part(
     upload = db.get(MultipartUpload, upload_id)
     if upload is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Multipart upload not found")
+    if upload.status != "uploading" or is_expired(upload):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Multipart upload is not writable")
     expected = expected_part_size(upload, payload.part_number)
     if payload.size_bytes != expected:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Part size is invalid")
@@ -814,7 +783,11 @@ def complete_multipart_upload(
     payload: MultipartCompleteRequest,
     db: Session = Depends(get_db),
 ) -> MultipartUpload:
-    upload = db.get(MultipartUpload, upload_id)
+    upload = db.scalar(
+        select(MultipartUpload)
+        .where(MultipartUpload.id == upload_id)
+        .with_for_update()
+    )
     if upload is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Multipart upload not found")
     if upload.status == "completed":
@@ -864,7 +837,11 @@ def abort_multipart_upload(
     upload_id: UUID,
     db: Session = Depends(get_db),
 ) -> SimpleMessage:
-    upload = db.get(MultipartUpload, upload_id)
+    upload = db.scalar(
+        select(MultipartUpload)
+        .where(MultipartUpload.id == upload_id)
+        .with_for_update()
+    )
     if upload is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Multipart upload not found")
     if upload.status in {"completed", "aborted"}:

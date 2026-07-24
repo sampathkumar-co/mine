@@ -6,7 +6,13 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.operations import BillingAccount, BillingEntry, ProjectBillingReservation
+from app.models.operations import (
+    BillingAccount,
+    BillingEntry,
+    ProjectBillingReservation,
+    UserStarterCreditGrant,
+)
+from app.models.platform import User, Workspace
 from app.models.project import Project
 
 CREDIT_QUANTUM = Decimal("0.0001")
@@ -39,6 +45,43 @@ def ensure_billing_account(
         )
         db.add(account)
         db.flush()
+    return account
+
+
+
+
+def ensure_workspace_billing(
+    db: Session,
+    workspace_id: UUID,
+    settings,
+) -> BillingAccount:
+    account = ensure_billing_account(db, workspace_id)
+    if settings.starter_grants_per_user <= 0 or settings.starter_credits <= 0:
+        return account
+    workspace = db.get(Workspace, workspace_id)
+    if workspace is None:
+        return account
+    db.scalar(select(User).where(User.id == workspace.created_by_user_id).with_for_update())
+    grant = db.get(UserStarterCreditGrant, workspace.created_by_user_id)
+    if grant is not None:
+        return account
+    post_adjustment(
+        db,
+        workspace_id,
+        settings.starter_credits,
+        idempotency_key=f"user:{workspace.created_by_user_id}:starter-grant",
+        description="One-time starter credits granted to the account owner",
+        actor_user_id=workspace.created_by_user_id,
+        kind="grant",
+    )
+    db.add(
+        UserStarterCreditGrant(
+            user_id=workspace.created_by_user_id,
+            workspace_id=workspace_id,
+            amount_credits=credits(settings.starter_credits),
+        )
+    )
+    db.flush()
     return account
 
 

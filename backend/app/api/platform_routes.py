@@ -9,9 +9,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, Response, status
 from fastapi.responses import FileResponse
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -20,7 +20,6 @@ from app.core.database import get_db
 from app.core.enums import AssetKind, ProjectStatus
 from app.core.security import (
     InvalidTokenError,
-    create_access_token,
     hash_password,
     sign_payload,
     verify_password,
@@ -37,10 +36,14 @@ from app.schemas.platform import (
     RegisterRequest,
     ResumableUploadCreate,
     ResumableUploadRead,
+    UserRead,
     WorkspaceCreate,
     WorkspaceProjectRead,
     WorkspaceRead,
 )
+from app.services.email import email_is_verified, ensure_email_status, queue_verification_email
+from app.services.session_cookies import set_session_cookies
+from app.services.sessions import issue_session
 from app.storage.uploads import UnsupportedAssetError, _validate_content_type
 
 router = APIRouter()
@@ -85,12 +88,20 @@ def _slug(value: str) -> str:
     return f"{base}-{uuid4().hex[:8]}"
 
 
-def _auth_session(db: Session, user: User) -> AuthSession:
-    token, expires_at = create_access_token(user.id, settings)
+def _session_response(db: Session, user: User, issued) -> AuthSession:
     return AuthSession(
-        access_token=token,
-        expires_at=expires_at,
-        user=user,
+        access_token=issued.access_token,
+        refresh_token=None,
+        expires_at=issued.access_expires_at,
+        refresh_expires_at=issued.refresh_expires_at,
+        session_id=issued.record.id,
+        user=UserRead(
+            id=user.id,
+            email=user.email,
+            display_name=user.display_name,
+            email_verified=email_is_verified(db, user.id),
+            created_at=user.created_at,
+        ),
         workspaces=[_workspace_read(item) for item in _memberships(db, user.id)],
     )
 
@@ -101,61 +112,65 @@ def _auth_session(db: Session, user: User) -> AuthSession:
     status_code=status.HTTP_201_CREATED,
     tags=["authentication"],
 )
-def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> AuthSession:
+def register(
+    payload: RegisterRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> AuthSession:
     email = payload.email.strip().casefold()
     if db.scalar(select(User.id).where(User.email == email)) is not None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email is already registered")
 
-    user = User(
-        email=email,
-        display_name=payload.display_name.strip(),
-        password_hash=hash_password(payload.password),
-    )
+    user = User(email=email, display_name=payload.display_name.strip(), password_hash=hash_password(payload.password))
     db.add(user)
     db.flush()
-    workspace = Workspace(
-        name=payload.workspace_name.strip(),
-        slug=_slug(payload.workspace_name),
-        created_by_user_id=user.id,
-    )
+    workspace = Workspace(name=payload.workspace_name.strip(), slug=_slug(payload.workspace_name), created_by_user_id=user.id)
     db.add(workspace)
     db.flush()
-    db.add(
-        WorkspaceMembership(
-            workspace_id=workspace.id,
-            user_id=user.id,
-            role="owner",
-        )
-    )
+    db.add(WorkspaceMembership(workspace_id=workspace.id, user_id=user.id, role="owner"))
+    ensure_email_status(db, user.id)
+    issued = issue_session(db, user, settings, request=request)
     try:
         db.commit()
     except IntegrityError as exc:
         db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Account could not be created with those details",
-        ) from exc
-    db.refresh(user)
-    return _auth_session(db, user)
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account could not be created with those details") from exc
+    set_session_cookies(response, issued, settings)
+    return _session_response(db, user, issued)
 
 
 @router.post("/auth/login", response_model=AuthSession, tags=["authentication"])
-def login(payload: LoginRequest, db: Session = Depends(get_db)) -> AuthSession:
+def login(
+    payload: LoginRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> AuthSession:
     user = db.scalar(select(User).where(User.email == payload.email.strip().casefold()))
     if user is None or not verify_password(payload.password, user.password_hash):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email or password is incorrect",
-        )
-    return _auth_session(db, user)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Email or password is incorrect")
+    issued = issue_session(db, user, settings, request=request)
+    email_status = ensure_email_status(db, user.id)
+    if email_status.verified_at is None and email_status.verification_sent_at is None:
+        queue_verification_email(db, user, settings)
+    db.commit()
+    set_session_cookies(response, issued, settings)
+    return _session_response(db, user, issued)
 
 
-@router.get("/auth/me", response_model=AuthSession, tags=["authentication"])
-def me(request: Request, db: Session = Depends(get_db)) -> AuthSession:
+@router.get("/auth/me", response_model=UserRead, tags=["authentication"])
+def me(request: Request, db: Session = Depends(get_db)) -> UserRead:
     user = db.get(User, _current_user_id(request))
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-    return _auth_session(db, user)
+    return UserRead(
+        id=user.id,
+        email=user.email,
+        display_name=user.display_name,
+        email_verified=email_is_verified(db, user.id),
+        created_at=user.created_at,
+    )
 
 
 @router.get("/workspaces", response_model=list[WorkspaceRead], tags=["workspaces"])
@@ -175,6 +190,19 @@ def create_workspace(
     db: Session = Depends(get_db),
 ) -> WorkspaceRead:
     user_id = _current_user_id(request)
+    workspace_count = int(
+        db.scalar(select(func.count(Workspace.id)).where(Workspace.created_by_user_id == user_id)) or 0
+    )
+    if workspace_count >= settings.max_workspaces_per_user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account workspace limit reached",
+        )
+    if workspace_count > 0 and not email_is_verified(db, user_id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Verify your email before creating another workspace",
+        )
     workspace = Workspace(
         name=payload.name.strip(),
         slug=_slug(payload.name),

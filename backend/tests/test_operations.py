@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from collections.abc import Generator
 from pathlib import Path
+from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
@@ -10,7 +11,12 @@ from sqlalchemy import select
 
 from app.core.database import Base, SessionLocal, engine
 from app.main import app
-from app.models.operations import AuthSessionRecord, EmailOutbox
+from app.models.operations import (
+    AuthSessionRecord,
+    BillingAccount,
+    EmailOutbox,
+    UserStarterCreditGrant,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -49,13 +55,10 @@ def register(client: TestClient, email: str, *, workspace: str = "Studio") -> di
 
 
 def refreshable_session(client: TestClient, bootstrap: dict[str, object]) -> dict[str, object]:
-    response = client.post(
-        "/api/v1/auth/session",
-        headers={"Authorization": f"Bearer {bootstrap['access_token']}"},
-    )
-    assert response.status_code == 200
-    assert response.json()["refresh_token"]
-    return response.json()
+    assert bootstrap["refresh_token"] is None
+    assert client.cookies.get("director_refresh")
+    assert client.cookies.get("director_csrf")
+    return bootstrap
 
 
 def headers(session: dict[str, object]) -> dict[str, str]:
@@ -86,14 +89,27 @@ def create_project(client: TestClient, session: dict[str, object]) -> str:
 
 
 def test_refresh_rotation_detects_reuse_and_revokes_family(client: TestClient) -> None:
-    session = refreshable_session(client, register(client, "sessions@example.com"))
-    old_refresh = session["refresh_token"]
-    rotated = client.post("/api/v1/auth/refresh", json={"refresh_token": old_refresh})
+    refreshable_session(client, register(client, "sessions@example.com"))
+    old_refresh = client.cookies.get("director_refresh")
+    old_csrf = client.cookies.get("director_csrf")
+    assert old_refresh and old_csrf
+
+    rotated = client.post(
+        "/api/v1/auth/refresh",
+        headers={"X-CSRF-Token": old_csrf},
+    )
     assert rotated.status_code == 200
     rotated_payload = rotated.json()
-    assert rotated_payload["refresh_token"] != old_refresh
+    assert rotated_payload["refresh_token"] is None
+    assert client.cookies.get("director_refresh") != old_refresh
 
-    reused = client.post("/api/v1/auth/refresh", json={"refresh_token": old_refresh})
+    with TestClient(app) as replay_client:
+        replay_client.cookies.set("director_refresh", old_refresh, path="/api/v1/auth")
+        replay_client.cookies.set("director_csrf", old_csrf, path="/api/v1/auth")
+        reused = replay_client.post(
+            "/api/v1/auth/refresh",
+            headers={"X-CSRF-Token": old_csrf},
+        )
     assert reused.status_code == 401
     blocked = client.get("/api/v1/auth/account", headers=headers(rotated_payload))
     assert blocked.status_code == 401
@@ -102,6 +118,33 @@ def test_refresh_rotation_detects_reuse_and_revokes_family(client: TestClient) -
         records = list(db.scalars(select(AuthSessionRecord)).all())
         assert len(records) == 2
         assert all(record.revoked_at is not None for record in records)
+
+
+def test_refresh_requires_csrf_and_register_uses_httponly_cookie(client: TestClient) -> None:
+    response = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "cookie-security@example.com",
+            "password": "correct-horse-battery-staple",
+            "display_name": "Cookie Security",
+            "workspace_name": "Cookie Studio",
+        },
+    )
+    assert response.status_code == 201
+    cookies = response.headers.get_list("set-cookie")
+    refresh_cookie = next(item for item in cookies if item.startswith("director_refresh="))
+    assert "HttpOnly" in refresh_cookie
+    assert "SameSite=strict" in refresh_cookie
+    assert response.json()["refresh_token"] is None
+    assert client.post("/api/v1/auth/refresh").status_code == 401
+
+
+def test_auth_me_never_mints_a_new_access_token(client: TestClient) -> None:
+    session = register(client, "me-no-token@example.com")
+    response = client.get("/api/v1/auth/me", headers=headers(session))
+    assert response.status_code == 200
+    assert "access_token" not in response.json()
+    assert response.json()["email"] == "me-no-token@example.com"
 
 
 def test_verification_and_password_reset_are_single_use(client: TestClient) -> None:
@@ -264,13 +307,20 @@ def test_local_multipart_upload_finalizes_verified_asset(client: TestClient) -> 
     )
     assert completed.status_code == 200
     assert completed.json()["status"] == "completed"
+    repeated = client.post(
+        f"/api/v1/multipart-uploads/{upload_id}/complete",
+        headers=headers(session),
+        json={"parts": completed_parts},
+    )
+    assert repeated.status_code == 200
+    assert repeated.json()["asset_id"] == completed.json()["asset_id"]
     project = client.get(f"/api/v1/projects/{project_id}", headers=headers(session))
     assert project.status_code == 200
     assert project.json()["status"] == "ready_to_queue"
     assert project.json()["assets"][0]["size_bytes"] == total
 
 
-def test_billing_account_is_idempotent_and_audited(client: TestClient) -> None:
+def test_workspace_owner_cannot_mint_credits(client: TestClient) -> None:
     session = refreshable_session(client, register(client, "billing@example.com"))
     workspace_id = session["workspaces"][0]["id"]  # type: ignore[index]
     initial = client.get(
@@ -278,34 +328,57 @@ def test_billing_account_is_idempotent_and_audited(client: TestClient) -> None:
         headers=headers(session),
     )
     assert initial.status_code == 200
+    original_balance = initial.json()["balance_credits"]
 
-    payload = {
-        "amount_credits": "25.0000",
-        "idempotency_key": "manual:test-credit-001",
-        "description": "Test credit adjustment",
-    }
-    first = client.post(
+    response = client.post(
         f"/api/v1/workspaces/{workspace_id}/billing/adjustments",
         headers=headers(session),
-        json=payload,
+        json={
+            "amount_credits": "999999.0000",
+            "idempotency_key": "customer-mint-attempt",
+            "description": "This must not be reachable",
+        },
     )
-    second = client.post(
-        f"/api/v1/workspaces/{workspace_id}/billing/adjustments",
-        headers=headers(session),
-        json=payload,
-    )
-    assert first.status_code == 201
-    assert second.status_code == 201
-    entries = client.get(
-        f"/api/v1/workspaces/{workspace_id}/billing/entries",
+    assert response.status_code == 404
+    current = client.get(
+        f"/api/v1/workspaces/{workspace_id}/billing",
         headers=headers(session),
     )
-    matching = [item for item in entries.json() if item["idempotency_key"] == payload["idempotency_key"]]
-    assert len(matching) == 1
+    assert current.json()["balance_credits"] == original_balance
 
-    audit = client.get(
-        f"/api/v1/workspaces/{workspace_id}/audit-events",
+
+def test_starter_credit_is_granted_once_per_user(client: TestClient) -> None:
+    session = refreshable_session(client, register(client, "one-trial@example.com"))
+    first_workspace_id = session["workspaces"][0]["id"]  # type: ignore[index]
+    first = client.get(
+        f"/api/v1/workspaces/{first_workspace_id}/billing",
         headers=headers(session),
     )
-    assert audit.status_code == 200
-    assert any("billing/adjustments" in item["action"] for item in audit.json())
+    assert first.status_code == 200
+    assert float(first.json()["balance_credits"]) == 100.0
+
+    with SessionLocal() as db:
+        from app.services.email import mark_email_verified
+
+        user_id = UUID(str(session["user"]["id"]))  # type: ignore[index]
+        mark_email_verified(db, user_id)
+        db.commit()
+
+    second_workspace = client.post(
+        "/api/v1/workspaces",
+        headers=headers(session),
+        json={"name": "Second Workspace"},
+    )
+    assert second_workspace.status_code == 201
+    second_workspace_id = second_workspace.json()["id"]
+    second = client.get(
+        f"/api/v1/workspaces/{second_workspace_id}/billing",
+        headers=headers(session),
+    )
+    assert second.status_code == 200
+    assert float(second.json()["balance_credits"]) == 0.0
+
+    with SessionLocal() as db:
+        assert len(list(db.scalars(select(UserStarterCreditGrant)).all())) == 1
+        accounts = list(db.scalars(select(BillingAccount)).all())
+        assert len(accounts) == 2

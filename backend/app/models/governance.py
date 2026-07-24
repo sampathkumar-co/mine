@@ -38,3 +38,15 @@ class PrivacyRequest(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now, onupdate=utc_now
     )
+
+
+class WorkspaceDeletionTombstone(Base):
+    __tablename__ = "workspace_deletion_tombstones"
+
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid4)
+    request_id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), unique=True, index=True)
+    workspace_id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), index=True)
+    requested_by_user_id: Mapped[UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True)
+    workspace_slug: Mapped[str] = mapped_column(String(120))
+    summary: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)

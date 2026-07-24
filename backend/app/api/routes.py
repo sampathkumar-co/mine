@@ -2,7 +2,7 @@ from pathlib import Path
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
-from sqlalchemy import func, select, update
+from sqlalchemy import select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -26,14 +26,14 @@ from app.schemas.projects import (
     RevisionDetail,
     RevisionSummary,
 )
+from app.services.jobs import JobConflictError, enqueue_project_job, enqueue_revision_job
 from app.storage.uploads import (
     EmptyUploadError,
     UnsupportedAssetError,
     UploadTooLargeError,
     store_upload,
 )
-from app.worker.revisions import run_revision_pipeline
-from app.worker.tasks import run_project_pipeline
+from app.worker.dispatch import dispatch_pending_jobs
 
 router = APIRouter()
 settings = get_settings()
@@ -246,6 +246,7 @@ def compare_project_revisions(
 def create_project_revision(
     project_id: UUID,
     payload: RevisionCreate,
+    request: Request,
     db: Session = Depends(get_db),
 ) -> RevisionAccepted:
     project = _get_project(db, project_id)
@@ -270,15 +271,18 @@ def create_project_revision(
     if base_revision.status != "ready":
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Base revision is not ready")
 
-    highest_version = db.scalar(
-        select(func.max(EditGraphRevision.version)).where(
-            EditGraphRevision.project_id == project_id
-        )
-    ) or graph.version
-    next_version = highest_version + 1
+    project.revision_generation = max(project.revision_generation, graph.version)
+    next_version = db.scalar(
+        update(Project)
+        .where(Project.id == project_id)
+        .values(revision_generation=Project.revision_generation + 1)
+        .returning(Project.revision_generation)
+    )
+    if next_version is None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Revision version could not be allocated")
     revision = EditGraphRevision(
         project_id=project_id,
-        version=next_version,
+        version=int(next_version),
         base_version=base_version,
         instruction=payload.instruction,
         status="queued",
@@ -288,37 +292,28 @@ def create_project_revision(
         is_active=False,
     )
     db.add(revision)
-    db.commit()
-    db.refresh(revision)
-
     try:
-        task_result = run_revision_pipeline.delay(str(project_id), next_version)
-    except Exception as exc:
-        revision.status = "failed"
-        revision.error_message = "Revision queue unavailable"
-        db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Revision queue is unavailable",
-        ) from exc
-
-    task_id = str(getattr(task_result, "id", ""))
-    if not task_id:
-        revision.status = "failed"
-        revision.error_message = "Queue did not return a task identifier"
-        db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Revision queue did not accept the request",
+        job = enqueue_revision_job(
+            db,
+            project_id,
+            int(next_version),
+            created_by_user_id=_current_user_id(request),
         )
-    revision.task_id = task_id
-    db.commit()
+        revision.task_id = str(job.id)
+        db.commit()
+    except JobConflictError as exc:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    try:
+        dispatch_pending_jobs.delay()
+    except Exception:
+        pass
     return RevisionAccepted(
         project_id=project_id,
-        version=next_version,
+        version=int(next_version),
         base_version=base_version,
         status=revision.status,
-        task_id=task_id,
+        task_id=str(job.id),
     )
 
 
@@ -449,7 +444,11 @@ async def upload_project_asset(
     status_code=status.HTTP_202_ACCEPTED,
     tags=["projects"],
 )
-def start_project(project_id: UUID, db: Session = Depends(get_db)) -> ProjectAccepted:
+def start_project(
+    project_id: UUID,
+    request: Request,
+    db: Session = Depends(get_db),
+) -> ProjectAccepted:
     project = _get_project(db, project_id)
     if project.status != ProjectStatus.READY_TO_QUEUE:
         raise HTTPException(
@@ -461,31 +460,20 @@ def start_project(project_id: UUID, db: Session = Depends(get_db)) -> ProjectAcc
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="At least one source_video asset is required",
         )
-
-    project.status = ProjectStatus.QUEUED
-    project.error_message = None
-    db.commit()
-
     try:
-        task_result = run_project_pipeline.delay(str(project.id))
-    except Exception as exc:
-        project.status = ProjectStatus.READY_TO_QUEUE
-        project.error_message = "Queue unavailable"
-        db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Processing queue is unavailable",
-        ) from exc
-
-    task_id = str(getattr(task_result, "id", ""))
-    if not task_id:
-        project.status = ProjectStatus.READY_TO_QUEUE
-        project.error_message = "Queue did not return a task identifier"
-        db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Processing queue did not accept the project",
+        job = enqueue_project_job(
+            db,
+            project.id,
+            kind="production",
+            allowed_statuses={ProjectStatus.READY_TO_QUEUE},
+            created_by_user_id=_current_user_id(request),
         )
-    project.task_id = task_id
-    db.commit()
-    return ProjectAccepted(project_id=project.id, status=project.status, task_id=task_id)
+        db.commit()
+    except JobConflictError as exc:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    try:
+        dispatch_pending_jobs.delay()
+    except Exception:
+        pass
+    return ProjectAccepted(project_id=project.id, status=ProjectStatus.QUEUED, task_id=str(job.id))

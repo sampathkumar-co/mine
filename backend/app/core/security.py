@@ -51,32 +51,37 @@ def verify_password(password: str, encoded: str) -> bool:
     return hmac.compare_digest(actual, expected)
 
 
+def _sign(encoded: str, secret: str) -> bytes:
+    return hmac.new(secret.encode("utf-8"), encoded.encode("ascii"), hashlib.sha256).digest()
+
+
 def sign_payload(payload: dict[str, Any], settings: Settings) -> str:
-    encoded = _b64encode(
-        json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
-    )
-    signature = hmac.new(
-        settings.auth_secret.encode("utf-8"),
-        encoded.encode("ascii"),
-        hashlib.sha256,
-    ).digest()
-    return f"{encoded}.{_b64encode(signature)}"
+    value = {**payload, "kid": settings.auth_key_id}
+    encoded = _b64encode(json.dumps(value, separators=(",", ":"), sort_keys=True).encode("utf-8"))
+    return f"{encoded}.{_b64encode(_sign(encoded, settings.auth_secret))}"
 
 
 def verify_signed_payload(token: str, settings: Settings) -> dict[str, Any]:
     try:
         encoded, signature_text = token.split(".", 1)
         supplied = _b64decode(signature_text)
-        expected = hmac.new(
-            settings.auth_secret.encode("utf-8"),
-            encoded.encode("ascii"),
-            hashlib.sha256,
-        ).digest()
-        if not hmac.compare_digest(supplied, expected):
-            raise InvalidTokenError("Invalid token signature")
         payload = json.loads(_b64decode(encoded))
         if not isinstance(payload, dict):
             raise InvalidTokenError("Invalid token payload")
+        key_id = str(payload.get("kid", ""))
+        candidates: list[str] = []
+        if key_id == settings.auth_key_id:
+            candidates.append(settings.auth_secret)
+        if (
+            settings.auth_previous_secret
+            and settings.auth_previous_key_id
+            and key_id == settings.auth_previous_key_id
+        ):
+            candidates.append(settings.auth_previous_secret)
+        if not candidates or not any(
+            hmac.compare_digest(supplied, _sign(encoded, secret)) for secret in candidates
+        ):
+            raise InvalidTokenError("Invalid token signature or key identifier")
         expires_at = int(payload.get("exp", 0))
         if expires_at <= int(datetime.now(UTC).timestamp()):
             raise InvalidTokenError("Token has expired")
@@ -87,30 +92,24 @@ def verify_signed_payload(token: str, settings: Settings) -> dict[str, Any]:
         raise InvalidTokenError("Malformed token") from exc
 
 
-def create_access_token(
-    user_id: UUID,
-    settings: Settings,
-    *,
-    session_id: UUID | None = None,
-) -> tuple[str, datetime]:
+def create_access_token(user_id: UUID, settings: Settings, *, session_id: UUID) -> tuple[str, datetime]:
     expires_at = datetime.now(UTC) + timedelta(minutes=settings.access_token_minutes)
     payload: dict[str, Any] = {
         "purpose": "access",
         "sub": str(user_id),
+        "sid": str(session_id),
         "exp": int(expires_at.timestamp()),
     }
-    if session_id is not None:
-        payload["sid"] = str(session_id)
     return sign_payload(payload, settings), expires_at
 
 
-def decode_access_session(token: str, settings: Settings) -> tuple[UUID, UUID | None]:
+def decode_access_session(token: str, settings: Settings) -> tuple[UUID, UUID]:
     payload = verify_signed_payload(token, settings)
     if payload.get("purpose") != "access":
         raise InvalidTokenError("Token is not an access session")
     try:
         user_id = UUID(str(payload["sub"]))
-        session_id = UUID(str(payload["sid"])) if payload.get("sid") else None
+        session_id = UUID(str(payload["sid"]))
     except (KeyError, ValueError) as exc:
         raise InvalidTokenError("Access token has invalid session claims") from exc
     return user_id, session_id

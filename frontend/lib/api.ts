@@ -9,6 +9,7 @@ import type {
   MultipartPart,
   MultipartPartTarget,
   MultipartUpload,
+  MultipartUploadDetail,
   Project,
   ProjectAccepted,
   RevisionAccepted,
@@ -19,57 +20,39 @@ import type {
   WorkspaceProject,
   WorkspaceRole,
 } from "@/lib/types";
+import { loadUpload, removeUpload, saveUpload, uploadFingerprint } from "@/lib/upload-store";
 
 const API_URL = (process.env.NEXT_PUBLIC_DIRECTOR_API_URL ?? "http://localhost:8000/api/v1").replace(/\/$/, "");
-const ACCESS_TOKEN_KEY = "director-os-access-token";
-const REFRESH_TOKEN_KEY = "director-os-refresh-token";
+let accessToken: string | null = null;
 let refreshInFlight: Promise<AuthSession> | null = null;
 
 export class ApiError extends Error {
-  constructor(
-    message: string,
-    readonly status: number,
-  ) {
+  constructor(message: string, readonly status: number) {
     super(message);
   }
 }
 
 export function getAccessToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.sessionStorage.getItem(ACCESS_TOKEN_KEY);
+  return accessToken;
 }
 
-export function getRefreshToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.sessionStorage.getItem(REFRESH_TOKEN_KEY);
+function csrfToken(): string {
+  if (typeof document === "undefined") return "";
+  const match = document.cookie.split("; ").find((item) => item.startsWith("director_csrf="));
+  return match ? decodeURIComponent(match.split("=", 2)[1] ?? "") : "";
 }
 
 function dispatchAuthChange(): void {
   if (typeof window !== "undefined") window.dispatchEvent(new Event("director-auth-changed"));
 }
 
-export function setAccessToken(token: string | null): void {
-  if (typeof window === "undefined") return;
-  if (token) window.sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
-  else window.sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-  dispatchAuthChange();
-}
-
 export function setSessionTokens(session: AuthSession | null): void {
-  if (typeof window === "undefined") return;
-  if (!session) {
-    window.sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-    window.sessionStorage.removeItem(REFRESH_TOKEN_KEY);
-  } else {
-    window.sessionStorage.setItem(ACCESS_TOKEN_KEY, session.access_token);
-    if (session.refresh_token) window.sessionStorage.setItem(REFRESH_TOKEN_KEY, session.refresh_token);
-  }
+  accessToken = session?.access_token ?? null;
   dispatchAuthChange();
 }
 
 function authHeaders(): Record<string, string> {
-  const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
 }
 
 function apiOrigin(): string {
@@ -103,6 +86,7 @@ function structuredBody(body: BodyInit | null | undefined): boolean {
 async function fetchApi(path: string, init?: RequestInit, withAuth = true): Promise<Response> {
   return fetch(`${API_URL}${path}`, {
     ...init,
+    credentials: "include",
     headers: {
       Accept: "application/json",
       ...(withAuth ? authHeaders() : {}),
@@ -113,14 +97,13 @@ async function fetchApi(path: string, init?: RequestInit, withAuth = true): Prom
   });
 }
 
-async function refreshAccessSession(): Promise<AuthSession> {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) throw new ApiError("Session has expired", 401);
+export async function refreshAccessSession(): Promise<AuthSession> {
   if (!refreshInFlight) {
     refreshInFlight = (async () => {
+      const csrf = csrfToken();
       const response = await fetchApi(
         "/auth/refresh",
-        { method: "POST", body: JSON.stringify({ refresh_token: refreshToken }) },
+        { method: "POST", headers: csrf ? { "X-CSRF-Token": csrf } : {} },
         false,
       );
       if (!response.ok) {
@@ -139,7 +122,7 @@ async function refreshAccessSession(): Promise<AuthSession> {
 
 async function request<T>(path: string, init?: RequestInit, retry = true): Promise<T> {
   let response = await fetchApi(path, init);
-  if (response.status === 401 && retry && getRefreshToken() && path !== "/auth/refresh") {
+  if (response.status === 401 && retry && path !== "/auth/refresh") {
     await refreshAccessSession();
     response = await fetchApi(path, init);
   }
@@ -151,19 +134,13 @@ async function request<T>(path: string, init?: RequestInit, retry = true): Promi
   return (await response.json()) as T;
 }
 
-async function upgradeBootstrapSession(): Promise<AuthSession> {
-  const session = await request<AuthSession>("/auth/session", { method: "POST" }, false);
-  setSessionTokens(session);
-  return session;
-}
-
 export async function register(input: {
   email: string;
   password: string;
   displayName: string;
   workspaceName: string;
 }): Promise<AuthSession> {
-  const bootstrap = await fetchApi(
+  const response = await fetchApi(
     "/auth/register",
     {
       method: "POST",
@@ -176,10 +153,10 @@ export async function register(input: {
     },
     false,
   );
-  if (!bootstrap.ok) throw await responseError(bootstrap);
-  const session = (await bootstrap.json()) as AuthSession;
-  setAccessToken(session.access_token);
-  return upgradeBootstrapSession();
+  if (!response.ok) throw await responseError(response);
+  const session = (await response.json()) as AuthSession;
+  setSessionTokens(session);
+  return session;
 }
 
 export async function login(email: string, password: string): Promise<AuthSession> {
@@ -190,24 +167,33 @@ export async function login(email: string, password: string): Promise<AuthSessio
   );
   if (!response.ok) throw await responseError(response);
   const session = (await response.json()) as AuthSession;
-  setAccessToken(session.access_token);
-  return upgradeBootstrapSession();
+  setSessionTokens(session);
+  return session;
 }
 
 export async function getSession(): Promise<AuthSession> {
-  const session = await request<AuthSession>("/auth/me");
+  if (!accessToken) return refreshAccessSession();
+  const account = await request<{ user: AuthSession["user"]; workspaces: Workspace[] }>(
+    "/auth/account",
+  );
   return {
-    ...session,
-    access_token: getAccessToken() ?? session.access_token,
-    refresh_token: getRefreshToken(),
+    access_token: accessToken,
+    refresh_token: null,
+    token_type: "bearer",
+    expires_at: new Date(Date.now() + 60_000).toISOString(),
+    refresh_expires_at: null,
+    session_id: null,
+    user: account.user,
+    workspaces: account.workspaces,
   };
 }
 
 export async function logout(): Promise<void> {
   try {
+    const csrf = csrfToken();
     await request("/auth/logout", {
       method: "POST",
-      body: JSON.stringify({ refresh_token: getRefreshToken() }),
+      headers: csrf ? { "X-CSRF-Token": csrf } : {},
     });
   } finally {
     setSessionTokens(null);
@@ -215,7 +201,11 @@ export async function logout(): Promise<void> {
 }
 
 export function logoutAll(): Promise<{ message: string }> {
-  return request("/auth/logout-all", { method: "POST" });
+  const csrf = csrfToken();
+  return request("/auth/logout-all", {
+    method: "POST",
+    headers: csrf ? { "X-CSRF-Token": csrf } : {},
+  });
 }
 
 export function requestEmailVerification(): Promise<{ message: string }> {
@@ -353,61 +343,114 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
   });
 }
 
+async function uploadPartWithRetry(
+  upload: MultipartUpload,
+  file: File,
+  partNumber: number,
+): Promise<MultipartPart> {
+  const start = (partNumber - 1) * upload.part_size;
+  const end = Math.min(file.size, start + upload.part_size);
+  const chunk = file.slice(start, end, "application/octet-stream");
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      const target = await request<MultipartPartTarget>(
+        `/multipart-uploads/${upload.id}/parts/${partNumber}/target`,
+        { method: "POST" },
+      );
+      const targetUrl = resolveTargetUrl(target.url);
+      const localTarget = targetUrl.startsWith("/api/v1")
+        || new URL(targetUrl, window.location.origin).origin === apiOrigin();
+      const perform = () => fetch(targetUrl, {
+        method: target.method,
+        credentials: localTarget ? "include" : "omit",
+        headers: { ...target.headers, ...(localTarget ? authHeaders() : {}) },
+        body: chunk,
+      });
+      let response = await perform();
+      if (response.status === 401 && localTarget) {
+        await refreshAccessSession();
+        response = await perform();
+      }
+      if (!response.ok) throw await responseError(response);
+      if (localTarget) return (await response.json()) as MultipartPart;
+      const etag = response.headers.get("etag")?.replaceAll('"', "");
+      if (!etag) throw new ApiError("Object storage did not return a part ETag", 502);
+      const part = { part_number: partNumber, etag, size_bytes: chunk.size };
+      await request(`/multipart-uploads/${upload.id}/parts`, {
+        method: "POST",
+        body: JSON.stringify(part),
+      });
+      return part;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await new Promise((resolve) => setTimeout(resolve, 500 * 2 ** attempt));
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Upload part failed");
+}
+
 export async function uploadAssetResumable(
   projectId: string,
   file: File,
   kind = "source_video",
   onProgress?: (fraction: number) => void,
 ): Promise<void> {
-  const upload = await request<MultipartUpload>(`/projects/${projectId}/multipart-uploads`, {
-    method: "POST",
-    body: JSON.stringify({
-      kind,
-      original_filename: file.name,
-      content_type: file.type || "video/mp4",
-      total_bytes: file.size,
-    }),
-  });
-  const partCount = Math.ceil(file.size / upload.part_size);
-  const completedParts: MultipartPart[] = [];
-  for (let partNumber = 1; partNumber <= partCount; partNumber += 1) {
-    const start = (partNumber - 1) * upload.part_size;
-    const end = Math.min(file.size, start + upload.part_size);
-    const chunk = file.slice(start, end, "application/octet-stream");
-    const target = await request<MultipartPartTarget>(
-      `/multipart-uploads/${upload.id}/parts/${partNumber}/target`,
-      { method: "POST" },
-    );
-    const targetUrl = resolveTargetUrl(target.url);
-    const localTarget = targetUrl.startsWith(apiOrigin()) || targetUrl.startsWith("/api/v1");
-    const response = await fetch(targetUrl, {
-      method: target.method,
-      headers: {
-        ...target.headers,
-        ...(localTarget ? authHeaders() : {}),
-      },
-      body: chunk,
-    });
-    if (!response.ok) throw await responseError(response);
-    let part: MultipartPart;
-    if (localTarget) {
-      part = (await response.json()) as MultipartPart;
-    } else {
-      const etag = response.headers.get("etag")?.replaceAll('"', "");
-      if (!etag) throw new ApiError("Object storage did not return a part ETag", 502);
-      part = { part_number: partNumber, etag, size_bytes: chunk.size };
-      await request(`/multipart-uploads/${upload.id}/parts`, {
-        method: "POST",
-        body: JSON.stringify(part),
-      });
+  const key = uploadFingerprint(projectId, kind, file);
+  let upload: MultipartUploadDetail | null = null;
+  try {
+    const persisted = await loadUpload(key);
+    if (persisted?.uploadId) {
+      const current = await request<MultipartUploadDetail>(`/multipart-uploads/${persisted.uploadId}`);
+      if (current.status === "uploading") upload = current;
+      if (current.status === "completed") {
+        await removeUpload(key);
+        onProgress?.(1);
+        return;
+      }
     }
-    completedParts.push(part);
-    onProgress?.(partNumber / partCount);
+  } catch {
+    await removeUpload(key).catch(() => undefined);
   }
-  await request(`/multipart-uploads/${upload.id}/complete`, {
-    method: "POST",
-    body: JSON.stringify({ parts: completedParts }),
+  if (!upload) {
+    const created = await request<MultipartUpload>(`/projects/${projectId}/multipart-uploads`, {
+      method: "POST",
+      body: JSON.stringify({
+        kind,
+        original_filename: file.name,
+        content_type: file.type || "video/mp4",
+        total_bytes: file.size,
+      }),
+    });
+    upload = { ...created, parts: [] };
+    await saveUpload({ key, uploadId: created.id, projectId, kind, file, updatedAt: Date.now() });
+  }
+
+  const activeUpload = upload;
+  const partCount = Math.ceil(file.size / activeUpload.part_size);
+  const completed = new Map(activeUpload.parts.map((part) => [part.part_number, part]));
+  onProgress?.(completed.size / partCount);
+  const pending = Array.from({ length: partCount }, (_, index) => index + 1).filter(
+    (partNumber) => !completed.has(partNumber),
+  );
+  let cursor = 0;
+  const workers = Array.from({ length: Math.min(4, pending.length || 1) }, async () => {
+    while (cursor < pending.length) {
+      const partNumber = pending[cursor];
+      cursor += 1;
+      const part = await uploadPartWithRetry(activeUpload, file, partNumber);
+      completed.set(partNumber, part);
+      onProgress?.(completed.size / partCount);
+      await saveUpload({ key, uploadId: activeUpload.id, projectId, kind, file, updatedAt: Date.now() });
+    }
   });
+  await Promise.all(workers);
+  await request(`/multipart-uploads/${activeUpload.id}/complete`, {
+    method: "POST",
+    body: JSON.stringify({ parts: [...completed.values()].sort((a, b) => a.part_number - b.part_number) }),
+  });
+  await removeUpload(key);
+  onProgress?.(1);
 }
 
 export async function uploadAsset(projectId: string, file: File, kind = "source_video"): Promise<void> {
@@ -429,13 +472,13 @@ export function getDirectorCamera(projectId: string): Promise<DirectorCamera> {
 export async function getGhostFrame(projectId: string, missionId: string): Promise<Blob> {
   let response = await fetch(
     `${API_URL}/projects/${projectId}/director-camera/missions/${missionId}/ghost-frame`,
-    { headers: authHeaders(), cache: "no-store" },
+    { headers: authHeaders(), credentials: "include", cache: "no-store" },
   );
-  if (response.status === 401 && getRefreshToken()) {
+  if (response.status === 401) {
     await refreshAccessSession();
     response = await fetch(
       `${API_URL}/projects/${projectId}/director-camera/missions/${missionId}/ghost-frame`,
-      { headers: authHeaders(), cache: "no-store" },
+      { headers: authHeaders(), credentials: "include", cache: "no-store" },
     );
   }
   if (!response.ok) throw await responseError(response);

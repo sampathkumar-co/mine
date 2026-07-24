@@ -47,12 +47,9 @@ def session(client: TestClient, email: str) -> dict[str, object]:
         },
     )
     assert registered.status_code == 201
-    refreshable = client.post(
-        "/api/v1/auth/session",
-        headers={"Authorization": f"Bearer {registered.json()['access_token']}"},
-    )
-    assert refreshable.status_code == 200
-    return refreshable.json()
+    assert registered.json()["refresh_token"] is None
+    assert client.cookies.get("director_refresh")
+    return registered.json()
 
 
 def auth(value: dict[str, object]) -> dict[str, str]:
@@ -80,7 +77,7 @@ def test_fixed_window_rate_limiter_blocks_after_limit() -> None:
 def test_liveness_readiness_and_prometheus_metrics(client: TestClient) -> None:
     live = client.get("/api/v1/health/live")
     assert live.status_code == 200
-    assert live.json()["version"] == "1.0.0"
+    assert live.json()["version"] == "1.0.1"
 
     ready = client.get("/api/v1/health/ready")
     assert ready.status_code == 200

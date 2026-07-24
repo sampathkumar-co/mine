@@ -13,14 +13,6 @@ from app.schemas.platform import UserRead, WorkspaceRead
 WorkspaceRole = Literal["owner", "admin", "editor", "viewer"]
 
 
-class RefreshRequest(BaseModel):
-    refresh_token: str = Field(min_length=20, max_length=512)
-
-
-class LogoutRequest(BaseModel):
-    refresh_token: str | None = Field(default=None, max_length=512)
-
-
 class VerificationConfirm(BaseModel):
     token: str = Field(min_length=20, max_length=512)
 
@@ -129,12 +121,6 @@ class BillingEntryRead(BaseModel):
     description: str
     entry_metadata: dict[str, object]
     created_at: datetime
-
-
-class BillingAdjustmentCreate(BaseModel):
-    amount_credits: Decimal = Field(max_digits=14, decimal_places=4)
-    idempotency_key: str = Field(min_length=8, max_length=180, pattern=r"^[A-Za-z0-9:_-]+$")
-    description: str = Field(min_length=3, max_length=500)
 
 
 class MultipartUploadCreate(BaseModel):

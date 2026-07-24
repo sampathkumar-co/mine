@@ -7,10 +7,11 @@ from datetime import UTC, datetime, timedelta
 from email.message import EmailMessage
 from uuid import UUID
 
+from cryptography.fernet import Fernet, InvalidToken
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.config import Settings
+from app.core.config import Settings, get_settings
 from app.core.time import is_expired_at
 from app.models.operations import AccountToken, EmailOutbox, UserEmailStatus
 from app.models.platform import User
@@ -95,8 +96,49 @@ def email_is_verified(db: Session, user_id: UUID) -> bool:
     return bool(status and status.verified_at)
 
 
-def queue_email(db: Session, *, recipient: str, subject: str, body_text: str) -> EmailOutbox:
-    message = EmailOutbox(recipient=recipient, subject=subject, body_text=body_text)
+def _fernet(settings: Settings) -> Fernet | None:
+    if not settings.email_body_encryption_key:
+        return None
+    try:
+        return Fernet(settings.email_body_encryption_key.encode("ascii"))
+    except (ValueError, TypeError) as exc:
+        raise ValueError("DIRECTOR_EMAIL_BODY_ENCRYPTION_KEY is not a valid Fernet key") from exc
+
+
+def protect_email_body(body_text: str, settings: Settings) -> str:
+    cipher = _fernet(settings)
+    if cipher is None:
+        return body_text
+    encrypted = cipher.encrypt(body_text.encode("utf-8")).decode("ascii")
+    return f"fernet:{encrypted}"
+
+
+def reveal_email_body(body_text: str, settings: Settings) -> str:
+    if not body_text.startswith("fernet:"):
+        return body_text
+    cipher = _fernet(settings)
+    if cipher is None:
+        raise ValueError("Email body encryption key is required to deliver queued email")
+    try:
+        return cipher.decrypt(body_text.removeprefix("fernet:").encode("ascii")).decode("utf-8")
+    except InvalidToken as exc:
+        raise ValueError("Queued email body could not be decrypted") from exc
+
+
+def queue_email(
+    db: Session,
+    *,
+    recipient: str,
+    subject: str,
+    body_text: str,
+    settings: Settings | None = None,
+) -> EmailOutbox:
+    runtime_settings = settings or get_settings()
+    message = EmailOutbox(
+        recipient=recipient,
+        subject=subject,
+        body_text=protect_email_body(body_text, runtime_settings),
+    )
     db.add(message)
     db.flush()
     return message
@@ -116,6 +158,7 @@ def queue_verification_email(db: Session, user: User, settings: Settings) -> str
         db,
         recipient=user.email,
         subject="Verify your Director OS email",
+        settings=settings,
         body_text=(
             f"Hello {user.display_name},\n\nVerify your Director OS email by opening:\n{url}\n\n"
             "This link expires automatically. If you did not create this account, ignore this message."
@@ -136,6 +179,7 @@ def queue_password_reset_email(db: Session, user: User, settings: Settings) -> s
         db,
         recipient=user.email,
         subject="Reset your Director OS password",
+        settings=settings,
         body_text=(
             f"Hello {user.display_name},\n\nReset your Director OS password by opening:\n{url}\n\n"
             "This link expires automatically. If you did not request it, ignore this message."
@@ -158,7 +202,7 @@ def deliver_outbox_message(message: EmailOutbox, settings: Settings) -> None:
     email["From"] = settings.smtp_from_email
     email["To"] = message.recipient
     email["Subject"] = message.subject
-    email.set_content(message.body_text)
+    email.set_content(reveal_email_body(message.body_text, settings))
     with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=30) as client:
         if settings.smtp_starttls:
             client.starttls()
@@ -167,3 +211,4 @@ def deliver_outbox_message(message: EmailOutbox, settings: Settings) -> None:
         client.send_message(email)
     message.status = "sent"
     message.sent_at = datetime.now(UTC)
+    message.body_text = "[redacted after delivery]"
