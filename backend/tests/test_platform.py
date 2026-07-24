@@ -1,6 +1,7 @@
 from collections.abc import Generator
 from pathlib import Path
 from urllib.parse import urlsplit
+from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
@@ -149,7 +150,7 @@ def test_signed_delivery_link_hides_storage_path(client: TestClient) -> None:
     output.write_bytes(b"publishable-video")
 
     with SessionLocal() as db:
-        project = db.get(Project, project_id)
+        project = db.get(Project, UUID(project_id))
         assert project is not None
         project.output_path = str(output)
         project.status = ProjectStatus.READY
