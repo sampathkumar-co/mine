@@ -6,9 +6,9 @@ Director OS is an autonomous video production agent that turns raw footage, crea
 
 The repository contains a runnable Tier 1 backend path with:
 
-- FastAPI project, upload, queue, status, intelligence, and revision APIs
-- Typed Director Contract with six-tier validation
-- PostgreSQL persistence for projects, assets, analyses, active graphs, and append-only graph revisions
+- FastAPI project, upload, queue, status, intelligence, revision, feedback, performance, and memory APIs
+- Typed Director Contract with six-tier validation and named Director Memory profiles
+- PostgreSQL persistence for projects, assets, analyses, active graphs, append-only revisions, feedback evidence, memory profiles, and performance samples
 - Streamed uploads with size, type, and SHA-256 validation
 - Durable Celery + Redis processing with sequential worker execution
 - Per-source probing, transcription, scene detection, and subject framing
@@ -30,10 +30,13 @@ The repository contains a runnable Tier 1 backend path with:
 - Natural-language deterministic revisions with locked output ranges
 - Version comparison, activation, undo, and redo through immutable revision history
 - Component-isolated rerendering that reuses cached narration for caption/B-roll-only changes
+- Append-only accepted/rejected feedback and negative-taste evidence
+- Weakly weighted post-publish performance learning
+- Conservative memory application that never overrides explicit current-project rules
 - Automated output dimension, duration, and audio-presence checks
 - Docker Compose development stack and GitHub Actions tests
 
-This remains a deterministic Tier 1 production engine, not the finished autonomous director. Semantic tags and revision interpretation are inspectable rules rather than opaque claims of universal understanding. Model-backed revision interpretation, segment-level narration caches, advanced object tracking, optical continuity repair, billing, performance learning, and Director Camera remain future milestones.
+This remains a deterministic Tier 1 production engine, not the finished autonomous director. Semantic tags, revision interpretation, and preference extraction are inspectable rules rather than opaque claims of universal understanding. Performance signals are deliberately weak evidence and only repeated or explicit preferences affect future projects. Model-backed interpretation, advanced object tracking, optical continuity repair, billing, Director Camera, and cross-account benchmark learning remain future milestones.
 
 ## Run locally
 
@@ -64,6 +67,8 @@ curl -X POST http://localhost:8000/api/v1/projects \
       "target_audience": "small-business owners",
       "tier": 1,
       "target_duration_seconds": 45,
+      "director_profile_key": "founder-brand",
+      "use_director_memory": true,
       "must_include": ["dashboard proof"],
       "must_avoid": ["emojis"],
       "brand_rules": {
@@ -71,14 +76,14 @@ curl -X POST http://localhost:8000/api/v1/projects \
         "caption_primary_color": "#FFFFFF",
         "caption_accent_color": "#D4AF37",
         "caption_position": "lower",
-        "caption_all_caps": false,
-        "music_energy": "calm",
         "music_volume": 0.14
       },
       "creative_freedom": 0.6
     }
   }'
 ```
+
+Explicit `brand_rules`, must-do rules, prohibitions, and duration requirements always override remembered preferences. Set `use_director_memory=false` to create a clean project without profile application.
 
 ### 2. Upload source clips and optional assets
 
@@ -126,28 +131,85 @@ curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/revisions \
 
 The deterministic revision compiler currently understands duration tightening, intro/outro trims, quoted phrase removal, caption visibility/case/size, music enable/disable, and B-roll removal/reduction. Unrecognized instructions are preserved as warnings rather than silently guessed.
 
-### List and inspect revisions
+### List, compare, undo, and redo
 
 ```bash
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/revisions
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/revisions/2
-```
-
-### Compare two versions
-
-```bash
 curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/revisions/1/compare/2
-```
-
-The comparison reports changed components, changed output ranges, reusable ranges, graph fingerprints, and whether the cached narration master can be reused.
-
-### Undo or redo by activating a completed version
-
-```bash
 curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/revisions/1/activate
 ```
 
 Revision rows and outputs are immutable. Activation only changes the project's active graph and output pointer, so any ready version can be restored without losing newer versions.
+
+## Director Memory workflow
+
+### Set explicit reusable preferences
+
+```bash
+curl -X POST http://localhost:8000/api/v1/users/<USER_ID>/director-memory/founder-brand/preferences \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "preferences": {
+      "caption_size": "large",
+      "music_enabled": false,
+      "overlay_density": "sparse"
+    },
+    "avoid_preferences": {
+      "transition_style": "soft"
+    },
+    "note": "Use this for weekly founder updates"
+  }'
+```
+
+Supported explicit keys are `captions_enabled`, `caption_all_caps`, `caption_size`, `music_enabled`, `music_energy`, `overlay_density`, `pace`, and `transition_style`.
+
+### Record feedback on an exact revision
+
+```bash
+curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/feedback \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "revision_version": 2,
+    "verdict": "accepted",
+    "rating": 5,
+    "feedback_text": "Keep the larger captions and use less B-roll next time."
+  }'
+```
+
+Accepted and rejected graph traits, explicit preferences, natural-language preference phrases, and dimension ratings are stored as immutable evidence. The derived profile records support, opposition, evidence count, confidence, and negative-taste candidates.
+
+### Record post-publish performance
+
+```bash
+curl -X POST http://localhost:8000/api/v1/projects/<PROJECT_ID>/performance \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "revision_version": 2,
+    "platform": "instagram",
+    "impressions": 12000,
+    "views": 9000,
+    "average_watch_seconds": 24.5,
+    "completion_rate": 0.71,
+    "likes": 640,
+    "comments": 48,
+    "shares": 190,
+    "saves": 230,
+    "clicks": 120,
+    "conversions": 17
+  }'
+```
+
+Performance is normalized into a bounded score and contributes only low-weight evidence. Neutral performance is stored but does not alter preferences.
+
+### Inspect a profile
+
+```bash
+curl http://localhost:8000/api/v1/users/<USER_ID>/director-memory/founder-brand
+curl http://localhost:8000/api/v1/projects/<PROJECT_ID>/director-memory
+```
+
+A non-explicit preference must receive repeated support and sufficient confidence before it is eligible for future projects. One explicit preference can become eligible immediately. Current-project rules always win.
 
 Project states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`. Revision states include `queued`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
 
