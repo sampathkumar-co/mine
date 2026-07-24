@@ -37,7 +37,15 @@ jobs:
           DIRECTOR_AUTH_SECRET: release-qualification-secret-change-me
           DIRECTOR_DATABASE_URL: sqlite+pysqlite:///./release_media.db
           DIRECTOR_RUN_MEDIA_SMOKE: "1"
-        run: pytest -q tests/test_ffmpeg_integration.py
+        run: |
+          set -o pipefail
+          pytest -q tests/test_ffmpeg_integration.py 2>&1 | tee ../media-render.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: media-render-log
+          path: media-render.log
+          retention-days: 14
 
   stack-rehearsal:
     runs-on: ubuntu-latest
@@ -66,7 +74,8 @@ jobs:
           DIRECTOR_METRICS_TOKEN: release-qualification-metrics-token
         run: bash ops/smoke.sh http://127.0.0.1:8000
       - name: Verify worker connectivity
-        run: docker compose exec -T worker celery -A app.worker.celery_app.celery_app inspect ping --timeout=15
+        run: |
+          timeout 120 bash -c 'until docker compose exec -T worker celery -A app.worker.celery_app.celery_app inspect ping --timeout=10 | grep -q pong; do sleep 5; done'
       - name: Run bounded concurrency probe
         run: >-
           python3 ops/load_probe.py
