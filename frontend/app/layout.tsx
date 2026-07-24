@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
+import "./platform.css";
 
 export const metadata: Metadata = {
   title: "Director OS",
