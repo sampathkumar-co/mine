@@ -2,17 +2,27 @@ from dataclasses import asdict
 from pathlib import Path
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.core.enums import AssetKind, ProjectStatus
+from app.director.camera import (
+    AcceptedPickup,
+    PickupMissionSpec,
+    ProductionReadinessReport,
+    audit_production_readiness,
+    integrate_accepted_pickups,
+    promote_accepted_pickup,
+    validate_pickup_clip,
+)
 from app.director.cleanup import refine_graph_with_word_timings
 from app.director.edit_graph import build_multiclip_edit_graph
 from app.director.semantic_overlays import enhance_graph_with_semantic_overlays
 from app.director.style import compile_production_style
 from app.models.analysis import EditDecisionGraphRecord, ProjectAnalysis
+from app.models.camera import DirectorCameraAudit, PickupMission
 from app.models.project import Project, ProjectAsset
 from app.quality.editorial import review_and_repair_edit_graph
 from app.rendering.captions import write_ass_captions
@@ -169,6 +179,132 @@ def _analyze_source_assets(
     )
 
 
+def _validate_camera_submissions(
+    db: Session,
+    project_id: UUID,
+    clip_analyses: list[ClipAnalysis],
+    pickup_assets: list[ProjectAsset],
+) -> tuple[list[ClipAnalysis], list[AcceptedPickup]]:
+    clips_by_id = {clip.asset_id: clip for clip in clip_analyses}
+    pickup_ids = {str(asset.id) for asset in pickup_assets}
+    anchor_clip = next(
+        (
+            clip
+            for clip in clip_analyses
+            if clip.asset_id not in pickup_ids and clip.role == "primary_speech"
+        ),
+        next((clip for clip in clip_analyses if clip.asset_id not in pickup_ids), None),
+    )
+
+    submitted = list(
+        db.scalars(
+            select(PickupMission).where(
+                PickupMission.project_id == project_id,
+                PickupMission.status == "submitted",
+            )
+        ).all()
+    )
+    for mission in submitted:
+        asset_id = str(mission.submitted_asset_id or "")
+        clip = clips_by_id.get(asset_id)
+        if clip is None:
+            mission.status = "rejected"
+            mission.error_message = "Submitted pickup asset is unavailable"
+            mission.validation = {
+                "accepted": False,
+                "score": 0,
+                "blocking_reasons": ["Submitted pickup asset is unavailable"],
+            }
+            continue
+        specification = PickupMissionSpec.model_validate(mission.specification)
+        validation = validate_pickup_clip(
+            specification,
+            clip,
+            anchor_clip=anchor_clip,
+        )
+        mission.validation = validation.model_dump(mode="json")
+        mission.error_message = None
+        if validation.accepted:
+            mission.status = "accepted"
+            mission.accepted_asset_id = mission.submitted_asset_id
+        else:
+            mission.status = "rejected"
+            mission.accepted_asset_id = None
+            mission.error_message = "; ".join(validation.blocking_reasons)[:2_000]
+    db.commit()
+
+    accepted_rows = list(
+        db.scalars(
+            select(PickupMission).where(
+                PickupMission.project_id == project_id,
+                PickupMission.status == "accepted",
+                PickupMission.accepted_asset_id.is_not(None),
+            )
+        ).all()
+    )
+    accepted: list[AcceptedPickup] = []
+    promoted = list(clip_analyses)
+    index_by_id = {clip.asset_id: index for index, clip in enumerate(promoted)}
+    for mission in accepted_rows:
+        asset_id = str(mission.accepted_asset_id)
+        index = index_by_id.get(asset_id)
+        if index is None:
+            continue
+        specification = PickupMissionSpec.model_validate(mission.specification)
+        pickup = AcceptedPickup(
+            asset_id=asset_id,
+            mission_type=specification.mission_type,
+            target_terms=mission.target_terms,
+            insertion_strategy=specification.insertion_strategy,
+            validation_score=float((mission.validation or {}).get("score", 0.6)),
+        )
+        promoted[index] = promote_accepted_pickup(promoted[index], pickup)
+        accepted.append(pickup)
+    return promoted, accepted
+
+
+def _save_camera_audit(
+    db: Session,
+    project: Project,
+    report: ProductionReadinessReport,
+    *,
+    mode: str,
+) -> DirectorCameraAudit:
+    current_version = db.scalar(
+        select(func.max(DirectorCameraAudit.version)).where(
+            DirectorCameraAudit.project_id == project.id
+        )
+    ) or 0
+    audit = DirectorCameraAudit(
+        project_id=project.id,
+        version=current_version + 1,
+        mode=mode,
+        readiness_score=report.score,
+        threshold=report.threshold,
+        ready=report.ready,
+        report=report.model_dump(mode="json"),
+    )
+    db.add(audit)
+    db.flush()
+    for specification in report.missions:
+        db.add(
+            PickupMission(
+                project_id=project.id,
+                audit_id=audit.id,
+                mission_type=specification.mission_type,
+                priority=specification.priority,
+                title=specification.title,
+                reason=specification.reason,
+                status="requested",
+                specification=specification.model_dump(mode="json"),
+                target_terms=specification.target_terms,
+            )
+        )
+    db.commit()
+    db.refresh(audit)
+    return audit
+
+
 @celery_app.task(bind=True, max_retries=3)
 def run_project_pipeline(self, project_id: str) -> dict[str, str]:
     project_uuid = UUID(project_id)
@@ -181,12 +317,14 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
         project_output_dir = Path(settings.output_dir) / project_id
         caption_path = project_output_dir / "analysis" / "captions.ass"
         try:
-            source_assets = _all_assets(db, project.id, AssetKind.SOURCE_VIDEO)
-            if not source_assets:
+            original_assets = _all_assets(db, project.id, AssetKind.SOURCE_VIDEO)
+            pickup_assets = _all_assets(db, project.id, AssetKind.PICKUP_VIDEO)
+            source_assets = [*original_assets, *pickup_assets]
+            if not original_assets:
                 raise ValueError("Project has no source video")
             if len(source_assets) > settings.max_source_clips:
                 raise ValueError(
-                    f"Project has {len(source_assets)} source clips; maximum is {settings.max_source_clips}"
+                    f"Project has {len(source_assets)} source and pickup clips; maximum is {settings.max_source_clips}"
                 )
             reference = _first_asset(db, project.id, AssetKind.REFERENCE_VIDEO)
             music_assets = _all_assets(db, project.id, AssetKind.MUSIC)
@@ -198,6 +336,12 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 source_assets,
                 project_output_dir=project_output_dir,
                 analysis_notes=analysis_notes,
+            )
+            clip_analyses, accepted_pickups = _validate_camera_submissions(
+                db,
+                project.id,
+                clip_analyses,
+                pickup_assets,
             )
 
             reference_style = None
@@ -272,7 +416,69 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 music_profiles=music_profiles,
                 production_style=style_payload,
             )
+
+            camera_mode = str(contract.get("director_camera_mode", "advisory"))
+            camera_override = bool(contract.get("_director_camera_override"))
+            camera_report = None
+            camera_audit = None
+            if camera_mode != "off":
+                camera_report = audit_production_readiness(
+                    analysis,
+                    contract,
+                    threshold=float(contract.get("production_readiness_threshold", 0.72)),
+                )
+                camera_audit = _save_camera_audit(
+                    db,
+                    project,
+                    camera_report,
+                    mode=camera_mode,
+                )
+                analysis = analysis.model_copy(
+                    update={
+                        "director_camera": {
+                            "audit_id": str(camera_audit.id),
+                            "audit_version": camera_audit.version,
+                            "mode": camera_mode,
+                            "report": camera_report.model_dump(mode="json"),
+                            "accepted_pickups": [
+                                item.model_dump(mode="json") for item in accepted_pickups
+                            ],
+                            "override": contract.get("_director_camera_override"),
+                        }
+                    }
+                )
             _save_analysis(db, project.id, analysis.model_dump(mode="json"))
+
+            if (
+                camera_mode == "required"
+                and camera_report is not None
+                and not camera_report.ready
+                and not camera_override
+            ):
+                _set_status(
+                    db,
+                    project,
+                    ProjectStatus.NEEDS_PICKUPS,
+                    error_message=(
+                        "Director Camera requires additional footage before rendering: "
+                        + "; ".join(camera_report.blocking_reasons[:4])
+                    )[:2_000],
+                )
+                self.update_state(
+                    state="NEEDS_PICKUPS",
+                    meta={
+                        "project_id": project_id,
+                        "audit_version": camera_audit.version if camera_audit else None,
+                        "readiness_score": camera_report.score,
+                        "missions": len(camera_report.missions),
+                    },
+                )
+                return {
+                    "project_id": project_id,
+                    "status": ProjectStatus.NEEDS_PICKUPS.value,
+                    "readiness_score": f"{camera_report.score:.3f}",
+                    "pickup_missions": str(len(camera_report.missions)),
+                }
 
             _set_status(db, project, ProjectStatus.PLANNING)
             self.update_state(state="PLANNING", meta={"project_id": project_id})
@@ -293,14 +499,20 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                     silence_threshold_seconds=settings.silence_threshold_seconds,
                     speech_padding_seconds=settings.speech_padding_seconds,
                 )
+            overlay_limit = (
+                production_style.max_visual_overlays
+                if production_style.max_visual_overlays is not None
+                else settings.max_visual_overlays
+            )
             graph = enhance_graph_with_semantic_overlays(
                 graph,
                 analysis,
                 objective=objective,
                 target_duration_seconds=target_duration,
-                max_overlays=(settings.max_visual_overlays if settings.enable_semantic_overlays else 0),
+                max_overlays=(overlay_limit if settings.enable_semantic_overlays else 0),
                 minimum_match_score=settings.minimum_overlay_match_score,
             )
+            graph = integrate_accepted_pickups(graph, analysis, accepted_pickups)
             graph, critic_report = review_and_repair_edit_graph(graph, analysis, contract)
             analysis = analysis.model_copy(
                 update={"editorial_report": critic_report.model_dump(mode="json")}
@@ -328,11 +540,18 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                     f"Selected uploaded music '{selected_music.filename}' "
                     f"for energy match {selected_music.energy:.2f}."
                 )
+            if camera_report is not None:
+                graph_notes.append(
+                    f"Director Camera readiness {camera_report.score:.2f}/{camera_report.threshold:.2f} "
+                    f"in {camera_mode} mode."
+                )
+            if camera_override:
+                graph_notes.append("Director Camera gate was explicitly overridden by the user.")
             graph = graph.model_copy(update={"notes": graph_notes})
 
             caption_count = 0
             render_caption_path: Path | None = None
-            if settings.enable_captions and transcripts_by_asset:
+            if settings.enable_captions and production_style.caption.enabled and transcripts_by_asset:
                 caption_count = write_ass_captions(
                     caption_path,
                     graph,
@@ -357,7 +576,9 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                     asset_id=str(asset.id),
                     path=asset.storage_path,
                     probe=probes[str(asset.id)],
-                    subject_center_x=clip_by_asset_id[str(asset.id)].subject_framing.normalized_center_x,
+                    subject_center_x=clip_by_asset_id[
+                        str(asset.id)
+                    ].subject_framing.normalized_center_x,
                 )
                 for asset in source_assets
             ]
@@ -400,10 +621,14 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 "project_id": project_id,
                 "status": ProjectStatus.READY.value,
                 "source_clips": str(len(source_assets)),
+                "accepted_pickups": str(len(accepted_pickups)),
                 "rejected_clips": str(rejected_count),
                 "semantic_overlays": str(len(graph.overlays)),
                 "critic_score": f"{critic_report.score:.3f}",
                 "caption_cues": str(caption_count),
+                "readiness_score": (
+                    f"{camera_report.score:.3f}" if camera_report is not None else "not_audited"
+                ),
                 "reference_pace": reference_style.pace if reference_style else "none",
                 "music_asset_id": selected_music.asset_id if selected_music else "none",
             }
