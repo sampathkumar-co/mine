@@ -16,6 +16,7 @@ from app.models.platform import ResumableUpload, User, WorkspaceMembership
 from app.models.project import Project
 from app.services.email import email_is_verified
 from app.services.entitlements import EntitlementError, enforce_contract_entitlements
+from app.services.governance import workspace_pending_deletion
 from app.services.permissions import can_edit, can_manage_billing, can_manage_members
 from app.services.sessions import session_is_active
 
@@ -27,6 +28,9 @@ MULTIPART_PATH = re.compile(r"^/api/v1/multipart-uploads/([0-9a-fA-F-]{36})(?:/|
 USER_PATH = re.compile(r"^/api/v1/users/([0-9a-fA-F-]{36})(?:/|$)")
 PUBLIC_PATHS = {
     "/api/v1/health",
+    "/api/v1/health/live",
+    "/api/v1/health/ready",
+    "/api/v1/metrics",
     "/api/v1/auth/register",
     "/api/v1/auth/login",
     "/api/v1/auth/refresh",
@@ -60,6 +64,19 @@ def _membership(db, workspace_id: UUID, user_id: UUID) -> WorkspaceMembership | 
     )
 
 
+def _deletion_denied(request: Request, db, workspace_id: UUID) -> JSONResponse | None:
+    if request.method in SAFE_METHODS:
+        return None
+    if request.method == "DELETE" and "/privacy/deletion/" in request.url.path:
+        return None
+    if workspace_pending_deletion(db, workspace_id):
+        return _error(
+            "Workspace deletion is scheduled. Cancel deletion before making changes.",
+            status.HTTP_423_LOCKED,
+        )
+    return None
+
+
 def _authorize_workspace_request(request: Request, role: str) -> JSONResponse | None:
     path = request.url.path
     if request.method in SAFE_METHODS:
@@ -68,7 +85,7 @@ def _authorize_workspace_request(request: Request, role: str) -> JSONResponse | 
         return None
     if "/billing/adjustments" in path and not can_manage_billing(role):
         return _error("Workspace owner permission is required", status.HTTP_403_FORBIDDEN)
-    if any(marker in path for marker in ("/members", "/invitations", "/audit-events")):
+    if any(marker in path for marker in ("/members", "/invitations", "/audit-events", "/privacy")):
         if not can_manage_members(role):
             return _error(
                 "Workspace administrator permission is required",
@@ -97,6 +114,9 @@ async def _authorize_project_creation(
         return _error("Workspace not found", status.HTTP_404_NOT_FOUND)
     request.state.workspace_id = workspace_id
     request.state.workspace_role = membership.role
+    deletion_denied = _deletion_denied(request, db, workspace_id)
+    if deletion_denied is not None:
+        return deletion_denied
     if not can_edit(membership.role):
         return _error("Workspace editor permission is required", status.HTTP_403_FORBIDDEN)
     contract = payload.get("contract")
@@ -111,8 +131,11 @@ async def _authorize_project_creation(
 class AuthenticationMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         path = request.url.path
-        if request.method == "OPTIONS" or path in PUBLIC_PATHS or path.startswith(
-            "/api/v1/deliveries/"
+        if (
+            request.method == "OPTIONS"
+            or path in PUBLIC_PATHS
+            or path.startswith("/api/v1/deliveries/")
+            or path.startswith("/api/v1/privacy-deliveries/")
         ):
             return await call_next(request)
 
@@ -176,6 +199,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                         return _error("Project not found", status.HTTP_404_NOT_FOUND)
                     request.state.workspace_id = project.workspace_id
                     request.state.workspace_role = membership.role
+                    deletion_denied = _deletion_denied(request, db, project.workspace_id)
+                    if deletion_denied is not None:
+                        return deletion_denied
                     denied = _authorize_workspace_request(request, membership.role)
                     if denied is not None:
                         return denied
@@ -191,6 +217,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                     return _error("Workspace not found", status.HTTP_404_NOT_FOUND)
                 request.state.workspace_id = workspace_id
                 request.state.workspace_role = membership.role
+                deletion_denied = _deletion_denied(request, db, workspace_id)
+                if deletion_denied is not None:
+                    return deletion_denied
                 denied = _authorize_workspace_request(request, membership.role)
                 if denied is not None:
                     return denied
@@ -206,6 +235,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 )
                 if upload is None or project is None or membership is None:
                     return _error("Upload session not found", status.HTTP_404_NOT_FOUND)
+                deletion_denied = _deletion_denied(request, db, project.workspace_id)
+                if deletion_denied is not None:
+                    return deletion_denied
                 if request.method not in SAFE_METHODS and not can_edit(membership.role):
                     return _error(
                         "Workspace editor permission is required",
@@ -223,6 +255,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 )
                 if upload is None or project is None or membership is None:
                     return _error("Multipart upload not found", status.HTTP_404_NOT_FOUND)
+                deletion_denied = _deletion_denied(request, db, project.workspace_id)
+                if deletion_denied is not None:
+                    return deletion_denied
                 if request.method not in SAFE_METHODS and not can_edit(membership.role):
                     return _error(
                         "Workspace editor permission is required",
