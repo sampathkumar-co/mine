@@ -51,6 +51,11 @@ jobs:
           npm install --no-audit --no-fund
           npm run check
       - name: Validate deployment definitions
+        env:
+          DIRECTOR_DOMAIN: video.example.com
+          DIRECTOR_ACME_EMAIL: ops@example.com
+          DIRECTOR_POSTGRES_PASSWORD: test-production-password
+          DIRECTOR_METRICS_TOKEN: test-metrics-token-change-me
         run: |
           cp .env.example .env
           docker compose config >/dev/null
