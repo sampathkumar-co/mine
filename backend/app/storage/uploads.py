@@ -9,7 +9,11 @@ from fastapi import UploadFile
 from app.core.config import Settings
 from app.core.enums import AssetKind
 
-VIDEO_KINDS = {AssetKind.SOURCE_VIDEO, AssetKind.REFERENCE_VIDEO}
+VIDEO_KINDS = {
+    AssetKind.SOURCE_VIDEO,
+    AssetKind.PICKUP_VIDEO,
+    AssetKind.REFERENCE_VIDEO,
+}
 
 
 class UploadTooLargeError(ValueError):
