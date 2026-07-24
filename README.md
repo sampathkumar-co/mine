@@ -6,8 +6,9 @@ Director OS is an autonomous video production agent that turns raw footage, crea
 
 The repository now contains a runnable authenticated platform and Tier 1 production engine:
 
-- Next.js workspace client with account recovery, team administration, production library, revision chat, secure delivery, and guided browser capture
-- FastAPI control plane with Director Contracts, Director Camera, Director Memory, immutable revisions, audit events, and credit metering
+- Next.js workspace client with account recovery, team administration, subscription controls, production library, revision chat, secure delivery, and guided browser capture
+- FastAPI control plane with Director Contracts, Director Camera, Director Memory, immutable revisions, audit events, subscription entitlements, and credit metering
+- Optional Stripe Checkout subscriptions, signed webhook processing, and customer-portal sessions
 - PostgreSQL persistence with Alembic migrations
 - Redis and Celery workers for durable production, revisions, email delivery, and lifecycle cleanup
 - Local or S3-compatible multipart object storage
@@ -78,8 +79,10 @@ The bucket must allow the configured web origin to upload parts and expose the `
 ## Production flow
 
 ```text
-Create Director Contract
+Resolve active plan and enforce entitlements
+→ create Director Contract
 → multipart footage upload
+→ recheck clip and contract limits
 → reserve workspace credits
 → sensory analysis
 → Director Camera readiness audit
@@ -95,15 +98,27 @@ Create Director Contract
 
 Production states include `created`, `uploading`, `ready_to_queue`, `queued`, `analyzing`, `needs_pickups`, `planning`, `rendering`, `quality_check`, `ready`, and `failed`.
 
-## Billing ledger
+## Subscriptions and credit ledger
 
-Billing is currently an internal credit ledger—not card charging.
+Subscriptions are optional and disabled until Stripe credentials, webhook verification, and paid Price IDs are configured.
+
+- Workspace owners start paid plans through hosted Stripe Checkout.
+- Subscription state is updated only from verified webhook events, never from the browser redirect.
+- Each successful paid invoice grants the plan's configured credits through the append-only ledger.
+- Invoice IDs make recurring credit grants idempotent under webhook retries.
+- The Stripe customer portal handles payment methods, invoices, upgrades, downgrades, and cancellation.
+- Plan entitlements limit duration, Director tier, source and pickup clips, and workspace seats.
+- Downgrades preserve existing data but block new work that exceeds the active plan.
+
+The internal ledger remains the production-usage source of truth:
 
 - Each workspace has total, reserved, and available credits.
 - Starting production reserves an estimated amount before queue acceptance.
 - Queue rejection or terminal failure releases the reservation.
 - A successful render settles the reservation.
-- Adjustments and lifecycle entries are append-only and idempotent.
+- Adjustments, subscription grants, reservations, settlements, and releases are append-only and idempotent.
+
+See [`docs/subscriptions-and-entitlements.md`](docs/subscriptions-and-entitlements.md) for Stripe setup, required events, plan configuration, and launch rehearsal.
 
 ## Email and cleanup workers
 
@@ -118,7 +133,7 @@ Local development uses the database outbox. Production can configure SMTP using 
 
 ```bash
 cp .env.example .env
-# Fill production secrets, domain, database password, email, and storage settings.
+# Fill production secrets, domain, database password, email, storage, and billing settings.
 docker compose -f compose.production.yml up --build -d
 ```
 
@@ -140,3 +155,4 @@ Rehearse that migration against a restored backup before deploying it to the liv
 - [`docs/director-camera.md`](docs/director-camera.md)
 - [`docs/platform-workspaces.md`](docs/platform-workspaces.md)
 - [`docs/production-operations.md`](docs/production-operations.md)
+- [`docs/subscriptions-and-entitlements.md`](docs/subscriptions-and-entitlements.md)

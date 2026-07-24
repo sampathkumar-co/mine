@@ -16,6 +16,13 @@ import {
   revokeWorkspaceInvitation,
   updateWorkspaceMember,
 } from "@/lib/api";
+import {
+  createSubscriptionCheckout,
+  createSubscriptionPortal,
+  getSubscriptionOverview,
+  listBillingPlans,
+} from "@/lib/subscriptions";
+import type { BillingPlan, SubscriptionOverview } from "@/lib/subscriptions";
 import type {
   AuditEvent,
   BillingAccount,
@@ -32,6 +39,10 @@ function number(value: string): string {
   return Number.isFinite(parsed) ? parsed.toFixed(2) : value;
 }
 
+function planDetail(plan: BillingPlan): string {
+  return `${plan.max_source_clips} clips · ${plan.max_target_duration_seconds}s · ${plan.max_members} seats · Tier ${plan.max_tier}`;
+}
+
 export function WorkspaceSettings() {
   const params = useParams<{ workspaceId: string }>();
   const workspaceId = params.workspaceId;
@@ -39,6 +50,8 @@ export function WorkspaceSettings() {
   const [members, setMembers] = useState<WorkspaceMember[]>([]);
   const [invitations, setInvitations] = useState<WorkspaceInvitation[]>([]);
   const [billing, setBilling] = useState<BillingAccount | null>(null);
+  const [subscription, setSubscription] = useState<SubscriptionOverview | null>(null);
+  const [plans, setPlans] = useState<BillingPlan[]>([]);
   const [entries, setEntries] = useState<BillingEntry[]>([]);
   const [events, setEvents] = useState<AuditEvent[]>([]);
   const [email, setEmail] = useState("");
@@ -52,16 +65,21 @@ export function WorkspaceSettings() {
     [session, workspaceId],
   );
   const canManage = workspace?.role === "owner" || workspace?.role === "admin";
+  const canManageBilling = workspace?.role === "owner";
 
   const load = useCallback(async () => {
     if (!workspace) return;
     try {
-      const [nextBilling, nextEntries] = await Promise.all([
+      const [nextBilling, nextEntries, nextSubscription, nextPlans] = await Promise.all([
         getBillingAccount(workspaceId),
         listBillingEntries(workspaceId),
+        getSubscriptionOverview(workspaceId),
+        listBillingPlans(),
       ]);
       setBilling(nextBilling);
       setEntries(nextEntries);
+      setSubscription(nextSubscription);
+      setPlans(nextPlans);
       if (canManage) {
         const [nextMembers, nextInvitations, nextEvents] = await Promise.all([
           listWorkspaceMembers(workspaceId),
@@ -81,6 +99,12 @@ export function WorkspaceSettings() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    const result = new URLSearchParams(window.location.search).get("billing");
+    if (result === "success") setMessage("Checkout completed. Plan access updates after the verified billing webhook arrives.");
+    if (result === "cancelled") setMessage("Checkout was cancelled. No plan change was applied.");
+  }, []);
 
   async function invite(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -136,6 +160,30 @@ export function WorkspaceSettings() {
     }
   }
 
+  async function beginCheckout(plan: BillingPlan) {
+    setBusy(true);
+    setError("");
+    try {
+      const hosted = await createSubscriptionCheckout(workspaceId, plan.key);
+      window.location.assign(hosted.url);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Checkout could not be opened.");
+      setBusy(false);
+    }
+  }
+
+  async function openPortal() {
+    setBusy(true);
+    setError("");
+    try {
+      const hosted = await createSubscriptionPortal(workspaceId);
+      window.location.assign(hosted.url);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Billing portal could not be opened.");
+      setBusy(false);
+    }
+  }
+
   if (loading) return <main className="shell"><div className="panel loading">Loading workspace…</div></main>;
   if (!session || !workspace) return <main className="shell"><div className="panel loading">Workspace unavailable.</div></main>;
 
@@ -146,7 +194,7 @@ export function WorkspaceSettings() {
           <Link className="back" href="/">← Production library</Link>
           <div className="eyebrow">WORKSPACE OPERATIONS</div>
           <h1>{workspace.name}</h1>
-          <p>Role: {workspace.role} · account security, team access, credits, and audit history.</p>
+          <p>Role: {workspace.role} · account security, team access, plan limits, credits, and audit history.</p>
         </div>
       </header>
 
@@ -158,6 +206,42 @@ export function WorkspaceSettings() {
       )}
       {message && <div className="alert success">{message}</div>}
       {error && <div className="alert error">{error}</div>}
+
+      <section className="panel operation-card subscription-card full-width">
+        <div className="subscription-heading">
+          <div>
+            <div className="eyebrow">SUBSCRIPTION</div>
+            <h2>{subscription?.plan.name ?? "Starter"}</h2>
+            <p>
+              {subscription?.subscription
+                ? `${subscription.subscription.status.replaceAll("_", " ")}${subscription.subscription.cancel_at_period_end ? " · cancels at period end" : ""}`
+                : "No paid subscription attached."}
+            </p>
+          </div>
+          {canManageBilling && subscription?.portal_available && (
+            <button className="secondary" type="button" disabled={busy} onClick={() => void openPortal()}>Manage billing</button>
+          )}
+        </div>
+        {subscription?.plan && <strong className="plan-summary">{planDetail(subscription.plan)}</strong>}
+        <div className="plan-grid">
+          {plans.map((plan) => {
+            const current = subscription?.plan.key === plan.key;
+            return (
+              <article className={`plan-card ${current ? "current" : ""}`} key={plan.key}>
+                <div><span>{plan.name}</span>{current && <small>Current</small>}</div>
+                <p>{plan.description}</p>
+                <strong>{planDetail(plan)}</strong>
+                <small>{number(plan.monthly_credits)} credits per paid invoice</small>
+                {canManageBilling && !current && plan.key !== "starter" && (
+                  <button className="primary" type="button" disabled={busy || !plan.checkout_available} onClick={() => void beginCheckout(plan)}>
+                    {plan.checkout_available ? `Choose ${plan.name}` : "Price not configured"}
+                  </button>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </section>
 
       <div className="operations-grid">
         <section className="panel operation-card">
@@ -175,6 +259,7 @@ export function WorkspaceSettings() {
           <section className="panel operation-card">
             <div className="eyebrow">INVITE TEAM</div>
             <h2>Workspace access</h2>
+            <p>{subscription?.plan ? `${subscription.plan.max_members} seats included on ${subscription.plan.name}.` : "Seat limits follow the active plan."}</p>
             <form className="inline-form" onSubmit={invite}>
               <input type="email" placeholder="editor@example.com" value={email} onChange={(event) => setEmail(event.target.value)} required />
               <select value={role} onChange={(event) => setRole(event.target.value as WorkspaceRole)}>

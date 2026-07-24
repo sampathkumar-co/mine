@@ -28,6 +28,7 @@ def import_models() -> None:
     import app.models.operations  # noqa: F401
     import app.models.platform  # noqa: F401
     import app.models.project  # noqa: F401
+    import app.models.subscriptions  # noqa: F401
 
 
 def init_database() -> None:
