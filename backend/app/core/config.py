@@ -51,6 +51,23 @@ class Settings(BaseSettings):
 
     starter_credits: float = Field(default=100, ge=0, le=1_000_000)
     billing_enabled: bool = True
+    entitlements_enabled: bool = True
+    subscriptions_enabled: bool = False
+    billing_provider: str = "stripe"
+    billing_plans_json: str = (
+        '{"starter":{"name":"Starter","description":"Core autonomous production for small teams.",'
+        '"price_id":null,"monthly_credits":0,"max_source_clips":8,'
+        '"max_target_duration_seconds":180,"max_members":3,"max_tier":1},'
+        '"creator":{"name":"Creator","description":"Longer productions, more sources, and advanced Director tiers.",'
+        '"price_id":null,"monthly_credits":250,"max_source_clips":16,'
+        '"max_target_duration_seconds":600,"max_members":8,"max_tier":3},'
+        '"studio":{"name":"Studio","description":"High-volume production and full Director capabilities.",'
+        '"price_id":null,"monthly_credits":1200,"max_source_clips":24,'
+        '"max_target_duration_seconds":1800,"max_members":25,"max_tier":6}}'
+    )
+    stripe_secret_key: str | None = None
+    stripe_webhook_secret: str | None = None
+    stripe_portal_configuration_id: str | None = None
     audit_retention_days: int = Field(default=365, ge=30, le=3_650)
     run_migrations_on_startup: bool = False
     auto_create_schema: bool = True
