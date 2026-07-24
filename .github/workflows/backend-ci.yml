@@ -11,6 +11,9 @@ on:
       - "backend/**"
       - ".github/workflows/backend-ci.yml"
 
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,18 +22,23 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install ".[dev]"
-      - name: Generate Ruff fix diff
-        run: ruff check . --fix --diff > ruff-fix.diff || true
-      - name: Upload Ruff fix diff
-        uses: actions/upload-artifact@v4
-        with:
-          name: operations-ruff-fix
-          path: backend/ruff-fix.diff
+      - name: Apply Ruff fixes
+        run: |
+          ruff check . --fix
+          if ! git diff --quiet; then
+            git config user.name "director-os-ci"
+            git config user.email "director-os-ci@users.noreply.github.com"
+            git add .
+            git commit -m "Fix backend lint"
+            git push
+          fi
       - run: ruff check .
       - name: Validate Alembic migrations
         env:
