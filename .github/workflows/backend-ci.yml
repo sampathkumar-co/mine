@@ -32,7 +32,20 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install ".[dev]"
-      - run: ruff check .
+      - name: Run Ruff
+        id: ruff
+        continue-on-error: true
+        run: set -o pipefail; ruff check . --output-format=concise 2>&1 | tee ../ruff-report.txt
+      - name: Upload Ruff report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v101-ruff-report
+          path: ruff-report.txt
+          retention-days: 7
+      - name: Enforce Ruff result
+        if: steps.ruff.outcome == 'failure'
+        run: exit 1
       - name: Validate operations scripts
         working-directory: .
         run: |
@@ -96,4 +109,16 @@ jobs:
       - name: Rehearse PostgreSQL migrations
         run: alembic upgrade head
       - name: Run PostgreSQL concurrency suite
-        run: pytest -q tests/test_postgres_concurrency.py
+        id: postgres_tests
+        continue-on-error: true
+        run: set -o pipefail; pytest -q tests/test_postgres_concurrency.py 2>&1 | tee ../postgres-concurrency.log
+      - name: Upload PostgreSQL concurrency report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v101-postgres-concurrency-report
+          path: postgres-concurrency.log
+          retention-days: 7
+      - name: Enforce PostgreSQL concurrency result
+        if: steps.postgres_tests.outcome == 'failure'
+        run: exit 1
