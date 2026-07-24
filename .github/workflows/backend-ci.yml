@@ -24,6 +24,13 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install ".[dev]"
+      - name: Generate Ruff fix diff
+        run: ruff check . --fix --diff > ruff-fix.diff || true
+      - name: Upload Ruff fix diff
+        uses: actions/upload-artifact@v4
+        with:
+          name: subscription-ruff-fix
+          path: backend/ruff-fix.diff
       - run: ruff check .
       - name: Validate Alembic migrations
         env:
