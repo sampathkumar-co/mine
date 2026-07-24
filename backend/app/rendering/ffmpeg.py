@@ -169,6 +169,10 @@ def render_vertical_baseline(
     )
 
 
+def _audio_format_filter() -> str:
+    return "aresample=48000,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo"
+
+
 def _music_filter(
     *,
     input_index: int,
@@ -178,6 +182,7 @@ def _music_filter(
     filters = [
         f"[{input_index}:a]atrim=duration={duration_seconds:.3f}",
         "asetpts=PTS-STARTPTS",
+        _audio_format_filter(),
     ]
     fade = min(style.music.fade_seconds, max(0.0, duration_seconds / 3))
     if fade > 0.01:
@@ -225,6 +230,7 @@ def render_multiclip_edit_decision_graph(
         f"saturation={production_style.visual.saturation:.4f}:"
         f"brightness={production_style.visual.brightness:.4f}"
     )
+    audio_format = _audio_format_filter()
 
     for index, segment in enumerate(graph.segments):
         source_index, source = _source_for_segment(segment, sources)
@@ -238,12 +244,12 @@ def render_multiclip_edit_decision_graph(
         if source.probe.has_audio:
             filters.append(
                 f"[{source_index}:a]atrim=start={segment.source_start}:end={segment.source_end},"
-                f"asetpts=PTS-STARTPTS[a{index}]"
+                f"asetpts=PTS-STARTPTS,{audio_format}[a{index}]"
             )
         else:
             filters.append(
                 f"anullsrc=r=48000:cl=stereo,atrim=duration={duration:.3f},"
-                f"asetpts=PTS-STARTPTS[a{index}]"
+                f"asetpts=PTS-STARTPTS,{audio_format}[a{index}]"
             )
         concat_inputs.append(f"[a{index}]")
 
@@ -270,7 +276,7 @@ def render_multiclip_edit_decision_graph(
 
     filters.append(
         "[aconcat]highpass=f=80,lowpass=f=12000,afftdn=nf=-25,"
-        "loudnorm=I=-16:TP=-1.5:LRA=11[voiceclean]"
+        f"{audio_format}[voiceclean]"
     )
 
     if has_music and music_input_index is not None:
@@ -296,7 +302,7 @@ def render_multiclip_edit_decision_graph(
             ]
         )
     else:
-        filters.append("[voiceclean]anull[aout]")
+        filters.append("[voiceclean]loudnorm=I=-16:TP=-1.5:LRA=11[aout]")
 
     command.extend(
         [
