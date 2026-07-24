@@ -5,7 +5,6 @@ import json
 import os
 import shutil
 from dataclasses import dataclass
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol
 from uuid import UUID, uuid4
@@ -15,6 +14,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import Settings
 from app.core.enums import AssetKind, ProjectStatus
+from app.core.time import is_expired_at
 from app.models.operations import (
     MultipartUpload,
     MultipartUploadPart,
@@ -373,4 +373,4 @@ def cleanup_expired_multipart_upload(
 
 
 def is_expired(upload: MultipartUpload) -> bool:
-    return upload.expires_at <= datetime.now(UTC)
+    return is_expired_at(upload.expires_at)

@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.database import get_db
 from app.core.security import hash_password
+from app.core.time import is_expired_at
 from app.models.operations import (
     AuditEvent,
     BillingEntry,
@@ -503,7 +504,7 @@ def accept_workspace_invitation(
     now = datetime.now(UTC)
     if user is None or invitation is None:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invitation is invalid")
-    if invitation.revoked_at or invitation.accepted_at or invitation.expires_at <= now:
+    if invitation.revoked_at or invitation.accepted_at or is_expired_at(invitation.expires_at, now=now):
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invitation is no longer valid")
     if invitation.email != user.email:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invitation belongs to another email")
