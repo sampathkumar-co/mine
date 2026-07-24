@@ -31,7 +31,8 @@ from app.storage.uploads import (
     UploadTooLargeError,
     store_upload,
 )
-from app.worker.tasks import run_project_pipeline, run_revision_pipeline
+from app.worker.revisions import run_revision_pipeline
+from app.worker.tasks import run_project_pipeline
 
 router = APIRouter()
 settings = get_settings()
