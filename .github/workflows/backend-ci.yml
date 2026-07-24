@@ -4,11 +4,15 @@ on:
   pull_request:
     paths:
       - "backend/**"
+      - "ops/**"
+      - "compose.production.yml"
       - ".github/workflows/backend-ci.yml"
   push:
     branches: [main]
     paths:
       - "backend/**"
+      - "ops/**"
+      - "compose.production.yml"
       - ".github/workflows/backend-ci.yml"
 
 jobs:
@@ -25,6 +29,9 @@ jobs:
           cache: pip
       - run: pip install ".[dev]"
       - run: ruff check .
+      - name: Validate operations scripts
+        working-directory: .
+        run: bash -n ops/backup.sh ops/restore.sh ops/smoke.sh
       - name: Validate Alembic migrations
         env:
           DIRECTOR_ENVIRONMENT: test

@@ -40,4 +40,5 @@ jobs:
           DIRECTOR_DOMAIN: video.example.com
           DIRECTOR_ACME_EMAIL: ops@example.com
           DIRECTOR_POSTGRES_PASSWORD: test-production-password
+          DIRECTOR_METRICS_TOKEN: test-metrics-token-change-me
         run: docker compose -f compose.production.yml config >/dev/null

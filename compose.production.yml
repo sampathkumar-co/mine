@@ -2,6 +2,8 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     environment:
       DIRECTOR_DOMAIN: ${DIRECTOR_DOMAIN:?Set DIRECTOR_DOMAIN}
       DIRECTOR_ACME_EMAIL: ${DIRECTOR_ACME_EMAIL:?Set DIRECTOR_ACME_EMAIL}
@@ -25,6 +27,8 @@ services:
       args:
         NEXT_PUBLIC_DIRECTOR_API_URL: /api/v1
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
       interval: 15s
@@ -52,6 +56,9 @@ services:
     build: ./backend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     restart: unless-stopped
+    stop_grace_period: 30s
+    security_opt:
+      - no-new-privileges:true
     env_file: .env
     environment:
       DIRECTOR_ENVIRONMENT: production
@@ -59,13 +66,19 @@ services:
       DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
       DIRECTOR_PUBLIC_APP_URL: https://${DIRECTOR_DOMAIN:?Set DIRECTOR_DOMAIN}
       DIRECTOR_CORS_ORIGINS: https://${DIRECTOR_DOMAIN:?Set DIRECTOR_DOMAIN}
+      DIRECTOR_RATE_LIMIT_BACKEND: redis
+      DIRECTOR_RATE_LIMIT_FAIL_CLOSED: "true"
+      DIRECTOR_TRUST_PROXY_HEADERS: "true"
+      DIRECTOR_READINESS_REQUIRE_REDIS: "true"
+      DIRECTOR_METRICS_TOKEN: ${DIRECTOR_METRICS_TOKEN:?Set DIRECTOR_METRICS_TOKEN}
     volumes:
       - director_data:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/ready"]
       interval: 15s
       timeout: 5s
-      retries: 5
+      retries: 8
+      start_period: 20s
     depends_on:
       redis:
         condition: service_healthy
@@ -78,6 +91,9 @@ services:
     build: ./backend
     command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --concurrency=1
     restart: unless-stopped
+    stop_grace_period: 2m
+    security_opt:
+      - no-new-privileges:true
     env_file: .env
     environment:
       DIRECTOR_ENVIRONMENT: production
@@ -97,6 +113,8 @@ services:
     build: ./backend
     command: celery -A app.worker.celery_app.celery_app beat --loglevel=INFO
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     env_file: .env
     environment:
       DIRECTOR_ENVIRONMENT: production
@@ -116,6 +134,8 @@ services:
     image: redis:7-alpine
     command: redis-server --appendonly yes
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - redis_data:/data
     healthcheck:
@@ -127,6 +147,8 @@ services:
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     environment:
       POSTGRES_DB: director
       POSTGRES_USER: director

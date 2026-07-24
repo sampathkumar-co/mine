@@ -24,6 +24,7 @@ def get_db() -> Generator[Session, None, None]:
 def import_models() -> None:
     import app.models.analysis  # noqa: F401
     import app.models.camera  # noqa: F401
+    import app.models.governance  # noqa: F401
     import app.models.memory  # noqa: F401
     import app.models.operations  # noqa: F401
     import app.models.platform  # noqa: F401
