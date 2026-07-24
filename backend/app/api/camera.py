@@ -108,8 +108,8 @@ def get_director_camera(
     missions = list(
         db.scalars(
             select(PickupMission)
-            .where(PickupMission.audit_id == audit.id)
-            .order_by(PickupMission.created_at)
+            .where(PickupMission.project_id == project_id)
+            .order_by(PickupMission.created_at.desc())
         ).all()
     )
     return DirectorCameraRead(
@@ -139,10 +139,10 @@ async def submit_pickup(
 ) -> PickupSubmissionAccepted:
     project = _project(db, project_id)
     mission = _mission(db, project_id, mission_id)
-    if project.status != ProjectStatus.NEEDS_PICKUPS:
+    if project.status not in {ProjectStatus.NEEDS_PICKUPS, ProjectStatus.READY}:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Pickup footage can only be submitted while the project needs pickups",
+            detail="Pickup footage can only be submitted for a waiting or completed project",
         )
     if mission.status in {"accepted", "cancelled"}:
         raise HTTPException(
