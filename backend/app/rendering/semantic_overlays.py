@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 from app.core.config import Settings
+from app.director.rhythm import plan_music_timing, prepare_aligned_music
 from app.director.semantic_overlays import ProductionEditDecisionGraph, VisualOverlay
 from app.director.style import ProductionStyle
 from app.rendering.ffmpeg import (
@@ -15,6 +16,7 @@ from app.rendering.ffmpeg import (
     _vertical_filter,
     render_multiclip_edit_decision_graph,
 )
+from app.sensory.music import analyze_music
 
 
 def _source_for_overlay(
@@ -28,6 +30,46 @@ def _source_for_overlay(
             f"Overlay references unavailable source asset {overlay.source_asset_id}"
         )
     return source
+
+
+def _prepare_render_music(
+    music_path: str | Path | None,
+    *,
+    output: Path,
+    graph: ProductionEditDecisionGraph,
+    production_style: ProductionStyle,
+    settings: Settings,
+) -> tuple[str | Path | None, Path | None]:
+    if music_path is None or not production_style.music.enabled:
+        return music_path, None
+    source = Path(music_path)
+    if not source.exists():
+        return music_path, None
+    try:
+        profile = analyze_music(
+            source,
+            asset_id=f"render:{source.resolve()}",
+            filename=source.name,
+            settings=settings,
+        )
+        plan = plan_music_timing(graph, profile)
+        if not plan.usable:
+            return music_path, None
+        aligned_path = output.with_name(f"{output.stem}.beat-aligned.m4a")
+        prepare_aligned_music(
+            source,
+            aligned_path,
+            plan=plan,
+            duration_seconds=graph.selected_duration_seconds,
+            settings=settings,
+        )
+        graph.notes.append(
+            f"Beat-synced music at {profile.tempo_bpm or 0:.1f} BPM: {plan.reason}"
+        )
+        return aligned_path, aligned_path
+    except Exception as exc:
+        graph.notes.append(f"Beat sync skipped; retained safe music mix: {str(exc)[:180]}")
+        return music_path, None
 
 
 def render_semantic_production_graph(
@@ -60,15 +102,26 @@ def render_semantic_production_graph(
 
     if reusable_base is None:
         base_path.parent.mkdir(parents=True, exist_ok=True)
-        render_multiclip_edit_decision_graph(
-            sources,
-            base_path,
-            graph,
-            caption_path=None,
-            music_path=music_path,
-            style=production_style,
+        render_music_path, aligned_music_path = _prepare_render_music(
+            music_path,
+            output=output,
+            graph=graph,
+            production_style=production_style,
             settings=settings,
         )
+        try:
+            render_multiclip_edit_decision_graph(
+                sources,
+                base_path,
+                graph,
+                caption_path=None,
+                music_path=render_music_path,
+                style=production_style,
+                settings=settings,
+            )
+        finally:
+            if aligned_music_path is not None:
+                aligned_music_path.unlink(missing_ok=True)
 
     has_captions = caption_path is not None and Path(caption_path).exists()
     if not graph.overlays and not has_captions:
