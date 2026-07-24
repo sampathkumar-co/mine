@@ -24,17 +24,5 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install ".[dev]"
-      - name: Run Ruff
-        id: ruff
-        continue-on-error: true
-        run: ruff check . --output-format=concise | tee ruff-report.txt
-      - name: Upload Ruff report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ruff-report-memory
-          path: backend/ruff-report.txt
-      - name: Enforce Ruff result
-        if: steps.ruff.outcome == 'failure'
-        run: exit 1
+      - run: ruff check .
       - run: pytest --cov=app --cov-report=term-missing
