@@ -299,6 +299,19 @@ def _build_overlays(
     return overlays
 
 
+def _style_overlay_limit(analysis: AnalysisBundle, default: int) -> int:
+    style = analysis.production_style
+    if not isinstance(style, dict):
+        return default
+    value = style.get("max_visual_overlays")
+    if value is None:
+        return default
+    try:
+        return min(default, max(0, int(value)))
+    except (TypeError, ValueError):
+        return default
+
+
 def enhance_graph_with_semantic_overlays(
     graph: EditDecisionGraph,
     analysis: AnalysisBundle,
@@ -308,6 +321,7 @@ def enhance_graph_with_semantic_overlays(
     max_overlays: int = 4,
     minimum_match_score: float = 0.3,
 ) -> ProductionEditDecisionGraph:
+    max_overlays = _style_overlay_limit(analysis, max_overlays)
     clips_by_id = {clip.asset_id: clip for clip in analysis.source_clips}
     story = _speech_story(
         graph,
@@ -327,6 +341,7 @@ def enhance_graph_with_semantic_overlays(
     notes = [
         *graph.notes,
         f"Preserved narration while scheduling {len(overlays)} semantic evidence/B-roll overlay(s).",
+        f"Applied a maximum of {max_overlays} visual overlay(s) for this production style.",
         f"Scored {len(continuity_decisions)} cross-segment continuity decision(s).",
     ]
     return ProductionEditDecisionGraph(
