@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - "frontend/**"
+      - "docker-compose.yml"
       - ".github/workflows/frontend-ci.yml"
   push:
     branches: [main]
     paths:
       - "frontend/**"
+      - "docker-compose.yml"
       - ".github/workflows/frontend-ci.yml"
 
 jobs:
@@ -24,16 +26,7 @@ jobs:
           node-version: "24"
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
-      - name: Run production build
-        id: build
-        continue-on-error: true
-        run: set -o pipefail; npm run build 2>&1 | tee build-report.txt
-      - name: Upload build report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build-report
-          path: frontend/build-report.txt
-      - name: Enforce build result
-        if: steps.build.outcome == 'failure'
-        run: exit 1
+      - run: npm run build
+      - name: Validate Docker Compose
+        working-directory: .
+        run: cp .env.example .env && docker compose config >/dev/null
