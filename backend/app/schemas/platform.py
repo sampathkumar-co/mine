@@ -24,6 +24,7 @@ class UserRead(BaseModel):
     id: UUID
     email: str
     display_name: str
+    email_verified: bool = False
     created_at: datetime
 
 
@@ -37,8 +38,11 @@ class WorkspaceRead(BaseModel):
 
 class AuthSession(BaseModel):
     access_token: str
+    refresh_token: str | None = None
     token_type: str = "bearer"
     expires_at: datetime
+    refresh_expires_at: datetime | None = None
+    session_id: UUID | None = None
     user: UserRead
     workspaces: list[WorkspaceRead]
 
