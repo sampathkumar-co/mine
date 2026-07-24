@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import Settings
 from app.core.security import create_access_token
+from app.core.time import as_utc, is_expired_at
 from app.models.operations import AuthSessionRecord
 from app.models.platform import User
 
@@ -78,7 +79,7 @@ def issue_session(
         access_token=access_token,
         refresh_token=refresh_token,
         access_expires_at=access_expires_at,
-        refresh_expires_at=record.expires_at,
+        refresh_expires_at=as_utc(record.expires_at),
         record=record,
     )
 
@@ -110,7 +111,7 @@ def rotate_session(
         raise SessionError("Refresh session reuse was detected; the session family was revoked")
     if record.revoked_at is not None:
         raise SessionError("Refresh session has been revoked")
-    if record.expires_at <= now:
+    if is_expired_at(record.expires_at, now=now):
         record.revoked_at = now
         db.flush()
         raise SessionError("Refresh session has expired")
@@ -158,8 +159,7 @@ def revoke_all_sessions(db: Session, user_id: UUID, *, except_session_id: UUID |
 
 
 def session_is_active(db: Session, session_id: UUID, user_id: UUID) -> bool:
-    now = datetime.now(UTC)
     record = db.get(AuthSessionRecord, session_id)
     if record is None or record.user_id != user_id:
         return False
-    return record.revoked_at is None and record.expires_at > now
+    return record.revoked_at is None and not is_expired_at(record.expires_at)
