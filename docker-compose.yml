@@ -12,8 +12,10 @@ services:
 
   api:
     build: ./backend
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     env_file: .env
+    environment:
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
     volumes:
       - ./backend:/app
       - director_data:/data
@@ -34,6 +36,8 @@ services:
     build: ./backend
     command: celery -A app.worker.celery_app.celery_app worker --loglevel=INFO --concurrency=1
     env_file: .env
+    environment:
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
     volumes:
       - ./backend:/app
       - director_data:/data
@@ -41,6 +45,25 @@ services:
       redis:
         condition: service_healthy
       postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  beat:
+    build: ./backend
+    command: celery -A app.worker.celery_app.celery_app beat --loglevel=INFO
+    env_file: .env
+    environment:
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
+    volumes:
+      - ./backend:/app
+      - director_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      api:
         condition: service_healthy
 
   redis:

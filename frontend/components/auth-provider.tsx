@@ -9,12 +9,15 @@ import {
   useMemo,
   useState,
 } from "react";
+import { getAccountContext } from "@/lib/account";
 import {
   getAccessToken,
+  getRefreshToken,
   getSession,
   login as apiLogin,
+  logout as apiLogout,
   register as apiRegister,
-  setAccessToken,
+  setSessionTokens,
 } from "@/lib/api";
 import type { AuthSession } from "@/lib/types";
 
@@ -28,26 +31,31 @@ interface AuthContextValue {
     displayName: string;
     workspaceName: string;
   }) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refresh: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+async function hydrateSession(session: AuthSession): Promise<AuthSession> {
+  const account = await getAccountContext();
+  return { ...session, user: account.user, workspaces: account.workspaces };
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<AuthSession | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    if (!getAccessToken()) {
+    if (!getAccessToken() && !getRefreshToken()) {
       setSession(null);
       setLoading(false);
       return;
     }
     try {
-      setSession(await getSession());
+      setSession(await hydrateSession(await getSession()));
     } catch {
-      setAccessToken(null);
+      setSessionTokens(null);
       setSession(null);
     } finally {
       setLoading(false);
@@ -57,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void refresh();
     const changed = () => {
-      if (!getAccessToken()) setSession(null);
+      if (!getAccessToken() && !getRefreshToken()) setSession(null);
     };
     window.addEventListener("director-auth-changed", changed);
     return () => window.removeEventListener("director-auth-changed", changed);
@@ -68,13 +76,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       loading,
       login: async (email, password) => {
-        setSession(await apiLogin(email, password));
+        setSession(await hydrateSession(await apiLogin(email, password)));
       },
       register: async (input) => {
-        setSession(await apiRegister(input));
+        setSession(await hydrateSession(await apiRegister(input)));
       },
-      logout: () => {
-        setAccessToken(null);
+      logout: async () => {
+        await apiLogout();
         setSession(null);
       },
       refresh,

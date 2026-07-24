@@ -34,6 +34,20 @@ services:
       api:
         condition: service_healthy
 
+  migrate:
+    build: ./backend
+    command: alembic upgrade head
+    env_file: .env
+    environment:
+      DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
+      DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
+    volumes:
+      - director_data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api:
     build: ./backend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
@@ -41,7 +55,9 @@ services:
     env_file: .env
     environment:
       DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
       DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
+      DIRECTOR_PUBLIC_APP_URL: https://${DIRECTOR_DOMAIN:?Set DIRECTOR_DOMAIN}
       DIRECTOR_CORS_ORIGINS: https://${DIRECTOR_DOMAIN:?Set DIRECTOR_DOMAIN}
     volumes:
       - director_data:/data
@@ -55,6 +71,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   worker:
     build: ./backend
@@ -63,6 +81,7 @@ services:
     env_file: .env
     environment:
       DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
       DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
     volumes:
       - director_data:/data
@@ -71,6 +90,27 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  beat:
+    build: ./backend
+    command: celery -A app.worker.celery_app.celery_app beat --loglevel=INFO
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DIRECTOR_ENVIRONMENT: production
+      DIRECTOR_AUTO_CREATE_SCHEMA: "false"
+      DIRECTOR_DATABASE_URL: postgresql+psycopg://director:${DIRECTOR_POSTGRES_PASSWORD:?Set DIRECTOR_POSTGRES_PASSWORD}@postgres:5432/director
+    volumes:
+      - director_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   redis:
     image: redis:7-alpine
