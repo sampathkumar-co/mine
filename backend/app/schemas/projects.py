@@ -28,6 +28,8 @@ class DirectorContract(BaseModel):
     use_director_memory: bool = True
     director_camera_mode: Literal["off", "advisory", "required"] = "advisory"
     production_readiness_threshold: float = Field(default=0.72, ge=0.4, le=0.95)
+    music_direction_mode: Literal["restrained", "balanced", "expressive"] = "balanced"
+    dialogue_protection: Literal["automatic", "strong"] = "automatic"
 
     @model_validator(mode="after")
     def requirements_must_not_conflict(self) -> Self:

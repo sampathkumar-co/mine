@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 import { createProject, startProject, uploadAssetResumable } from "@/lib/api";
-import type { CameraMode } from "@/lib/types";
+import type { CameraMode, DialogueProtection, MusicDirectionMode } from "@/lib/types";
 
 function splitRules(value: string): string[] {
   return value
@@ -20,9 +20,12 @@ export function ProjectLauncher({ workspaceId }: { workspaceId: string }) {
   const [duration, setDuration] = useState(45);
   const [cameraMode, setCameraMode] = useState<CameraMode>("required");
   const [threshold, setThreshold] = useState(0.72);
+  const [musicDirectionMode, setMusicDirectionMode] = useState<MusicDirectionMode>("balanced");
+  const [dialogueProtection, setDialogueProtection] = useState<DialogueProtection>("automatic");
   const [mustInclude, setMustInclude] = useState("proof, call to action");
   const [mustAvoid, setMustAvoid] = useState("private customer information");
   const [files, setFiles] = useState<File[]>([]);
+  const [musicFile, setMusicFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState("");
   const [error, setError] = useState("");
@@ -47,6 +50,8 @@ export function ProjectLauncher({ workspaceId }: { workspaceId: string }) {
         duration,
         cameraMode,
         readinessThreshold: threshold,
+        musicDirectionMode,
+        dialogueProtection,
         mustInclude: splitRules(mustInclude),
         mustAvoid: splitRules(mustAvoid),
       });
@@ -55,6 +60,11 @@ export function ProjectLauncher({ workspaceId }: { workspaceId: string }) {
           setProgress(
             `Uploading source ${index + 1} of ${files.length}: ${file.name} · ${Math.round(fraction * 100)}%`,
           );
+        });
+      }
+      if (musicFile) {
+        await uploadAssetResumable(project.id, musicFile, "music", (fraction) => {
+          setProgress(`Uploading music: ${musicFile.name} · ${Math.round(fraction * 100)}%`);
         });
       }
       setProgress("Starting autonomous production…");
@@ -98,14 +108,29 @@ export function ProjectLauncher({ workspaceId }: { workspaceId: string }) {
         </section>
 
         <section className="form-section">
-          <div className="section-heading"><span>03</span><div><h2>Rules</h2><p>Comma or line separated. Current rules always beat learned preferences.</p></div></div>
+          <div className="section-heading"><span>03</span><div><h2>Music direction</h2><p>Choose the emotional range; Director OS still protects speech and musical timing.</p></div></div>
+          <div className="choice-row">
+            {(["restrained", "balanced", "expressive"] as MusicDirectionMode[]).map((mode) => (
+              <button className={`choice ${musicDirectionMode === mode ? "active" : ""}`} type="button" key={mode} onClick={() => setMusicDirectionMode(mode)}><strong>{mode}</strong><small>{mode === "restrained" ? "Subtle lifts, rare accents" : mode === "balanced" ? "Natural dynamics and transitions" : "Bolder section lifts and accents"}</small></button>
+            ))}
+          </div>
+          <div className="choice-row two">
+            {(["automatic", "strong"] as DialogueProtection[]).map((mode) => (
+              <button className={`choice ${dialogueProtection === mode ? "active" : ""}`} type="button" key={mode} onClick={() => setDialogueProtection(mode)}><strong>{mode} dialogue protection</strong><small>{mode === "automatic" ? "Adapt to detected speech" : "Keep music further below narration"}</small></button>
+            ))}
+          </div>
+        </section>
+
+        <section className="form-section">
+          <div className="section-heading"><span>04</span><div><h2>Rules</h2><p>Comma or line separated. Current rules always beat learned preferences.</p></div></div>
           <div className="grid two"><label>Must include<textarea value={mustInclude} onChange={(event) => setMustInclude(event.target.value)} /></label><label>Must avoid<textarea value={mustAvoid} onChange={(event) => setMustAvoid(event.target.value)} /></label></div>
         </section>
 
         <section className="form-section">
-          <div className="section-heading"><span>04</span><div><h2>Footage</h2><p>Large files resume from the last server-confirmed byte.</p></div></div>
+          <div className="section-heading"><span>05</span><div><h2>Footage & music</h2><p>Large files resume from the last server-confirmed byte. Music is optional and must be yours to use.</p></div></div>
           <label className="drop-zone"><input type="file" accept="video/*" multiple onChange={(event) => setFiles(Array.from(event.target.files ?? []))} /><strong>Choose source videos</strong><span>{files.length ? `${files.length} file(s), ${(totalSize / 1024 / 1024).toFixed(1)} MB` : "MP4, MOV, WebM, or another browser-supported video"}</span></label>
           {files.length > 0 && <ul className="file-list">{files.map((file) => <li key={`${file.name}-${file.size}`}><span>{file.name}</span><small>{(file.size / 1024 / 1024).toFixed(1)} MB</small></li>)}</ul>}
+          <label className="drop-zone music-zone"><input type="file" accept="audio/*" onChange={(event) => setMusicFile(event.target.files?.[0] ?? null)} /><strong>Optional music track</strong><span>{musicFile ? `${musicFile.name} · ${(musicFile.size / 1024 / 1024).toFixed(1)} MB` : "MP3, WAV, M4A, or another browser-supported audio file"}</span></label>
         </section>
 
         {error && <div className="alert error">{error}</div>}

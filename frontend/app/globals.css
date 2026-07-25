@@ -39,6 +39,7 @@ textarea { min-height: 96px; resize: vertical; line-height: 1.45; }
 .grid { display: grid; gap: 18px; }
 .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .choice-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+.choice-row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .choice { text-align: left; border: 1px solid var(--line); background: #fff; border-radius: 13px; padding: 15px; display: grid; gap: 5px; text-transform: capitalize; }
 .choice small { color: var(--muted); }
 .choice.active { border-color: var(--ink); background: var(--ink); color: white; }
@@ -48,6 +49,7 @@ textarea { min-height: 96px; resize: vertical; line-height: 1.45; }
 .drop-zone input { position: absolute; opacity: 0; pointer-events: none; }
 .drop-zone strong { font-size: 1.1rem; }
 .drop-zone span { color: var(--muted); font-weight: 400; }
+.music-zone { min-height: 105px; margin-top: 16px; }
 .file-list, .asset-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
 .file-list li, .asset-list li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 .asset-list li span { display: grid; gap: 4px; }
@@ -92,6 +94,15 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .meter { height: 7px; background: #e5dfd4; border-radius: 999px; overflow: hidden; margin-top: 9px; }
 .meter i { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
 .inline-actions { display: flex; gap: 8px; }
+.music-direction-panel { padding: 25px; margin-bottom: 20px; }
+.decision-chips { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.decision-chips span { background: #ece7dc; border-radius: 999px; padding: 7px 10px; font-size: .7rem; font-weight: 800; text-transform: capitalize; }
+.music-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.music-metric { border: 1px solid var(--line); border-radius: 13px; padding: 15px; background: white; display: grid; gap: 6px; }
+.music-metric small { color: var(--muted); font-size: .68rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.music-metric strong { font-size: 1.35rem; }
+.music-metric span { color: var(--muted); font-size: .76rem; }
+.music-reason { margin: 15px 0 0; line-height: 1.5; }
 .mission-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .mission-card { border: 1px solid var(--line); border-radius: 15px; padding: 18px; display: flex; flex-direction: column; align-items: flex-start; background: white; }
 .mission-card p { color: var(--muted); line-height: 1.45; flex: 1; }
@@ -138,12 +149,13 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .take-review > div { display: flex; justify-content: flex-end; gap: 9px; margin-top: 10px; }
 @media (max-width: 900px) {
   .studio-grid, .capture-grid { grid-template-columns: 1fr; }
+  .music-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mission-grid { grid-template-columns: 1fr 1fr; }
   .camera-stage { width: min(100%, 420px); }
 }
 @media (max-width: 650px) {
   .shell { width: min(100% - 20px, 1220px); padding-top: 20px; }
-  .grid.two, .choice-row, .mission-grid, .signal-grid { grid-template-columns: 1fr; }
+  .grid.two, .choice-row, .choice-row.two, .mission-grid, .signal-grid, .music-metrics { grid-template-columns: 1fr; }
   .studio-header, .panel-title { flex-direction: column; }
   .inline-actions { width: 100%; }
   .inline-actions button { flex: 1; }

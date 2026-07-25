@@ -70,6 +70,8 @@ class ProductionEditDecisionGraph(EditDecisionGraph):
     strategy: str = "tier1_semantic_evidence_overlays"
     overlays: list[VisualOverlay] = Field(default_factory=list)
     continuity_decisions: list[ContinuityDecision] = Field(default_factory=list)
+    music_timing: dict[str, object] = Field(default_factory=dict)
+    sound_design: dict[str, object] = Field(default_factory=dict)
     critic_report: dict[str, object] = Field(default_factory=dict)
 
 

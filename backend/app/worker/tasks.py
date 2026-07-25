@@ -19,6 +19,7 @@ from app.director.camera import (
 )
 from app.director.cleanup import refine_graph_with_word_timings
 from app.director.edit_graph import build_multiclip_edit_graph
+from app.director.rhythm import plan_music_timing, plan_sound_design
 from app.director.semantic_overlays import enhance_graph_with_semantic_overlays
 from app.director.style import compile_production_style
 from app.models.analysis import EditDecisionGraphRecord, ProjectAnalysis
@@ -514,8 +515,30 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
             )
             graph = integrate_accepted_pickups(graph, analysis, accepted_pickups)
             graph, critic_report = review_and_repair_edit_graph(graph, analysis, contract)
+            music_timing = None
+            sound_design = None
+            if selected_music is not None:
+                music_timing = plan_music_timing(graph, selected_music)
+                sound_design = plan_sound_design(
+                    graph,
+                    selected_music,
+                    music_timing,
+                    direction_mode=str(project.contract.get("music_direction_mode", "balanced")),
+                    dialogue_protection=str(project.contract.get("dialogue_protection", "automatic")),
+                )
+                graph = graph.model_copy(
+                    update={
+                        "music_timing": music_timing.as_dict(),
+                        "sound_design": sound_design.as_dict(),
+                    }
+                )
+                style_payload["music_timing"] = music_timing.as_dict()
+                style_payload["sound_design"] = sound_design.as_dict()
             analysis = analysis.model_copy(
-                update={"editorial_report": critic_report.model_dump(mode="json")}
+                update={
+                    "editorial_report": critic_report.model_dump(mode="json"),
+                    "production_style": style_payload,
+                }
             )
             _save_analysis(db, project.id, analysis.model_dump(mode="json"))
             if settings.require_editorial_critic_pass and not critic_report.passed:
@@ -540,6 +563,10 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                     f"Selected uploaded music '{selected_music.filename}' "
                     f"for energy match {selected_music.energy:.2f}."
                 )
+            if music_timing is not None:
+                graph_notes.append(f"Persisted music timing: {music_timing.reason}")
+                if sound_design is not None:
+                    graph_notes.append(f"Directed music dynamics: {sound_design.reason}")
             if camera_report is not None:
                 graph_notes.append(
                     f"Director Camera readiness {camera_report.score:.2f}/{camera_report.threshold:.2f} "
@@ -631,6 +658,15 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 ),
                 "reference_pace": reference_style.pace if reference_style else "none",
                 "music_asset_id": selected_music.asset_id if selected_music else "none",
+                "music_alignment_score": (
+                    f"{music_timing.alignment_score:.3f}" if music_timing is not None else "none"
+                ),
+                "music_lifts": (
+                    str(len(sound_design.lift_windows)) if sound_design is not None else "0"
+                ),
+                "music_stings": (
+                    str(len(sound_design.stings)) if sound_design is not None else "0"
+                ),
             }
         except Exception as exc:
             db.rollback()

@@ -16,6 +16,7 @@ from app.director.revision_engine import (
     normalize_revision_graph,
 )
 from app.director.revisions import LockedRange
+from app.director.rhythm import plan_music_timing, plan_sound_design
 from app.director.style import ProductionStyle
 from app.models.analysis import EditDecisionGraphRecord, EditGraphRevision, ProjectAnalysis
 from app.models.project import Project, ProjectAsset
@@ -177,6 +178,32 @@ def run_revision_pipeline(
                 project.contract,
             )
             graph = normalize_revision_graph(repaired.model_dump(mode="json"))
+            selected_music_id = str(
+                analysis.production_style.get("selected_music_asset_id") or ""
+            )
+            selected_music = next(
+                (
+                    profile
+                    for profile in analysis.music_profiles
+                    if profile.asset_id == selected_music_id
+                ),
+                None,
+            )
+            if selected_music is not None:
+                music_timing = plan_music_timing(graph, selected_music)
+                sound_design = plan_sound_design(
+                    graph,
+                    selected_music,
+                    music_timing,
+                    direction_mode=str(project.contract.get("music_direction_mode", "balanced")),
+                    dialogue_protection=str(project.contract.get("dialogue_protection", "automatic")),
+                )
+                graph = graph.model_copy(
+                    update={
+                        "music_timing": music_timing.as_dict(),
+                        "sound_design": sound_design.as_dict(),
+                    }
+                )
             revision.graph_payload = graph.model_dump(mode="json")
             revision.render_plan = application.render_plan.model_dump(mode="json")
             revision.critic_report = critic_report.model_dump(mode="json")

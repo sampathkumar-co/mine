@@ -4,12 +4,15 @@ import type {
   BillingAccount,
   BillingEntry,
   CameraMode,
+  DialogueProtection,
   DeliveryLink,
   DirectorCamera,
   MultipartPart,
   MultipartPartTarget,
   MultipartUpload,
+  MusicDirectionMode,
   Project,
+  ProjectIntelligence,
   ProjectAccepted,
   RevisionAccepted,
   RevisionSummary,
@@ -323,6 +326,8 @@ export interface CreateProjectInput {
   duration: number;
   cameraMode: CameraMode;
   readinessThreshold: number;
+  musicDirectionMode: MusicDirectionMode;
+  dialogueProtection: DialogueProtection;
   mustInclude: string[];
   mustAvoid: string[];
 }
@@ -348,6 +353,8 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
         use_director_memory: true,
         director_camera_mode: input.cameraMode,
         production_readiness_threshold: input.readinessThreshold,
+        music_direction_mode: input.musicDirectionMode,
+        dialogue_protection: input.dialogueProtection,
       },
     }),
   });
@@ -420,6 +427,10 @@ export function startProject(projectId: string): Promise<ProjectAccepted> {
 
 export function getProject(projectId: string): Promise<Project> {
   return request<Project>(`/projects/${projectId}`);
+}
+
+export function getProjectIntelligence(projectId: string): Promise<ProjectIntelligence> {
+  return request<ProjectIntelligence>(`/projects/${projectId}/intelligence`);
 }
 
 export function getDirectorCamera(projectId: string): Promise<DirectorCamera> {
