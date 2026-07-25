@@ -150,6 +150,8 @@ def test_ffmpeg_graph_contains_phrase_dynamics_and_sting(
     assert "asplit=2[musicraw][stingraw0]" in filter_graph
     assert "highpass=f=1200" in filter_graph
     assert "sidechaincompress" in filter_graph
+    assert ",[musicbed]" not in filter_graph
+    assert "volume=1.1200:enable='between(t,1.200,2.200)'[musicbed]" in filter_graph
     assert captured["timeout_seconds"] == 90
 
 

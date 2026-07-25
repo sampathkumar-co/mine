@@ -203,8 +203,7 @@ def _music_filter(
                 f"volume={window.multiplier:.4f}:"
                 f"enable='between(t,{window.start_seconds:.3f},{window.end_seconds:.3f})'"
             )
-    filters.append("[musicbed]")
-    return ",".join(filters)
+    return ",".join(filters) + "[musicbed]"
 
 
 def _source_for_segment(
