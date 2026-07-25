@@ -159,7 +159,19 @@ def test_ffmpeg_graph_contains_phrase_dynamics_and_sting(
     os.getenv("DIRECTOR_RUN_MEDIA_SMOKE") != "1",
     reason="Set DIRECTOR_RUN_MEDIA_SMOKE=1 to run the real FFmpeg qualification.",
 )
-def test_real_multiclip_caption_music_and_audio_render(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "music_filter",
+    [
+        "sine=frequency=180:sample_rate=48000:duration=4,volume=0.18",
+        "sine=frequency=320:sample_rate=48000:duration=4,volume=0.38",
+        "sine=frequency=880:sample_rate=48000:duration=4,volume=0.75",
+    ],
+    ids=["calm", "speech-heavy", "high-energy"],
+)
+def test_real_multiclip_caption_music_and_audio_render(
+    tmp_path: Path,
+    music_filter: str,
+) -> None:
     ffmpeg = shutil.which("ffmpeg")
     ffprobe = shutil.which("ffprobe")
     assert ffmpeg and ffprobe, "FFmpeg and ffprobe are required for release qualification"
@@ -216,7 +228,7 @@ def test_real_multiclip_caption_music_and_audio_render(tmp_path: Path) -> None:
             "-f",
             "lavfi",
             "-i",
-            "sine=frequency=220:sample_rate=48000:duration=4",
+            music_filter,
             "-ac",
             "2",
             str(music),

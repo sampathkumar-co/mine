@@ -140,6 +140,41 @@ def test_plan_sound_design_adds_phrase_aware_dynamics() -> None:
     assert restored == sound
 
 
+def test_music_direction_modes_and_dialogue_protection_are_material() -> None:
+    graph = _story_graph()
+    profile = _music_profile()
+    timing = plan_music_timing(graph, profile)
+
+    restrained = plan_sound_design(
+        graph,
+        profile,
+        timing,
+        direction_mode="restrained",
+    )
+    expressive = plan_sound_design(
+        graph,
+        profile,
+        timing,
+        direction_mode="expressive",
+    )
+    strongly_protected = plan_sound_design(
+        graph,
+        profile,
+        timing,
+        dialogue_protection="strong",
+    )
+
+    assert len(restrained.lift_windows) <= 2
+    assert len(restrained.stings) <= 1
+    assert len(expressive.lift_windows) >= len(restrained.lift_windows)
+    assert expressive.stings[0].gain_multiplier > restrained.stings[0].gain_multiplier
+    assert min(window.multiplier for window in strongly_protected.ducking_windows) < min(
+        window.multiplier for window in restrained.ducking_windows
+    )
+    assert "Expressive direction" in expressive.reason
+    assert "strong dialogue protection" in strongly_protected.reason
+
+
 def test_plan_music_timing_falls_back_for_uncertain_track() -> None:
     graph = ProductionEditDecisionGraph(
         target_duration_seconds=3,

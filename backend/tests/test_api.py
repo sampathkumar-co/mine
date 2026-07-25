@@ -80,6 +80,8 @@ def test_project_upload_and_queue(
     project_id = created.json()["id"]
     assert created.json()["workspace_id"] == workspace_id
     assert created.json()["status"] == "created"
+    assert created.json()["contract"]["music_direction_mode"] == "balanced"
+    assert created.json()["contract"]["dialogue_protection"] == "automatic"
 
     intelligence = client.get(
         f"/api/v1/projects/{project_id}/intelligence",

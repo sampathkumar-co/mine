@@ -475,8 +475,10 @@ def plan_sound_design(
     timing: MusicTimingPlan,
     *,
     phrase_bars: int = 4,
-    max_lifts: int = 4,
-    max_stings: int = 3,
+    max_lifts: int = 6,
+    max_stings: int = 4,
+    direction_mode: str = "balanced",
+    dialogue_protection: str = "automatic",
 ) -> SoundDesignPlan:
     interval = timing.beat_interval_seconds
     duration = max(0.0, graph.selected_duration_seconds)
@@ -496,6 +498,37 @@ def plan_sound_design(
             stings=(),
             reason="Sound design stayed on the safe baseline because no trusted timing grid was available.",
         )
+
+    mode = direction_mode if direction_mode in {"restrained", "balanced", "expressive"} else "balanced"
+    mode_config = {
+        "restrained": {
+            "lift_limit": 2,
+            "sting_limit": 1,
+            "intro_lift": 1.03,
+            "section_lift": 1.07,
+            "outro_lift": 1.04,
+            "sting_gain": 0.18,
+        },
+        "balanced": {
+            "lift_limit": 4,
+            "sting_limit": 3,
+            "intro_lift": 1.06,
+            "section_lift": 1.12,
+            "outro_lift": 1.08,
+            "sting_gain": 0.30,
+        },
+        "expressive": {
+            "lift_limit": 6,
+            "sting_limit": 4,
+            "intro_lift": 1.08,
+            "section_lift": 1.18,
+            "outro_lift": 1.12,
+            "sting_gain": 0.42,
+        },
+    }[mode]
+    lift_limit = min(max_lifts, int(mode_config["lift_limit"]))
+    sting_limit = min(max_stings, int(mode_config["sting_limit"]))
+    strong_dialogue = dialogue_protection == "strong"
 
     beat_origin = (profile.beat_offset_seconds - timing.start_offset_seconds) % interval
     phrase_interval = interval * max(4, phrase_bars * 4)
@@ -520,7 +553,11 @@ def plan_sound_design(
             end = min(duration, next_beat)
         if end - start < 0.08:
             continue
-        multiplier = 0.72 if (segment.transcript_text or "").strip() else 0.82
+        has_transcript = bool((segment.transcript_text or "").strip())
+        if strong_dialogue:
+            multiplier = 0.58 if has_transcript else 0.68
+        else:
+            multiplier = 0.72 if has_transcript else 0.82
         ducking.append(
             MusicEnvelopeWindow(
                 start_seconds=round(start, 3),
@@ -539,9 +576,14 @@ def plan_sound_design(
     ]
     lifts: list[MusicEnvelopeWindow] = []
     intro_end = min(duration, max(0.5, interval * 1.5))
-    if intro_end >= 0.3:
+    if intro_end >= 0.3 and lift_limit:
         lifts.append(
-            MusicEnvelopeWindow(0.0, round(intro_end, 3), 1.06, "Opening section lift.")
+            MusicEnvelopeWindow(
+                0.0,
+                round(intro_end, 3),
+                float(mode_config["intro_lift"]),
+                "Opening section lift.",
+            )
         )
 
     tolerance = max(0.22, interval * 0.65)
@@ -557,24 +599,24 @@ def plan_sound_design(
                 MusicEnvelopeWindow(
                     round(max(0.0, cut - 0.04), 3),
                     round(lift_end, 3),
-                    1.12,
+                    float(mode_config["section_lift"]),
                     "Musical phrase lift at a story-section change.",
                 )
             )
-        if len(lifts) >= max_lifts:
+        if len(lifts) >= lift_limit:
             break
 
-    if duration >= 2.5 and len(lifts) < max_lifts:
+    if duration >= 2.5 and len(lifts) < lift_limit:
         outro_start = max(0.0, duration - max(0.8, interval * 2.0))
         lifts.append(
             MusicEnvelopeWindow(
                 round(outro_start, 3),
                 round(duration, 3),
-                1.08,
+                float(mode_config["outro_lift"]),
                 "Closing section lift.",
             )
         )
-    lift_windows = _merge_windows(lifts[:max_lifts], use_minimum_multiplier=False)
+    lift_windows = _merge_windows(lifts[:lift_limit], use_minimum_multiplier=False)
 
     stings: list[MusicSting] = []
     for cut, transition, reason in aligned_transitions:
@@ -585,14 +627,15 @@ def plan_sound_design(
             MusicSting(
                 start_seconds=round(max(0.0, cut - 0.03), 3),
                 duration_seconds=round(min(sting_duration, duration - cut + 0.03), 3),
-                gain_multiplier=0.30,
+                gain_multiplier=float(mode_config["sting_gain"]),
                 highpass_hz=1_200,
-                reason=f"Restrained accent for {transition}: {reason}"[:500],
+                reason=f"{mode.capitalize()} accent for {transition}: {reason}"[:500],
             )
         )
-        if len(stings) >= max_stings:
+        if len(stings) >= sting_limit:
             break
 
+    protection = "strong" if strong_dialogue else "automatic"
     return SoundDesignPlan(
         usable=True,
         asset_id=profile.asset_id,
@@ -601,8 +644,9 @@ def plan_sound_design(
         lift_windows=lift_windows,
         stings=tuple(stings),
         reason=(
-            f"Planned {len(ducking_windows)} speech-protection window(s), "
-            f"{len(lift_windows)} section lift(s), and {len(stings)} restrained sting(s)."
+            f"{mode.capitalize()} direction with {protection} dialogue protection planned "
+            f"{len(ducking_windows)} speech window(s), {len(lift_windows)} section lift(s), "
+            f"and {len(stings)} accent(s)."
         ),
     )
 

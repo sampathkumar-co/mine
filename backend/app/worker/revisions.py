@@ -191,7 +191,13 @@ def run_revision_pipeline(
             )
             if selected_music is not None:
                 music_timing = plan_music_timing(graph, selected_music)
-                sound_design = plan_sound_design(graph, selected_music, music_timing)
+                sound_design = plan_sound_design(
+                    graph,
+                    selected_music,
+                    music_timing,
+                    direction_mode=str(project.contract.get("music_direction_mode", "balanced")),
+                    dialogue_protection=str(project.contract.get("dialogue_protection", "automatic")),
+                )
                 graph = graph.model_copy(
                     update={
                         "music_timing": music_timing.as_dict(),

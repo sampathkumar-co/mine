@@ -12,6 +12,8 @@ export type ProjectStatus =
   | "failed";
 
 export type CameraMode = "off" | "advisory" | "required";
+export type MusicDirectionMode = "restrained" | "balanced" | "expressive";
+export type DialogueProtection = "automatic" | "strong";
 export type WorkspaceRole = "owner" | "admin" | "editor" | "viewer";
 
 export interface User {
@@ -146,6 +148,8 @@ export interface DirectorContract {
   use_director_memory: boolean;
   director_camera_mode: CameraMode;
   production_readiness_threshold: number;
+  music_direction_mode: MusicDirectionMode;
+  dialogue_protection: DialogueProtection;
 }
 
 export interface ProjectAsset {
@@ -170,6 +174,13 @@ export interface Project {
   created_at: string;
   updated_at: string;
   assets: ProjectAsset[];
+}
+
+export interface ProjectIntelligence {
+  project_id: string;
+  analysis: Record<string, unknown> | null;
+  edit_decision_graph: Record<string, unknown> | null;
+  graph_version: number | null;
 }
 
 export interface WorkspaceProject {

@@ -11,6 +11,9 @@ Director OS v1.1 development has started with beat-aware sound direction:
 - Beat detection, timing-plan selection, and bounded aligned-music preparation are covered by unit tests
 - The selected timing plan is now persisted in project intelligence and reused by rendering without a second analysis pass
 - Phrase-aware ducking, musical section lifts, and restrained track-derived stings now follow the persisted timing plan
+- Restrained, balanced, and expressive direction controls now shape lifts and accents, with optional stronger dialogue protection
+- The launcher accepts an optional user-owned music track and the studio exposes tempo, alignment, speech windows, lifts, and accents
+- Real FFmpeg qualification now covers synthetic calm, speech-heavy, and high-energy music fixtures
 
 ## 1.0.0 — 2026-07-24
 

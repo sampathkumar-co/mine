@@ -7,8 +7,8 @@ import { AuthPanel } from "@/components/auth-panel";
 import { useAuth } from "@/components/auth-provider";
 import { CaptureStudio } from "@/components/capture-studio";
 import { RevisionChat } from "@/components/revision-chat";
-import { getDirectorCamera, getProject, overrideDirectorCamera, resumeDirectorCamera } from "@/lib/api";
-import type { CameraDimension, DirectorCamera, PickupMission, Project } from "@/lib/types";
+import { getDirectorCamera, getProject, getProjectIntelligence, overrideDirectorCamera, resumeDirectorCamera } from "@/lib/api";
+import type { CameraDimension, DirectorCamera, PickupMission, Project, ProjectIntelligence } from "@/lib/types";
 
 const PIPELINE = ["queued", "analyzing", "needs_pickups", "planning", "rendering", "quality_check", "ready"] as const;
 
@@ -23,12 +23,41 @@ function statusLabel(status: string): string {
   return status.replaceAll("_", " ");
 }
 
+function record(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
+}
+
+function numeric(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function musicSummary(intelligence: ProjectIntelligence | null) {
+  const graph = record(intelligence?.edit_decision_graph);
+  const analysis = record(intelligence?.analysis);
+  const productionStyle = record(analysis?.production_style);
+  const timing = record(graph?.music_timing) ?? record(productionStyle?.music_timing);
+  const sound = record(graph?.sound_design) ?? record(productionStyle?.sound_design);
+  const lifts = Array.isArray(sound?.lift_windows) ? sound.lift_windows.length : 0;
+  const stings = Array.isArray(sound?.stings) ? sound.stings.length : 0;
+  const ducks = Array.isArray(sound?.ducking_windows) ? sound.ducking_windows.length : 0;
+  return {
+    usable: timing?.usable === true && sound?.usable === true,
+    tempo: numeric(timing?.tempo_bpm),
+    alignment: numeric(timing?.alignment_score),
+    beatAligned: numeric(timing?.beat_aligned_cut_count),
+    totalCuts: numeric(timing?.total_cut_count),
+    lifts, stings, ducks,
+    reason: typeof sound?.reason === "string" ? sound.reason : typeof timing?.reason === "string" ? timing.reason : "",
+  };
+}
+
 export function ProjectStudio() {
   const { session, loading: authLoading } = useAuth();
   const params = useParams<{ projectId: string }>();
   const projectId = params.projectId;
   const [project, setProject] = useState<Project | null>(null);
   const [camera, setCamera] = useState<DirectorCamera | null>(null);
+  const [intelligence, setIntelligence] = useState<ProjectIntelligence | null>(null);
   const [selectedMission, setSelectedMission] = useState<PickupMission | null>(null);
   const [loading, setLoading] = useState(true);
   const [action, setAction] = useState("");
@@ -37,9 +66,10 @@ export function ProjectStudio() {
   const refresh = useCallback(async () => {
     if (!session) return;
     try {
-      const [nextProject, nextCamera] = await Promise.all([getProject(projectId), getDirectorCamera(projectId)]);
+      const [nextProject, nextCamera, nextIntelligence] = await Promise.all([getProject(projectId), getDirectorCamera(projectId), getProjectIntelligence(projectId)]);
       setProject(nextProject);
       setCamera(nextCamera);
+      setIntelligence(nextIntelligence);
       setError("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not load project.");
@@ -57,6 +87,8 @@ export function ProjectStudio() {
 
   const progressIndex = useMemo(() => Math.max(0, PIPELINE.indexOf((project?.status ?? "queued") as (typeof PIPELINE)[number])), [project?.status]);
   const openMissions = camera?.missions.filter((mission) => ["requested", "submitted", "rejected"].includes(mission.status)) ?? [];
+  const music = musicSummary(intelligence);
+  const hasMusicAsset = project?.assets.some((asset) => asset.kind === "music") ?? false;
 
   async function resume() {
     setAction("Resuming Director Camera validation…");
@@ -103,6 +135,19 @@ export function ProjectStudio() {
           {project.error_message && <div className="alert error">{project.error_message}</div>}
         </section>
       </div>
+
+      <section className="panel music-direction-panel">
+        <div className="panel-title"><div><div className="eyebrow">MUSIC DIRECTION</div><h2>{hasMusicAsset ? music.usable ? "Directed and aligned" : "Safe baseline" : "No music uploaded"}</h2></div><div className="decision-chips"><span>{project.contract.music_direction_mode}</span><span>{project.contract.dialogue_protection} speech protection</span></div></div>
+        {hasMusicAsset ? <>
+          <div className="music-metrics">
+            <article className="music-metric"><small>Tempo</small><strong>{music.tempo == null ? "—" : `${Math.round(music.tempo)} BPM`}</strong></article>
+            <article className="music-metric"><small>Cut alignment</small><strong>{music.alignment == null ? "—" : `${Math.round(music.alignment * 100)}%`}</strong><span>{music.beatAligned ?? 0}/{music.totalCuts ?? 0} cuts</span></article>
+            <article className="music-metric"><small>Speech windows</small><strong>{music.ducks}</strong></article>
+            <article className="music-metric"><small>Lifts · accents</small><strong>{music.lifts} · {music.stings}</strong></article>
+          </div>
+          <p className="muted music-reason">{music.reason || "Music analysis is still being prepared."}</p>
+        </> : <p className="muted">Upload a track when creating a production to enable beat-aware cuts, phrase lifts, and dialogue-safe dynamics.</p>}
+      </section>
 
       <section className="panel mission-section">
         <div className="panel-title"><div><div className="eyebrow">DIRECTOR CAMERA MISSIONS</div><h2>{openMissions.length ? `${openMissions.length} action${openMissions.length === 1 ? "" : "s"} needed` : "No open pickups"}</h2></div>{project.status === "needs_pickups" && <div className="inline-actions"><button className="secondary" onClick={override}>Override gate</button><button className="primary" onClick={resume}>Validate & resume</button></div>}</div>
