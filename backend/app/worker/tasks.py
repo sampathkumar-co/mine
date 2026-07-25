@@ -539,11 +539,11 @@ def run_project_pipeline(self, project_id: str) -> dict[str, str]:
                 blocking_messages = [
                     issue.message for issue in critic_report.issues if issue.severity == "blocking"
                 ]
-                raise ValueEError(
+                raise ValueError(
                     "Editorial critic blocked rendering: " + "; ".join(blocking_messages[:5])
                 )
             if not graph.segments:
-                raise ValueEError("Director could not identify a usable edit segment")
+                raise ValueError("Director could not identify a usable edit segment")
 
             graph_notes = [*graph.notes]
             if reference_style is not None:
