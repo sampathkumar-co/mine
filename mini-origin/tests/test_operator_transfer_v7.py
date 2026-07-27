@@ -1,5 +1,5 @@
 from mini_origin.language_v6 import binary, terminal, unary
-from mini_origin.operator_transfer_v7 import (
+from mini_origin.operator_transfer_v7_hardened import (
     Template,
     TemporalScenario,
     _skeleton,
@@ -56,7 +56,8 @@ def test_closed_source_rule_cannot_access_temporal_signals() -> None:
     )
     transferred = temporal_score(hand_temporal_delta(), scenario)
     closed = temporal_score(_source_delta(), scenario)
-    assert transferred > closed + 0.20
+    assert closed < 0.05
+    assert transferred > closed + 0.50
 
 
 def test_temporal_delta_survives_harder_transfer_case() -> None:
@@ -71,4 +72,4 @@ def test_temporal_delta_survives_harder_transfer_case() -> None:
         damage=0.50,
     )
     score = temporal_score(hand_temporal_delta(), scenario)
-    assert score > 0.65
+    assert score > 0.70
