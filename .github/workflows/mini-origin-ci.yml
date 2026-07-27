@@ -73,3 +73,71 @@ jobs:
           name: mini-origin-relay-v2-seed-${{ matrix.seed }}
           path: mini-origin/results/relay-v2-seed-${{ matrix.seed }}.json
           retention-days: 90
+
+  aggregate-relay-study:
+    needs: strict-relay-research
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-relay-v2-seed-*
+          path: relay-artifacts
+          merge-multiple: true
+      - name: Aggregate all independent runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import re
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("relay-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              match = re.search(r"seed-(\d+)", filename)
+              seed = int(match.group(1)) if match else -1
+              rows.append({
+                  "seed": seed,
+                  "status": data["status"],
+                  "training_score": data["training_score"],
+                  "strict_transfer_score": data["strict_transfer_score"],
+                  "hidden_scores": data["hidden_scores"],
+                  "random_baseline": data["random_baseline"],
+                  "identity_baseline": data["identity_baseline"],
+              })
+
+          transfers = [row["strict_transfer_score"] for row in rows]
+          successful = [row for row in rows if row["status"] == "project_breakthrough"]
+          success_rate = len(successful) / len(rows) if rows else 0.0
+          summary = {
+              "verdict": (
+                  "replicated_internal_milestone"
+                  if len(successful) >= 3 and success_rate >= 0.20
+                  else "not_replicated"
+              ),
+              "claim_scope": (
+                  "evolution repeatedly discovers a strict sign-balanced local relay law; "
+                  "this is not evidence of a new universal computation substrate"
+              ),
+              "run_count": len(rows),
+              "success_count": len(successful),
+              "success_rate": success_rate,
+              "successful_seeds": [row["seed"] for row in successful],
+              "transfer_min": min(transfers) if transfers else None,
+              "transfer_median": statistics.median(transfers) if transfers else None,
+              "transfer_mean": statistics.mean(transfers) if transfers else None,
+              "transfer_max": max(transfers) if transfers else None,
+              "runs": rows,
+          }
+          Path("relay-v2-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+          PY
+      - name: Upload aggregate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-relay-v2-summary
+          path: relay-v2-summary.json
+          retention-days: 90
