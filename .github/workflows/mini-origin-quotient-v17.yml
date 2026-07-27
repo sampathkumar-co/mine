@@ -1,0 +1,142 @@
+name: Mini-ORIGIN Mechanism Quotient v0.17
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/mechanism_quotient_v17.py"
+      - "mini-origin/src/mini_origin/mechanism_quotient_v17_1.py"
+      - "mini-origin/tests/test_mechanism_quotient_v17_1.py"
+      - ".github/workflows/mini-origin-quotient-v17.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test quotient safeguards
+        run: pytest -q tests/test_mechanism_quotient_v17_1.py
+
+  quotient-search:
+    name: quotient-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        seed: [181, 182, 183]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Search irreducible behavioural mechanism classes
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.mechanism_quotient_v17_1
+          --seed ${{ matrix.seed }}
+          --output results/mechanism-quotient-v17-seed-${{ matrix.seed }}.json
+      - name: Upload v0.17 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-quotient-v17-seed-${{ matrix.seed }}
+          path: mini-origin/results/mechanism-quotient-v17-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-quotient-study:
+    needs: [tests, quotient-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-quotient-v17-seed-*
+          path: quotient-artifacts
+          merge-multiple: true
+      - name: Aggregate independent quotient searches
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("quotient-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "program": data["program"],
+                  "nearest_known_mechanism": data["nearest_known_mechanism"],
+                  "known_mechanism_distance": data["known_mechanism_distance"],
+                  "strict_hidden_score": data["strict_hidden_score"],
+                  "strict_baseline_score": data["strict_baseline_score"],
+                  "strict_no_spawn_score": data["strict_no_spawn_score"],
+                  "quotient": data["quotient"],
+              })
+
+          passing = [row for row in rows if row["status"] == "mechanism_quotient_candidate"]
+          hidden = [row["strict_hidden_score"] for row in rows]
+          baseline_gaps = [row["strict_hidden_score"] - row["strict_baseline_score"] for row in rows]
+          state_gaps = [row["strict_hidden_score"] - row["strict_no_spawn_score"] for row in rows]
+          distances = [row["known_mechanism_distance"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_external_breakthrough_candidate"
+                  if len(passing) >= 2
+                  and statistics.median(hidden) >= 0.68
+                  and statistics.median(baseline_gaps) >= 0.06
+                  and statistics.median(state_gaps) >= 0.22
+                  and min(distances) >= 0.16
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "development-only search over interventional behavioural equivalence classes; "
+                  "external status still requires symbolic equivalence, broader controls, an "
+                  "independent implementation, outside reproduction and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": len(passing),
+              "passing_seeds": [row["seed"] for row in passing],
+              "hidden_min": min(hidden) if hidden else None,
+              "hidden_median": statistics.median(hidden) if hidden else None,
+              "baseline_gap_min": min(baseline_gaps) if baseline_gaps else None,
+              "baseline_gap_median": statistics.median(baseline_gaps) if baseline_gaps else None,
+              "state_gap_min": min(state_gaps) if state_gaps else None,
+              "state_gap_median": statistics.median(state_gaps) if state_gaps else None,
+              "known_distance_min": min(distances) if distances else None,
+              "known_distance_median": statistics.median(distances) if distances else None,
+              "rows": rows,
+          }
+          Path("mechanism-quotient-v17-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.17 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-quotient-v17-summary
+          path: mechanism-quotient-v17-summary.json
+          retention-days: 90
