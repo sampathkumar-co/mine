@@ -1,0 +1,108 @@
+name: Mini-ORIGIN Audit v0.13
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/sketch_audit_v13.py"
+      - "mini-origin/tests/test_sketch_audit_v13.py"
+      - ".github/workflows/mini-origin-audit-v13.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/sketch_audit_v13.py"
+      - "mini-origin/tests/test_sketch_audit_v13.py"
+      - ".github/workflows/mini-origin-audit-v13.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-audit-v13-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_sketch_audit_v13.py
+
+  pareto-audit:
+    name: audit-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [131, 132, 133]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Run fresh-seed Pareto audit
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.sketch_audit_v13
+          --seed ${{ matrix.seed }}
+          --output results/audit-v13-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-audit-v13-seed-${{ matrix.seed }}
+          path: mini-origin/results/audit-v13-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-audit:
+    needs: [tests, pareto-audit]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-audit-v13-seed-*
+          path: audit-artifacts
+          merge-multiple: true
+      - name: Aggregate Pareto audits
+        run: |
+          python - <<'PY'
+          import glob, json
+          from pathlib import Path
+          rows=[]
+          for filename in sorted(glob.glob("audit-artifacts/*.json")):
+              data=json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed":data["seed"],
+                  "verdict":data["verdict"],
+                  "pareto_frontier":data["pareto_frontier"],
+                  "reasons":data["reasons"],
+              })
+          surviving=[row for row in rows if row["verdict"]=="v12_candidate_survives_pareto_audit"]
+          summary={
+              "verdict":"v12_candidate_survives_independent_pareto_audit" if len(surviving)>=2 else "v12_candidate_rejected",
+              "run_count":len(rows),
+              "surviving_count":len(surviving),
+              "surviving_seeds":[row["seed"] for row in surviving],
+              "runs":rows,
+          }
+          Path("audit-v13-summary.json").write_text(json.dumps(summary,indent=2),encoding="utf-8")
+          print(json.dumps(summary,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-audit-v13-summary
+          path: audit-v13-summary.json
+          retention-days: 90
