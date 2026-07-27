@@ -11,6 +11,9 @@ on:
       - ".github/workflows/mini-origin-ci.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test-and-demo:
     runs-on: ubuntu-latest
@@ -28,10 +31,43 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Test
         run: pytest -q
-      - name: Run reproducible discovery demo
+      - name: Run reproducible v0.1 demo
         run: mini-origin demo --generations 8 --population 18 --seed 7 --output results/demo.json
-      - name: Upload experiment result
+      - name: Upload v0.1 result
         uses: actions/upload-artifact@v4
         with:
           name: mini-origin-demo
           path: mini-origin/results/demo.json
+
+  strict-relay-research:
+    name: strict-relay-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [3, 7, 11]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Run bounded sign-balanced relay discovery
+        run: >-
+          python -m mini_origin.research_v2
+          --seed ${{ matrix.seed }}
+          --population 72
+          --scale 0.6
+          --output results/relay-v2-seed-${{ matrix.seed }}.json
+      - name: Upload strict relay evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-relay-v2-seed-${{ matrix.seed }}
+          path: mini-origin/results/relay-v2-seed-${{ matrix.seed }}.json
+          retention-days: 90
