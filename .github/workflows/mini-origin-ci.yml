@@ -43,8 +43,14 @@ jobs:
           name: mini-origin-demo
           path: mini-origin/results/demo.json
 
-  verified-base-relay:
+  competitive-routing-research:
+    name: competitive-routing-seed-${{ matrix.seed }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [41, 42, 43, 44, 45]
     defaults:
       run:
         working-directory: mini-origin
@@ -57,69 +63,31 @@ jobs:
           cache-dependency-path: mini-origin/pyproject.toml
       - name: Install
         run: python -m pip install -e ".[dev]"
-      - name: Reproduce the verified clean relay candidate
+      - name: Evolve competitive damage-tolerant local routing
         run: >-
           mkdir -p results &&
-          python -m mini_origin.research_v2
-          --seed 7
-          --population 72
-          --scale 0.6
-          --output results/relay-v2-seed-7.json
-      - name: Upload verified base relay
-        uses: actions/upload-artifact@v4
-        with:
-          name: mini-origin-relay-v2-seed-7
-          path: mini-origin/results/relay-v2-seed-7.json
-          retention-days: 90
-
-  robust-resilience-research:
-    name: robust-resilience-seed-${{ matrix.seed }}
-    needs: verified-base-relay
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        seed: [31, 32, 33]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: mini-origin/pyproject.toml
-      - name: Download verified relay candidate
-        uses: actions/download-artifact@v4
-        with:
-          name: mini-origin-relay-v2-seed-7
-          path: base-relay
-      - name: Install
-        run: python -m pip install -e "mini-origin[dev]"
-      - name: Run worst-case domain-randomized resilience search
-        run: >-
-          mkdir -p mini-origin/results &&
-          python -m mini_origin.resilience_v3
-          --base base-relay/relay-v2-seed-7.json
+          python -m mini_origin.competitive_v4
           --seed ${{ matrix.seed }}
-          --population 56
-          --scale 0.70
-          --output mini-origin/results/resilience-v3-seed-${{ matrix.seed }}.json
-      - name: Upload robust resilience evidence
+          --population 64
+          --generations 55
+          --output results/competitive-v4-seed-${{ matrix.seed }}.json
+      - name: Upload competitive-routing evidence
         uses: actions/upload-artifact@v4
         with:
-          name: mini-origin-resilience-v3-seed-${{ matrix.seed }}
-          path: mini-origin/results/resilience-v3-seed-${{ matrix.seed }}.json
+          name: mini-origin-competitive-v4-seed-${{ matrix.seed }}
+          path: mini-origin/results/competitive-v4-seed-${{ matrix.seed }}.json
           retention-days: 90
 
-  aggregate-robust-resilience:
-    needs: robust-resilience-research
+  aggregate-competitive-study:
+    needs: competitive-routing-research
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: mini-origin-resilience-v3-seed-*
-          path: robust-artifacts
+          pattern: mini-origin-competitive-v4-seed-*
+          path: competitive-artifacts
           merge-multiple: true
-      - name: Aggregate independent robust searches
+      - name: Aggregate independent competitive searches
         run: |
           python - <<'PY'
           import glob
@@ -129,7 +97,7 @@ jobs:
           from pathlib import Path
 
           rows = []
-          for filename in sorted(glob.glob("robust-artifacts/*.json")):
+          for filename in sorted(glob.glob("competitive-artifacts/*.json")):
               data = json.loads(Path(filename).read_text(encoding="utf-8"))
               match = re.search(r"seed-(\d+)", filename)
               seed = int(match.group(1)) if match else -1
@@ -138,39 +106,46 @@ jobs:
                   "status": data["status"],
                   "validation_score": data["validation_score"],
                   "strict_hidden_score": data["strict_hidden_score"],
-                  "base_strict_hidden_score": data["base_strict_hidden_score"],
+                  "hand_baseline_score": data["hand_baseline_score"],
                   "hidden_scores": data["hidden_scores"],
               })
 
           hidden = [row["strict_hidden_score"] for row in rows]
           successful = [row for row in rows if row["status"] == "internal_milestone"]
+          ratios = [
+              row["strict_hidden_score"] / row["hand_baseline_score"]
+              for row in rows
+          ]
           summary = {
               "verdict": (
-                  "replicated_internal_resilience_milestone"
-                  if len(successful) >= 2 and statistics.median(hidden) >= 0.60
+                  "replicated_competitive_routing_milestone"
+                  if len(successful) >= 3 and statistics.median(hidden) >= 0.72
                   else "not_yet"
               ),
               "claim_scope": (
-                  "worst-case local routing across unseen persistent damage distributions; "
-                  "not a world-level unconventional-computing breakthrough"
+                  "evolution repeatedly rediscovers a competitive signed-routing primitive "
+                  "that approaches an explicit max-flood control; this is an internal project "
+                  "milestone, not a new world-level computation result"
               ),
               "run_count": len(rows),
               "success_count": len(successful),
+              "success_rate": len(successful) / len(rows) if rows else 0.0,
               "successful_seeds": [row["seed"] for row in successful],
               "hidden_min": min(hidden) if hidden else None,
               "hidden_median": statistics.median(hidden) if hidden else None,
               "hidden_mean": statistics.mean(hidden) if hidden else None,
               "hidden_max": max(hidden) if hidden else None,
+              "median_fraction_of_hand_control": statistics.median(ratios) if ratios else None,
               "runs": rows,
           }
-          Path("resilience-v3-summary.json").write_text(
+          Path("competitive-v4-summary.json").write_text(
               json.dumps(summary, indent=2), encoding="utf-8"
           )
           print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
           PY
-      - name: Upload aggregate robust evidence
+      - name: Upload aggregate competitive evidence
         uses: actions/upload-artifact@v4
         with:
-          name: mini-origin-resilience-v3-summary
-          path: resilience-v3-summary.json
+          name: mini-origin-competitive-v4-summary
+          path: competitive-v4-summary.json
           retention-days: 90
