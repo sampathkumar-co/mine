@@ -44,6 +44,7 @@ jobs:
           path: mini-origin/results/demo.json
 
   within-lifetime-learning:
+    if: github.event_name == 'workflow_dispatch'
     name: plasticity-seed-${{ matrix.seed }}
     runs-on: ubuntu-latest
     strategy:
@@ -79,6 +80,7 @@ jobs:
           retention-days: 90
 
   aggregate-plasticity-study:
+    if: github.event_name == 'workflow_dispatch'
     needs: within-lifetime-learning
     runs-on: ubuntu-latest
     steps:
