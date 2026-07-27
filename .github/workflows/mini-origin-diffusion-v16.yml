@@ -1,0 +1,145 @@
+name: Mini-ORIGIN Diffusion v0.16
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/conservative_diffusion_v16.py"
+      - "mini-origin/tests/test_conservative_diffusion_v16.py"
+      - ".github/workflows/mini-origin-diffusion-v16.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/conservative_diffusion_v16.py"
+      - "mini-origin/tests/test_conservative_diffusion_v16.py"
+      - ".github/workflows/mini-origin-diffusion-v16.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test v0.16 safeguards
+        run: pytest -q tests/test_conservative_diffusion_v16.py
+
+  diffusion-search:
+    name: diffusion-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        seed: [171, 172, 173]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Search fixed-operation conservative diffusion
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.conservative_diffusion_v16
+          --seed ${{ matrix.seed }}
+          --output results/conservative-diffusion-v16-seed-${{ matrix.seed }}.json
+      - name: Upload v0.16 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-diffusion-v16-seed-${{ matrix.seed }}
+          path: mini-origin/results/conservative-diffusion-v16-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-diffusion-study:
+    needs: [tests, diffusion-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-diffusion-v16-seed-*
+          path: diffusion-artifacts
+          merge-multiple: true
+      - name: Aggregate independent v0.16 searches
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("diffusion-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "best_program": data["best_program"],
+                  "strict_post_damage": data["strict_post_damage"],
+                  "strict_dense_post_damage": data["strict_dense_post_damage"],
+                  "fraction_of_dense": data["fraction_of_dense"],
+                  "strict_specialist_post_damage": data["strict_specialist_post_damage"],
+                  "strict_retention": data["strict_retention"],
+                  "max_operation_fraction": data["max_operation_fraction"],
+              })
+
+          passing = [row for row in rows if row["status"] == "conservative_diffusion_candidate"]
+          fractions = [row["fraction_of_dense"] for row in rows]
+          gaps = [row["strict_post_damage"] - row["strict_specialist_post_damage"] for row in rows]
+          retention = [row["strict_retention"] for row in rows]
+          operations = [row["max_operation_fraction"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_external_breakthrough_candidate"
+                  if len(passing) >= 2
+                  and statistics.median(fractions) >= 0.985
+                  and statistics.median(gaps) >= 0.025
+                  and statistics.median(retention) >= 0.95
+                  and max(operations) <= 0.20 + 1e-12
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "fixed-operation conservative diffusion under targeted post-training erasure; "
+                  "external status still requires a separately implemented greedy verifier, "
+                  "coding-theory baselines, outside reproduction and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": len(passing),
+              "passing_seeds": [row["seed"] for row in passing],
+              "dense_fraction_min": min(fractions) if fractions else None,
+              "dense_fraction_median": statistics.median(fractions) if fractions else None,
+              "specialist_gap_min": min(gaps) if gaps else None,
+              "specialist_gap_median": statistics.median(gaps) if gaps else None,
+              "retention_min": min(retention) if retention else None,
+              "retention_median": statistics.median(retention) if retention else None,
+              "operation_max": max(operations) if operations else None,
+              "runs": rows,
+          }
+          Path("conservative-diffusion-v16-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+          PY
+      - name: Upload aggregate v0.16 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-diffusion-v16-summary
+          path: conservative-diffusion-v16-summary.json
+          retention-days: 90
