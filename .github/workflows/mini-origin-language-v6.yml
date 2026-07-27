@@ -6,6 +6,11 @@ on:
       - "mini-origin/src/mini_origin/language_v6.py"
       - "mini-origin/tests/test_language_v6.py"
       - ".github/workflows/mini-origin-language-v6.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/language_v6.py"
+      - "mini-origin/tests/test_language_v6.py"
+      - ".github/workflows/mini-origin-language-v6.yml"
   workflow_dispatch:
 
 permissions:
