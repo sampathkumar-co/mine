@@ -4,14 +4,20 @@ on:
   push:
     paths:
       - "mini-origin/src/mini_origin/language_v6.py"
+      - "mini-origin/src/mini_origin/language_v6_fast.py"
       - "mini-origin/tests/test_language_v6.py"
       - ".github/workflows/mini-origin-language-v6.yml"
   pull_request:
     paths:
       - "mini-origin/src/mini_origin/language_v6.py"
+      - "mini-origin/src/mini_origin/language_v6_fast.py"
       - "mini-origin/tests/test_language_v6.py"
       - ".github/workflows/mini-origin-language-v6.yml"
   workflow_dispatch:
+
+concurrency:
+  group: mini-origin-language-v6-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -37,7 +43,7 @@ jobs:
   language-search:
     name: language-seed-${{ matrix.seed }}
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -57,7 +63,7 @@ jobs:
       - name: Synthesize and expand the plasticity language
         run: >-
           mkdir -p results &&
-          python -m mini_origin.language_v6
+          python -m mini_origin.language_v6_fast
           --seed ${{ matrix.seed }}
           --output results/language-v6-seed-${{ matrix.seed }}.json
       - name: Upload language evidence
