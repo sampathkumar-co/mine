@@ -6,6 +6,7 @@ on:
       - "mini-origin/src/mini_origin/language_v6.py"
       - "mini-origin/src/mini_origin/language_v6_fast.py"
       - "mini-origin/src/mini_origin/operator_transfer_v7.py"
+      - "mini-origin/src/mini_origin/operator_transfer_v7_hardened.py"
       - "mini-origin/tests/test_operator_transfer_v7.py"
       - ".github/workflows/mini-origin-operator-v7.yml"
   pull_request:
@@ -13,6 +14,7 @@ on:
       - "mini-origin/src/mini_origin/language_v6.py"
       - "mini-origin/src/mini_origin/language_v6_fast.py"
       - "mini-origin/src/mini_origin/operator_transfer_v7.py"
+      - "mini-origin/src/mini_origin/operator_transfer_v7_hardened.py"
       - "mini-origin/tests/test_operator_transfer_v7.py"
       - ".github/workflows/mini-origin-operator-v7.yml"
   workflow_dispatch:
@@ -65,7 +67,7 @@ jobs:
       - name: Mine and transfer parameterized plasticity operators
         run: >-
           mkdir -p results &&
-          python -m mini_origin.operator_transfer_v7
+          python -m mini_origin.operator_transfer_v7_hardened
           --seed ${{ matrix.seed }}
           --output results/operator-v7-seed-${{ matrix.seed }}.json
       - name: Upload operator-transfer evidence
@@ -105,6 +107,7 @@ jobs:
                   "strict_closed_score": data["strict_closed_score"],
                   "strict_delta_score": data["strict_delta_score"],
                   "template_scores": data["template_scores"],
+                  "metric": data.get("metric"),
               })
 
           passing = [
@@ -131,8 +134,8 @@ jobs:
               ),
               "claim_scope": (
                   "parameterized local learning operators abstracted from source tasks and "
-                  "instantiated on unseen temporal signal roles; external acceptance still "
-                  "requires independent reproduction and peer review"
+                  "instantiated on unseen temporal signal roles under a mean-predictor-normalized "
+                  "skill metric; external acceptance still requires reproduction and peer review"
               ),
               "run_count": len(rows),
               "passing_count": len(passing),
