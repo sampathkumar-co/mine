@@ -1,0 +1,128 @@
+name: Mini-ORIGIN ClaimGuard External v0.18
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/claim_contract_v18.py"
+      - "mini-origin/src/mini_origin/claim_guard_adapter_v18.py"
+      - "mini-origin/independent/claim_guard_external_v18.mjs"
+      - ".github/workflows/mini-origin-claim-guard-external-v18.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/claim_contract_v18.py"
+      - "mini-origin/src/mini_origin/claim_guard_adapter_v18.py"
+      - "mini-origin/independent/claim_guard_external_v18.mjs"
+      - ".github/workflows/mini-origin-claim-guard-external-v18.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-claim-guard-external-v18-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  independent-red-team:
+    name: external-red-team-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [301, 302, 303, 304, 305]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Run independent JavaScript mutation suite
+        run: >-
+          mkdir -p results &&
+          node independent/claim_guard_external_v18.mjs
+          --seed ${{ matrix.seed }}
+          --output results/claim-guard-external-v18-seed-${{ matrix.seed }}.json
+      - name: Upload independent evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-claim-guard-external-v18-seed-${{ matrix.seed }}
+          path: |
+            mini-origin/results/claim-guard-external-v18-seed-${{ matrix.seed }}.json
+            mini-origin/results/claim-guard-external-v18-seed-${{ matrix.seed }}.json.cases.json
+            mini-origin/results/claim-guard-external-v18-seed-${{ matrix.seed }}.json.adapter.json
+          retention-days: 90
+
+  aggregate-independent-study:
+    needs: independent-red-team
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-claim-guard-external-v18-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent mutation suites
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          misses = Counter()
+          for filename in sorted(glob.glob("evidence/claim-guard-external-v18-seed-*.json")):
+              if filename.endswith(".cases.json") or filename.endswith(".adapter.json"):
+                  continue
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "case_count": data["case_count"],
+                  "correct_count": data["correct_count"],
+                  "accuracy": data["accuracy"],
+                  "all_correct": data["all_correct"],
+                  "missed_cases": data["missed_cases"],
+              })
+              misses.update(data["missed_cases"])
+
+          summary = {
+              "verdict": (
+                  "independent_suite_passed"
+                  if len(rows) == 5 and all(row["all_correct"] for row in rows)
+                  else "independent_suite_exposed_gaps"
+              ),
+              "claim_scope": (
+                  "independently authored JavaScript mutation generator evaluated through a neutral "
+                  "JSON adapter; this is an internal cross-language adversarial check, not outside reproduction"
+              ),
+              "run_count": len(rows),
+              "case_count_per_run": min((row["case_count"] for row in rows), default=0),
+              "accuracy_min": min((row["accuracy"] for row in rows), default=None),
+              "accuracy_mean": (
+                  sum(row["accuracy"] for row in rows) / len(rows) if rows else None
+              ),
+              "all_correct_count": sum(row["all_correct"] for row in rows),
+              "missed_case_frequency": dict(sorted(misses.items())),
+              "rows": rows,
+          }
+          Path("claim-guard-external-v18-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload independent aggregate
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-claim-guard-external-v18-summary
+          path: claim-guard-external-v18-summary.json
+          retention-days: 90
