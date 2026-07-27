@@ -1,0 +1,143 @@
+name: Mini-ORIGIN Repair v0.9
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/state_invention_v8.py"
+      - "mini-origin/src/mini_origin/state_repair_v9.py"
+      - "mini-origin/tests/test_state_repair_v9.py"
+      - ".github/workflows/mini-origin-repair-v9.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/state_invention_v8.py"
+      - "mini-origin/src/mini_origin/state_repair_v9.py"
+      - "mini-origin/tests/test_state_repair_v9.py"
+      - ".github/workflows/mini-origin-repair-v9.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-repair-v9-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_state_repair_v9.py
+
+  state-repair:
+    name: repair-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [91, 92, 93]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Evolve state allocation and reconstruction semantics
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.state_repair_v9
+          --seed ${{ matrix.seed }}
+          --output results/repair-v9-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-repair-v9-seed-${{ matrix.seed }}
+          path: mini-origin/results/repair-v9-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-repair-study:
+    needs: [tests, state-repair]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-repair-v9-seed-*
+          path: repair-artifacts
+          merge-multiple: true
+      - name: Aggregate independent state-repair searches
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("repair-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "invented_program": data["invented_program"],
+                  "strict_invented_score": data["strict_invented_score"],
+                  "strict_one_state_score": data["strict_one_state_score"],
+                  "strict_no_repair_score": data["strict_no_repair_score"],
+                  "strict_hand_score": data["strict_hand_score"],
+                  "hidden_scores": data["hidden_scores"],
+              })
+
+          passing = [row for row in rows if row["status"] == "adversarial_state_repair_candidate"]
+          invented = [row["strict_invented_score"] for row in rows]
+          one_gaps = [row["strict_invented_score"] - row["strict_one_state_score"] for row in rows]
+          repair_gaps = [row["strict_invented_score"] - row["strict_no_repair_score"] for row in rows]
+          hand_gaps = [row["strict_invented_score"] - row["strict_hand_score"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_adversarial_state_repair_candidate"
+                  if len(passing) >= 2
+                  and statistics.median(invented) >= 0.72
+                  and statistics.median(one_gaps) >= 0.35
+                  and statistics.median(repair_gaps) >= 0.20
+                  and statistics.median(hand_gaps) >= 0.06
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "adversarially synthesized state allocation and reconstruction semantics under "
+                  "recurrence, drift and targeted deletion; external acceptance requires independent "
+                  "reproduction and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": len(passing),
+              "passing_seeds": [row["seed"] for row in passing],
+              "invented_min": min(invented) if invented else None,
+              "invented_median": statistics.median(invented) if invented else None,
+              "one_state_gap_min": min(one_gaps) if one_gaps else None,
+              "one_state_gap_median": statistics.median(one_gaps) if one_gaps else None,
+              "repair_gap_min": min(repair_gaps) if repair_gaps else None,
+              "repair_gap_median": statistics.median(repair_gaps) if repair_gaps else None,
+              "hand_gap_min": min(hand_gaps) if hand_gaps else None,
+              "hand_gap_median": statistics.median(hand_gaps) if hand_gaps else None,
+              "runs": rows,
+          }
+          Path("repair-v9-summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-repair-v9-summary
+          path: repair-v9-summary.json
+          retention-days: 90
