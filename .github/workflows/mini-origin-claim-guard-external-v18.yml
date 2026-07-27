@@ -6,12 +6,14 @@ on:
       - "mini-origin/src/mini_origin/claim_contract_v18.py"
       - "mini-origin/src/mini_origin/claim_guard_adapter_v18.py"
       - "mini-origin/independent/claim_guard_external_v18.mjs"
+      - "mini-origin/independent/claim_guard_verifier_v18.mjs"
       - ".github/workflows/mini-origin-claim-guard-external-v18.yml"
   pull_request:
     paths:
       - "mini-origin/src/mini_origin/claim_contract_v18.py"
       - "mini-origin/src/mini_origin/claim_guard_adapter_v18.py"
       - "mini-origin/independent/claim_guard_external_v18.mjs"
+      - "mini-origin/independent/claim_guard_verifier_v18.mjs"
       - ".github/workflows/mini-origin-claim-guard-external-v18.yml"
   workflow_dispatch:
 
@@ -46,12 +48,17 @@ jobs:
           node-version: "22"
       - name: Install
         run: python -m pip install -e ".[dev]"
-      - name: Run independent JavaScript mutation suite
+      - name: Generate independent JavaScript mutation suite and run Python verifier
         run: >-
           mkdir -p results &&
           node independent/claim_guard_external_v18.mjs
           --seed ${{ matrix.seed }}
           --output results/claim-guard-external-v18-seed-${{ matrix.seed }}.json
+      - name: Run independent JavaScript verifier on the frozen cases
+        run: >-
+          node independent/claim_guard_verifier_v18.mjs
+          --input results/claim-guard-external-v18-seed-${{ matrix.seed }}.json.cases.json
+          --output results/claim-guard-external-v18-seed-${{ matrix.seed }}.json.verifier.json
       - name: Upload independent evidence
         uses: actions/upload-artifact@v4
         with:
@@ -60,6 +67,7 @@ jobs:
             mini-origin/results/claim-guard-external-v18-seed-${{ matrix.seed }}.json
             mini-origin/results/claim-guard-external-v18-seed-${{ matrix.seed }}.json.cases.json
             mini-origin/results/claim-guard-external-v18-seed-${{ matrix.seed }}.json.adapter.json
+            mini-origin/results/claim-guard-external-v18-seed-${{ matrix.seed }}.json.verifier.json
           retention-days: 90
 
   aggregate-independent-study:
@@ -71,7 +79,7 @@ jobs:
           pattern: mini-origin-claim-guard-external-v18-seed-*
           path: evidence
           merge-multiple: true
-      - name: Aggregate independent mutation suites
+      - name: Aggregate cross-language verifier agreement
         run: |
           python - <<'PY'
           import glob
@@ -81,38 +89,62 @@ jobs:
 
           rows = []
           misses = Counter()
+          disagreement = Counter()
           for filename in sorted(glob.glob("evidence/claim-guard-external-v18-seed-*.json")):
-              if filename.endswith(".cases.json") or filename.endswith(".adapter.json"):
+              if filename.endswith((".cases.json", ".adapter.json", ".verifier.json")):
                   continue
-              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              main = json.loads(Path(filename).read_text(encoding="utf-8"))
+              adapter = json.loads(Path(filename + ".adapter.json").read_text(encoding="utf-8"))
+              verifier = json.loads(Path(filename + ".verifier.json").read_text(encoding="utf-8"))
+
+              python_decisions = {
+                  item["name"]: item["observed_accept"]
+                  for item in adapter["results"]
+              }
+              js_decisions = {
+                  item["name"]: item["observed_accept"]
+                  for item in verifier["results"]
+              }
+              names = sorted(set(python_decisions) | set(js_decisions))
+              disagreements = [
+                  name for name in names
+                  if python_decisions.get(name) != js_decisions.get(name)
+              ]
+              disagreement.update(disagreements)
+              misses.update(main["missed_cases"])
               rows.append({
-                  "seed": data["seed"],
-                  "case_count": data["case_count"],
-                  "correct_count": data["correct_count"],
-                  "accuracy": data["accuracy"],
-                  "all_correct": data["all_correct"],
-                  "missed_cases": data["missed_cases"],
+                  "seed": main["seed"],
+                  "case_count": main["case_count"],
+                  "python_accuracy": main["accuracy"],
+                  "python_all_correct": main["all_correct"],
+                  "javascript_accuracy": verifier["accuracy"],
+                  "javascript_all_correct": verifier["all_correct"],
+                  "verifier_agreement": not disagreements,
+                  "disagreements": disagreements,
+                  "missed_cases": main["missed_cases"],
               })
-              misses.update(data["missed_cases"])
 
           summary = {
               "verdict": (
-                  "independent_suite_passed"
-                  if len(rows) == 5 and all(row["all_correct"] for row in rows)
-                  else "independent_suite_exposed_gaps"
+                  "cross_language_verification_passed"
+                  if len(rows) == 5
+                  and all(row["python_all_correct"] for row in rows)
+                  and all(row["javascript_all_correct"] for row in rows)
+                  and all(row["verifier_agreement"] for row in rows)
+                  else "cross_language_verification_exposed_gaps"
               ),
               "claim_scope": (
-                  "independently authored JavaScript mutation generator evaluated through a neutral "
-                  "JSON adapter; this is an internal cross-language adversarial check, not outside reproduction"
+                  "independently implemented Python and JavaScript verifiers agree on independently "
+                  "generated frozen mutation cases; this is internal cross-language reproduction, "
+                  "not reproduction by an outside researcher or institution"
               ),
               "run_count": len(rows),
               "case_count_per_run": min((row["case_count"] for row in rows), default=0),
-              "accuracy_min": min((row["accuracy"] for row in rows), default=None),
-              "accuracy_mean": (
-                  sum(row["accuracy"] for row in rows) / len(rows) if rows else None
-              ),
-              "all_correct_count": sum(row["all_correct"] for row in rows),
+              "python_accuracy_min": min((row["python_accuracy"] for row in rows), default=None),
+              "javascript_accuracy_min": min((row["javascript_accuracy"] for row in rows), default=None),
+              "agreement_count": sum(row["verifier_agreement"] for row in rows),
               "missed_case_frequency": dict(sorted(misses.items())),
+              "disagreement_frequency": dict(sorted(disagreement.items())),
               "rows": rows,
           }
           Path("claim-guard-external-v18-summary.json").write_text(
@@ -120,7 +152,7 @@ jobs:
           )
           print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
           PY
-      - name: Upload independent aggregate
+      - name: Upload cross-language aggregate
         uses: actions/upload-artifact@v4
         with:
           name: mini-origin-claim-guard-external-v18-summary
