@@ -1,0 +1,159 @@
+name: Mini-ORIGIN ProtocolSynth v0.19
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/protocol_synth_v19.py"
+      - "mini-origin/src/mini_origin/protocol_synth_v19_1.py"
+      - "mini-origin/tests/test_protocol_synth_v19.py"
+      - ".github/workflows/mini-origin-protocol-synth-v19.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/protocol_synth_v19.py"
+      - "mini-origin/src/mini_origin/protocol_synth_v19_1.py"
+      - "mini-origin/tests/test_protocol_synth_v19.py"
+      - ".github/workflows/mini-origin-protocol-synth-v19.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-protocol-synth-v19-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test synthesis safeguards
+        run: pytest -q tests/test_protocol_synth_v19.py
+
+  synthesis:
+    name: protocol-synth-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [401, 402, 403, 404, 405]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Synthesize and freeze scientific validity protocol
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.protocol_synth_v19_1
+          --seed ${{ matrix.seed }}
+          --output results/protocol-synth-v19-seed-${{ matrix.seed }}.json
+      - name: Upload synthesis evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-protocol-synth-v19-seed-${{ matrix.seed }}
+          path: mini-origin/results/protocol-synth-v19-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, synthesis]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-protocol-synth-v19-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent synthesis runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          rules = Counter()
+          for filename in sorted(glob.glob("evidence/protocol-synth-v19-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rules.update(data["selected_rules"])
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "candidate_gate": data["candidate_gate"],
+                  "selected_rule_count": data["selected_rule_count"],
+                  "library_size": data["library_size"],
+                  "selected_rules": data["selected_rules"],
+                  "protocol_digest": data["frozen_protocol_digest"],
+                  "training_accuracy": data["training"]["accuracy"],
+                  "hidden_detection": data["hidden"]["detection_rate"],
+                  "hidden_false_reject": data["hidden"]["false_reject_rate"],
+                  "random_detection_median": data["random_equal_size"]["detection_median"],
+                  "full_hand_accuracy": data["full_hand_protocol"]["accuracy"],
+              })
+
+          detection = [row["hidden_detection"] for row in rows]
+          false_reject = [row["hidden_false_reject"] for row in rows]
+          compression = [1.0 - row["selected_rule_count"] / row["library_size"] for row in rows]
+          advantages = [
+              row["hidden_detection"] - row["random_detection_median"]
+              for row in rows
+          ]
+          summary = {
+              "verdict": (
+                  "replicated_protocol_synthesis_candidate"
+                  if len(rows) == 5
+                  and all(row["candidate_gate"] for row in rows)
+                  and min(detection) == 1.0
+                  and max(false_reject) == 0.0
+                  and min(advantages) >= 0.20
+                  and min(compression) > 0.0
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "counterexample-guided synthesis freezes a minimal executable scientific-validity "
+                  "protocol before withheld mutation families are constructed; external status still "
+                  "requires an independently authored predicate grammar and outside reproduction"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "hidden_detection_min": min(detection) if detection else None,
+              "hidden_false_reject_max": max(false_reject) if false_reject else None,
+              "compression_min": min(compression) if compression else None,
+              "compression_median": statistics.median(compression) if compression else None,
+              "random_advantage_min": min(advantages) if advantages else None,
+              "random_advantage_median": statistics.median(advantages) if advantages else None,
+              "protocol_digest_count": len({row["protocol_digest"] for row in rows}),
+              "rule_selection_frequency": dict(sorted(rules.items())),
+              "rows": rows,
+          }
+          Path("protocol-synth-v19-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate synthesis evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-protocol-synth-v19-summary
+          path: protocol-synth-v19-summary.json
+          retention-days: 90
