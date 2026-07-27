@@ -7,7 +7,17 @@ on:
       - "mini-origin/src/mini_origin/mechanism_quotient_v17_1.py"
       - "mini-origin/tests/test_mechanism_quotient_v17_1.py"
       - ".github/workflows/mini-origin-quotient-v17.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/mechanism_quotient_v17.py"
+      - "mini-origin/src/mini_origin/mechanism_quotient_v17_1.py"
+      - "mini-origin/tests/test_mechanism_quotient_v17_1.py"
+      - ".github/workflows/mini-origin-quotient-v17.yml"
   workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v17-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
