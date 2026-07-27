@@ -2,42 +2,59 @@
 
 **Autonomous search for local, damage-tolerant computational substrates.**
 
-Mini-ORIGIN is the first research scaffold for ORIGIN COMPUTE: an attempt to search below conventional neural-network architecture design and discover local computational laws that can preserve information, transmit signals, adapt, and recover after structural damage.
+Mini-ORIGIN is a CPU-only research scaffold for ORIGIN COMPUTE: an attempt to search below conventional neural-network architecture design and discover local computational laws that preserve information, transmit signals, adapt, and recover after damage.
 
-> Status: early, falsifiable research prototype. It is not yet evidence of a new form of computation or a replacement for neural networks.
+> Current status: replicated internal research milestone. Mini-ORIGIN has not discovered a new universal form of computation and is not a replacement for neural networks or conventional hardware.
 
-## What v0.1 implements
+## Current milestone — v0.4 competitive local routing
 
-- A toroidal two-dimensional cell universe.
-- One shared local rule executed independently by every cell.
-- Cells observe only their own state, neighbour mean, neighbour maximum, and local input.
-- A genome describing the local update law.
-- Mutation and crossover over local laws.
-- Three measurable tasks: noisy memory, signal relay, and post-damage recovery.
-- Complexity-penalized evolutionary selection.
-- Deterministic replay through explicit random seeds.
-- CPU-only tests and a GitHub Actions experiment.
+The original v0.1 relay benchmark used a toroidal grid, which accidentally made opposite edges adjacent. That invalidated its relay claim. The benchmark was replaced with fixed boundaries, bipolar signals, early-leakage checks, hidden grid sizes, persistent dead cells, partial walls, and explicit controls.
 
-The candidate substrate has no global controller while it runs and receives no gradient updates. Evolution occurs between complete evaluations.
+Smooth weighted-sum local laws improved on damaged grids but failed robust transfer. Their median hidden score remained below 0.30. Mini-ORIGIN v0.4 therefore tests a different substrate primitive: local sources compete, and each cell uses a learned soft selection over the strongest signed neighbouring signal.
 
-## Architecture
+Five independent cloud searches were run with seeds 41–45. All five passed the internal milestone gate:
+
+| Metric | Result |
+|---|---:|
+| Independent runs | 5 |
+| Passing runs | 5 |
+| Success rate | 100% |
+| Hidden worst-case range | 0.8631–0.9558 |
+| Hidden median | 0.8946 |
+| Hidden mean | 0.9091 |
+| Transparent hand-control score | 0.9842 |
+| Median fraction of hand control | 90.9% |
+
+The strongest evolved genome scored:
+
+- `0.9558` on 48×25 grids with 33% damage;
+- `0.9991` on 60×31 grids with 35% damage;
+- `0.9852` on 72×37 grids with 37% damage.
+
+These grids, damage levels, obstacle layouts, and random seeds were excluded from search.
+
+### Honest interpretation
+
+This is a **replicated project-level milestone**, not a world-level computing breakthrough. The competitive primitive strongly shapes the solution space, and a transparent signed max-flood control still performs better in the strict worst case. The experiment demonstrates that evolution can repeatedly find robust parameters within this substrate family; it does not demonstrate autonomous invention of the substrate family itself.
+
+Permanent evidence is stored in:
 
 ```text
-Genome population
-      |
-      v
-Local-rule cellular universes
-      |
-      +--> noisy memory test
-      +--> signal relay test
-      +--> damage/recovery test
-      |
-      v
-Fitness + complexity penalty
-      |
-      v
-Elitism, crossover, mutation
+research-evidence/mini-origin-competitive-v4-summary.json
+research-evidence/mini-origin-competitive-v4-seed45.json
 ```
+
+## Implemented systems
+
+- Fixed-boundary and legacy toroidal cellular universes.
+- Shared smooth gated local laws with directional perception.
+- Competitive signed-neighbour local laws.
+- Noisy memory, bounded relay, state repair, and persistent-damage routing tasks.
+- Counterexample-driven benchmark corrections.
+- Random, identity, clean-shift, base-genome, and explicit max-flood controls.
+- Curriculum evolution and worst-case domain randomization.
+- Held-out sizes, damage levels, layouts, and random seeds.
+- Independent GitHub Actions experiment matrices and aggregate evidence.
 
 ## Run in GitHub Codespaces or locally
 
@@ -45,68 +62,78 @@ Elitism, crossover, mutation
 cd mini-origin
 python -m pip install -e ".[dev]"
 pytest -q
-mini-origin demo --generations 12 --population 24 --output results/demo.json
+
+python -m mini_origin.competitive_v4 \
+  --seed 45 \
+  --population 64 \
+  --generations 55 \
+  --output results/competitive-v4-seed-45.json
 ```
 
-The GitHub Actions workflow runs the tests and a compact reproducible discovery experiment automatically. The resulting JSON is uploaded as a workflow artifact.
+GitHub Actions runs the tests and independent search matrix without requiring a personal computer.
 
-## Research claim being tested
+## Research progression
 
-> Can search discover a shared local computational rule that performs multiple information-processing tasks and recovers after damage without being given a neural-network architecture?
+### v0.1 — Initial scaffold
 
-The repository does **not** assume that the answer is yes. Negative results are useful: they indicate whether the substrate, search space, fitness design, or central hypothesis must change.
+Implemented genomes, cellular worlds, memory, relay, repair, evolution, deterministic replay, tests, and cloud execution. Its toroidal relay result was later rejected.
+
+### v0.2 — Strict bounded relay
+
+Added fixed boundaries, directional features, sign-balanced evaluation, hidden distances, leakage penalties, and controls. Four of fifteen runs crossed the internal threshold, but an explicit east-copy rule outperformed them and exposed the task as a known transport primitive.
+
+### v0.3 — Damage and domain randomization
+
+Added dead cells, partial walls, larger unseen grids, changing obstacle layouts, lower-tail selection, and fixed validation. Smooth weighted-sum laws improved over their base genome but remained brittle on the largest hidden environments.
+
+### v0.4 — Competitive routing
+
+Changed the computational primitive from blending neighbours to competitive signed source selection. Five of five searches robustly approached an explicit max-flood control across unseen damaged grids.
+
+## What qualifies as the next major advance
+
+The next result will not count merely for improving routing accuracy. Mini-ORIGIN must demonstrate at least one of these:
+
+1. **Within-lifetime local learning:** one inherited law learns new tasks from examples without evolving a new genome.
+2. **Structural regeneration:** deleted computational cells or connections regrow and restore multiple capabilities.
+3. **Task transfer:** a substrate evolved without a hidden task learns or performs that task better than equal-compute controls.
+4. **Primitive invention:** search expands its own update-language or substrate operations instead of choosing parameters inside a human-fixed family.
+5. **Efficiency advantage:** a discovered law beats strong neural, reservoir, or cellular baselines under equal operation and memory budgets.
 
 ## Scientific safeguards
 
-A future candidate will not be called a discovery unless it survives:
+No result will be promoted beyond an internal milestone unless it survives:
 
-1. held-out seeds and grid sizes;
-2. unseen noise and damage distributions;
-3. ablation of each claimed mechanism;
-4. equal-compute neural, reservoir, cellular-automata, and random-search baselines;
-5. complexity and operation-count controls;
-6. transfer to tasks excluded from search;
-7. independent reruns.
-
-## Roadmap
-
-### v0.2 — Primitive archive
-
-Add novelty search and quality-diversity archives for memory, routing, copying, and logic-like primitives.
-
-### v0.3 — Local learning
-
-Separate inherited update laws from within-lifetime plasticity. A substrate must improve from examples without evolving a new genome for each task.
-
-### v0.4 — Regeneration
-
-Introduce structural cell death, connection damage, regrowth, and recovery measurements against nontrivial controls.
-
-### v0.5 — Multi-task substrate
-
-Require one substrate to learn multiple hidden tasks and generalize to larger worlds.
-
-### v1.0 — Research evaluation
-
-Add rigorous baselines, hidden benchmarks, ablations, efficiency accounting, and a reproducible paper-ready experiment suite.
+1. held-out seeds, sizes, layouts, and distributions;
+2. explicit hand-designed controls;
+3. ablation of every claimed mechanism;
+4. equal-compute neural, reservoir, and cellular baselines;
+5. operation, memory, and complexity accounting;
+6. task transfer excluded from search;
+7. independent reruns;
+8. external review and literature comparison.
 
 ## Repository layout
 
 ```text
-src/mini_origin/genome.py      evolvable local law
-src/mini_origin/substrate.py   cell-universe simulator
-src/mini_origin/tasks.py       falsifiable task definitions
-src/mini_origin/search.py      evolutionary discovery loop
-src/mini_origin/cli.py         experiment command
-tests/                         deterministic tests
+src/mini_origin/genome.py          smooth evolvable local law
+src/mini_origin/substrate.py       initial cell-universe simulator
+src/mini_origin/tasks.py           memory, relay, and repair tasks
+src/mini_origin/search.py          initial evolutionary loop
+src/mini_origin/research_v2.py     strict fixed-boundary relay study
+src/mini_origin/resilience_v2.py   persistent-damage adaptation
+src/mini_origin/resilience_v3.py   worst-case domain randomization
+src/mini_origin/competitive_v4.py  competitive signed-routing substrate
+tests/                             deterministic and anti-shortcut tests
 ```
 
 ## Current limitations
 
-- The substrate family is still human-selected.
-- The update law is a small differentiable equation, not an invented compiler or physical medium.
-- Search is simple elitist evolution, not open-ended discovery.
-- The recovery task tests state restoration, not rebuilding arbitrary structures.
-- Fitness design can create shortcuts and must be attacked continuously.
+- The substrate families and operators are still human-designed.
+- Search optimizes compact parameter sets rather than inventing a compiler or physical medium.
+- No within-lifetime learning has been demonstrated.
+- No structural regrowth has been demonstrated.
+- The v0.4 result rediscovers a known flood-like local routing mechanism.
+- No equal-compute advantage over established unconventional-computing baselines has been demonstrated.
 
-These limitations are explicit so later results cannot be overstated.
+The project records these limits explicitly so a successful benchmark cannot be mistaken for a world breakthrough.
