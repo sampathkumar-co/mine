@@ -1,0 +1,37 @@
+name: Mini-ORIGIN CI
+
+on:
+  push:
+    paths:
+      - "mini-origin/**"
+      - ".github/workflows/mini-origin-ci.yml"
+  pull_request:
+    paths:
+      - "mini-origin/**"
+      - ".github/workflows/mini-origin-ci.yml"
+  workflow_dispatch:
+
+jobs:
+  test-and-demo:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test
+        run: pytest -q
+      - name: Run reproducible discovery demo
+        run: mini-origin demo --generations 8 --population 18 --seed 7 --output results/demo.json
+      - name: Upload experiment result
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-demo
+          path: mini-origin/results/demo.json
