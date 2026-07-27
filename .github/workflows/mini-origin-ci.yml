@@ -60,6 +60,7 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Run bounded sign-balanced relay discovery
         run: >-
+          mkdir -p results &&
           python -m mini_origin.research_v2
           --seed ${{ matrix.seed }}
           --population 72
