@@ -2,59 +2,102 @@
 
 **Autonomous search for local, damage-tolerant computational substrates.**
 
-Mini-ORIGIN is a CPU-only research scaffold for ORIGIN COMPUTE: an attempt to search below conventional neural-network architecture design and discover local computational laws that preserve information, transmit signals, adapt, and recover after damage.
+Mini-ORIGIN is a CPU-only research scaffold for ORIGIN COMPUTE: an attempt to search below conventional neural-network architecture design and discover local computational laws that preserve information, transmit signals, learn, and recover after damage.
 
-> Current status: replicated internal research milestone. Mini-ORIGIN has not discovered a new universal form of computation and is not a replacement for neural networks or conventional hardware.
+> Current status: replicated within-lifetime local-learning breakthrough inside the project. Mini-ORIGIN has not discovered a universal replacement for neural networks or conventional hardware.
 
-## Current milestone — v0.4 competitive local routing
+## Current breakthrough — v0.5 within-lifetime feedback learning
 
-The original v0.1 relay benchmark used a toroidal grid, which accidentally made opposite edges adjacent. That invalidated its relay claim. The benchmark was replaced with fixed boundaries, bipolar signals, early-leakage checks, hidden grid sizes, persistent dead cells, partial walls, and explicit controls.
+One inherited, dimension-agnostic plasticity law now learns a newly generated linear mapping from examples during its own lifetime. The genome is fixed before the mapping exists and is not changed between tasks.
 
-Smooth weighted-sum local laws improved on damaged grids but failed robust transfer. Their median hidden score remained below 0.30. Mini-ORIGIN v0.4 therefore tests a different substrate primitive: local sources compete, and each cell uses a learned soft selection over the strongest signed neighbouring signal.
+After learning, up to 65% of the distributed memory cells are deleted. The surviving cells retain almost all learned performance.
 
-Five independent cloud searches were run with seeds 41–45. All five passed the internal milestone gate:
+### Accepted benchmark
+
+The first apparent v0.5 success was rejected because isotropic examples allowed a Hebbian correlation shortcut. The accepted benchmark therefore uses:
+
+- strongly correlated, ill-conditioned training examples;
+- isotropic test queries;
+- hidden orthogonal mappings generated inside each lifetime;
+- evolution only on dimensions 3–4;
+- hidden evaluation on dimensions 5, 6, and 8;
+- hidden condition numbers up to 36;
+- observation noise and up to 65% cell deletion;
+- frozen-memory, feedback-ablation, hand-Hebbian, and hand-delta controls.
+
+Five independent GitHub cloud searches used seeds 51–55. All five crossed the predefined breakthrough gate.
 
 | Metric | Result |
 |---|---:|
-| Independent runs | 5 |
-| Passing runs | 5 |
+| Independent searches | 5 |
+| Passing searches | 5 |
 | Success rate | 100% |
-| Hidden worst-case range | 0.8631–0.9558 |
-| Hidden median | 0.8946 |
-| Hidden mean | 0.9091 |
-| Transparent hand-control score | 0.9842 |
-| Median fraction of hand control | 90.9% |
+| Hidden worst-case range | 0.8527–0.8599 |
+| Hidden median | 0.8544 |
+| Minimum post-damage retention | 99.44% |
+| Median post-damage retention | 99.68% |
+| Median advantage over correlation-only control | 0.7074 |
+| Median fraction of hand-delta performance | 104.10% |
 
-The strongest evolved genome scored:
+The strongest evolved law, seed 55, scored:
 
-- `0.9558` on 48×25 grids with 33% damage;
-- `0.9991` on 60×31 grids with 35% damage;
-- `0.9852` on 72×37 grids with 37% damage.
+- `0.9877` on 5D mappings, condition number 16, after 45% cell death;
+- `0.9529` on 6D mappings, condition number 24, after 55% cell death;
+- `0.8599` on 8D mappings, condition number 36, after 65% cell death.
 
-These grids, damage levels, obstacle layouts, and random seeds were excluded from search.
+Its aggregate controls scored:
+
+| Control | Score |
+|---|---:|
+| No learning | 0.1212 |
+| Prediction feedback removed | 0.0515 |
+| Hand Hebbian learning | 0.1462 |
+| Hand delta learning | 0.8207 |
+| Evolved law strict hidden worst case | 0.8599 |
+
+### Learned mechanism
+
+The strongest rule evolved an effective teacher coefficient of `+3.6864` and an effective prediction-feedback coefficient of `-3.5718`.
+
+Those near-opposite coefficients implement a high-gain local error-correction rule:
+
+```text
+local memory change ≈ gain × (target - prediction) ⊗ input
+```
+
+Each cell receives its own noisy observations and updates only its own memory. Roughly 29.5% of examples are hidden from each cell, so cells develop overlapping but non-identical memories. Mean/median consensus across survivors preserves the mapping after severe deletion.
 
 ### Honest interpretation
 
-This is a **replicated project-level milestone**, not a world-level computing breakthrough. The competitive primitive strongly shapes the solution space, and a transparent signed max-flood control still performs better in the strict worst case. The experiment demonstrates that evolution can repeatedly find robust parameters within this substrate family; it does not demonstrate autonomous invention of the substrate family itself.
+This is a **real replicated project breakthrough** because the mapping is generated after the genome is fixed, learning occurs during the substrate's lifetime, larger dimensions and covariance structures are hidden, most cells are removed after learning, shortcut controls fail, and five independent searches reproduce the result.
 
-Permanent evidence is stored in:
+It is not yet a world-level learning breakthrough. The memory matrix, supervised target signal, and candidate plasticity operators remain human-designed.
+
+Permanent evidence:
 
 ```text
-research-evidence/mini-origin-competitive-v4-summary.json
-research-evidence/mini-origin-competitive-v4-seed45.json
+research-evidence/mini-origin-plasticity-v5-summary.json
+research-evidence/mini-origin-plasticity-v5-seed55.json
+research-evidence/MINI_ORIGIN_V05_REPORT.md
 ```
+
+## Previous milestone — v0.4 competitive local routing
+
+Mini-ORIGIN v0.4 discovered robust parameters for a competitive signed-neighbour routing substrate. Five of five searches transmitted bipolar signals across unseen grids with persistent dead cells and partial walls, reaching a hidden median of `0.8946` and about 90.9% of a transparent max-flood control.
+
+The earlier v0.1 toroidal relay result was explicitly rejected because opposite edges were accidentally adjacent. That failure led to fixed boundaries, anti-leakage checks, hidden sizes, damage distributions, and explicit controls.
 
 ## Implemented systems
 
 - Fixed-boundary and legacy toroidal cellular universes.
-- Shared smooth gated local laws with directional perception.
-- Competitive signed-neighbour local laws.
-- Noisy memory, bounded relay, state repair, and persistent-damage routing tasks.
-- Counterexample-driven benchmark corrections.
-- Random, identity, clean-shift, base-genome, and explicit max-flood controls.
-- Curriculum evolution and worst-case domain randomization.
-- Held-out sizes, damage levels, layouts, and random seeds.
-- Independent GitHub Actions experiment matrices and aggregate evidence.
+- Smooth gated directional local laws.
+- Competitive signed-neighbour routing laws.
+- Distributed local plastic memories.
+- Dimension-agnostic feedback-plasticity genomes.
+- Noisy memory, bounded relay, repair, persistent-damage routing, and lifetime-learning tasks.
+- Correlated-training/isotropic-query anti-shortcut benchmarks.
+- Frozen, identity, random, Hebbian, delta, feedback-ablation, and explicit routing controls.
+- Curriculum evolution, worst-case selection, hidden dimensions, and independent cloud replication.
 
 ## Run in GitHub Codespaces or locally
 
@@ -63,53 +106,57 @@ cd mini-origin
 python -m pip install -e ".[dev]"
 pytest -q
 
-python -m mini_origin.competitive_v4 \
-  --seed 45 \
-  --population 64 \
-  --generations 55 \
-  --output results/competitive-v4-seed-45.json
+python -m mini_origin.plasticity_v5 \
+  --seed 55 \
+  --population 52 \
+  --generations 30 \
+  --output results/plasticity-v5-seed-55.json
 ```
 
-GitHub Actions runs the tests and independent search matrix without requiring a personal computer.
+GitHub Actions runs the tests, independent search matrix, and aggregate evaluation without requiring a personal computer.
 
 ## Research progression
 
 ### v0.1 — Initial scaffold
 
-Implemented genomes, cellular worlds, memory, relay, repair, evolution, deterministic replay, tests, and cloud execution. Its toroidal relay result was later rejected.
+Implemented genomes, cellular worlds, memory, relay, repair, evolution, deterministic replay, tests, and cloud execution. Its toroidal relay claim was later rejected.
 
 ### v0.2 — Strict bounded relay
 
-Added fixed boundaries, directional features, sign-balanced evaluation, hidden distances, leakage penalties, and controls. Four of fifteen runs crossed the internal threshold, but an explicit east-copy rule outperformed them and exposed the task as a known transport primitive.
+Added fixed boundaries, directional features, sign-balanced evaluation, hidden distances, leakage penalties, and controls. Four of fifteen runs crossed an internal threshold, but a hand east-copy rule was stronger.
 
 ### v0.3 — Damage and domain randomization
 
-Added dead cells, partial walls, larger unseen grids, changing obstacle layouts, lower-tail selection, and fixed validation. Smooth weighted-sum laws improved over their base genome but remained brittle on the largest hidden environments.
+Added dead cells, partial walls, larger unseen grids, changing layouts, lower-tail selection, and fixed validation. Smooth weighted-sum laws remained brittle.
 
 ### v0.4 — Competitive routing
 
-Changed the computational primitive from blending neighbours to competitive signed source selection. Five of five searches robustly approached an explicit max-flood control across unseen damaged grids.
+Changed the primitive from neighbour blending to competitive signed source selection. Five of five searches approached an explicit max-flood control across unseen damaged grids.
 
-## What qualifies as the next major advance
+### v0.5 — Within-lifetime feedback learning
 
-The next result will not count merely for improving routing accuracy. Mini-ORIGIN must demonstrate at least one of these:
+Added distributed local memories and a dimension-agnostic plasticity law. Five of five searches learned hidden mappings from ill-conditioned examples, transferred to larger unseen dimensions and isotropic queries, survived up to 65% cell deletion, defeated correlation-only controls, and slightly exceeded the fixed hand-delta control on the aggregate hidden benchmark.
 
-1. **Within-lifetime local learning:** one inherited law learns new tasks from examples without evolving a new genome.
-2. **Structural regeneration:** deleted computational cells or connections regrow and restore multiple capabilities.
-3. **Task transfer:** a substrate evolved without a hidden task learns or performs that task better than equal-compute controls.
-4. **Primitive invention:** search expands its own update-language or substrate operations instead of choosing parameters inside a human-fixed family.
-5. **Efficiency advantage:** a discovered law beats strong neural, reservoir, or cellular baselines under equal operation and memory budgets.
+## Next major gate
+
+The next result should remove another major human assumption rather than merely increase v0.5 scores:
+
+1. **Sparse-reward or self-supervised learning:** learn without receiving the full target vector at every update.
+2. **Nonlinear and temporal tasks:** learn stateful programs, sequences, or nonlinear transformations.
+3. **Structural regeneration:** regrow deleted memory cells and reconstruct learned knowledge from neighbours.
+4. **Plasticity-language invention:** allow search to create or compose its own local update operators.
+5. **Equal-compute baselines:** compare against neural, reservoir, and established associative-learning methods under matched memory and operations.
 
 ## Scientific safeguards
 
-No result will be promoted beyond an internal milestone unless it survives:
+No result will be promoted beyond an internal breakthrough unless it survives:
 
-1. held-out seeds, sizes, layouts, and distributions;
+1. held-out seeds, dimensions, layouts, mappings, and distributions;
 2. explicit hand-designed controls;
-3. ablation of every claimed mechanism;
+3. mechanism ablations and shortcut attacks;
 4. equal-compute neural, reservoir, and cellular baselines;
 5. operation, memory, and complexity accounting;
-6. task transfer excluded from search;
+6. tasks excluded from evolution;
 7. independent reruns;
 8. external review and literature comparison.
 
@@ -117,23 +164,25 @@ No result will be promoted beyond an internal milestone unless it survives:
 
 ```text
 src/mini_origin/genome.py          smooth evolvable local law
-src/mini_origin/substrate.py       initial cell-universe simulator
+src/mini_origin/substrate.py       initial cellular simulator
 src/mini_origin/tasks.py           memory, relay, and repair tasks
 src/mini_origin/search.py          initial evolutionary loop
 src/mini_origin/research_v2.py     strict fixed-boundary relay study
 src/mini_origin/resilience_v2.py   persistent-damage adaptation
 src/mini_origin/resilience_v3.py   worst-case domain randomization
-src/mini_origin/competitive_v4.py  competitive signed-routing substrate
-tests/                             deterministic and anti-shortcut tests
+src/mini_origin/competitive_v4.py  competitive signed routing
+src/mini_origin/plasticity_v5.py   within-lifetime feedback learning
+tests/                             deterministic anti-shortcut tests
 ```
 
 ## Current limitations
 
-- The substrate families and operators are still human-designed.
-- Search optimizes compact parameter sets rather than inventing a compiler or physical medium.
-- No within-lifetime learning has been demonstrated.
-- No structural regrowth has been demonstrated.
-- The v0.4 result rediscovers a known flood-like local routing mechanism.
-- No equal-compute advantage over established unconventional-computing baselines has been demonstrated.
+- Substrate families and operator bases are still human-designed.
+- The v0.5 mapping tasks are linear and supervised.
+- Examples are delivered externally to many cells.
+- Damage tolerance currently relies on redundancy rather than regrowth.
+- The substrate does not invent objectives or decide what to learn.
+- External literature review and third-party replication remain necessary.
+- No matched-compute advantage over strong modern learning systems has been demonstrated.
 
-The project records these limits explicitly so a successful benchmark cannot be mistaken for a world breakthrough.
+These limitations are recorded explicitly so a successful internal benchmark cannot be mistaken for a universal-computing claim.
