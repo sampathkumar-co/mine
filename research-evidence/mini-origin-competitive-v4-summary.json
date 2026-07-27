@@ -1,0 +1,75 @@
+{
+  "verdict": "replicated_competitive_routing_milestone",
+  "claim_scope": "evolution repeatedly rediscovers a competitive signed-routing primitive that approaches an explicit max-flood control; this is an internal project milestone, not a new world-level computation result",
+  "run_count": 5,
+  "success_count": 5,
+  "success_rate": 1.0,
+  "successful_seeds": [41, 42, 43, 44, 45],
+  "hidden_min": 0.8630605872168647,
+  "hidden_median": 0.8946251751755716,
+  "hidden_mean": 0.9090548007681606,
+  "hidden_max": 0.9558457468820206,
+  "median_fraction_of_hand_control": 0.9089964081372054,
+  "runs": [
+    {
+      "seed": 41,
+      "status": "internal_milestone",
+      "validation_score": 0.9915246395792267,
+      "strict_hidden_score": 0.8630605872168647,
+      "hand_baseline_score": 0.9841900002761457,
+      "hidden_scores": {
+        "48x25@0.33": 0.9372950760747044,
+        "60x31@0.35": 0.9918978118560638,
+        "72x37@0.37": 0.8630605872168647
+      }
+    },
+    {
+      "seed": 42,
+      "status": "internal_milestone",
+      "validation_score": 0.9949990849762375,
+      "strict_hidden_score": 0.8780926764653855,
+      "hand_baseline_score": 0.9841900002761457,
+      "hidden_scores": {
+        "48x25@0.33": 0.8780926764653855,
+        "60x31@0.35": 0.9962762999703861,
+        "72x37@0.37": 0.9114171094635911
+      }
+    },
+    {
+      "seed": 43,
+      "status": "internal_milestone",
+      "validation_score": 0.9923347548503118,
+      "strict_hidden_score": 0.8946251751755716,
+      "hand_baseline_score": 0.9841900002761457,
+      "hidden_scores": {
+        "48x25@0.33": 0.8946251751755716,
+        "60x31@0.35": 0.9931435996564723,
+        "72x37@0.37": 0.9002380451101502
+      }
+    },
+    {
+      "seed": 44,
+      "status": "internal_milestone",
+      "validation_score": 0.99233323672461,
+      "strict_hidden_score": 0.9536498181009605,
+      "hand_baseline_score": 0.9841900002761457,
+      "hidden_scores": {
+        "48x25@0.33": 0.9536498181009605,
+        "60x31@0.35": 0.9910506495453293,
+        "72x37@0.37": 0.978597482238021
+      }
+    },
+    {
+      "seed": 45,
+      "status": "internal_milestone",
+      "validation_score": 0.9960924880250228,
+      "strict_hidden_score": 0.9558457468820206,
+      "hand_baseline_score": 0.9841900002761457,
+      "hidden_scores": {
+        "48x25@0.33": 0.9558457468820206,
+        "60x31@0.35": 0.9990870250058966,
+        "72x37@0.37": 0.9852459312960523
+      }
+    }
+  ]
+}
