@@ -1,0 +1,161 @@
+name: Mini-ORIGIN Language v0.7
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/language_v7.py"
+      - "mini-origin/tests/test_language_v7.py"
+      - ".github/workflows/mini-origin-language-v7.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/language_v7.py"
+      - "mini-origin/tests/test_language_v7.py"
+      - ".github/workflows/mini-origin-language-v7.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test v0.7 safeguards
+        run: pytest -q tests/test_language_v7.py
+
+  stateful-language-search:
+    name: stateful-language-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [71, 72, 73, 74, 75]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Induce recurrent macros and synthesize a shallow rule
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.language_v7
+          --seed ${{ matrix.seed }}
+          --output results/language-v7-seed-${{ matrix.seed }}.json
+      - name: Upload v0.7 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-language-v7-seed-${{ matrix.seed }}
+          path: mini-origin/results/language-v7-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-v7-study:
+    needs: [tests, stateful-language-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-language-v7-seed-*
+          path: language-artifacts
+          merge-multiple: true
+      - name: Aggregate independent v0.7 searches
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("language-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "best_program": data["best_program"],
+                  "macros": data["macros"],
+                  "strict_hidden_score": data["strict_hidden_score"],
+                  "no_library_strict_score": data["no_library_strict_score"],
+                  "normalized_delta_strict_score": data["normalized_delta_strict_score"],
+                  "macro_ablation_strict_score": data["macro_ablation_strict_score"],
+                  "hidden_scores": data["hidden_scores"],
+              })
+
+          passing = [
+              row for row in rows
+              if row["status"] == "external_breakthrough_candidate"
+          ]
+          hidden = [row["strict_hidden_score"] for row in rows]
+          library_gaps = [
+              row["strict_hidden_score"] - row["no_library_strict_score"]
+              for row in rows
+          ]
+          ablation_gaps = [
+              row["strict_hidden_score"] - row["macro_ablation_strict_score"]
+              for row in rows
+          ]
+          normalized_ratios = [
+              row["strict_hidden_score"]
+              / max(row["normalized_delta_strict_score"], 1e-12)
+              for row in rows
+          ]
+          summary = {
+              "verdict": (
+                  "replicated_external_breakthrough_candidate"
+                  if len(passing) >= 3
+                  and statistics.median(hidden) >= 0.76
+                  and statistics.median(library_gaps) >= 0.12
+                  and statistics.median(ablation_gaps) >= 0.08
+                  and statistics.median(normalized_ratios) >= 0.95
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "replicated self-expanding recurrent plasticity-language candidate; "
+                  "external breakthrough status still requires outside reproduction, "
+                  "broader baselines and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": len(passing),
+              "passing_seeds": [row["seed"] for row in passing],
+              "hidden_min": min(hidden) if hidden else None,
+              "hidden_median": statistics.median(hidden) if hidden else None,
+              "hidden_mean": statistics.mean(hidden) if hidden else None,
+              "library_gap_min": min(library_gaps) if library_gaps else None,
+              "library_gap_median": statistics.median(library_gaps) if library_gaps else None,
+              "ablation_gap_min": min(ablation_gaps) if ablation_gaps else None,
+              "ablation_gap_median": statistics.median(ablation_gaps) if ablation_gaps else None,
+              "median_fraction_of_normalized_delta": (
+                  statistics.median(normalized_ratios) if normalized_ratios else None
+              ),
+              "runs": rows,
+          }
+          Path("language-v7-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+          PY
+      - name: Upload aggregate v0.7 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-language-v7-summary
+          path: language-v7-summary.json
+          retention-days: 90
