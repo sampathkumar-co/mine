@@ -1,0 +1,158 @@
+name: Mini-ORIGIN Operator v0.7
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/language_v6.py"
+      - "mini-origin/src/mini_origin/language_v6_fast.py"
+      - "mini-origin/src/mini_origin/operator_transfer_v7.py"
+      - "mini-origin/tests/test_operator_transfer_v7.py"
+      - ".github/workflows/mini-origin-operator-v7.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/language_v6.py"
+      - "mini-origin/src/mini_origin/language_v6_fast.py"
+      - "mini-origin/src/mini_origin/operator_transfer_v7.py"
+      - "mini-origin/tests/test_operator_transfer_v7.py"
+      - ".github/workflows/mini-origin-operator-v7.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-operator-v7-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test operator-transfer safeguards
+        run: pytest -q tests/test_operator_transfer_v7.py
+
+  operator-transfer:
+    name: operator-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [71, 72, 73]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Mine and transfer parameterized plasticity operators
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.operator_transfer_v7
+          --seed ${{ matrix.seed }}
+          --output results/operator-v7-seed-${{ matrix.seed }}.json
+      - name: Upload operator-transfer evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-operator-v7-seed-${{ matrix.seed }}
+          path: mini-origin/results/operator-v7-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-operator-study:
+    needs: [tests, operator-transfer]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-operator-v7-seed-*
+          path: operator-artifacts
+          merge-multiple: true
+      - name: Aggregate independent operator transfers
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("operator-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "best_program": data["best_program"],
+                  "source_template": data["source_template"],
+                  "strict_template_score": data["strict_template_score"],
+                  "strict_shallow_score": data["strict_shallow_score"],
+                  "strict_closed_score": data["strict_closed_score"],
+                  "strict_delta_score": data["strict_delta_score"],
+                  "template_scores": data["template_scores"],
+              })
+
+          passing = [
+              row for row in rows
+              if row["status"] == "parameterized_operator_transfer_candidate"
+          ]
+          template_scores = [row["strict_template_score"] for row in rows]
+          shallow_gaps = [
+              row["strict_template_score"] - row["strict_shallow_score"]
+              for row in rows
+          ]
+          closed_gaps = [
+              row["strict_template_score"] - row["strict_closed_score"]
+              for row in rows
+          ]
+          summary = {
+              "verdict": (
+                  "replicated_parameterized_operator_transfer_candidate"
+                  if len(passing) >= 2
+                  and statistics.median(template_scores) >= 0.78
+                  and statistics.median(shallow_gaps) >= 0.22
+                  and statistics.median(closed_gaps) >= 0.30
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "parameterized local learning operators abstracted from source tasks and "
+                  "instantiated on unseen temporal signal roles; external acceptance still "
+                  "requires independent reproduction and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": len(passing),
+              "passing_seeds": [row["seed"] for row in passing],
+              "template_min": min(template_scores) if template_scores else None,
+              "template_median": statistics.median(template_scores) if template_scores else None,
+              "shallow_gap_min": min(shallow_gaps) if shallow_gaps else None,
+              "shallow_gap_median": statistics.median(shallow_gaps) if shallow_gaps else None,
+              "closed_gap_min": min(closed_gaps) if closed_gaps else None,
+              "closed_gap_median": statistics.median(closed_gaps) if closed_gaps else None,
+              "runs": rows,
+          }
+          Path("operator-v7-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+          PY
+      - name: Upload aggregate operator evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-operator-v7-summary
+          path: operator-v7-summary.json
+          retention-days: 90
