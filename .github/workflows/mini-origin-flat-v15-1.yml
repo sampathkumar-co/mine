@@ -1,0 +1,146 @@
+name: Mini-ORIGIN Flat Memory v0.15.1
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/adversarial_flat_v15_1.py"
+      - "mini-origin/tests/test_adversarial_flat_v15_1.py"
+      - ".github/workflows/mini-origin-flat-v15-1.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/adversarial_flat_v15_1.py"
+      - "mini-origin/tests/test_adversarial_flat_v15_1.py"
+      - ".github/workflows/mini-origin-flat-v15-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test corrected gate
+        run: pytest -q tests/test_adversarial_flat_v15_1.py
+
+  corrected-flat-search:
+    name: corrected-flat-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        seed: [161, 162, 163]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Search fixed-budget counterfactual routing
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.adversarial_flat_v15_1
+          --seed ${{ matrix.seed }}
+          --output results/adversarial-flat-v15-1-seed-${{ matrix.seed }}.json
+      - name: Upload corrected evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-flat-v15-1-seed-${{ matrix.seed }}
+          path: mini-origin/results/adversarial-flat-v15-1-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-corrected-study:
+    needs: [tests, corrected-flat-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-flat-v15-1-seed-*
+          path: corrected-artifacts
+          merge-multiple: true
+      - name: Aggregate corrected searches
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("corrected-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "best_program": data["best_program"],
+                  "strict_post_damage": data["strict_post_damage"],
+                  "strict_dense_post_damage": data["strict_dense_post_damage"],
+                  "fraction_of_dense": data["fraction_of_dense"],
+                  "strict_iid_post_damage": data["strict_iid_post_damage"],
+                  "strict_specialist_post_damage": data["strict_specialist_post_damage"],
+                  "strict_retention": data["strict_retention"],
+              })
+
+          passing = [row for row in rows if row["status"] == "corrected_flat_memory_candidate"]
+          fractions = [row["fraction_of_dense"] for row in rows]
+          iid_gaps = [row["strict_post_damage"] - row["strict_iid_post_damage"] for row in rows]
+          specialist_gaps = [row["strict_post_damage"] - row["strict_specialist_post_damage"] for row in rows]
+          retention = [row["strict_retention"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_external_breakthrough_candidate"
+                  if len(passing) >= 2
+                  and statistics.median(fractions) >= 0.97
+                  and statistics.median(iid_gaps) >= 0.025
+                  and statistics.median(specialist_gaps) >= 0.020
+                  and statistics.median(retention) >= 0.90
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "fixed-budget counterfactual attack-surface flattening measured relative "
+                  "to dense and equal-write controls; external status still requires formal "
+                  "coding baselines, independent implementation and outside reproduction"
+              ),
+              "run_count": len(rows),
+              "passing_count": len(passing),
+              "passing_seeds": [row["seed"] for row in passing],
+              "dense_fraction_min": min(fractions) if fractions else None,
+              "dense_fraction_median": statistics.median(fractions) if fractions else None,
+              "iid_gap_min": min(iid_gaps) if iid_gaps else None,
+              "iid_gap_median": statistics.median(iid_gaps) if iid_gaps else None,
+              "specialist_gap_min": min(specialist_gaps) if specialist_gaps else None,
+              "specialist_gap_median": statistics.median(specialist_gaps) if specialist_gaps else None,
+              "retention_min": min(retention) if retention else None,
+              "retention_median": statistics.median(retention) if retention else None,
+              "runs": rows,
+          }
+          Path("adversarial-flat-v15-1-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+          PY
+      - name: Upload corrected aggregate
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-flat-v15-1-summary
+          path: adversarial-flat-v15-1-summary.json
+          retention-days: 90
