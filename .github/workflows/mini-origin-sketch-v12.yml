@@ -3,43 +3,22 @@ name: Mini-ORIGIN Sketch v0.12
 on:
   push:
     paths:
-      - "mini-origin/src/mini_origin/rotating_sketch_v12.py"
-      - "mini-origin/tests/test_rotating_sketch_v12.py"
-      - ".github/workflows/mini-origin-sketch-v12.yml"
-  pull_request:
-    paths:
-      - "mini-origin/src/mini_origin/rotating_sketch_v12.py"
-      - "mini-origin/tests/test_rotating_sketch_v12.py"
       - ".github/workflows/mini-origin-sketch-v12.yml"
   workflow_dispatch:
-
-concurrency:
-  group: mini-origin-sketch-v12-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  tests:
+  archived-study-notice:
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: mini-origin
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: mini-origin/pyproject.toml
-      - run: python -m pip install -e ".[dev]"
-      - run: pytest -q tests/test_rotating_sketch_v12.py
+      - run: echo "v0.12 is complete; use workflow_dispatch to reproduce the rotating-sketch study."
 
-  rotating-sketch:
-    name: sketch-seed-${{ matrix.seed }}
+  reproduce:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 55
     strategy:
       fail-fast: false
       matrix:
@@ -52,11 +31,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
-          cache-dependency-path: mini-origin/pyproject.toml
       - run: python -m pip install -e ".[dev]"
-      - name: Synthesize temporally rotating sparse writes
-        run: >-
+      - run: pytest -q tests/test_rotating_sketch_v12.py
+      - run: >-
           mkdir -p results &&
           python -m mini_origin.rotating_sketch_v12
           --seed ${{ matrix.seed }}
@@ -65,62 +42,4 @@ jobs:
         with:
           name: mini-origin-sketch-v12-seed-${{ matrix.seed }}
           path: mini-origin/results/sketch-v12-seed-${{ matrix.seed }}.json
-          retention-days: 90
-
-  aggregate-sketch-study:
-    needs: [tests, rotating-sketch]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: mini-origin-sketch-v12-seed-*
-          path: sketch-artifacts
-          merge-multiple: true
-      - name: Aggregate independent rotating-sketch searches
-        run: |
-          python - <<'PY'
-          import glob, json, statistics
-          from pathlib import Path
-
-          rows=[]
-          for filename in sorted(glob.glob("sketch-artifacts/*.json")):
-              data=json.loads(Path(filename).read_text(encoding="utf-8"))
-              rows.append({
-                  "seed":data["seed"],"status":data["status"],"program":data["program"],
-                  "strict_post_damage":data["strict_post_damage"],
-                  "strict_dense_post_damage":data["strict_dense_post_damage"],
-                  "strict_static_post_damage":data["strict_static_post_damage"],
-                  "strict_hand_post_damage":data["strict_hand_post_damage"],
-                  "max_write_fraction":data["max_write_fraction"],
-                  "min_retention":data["min_retention"],"hidden":data["hidden"]})
-          passing=[row for row in rows if row["status"]=="rotating_sparse_sketch_external_candidate"]
-          post=[row["strict_post_damage"] for row in rows]
-          dense=[row["strict_post_damage"]-row["strict_dense_post_damage"] for row in rows]
-          static=[row["strict_post_damage"]-row["strict_static_post_damage"] for row in rows]
-          hand=[row["strict_post_damage"]-row["strict_hand_post_damage"] for row in rows]
-          writes=[row["max_write_fraction"] for row in rows]
-          retention=[row["min_retention"] for row in rows]
-          summary={
-              "verdict":"replicated_rotating_sparse_sketch_candidate"
-              if len(passing)>=2 and statistics.median(post)>=0.90
-              and statistics.median(dense)>=-0.04 and statistics.median(static)>=0.30
-              and statistics.median(hand)>=0.025 and statistics.median(writes)<=0.40
-              and statistics.median(retention)>=0.95 else "not_yet",
-              "claim_scope":"temporally rotating sparse online sufficient statistics under a hard per-example write budget and targeted deletion; external significance requires distributed-sketching and coding baselines, independent reproduction and peer review",
-              "run_count":len(rows),"passing_count":len(passing),
-              "passing_seeds":[row["seed"] for row in passing],
-              "post_min":min(post) if post else None,"post_median":statistics.median(post) if post else None,
-              "dense_gap_min":min(dense) if dense else None,"dense_gap_median":statistics.median(dense) if dense else None,
-              "static_gap_min":min(static) if static else None,"static_gap_median":statistics.median(static) if static else None,
-              "hand_gap_min":min(hand) if hand else None,"hand_gap_median":statistics.median(hand) if hand else None,
-              "write_max":max(writes) if writes else None,"write_median":statistics.median(writes) if writes else None,
-              "retention_min":min(retention) if retention else None,"retention_median":statistics.median(retention) if retention else None,
-              "runs":rows}
-          Path("sketch-v12-summary.json").write_text(json.dumps(summary,indent=2),encoding="utf-8")
-          print(json.dumps({key:value for key,value in summary.items() if key!="runs"},indent=2))
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mini-origin-sketch-v12-summary
-          path: sketch-v12-summary.json
           retention-days: 90
