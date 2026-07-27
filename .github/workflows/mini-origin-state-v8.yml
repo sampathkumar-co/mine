@@ -3,25 +3,25 @@ name: Mini-ORIGIN State v0.8
 on:
   push:
     paths:
-      - "mini-origin/src/mini_origin/state_invention_v8.py"
-      - "mini-origin/tests/test_state_invention_v8.py"
-      - ".github/workflows/mini-origin-state-v8.yml"
-  pull_request:
-    paths:
-      - "mini-origin/src/mini_origin/state_invention_v8.py"
-      - "mini-origin/tests/test_state_invention_v8.py"
       - ".github/workflows/mini-origin-state-v8.yml"
   workflow_dispatch:
 
 concurrency:
-  group: mini-origin-state-v8-${{ github.event.pull_request.number || github.ref }}
+  group: mini-origin-state-v8-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
+  archived-study-notice:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "v0.8 is complete; use workflow_dispatch to reproduce the state-invention study."
+
   tests:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,12 +33,11 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: mini-origin/pyproject.toml
-      - name: Install
-        run: python -m pip install -e ".[dev]"
-      - name: Test state-invention safeguards
-        run: pytest -q tests/test_state_invention_v8.py
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_state_invention_v8.py
 
   state-invention:
+    if: github.event_name == 'workflow_dispatch'
     name: state-seed-${{ matrix.seed }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -56,22 +55,20 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: mini-origin/pyproject.toml
-      - name: Install
-        run: python -m pip install -e ".[dev]"
-      - name: Diagnose stateless failure and synthesize dynamic state
-        run: >-
+      - run: python -m pip install -e ".[dev]"
+      - run: >-
           mkdir -p results &&
           python -m mini_origin.state_invention_v8
           --seed ${{ matrix.seed }}
           --output results/state-v8-seed-${{ matrix.seed }}.json
-      - name: Upload state-invention evidence
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: mini-origin-state-v8-seed-${{ matrix.seed }}
           path: mini-origin/results/state-v8-seed-${{ matrix.seed }}.json
           retention-days: 90
 
   aggregate-state-study:
+    if: github.event_name == 'workflow_dispatch'
     needs: [tests, state-invention]
     runs-on: ubuntu-latest
     steps:
@@ -80,73 +77,29 @@ jobs:
           pattern: mini-origin-state-v8-seed-*
           path: state-artifacts
           merge-multiple: true
-      - name: Aggregate independent state inventions
-        run: |
+      - run: |
           python - <<'PY'
-          import glob
-          import json
-          import statistics
+          import glob, json, statistics
           from pathlib import Path
-
-          rows = []
+          rows=[]
           for filename in sorted(glob.glob("state-artifacts/*.json")):
-              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              data=json.loads(Path(filename).read_text(encoding="utf-8"))
               rows.append({
-                  "seed": data["seed"],
-                  "status": data["status"],
-                  "invented_program": data["invented_program"],
-                  "strict_invented_score": data["strict_invented_score"],
-                  "strict_one_state_score": data["strict_one_state_score"],
-                  "strict_no_spawn_score": data["strict_no_spawn_score"],
-                  "strict_hand_score": data["strict_hand_score"],
-                  "hidden_scores": data["hidden_scores"],
-              })
-
-          passing = [
-              row for row in rows
-              if row["status"] == "counterexample_driven_state_invention_candidate"
-          ]
-          invented = [row["strict_invented_score"] for row in rows]
-          one_gaps = [
-              row["strict_invented_score"] - row["strict_one_state_score"]
-              for row in rows
-          ]
-          hand_gaps = [
-              row["strict_invented_score"] - row["strict_hand_score"]
-              for row in rows
-          ]
-          summary = {
-              "verdict": (
-                  "replicated_counterexample_driven_state_invention_candidate"
-                  if len(passing) >= 2
-                  and statistics.median(invented) >= 0.72
-                  and statistics.median(one_gaps) >= 0.35
-                  and statistics.median(hand_gaps) >= 0.06
-                  else "not_yet"
-              ),
-              "claim_scope": (
-                  "counterexample-driven expansion from stateless learning to conditional dynamic "
-                  "state creation under recurrence, drift and targeted state deletion; external "
-                  "acceptance still requires independent reproduction and peer review"
-              ),
-              "run_count": len(rows),
-              "passing_count": len(passing),
-              "passing_seeds": [row["seed"] for row in passing],
-              "invented_min": min(invented) if invented else None,
-              "invented_median": statistics.median(invented) if invented else None,
-              "one_state_gap_min": min(one_gaps) if one_gaps else None,
-              "one_state_gap_median": statistics.median(one_gaps) if one_gaps else None,
-              "hand_gap_min": min(hand_gaps) if hand_gaps else None,
-              "hand_gap_median": statistics.median(hand_gaps) if hand_gaps else None,
-              "runs": rows,
-          }
-          Path("state-v8-summary.json").write_text(
-              json.dumps(summary, indent=2), encoding="utf-8"
-          )
-          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+                  "seed":data["seed"],"status":data["status"],
+                  "strict_invented_score":data["strict_invented_score"],
+                  "strict_one_state_score":data["strict_one_state_score"],
+                  "strict_hand_score":data["strict_hand_score"]})
+          invented=[r["strict_invented_score"] for r in rows]
+          one=[r["strict_invented_score"]-r["strict_one_state_score"] for r in rows]
+          hand=[r["strict_invented_score"]-r["strict_hand_score"] for r in rows]
+          passing=[r for r in rows if r["status"]=="counterexample_driven_state_invention_candidate"]
+          summary={"verdict":"replicated_counterexample_driven_state_invention_candidate"
+              if len(passing)>=2 and statistics.median(invented)>=0.72
+              and statistics.median(one)>=0.35 and statistics.median(hand)>=0.06 else "not_yet",
+              "runs":rows}
+          Path("state-v8-summary.json").write_text(json.dumps(summary,indent=2),encoding="utf-8")
           PY
-      - name: Upload aggregate state evidence
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: mini-origin-state-v8-summary
           path: state-v8-summary.json
