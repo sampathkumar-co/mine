@@ -1,0 +1,155 @@
+name: Mini-ORIGIN ClaimGuard v0.18
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/claim_contract_v18.py"
+      - "mini-origin/src/mini_origin/claim_guard_benchmark_v18.py"
+      - "mini-origin/tests/test_claim_guard_v18.py"
+      - ".github/workflows/mini-origin-claim-guard-v18.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/claim_contract_v18.py"
+      - "mini-origin/src/mini_origin/claim_guard_benchmark_v18.py"
+      - "mini-origin/tests/test_claim_guard_v18.py"
+      - ".github/workflows/mini-origin-claim-guard-v18.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-claim-guard-v18-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test claim-contract safeguards
+        run: pytest -q tests/test_claim_guard_v18.py
+
+  red-team:
+    name: claim-guard-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [201, 202, 203, 204, 205]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Run prospective integrity study
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.claim_guard_benchmark_v18
+          --seed ${{ matrix.seed }}
+          --output results/claim-guard-v18-seed-${{ matrix.seed }}.json
+      - name: Upload v0.18 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-claim-guard-v18-seed-${{ matrix.seed }}
+          path: mini-origin/results/claim-guard-v18-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, red-team]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-claim-guard-v18-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent studies
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              red = data["red_team"]
+              hist = data["historical_replay"]
+              rows.append({
+                  "seed": red["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "historical_accuracy": hist["accuracy"],
+                  "claim_guard_detection": red["detection_rate"]["claim_guard"],
+                  "claim_guard_false_reject": red["false_reject_rate"]["claim_guard"],
+                  "threshold_detection": red["detection_rate"]["threshold"],
+                  "replication_detection": red["detection_rate"]["replication"],
+                  "provenance_detection": red["detection_rate"]["provenance"],
+              })
+
+          guard = [row["claim_guard_detection"] for row in rows]
+          false_reject = [row["claim_guard_false_reject"] for row in rows]
+          simple_best = [
+              max(
+                  row["threshold_detection"],
+                  row["replication_detection"],
+                  row["provenance_detection"],
+              )
+              for row in rows
+          ]
+          advantages = [left - right for left, right in zip(guard, simple_best)]
+          summary = {
+              "verdict": (
+                  "replicated_external_breakthrough_candidate"
+                  if len(rows) == 5
+                  and all(row["candidate_gate"] for row in rows)
+                  and min(row["historical_accuracy"] for row in rows) == 1.0
+                  and min(guard) >= 0.99
+                  and max(false_reject) == 0.0
+                  and min(advantages) >= 0.30
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "prospective executable claim contracts prevent known autonomous-research "
+                  "validity failures before success can be reported; external status still "
+                  "requires independent mutation suites, outside implementation and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "detection_min": min(guard) if guard else None,
+              "detection_median": statistics.median(guard) if guard else None,
+              "false_reject_max": max(false_reject) if false_reject else None,
+              "advantage_min": min(advantages) if advantages else None,
+              "advantage_median": statistics.median(advantages) if advantages else None,
+              "rows": rows,
+          }
+          Path("claim-guard-v18-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.18 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-claim-guard-v18-summary
+          path: claim-guard-v18-summary.json
+          retention-days: 90
