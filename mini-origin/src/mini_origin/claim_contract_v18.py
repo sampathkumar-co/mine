@@ -9,12 +9,39 @@ import random
 import statistics
 
 
+CONTRACT_FLOAT_FIELDS = {
+    "score_threshold",
+    "median_threshold",
+    "min_control_gap",
+    "median_control_gap",
+    "min_ablation_gap",
+    "oracle_ceiling",
+    "operation_budget",
+}
+
+
 def _canon(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
 def _hash(value: str) -> str:
     return hashlib.sha256(value.encode()).hexdigest()
+
+
+def _canonical_float(value: float) -> str:
+    if not math.isfinite(value):
+        raise ValueError("contract numbers must be finite")
+    if value == 0.0:
+        return "0"
+    return format(value, ".17g")
+
+
+def _contract_digest_payload(value: dict[str, object]) -> dict[str, object]:
+    payload = dict(value)
+    payload["required_checks"] = list(payload["required_checks"])
+    for name in CONTRACT_FLOAT_FIELDS:
+        payload[name] = f"float:{_canonical_float(float(payload[name]))}"
+    return payload
 
 
 @dataclass(frozen=True)
@@ -40,9 +67,7 @@ class Contract:
 
     @property
     def digest(self) -> str:
-        value = asdict(self)
-        value["required_checks"] = list(self.required_checks)
-        return _hash(_canon(value))
+        return _hash(_canon(_contract_digest_payload(asdict(self))))
 
 
 @dataclass(frozen=True)
