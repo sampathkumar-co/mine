@@ -1,0 +1,128 @@
+name: Mini-ORIGIN Code v0.11
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/coded_memory_v10.py"
+      - "mini-origin/src/mini_origin/coded_memory_v11.py"
+      - "mini-origin/tests/test_coded_memory_v11.py"
+      - ".github/workflows/mini-origin-code-v11.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/coded_memory_v10.py"
+      - "mini-origin/src/mini_origin/coded_memory_v11.py"
+      - "mini-origin/tests/test_coded_memory_v11.py"
+      - ".github/workflows/mini-origin-code-v11.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-code-v11-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_coded_memory_v10.py tests/test_coded_memory_v11.py
+
+  constrained-code:
+    name: constrained-code-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [111, 112, 113]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Synthesize rank-preserving sparse codes
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.coded_memory_v11
+          --seed ${{ matrix.seed }}
+          --output results/code-v11-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-code-v11-seed-${{ matrix.seed }}
+          path: mini-origin/results/code-v11-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-code-study:
+    needs: [tests, constrained-code]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-code-v11-seed-*
+          path: code-artifacts
+          merge-multiple: true
+      - name: Aggregate independent constrained-code searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows=[]
+          for filename in sorted(glob.glob("code-artifacts/*.json")):
+              data=json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed":data["seed"],"status":data["status"],"program":data["program"],
+                  "strict_post_damage":data["strict_post_damage"],
+                  "strict_dense_post_damage":data["strict_dense_post_damage"],
+                  "strict_replication_post_damage":data["strict_replication_post_damage"],
+                  "strict_expander_post_damage":data["strict_expander_post_damage"],
+                  "max_write_fraction":data["max_write_fraction"],
+                  "min_retention":data["min_retention"],"hidden":data["hidden"]})
+          passing=[row for row in rows if row["status"]=="hard_constrained_sparse_code_candidate"]
+          post=[row["strict_post_damage"] for row in rows]
+          dense=[row["strict_post_damage"]-row["strict_dense_post_damage"] for row in rows]
+          replication=[row["strict_post_damage"]-row["strict_replication_post_damage"] for row in rows]
+          expander=[row["strict_post_damage"]-row["strict_expander_post_damage"] for row in rows]
+          writes=[row["max_write_fraction"] for row in rows]
+          retention=[row["min_retention"] for row in rows]
+          summary={
+              "verdict":"replicated_hard_constrained_sparse_code_candidate"
+              if len(passing)>=2 and statistics.median(post)>=0.90
+              and statistics.median(dense)>=-0.04 and statistics.median(replication)>=0.15
+              and statistics.median(expander)>=-0.015 and statistics.median(writes)<=0.40
+              and statistics.median(retention)>=0.95 else "not_yet",
+              "claim_scope":"hard-budget online sparse coded memory compared with specialist sparse-expander, dense and replication controls; external significance requires specialist independent review",
+              "run_count":len(rows),"passing_count":len(passing),
+              "passing_seeds":[row["seed"] for row in passing],
+              "post_min":min(post) if post else None,"post_median":statistics.median(post) if post else None,
+              "dense_gap_min":min(dense) if dense else None,"dense_gap_median":statistics.median(dense) if dense else None,
+              "replication_gap_min":min(replication) if replication else None,"replication_gap_median":statistics.median(replication) if replication else None,
+              "expander_gap_min":min(expander) if expander else None,"expander_gap_median":statistics.median(expander) if expander else None,
+              "write_max":max(writes) if writes else None,"write_median":statistics.median(writes) if writes else None,
+              "retention_min":min(retention) if retention else None,"retention_median":statistics.median(retention) if retention else None,
+              "runs":rows}
+          Path("code-v11-summary.json").write_text(json.dumps(summary,indent=2),encoding="utf-8")
+          print(json.dumps({key:value for key,value in summary.items() if key!="runs"},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-code-v11-summary
+          path: code-v11-summary.json
+          retention-days: 90
