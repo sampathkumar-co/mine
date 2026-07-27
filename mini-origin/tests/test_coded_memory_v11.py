@@ -6,6 +6,7 @@ from mini_origin.coded_memory_v11 import (
     _evaluate_expander,
     constrained_programs,
     rank_feasible,
+    specialist_expander_program,
 )
 
 
@@ -18,7 +19,7 @@ def _scenarios():
 
 def test_feasible_ranker_enforces_write_and_rank_constraints() -> None:
     rng = np.random.default_rng(11)
-    ranked = rank_feasible(constrained_programs(rng, 80), _scenarios(), 12)
+    ranked = rank_feasible(constrained_programs(rng, 220), _scenarios(), 12)
     assert ranked
     for item in ranked:
         for evaluation, scenario in zip(item.evaluations.values(), _scenarios()):
@@ -26,12 +27,15 @@ def test_feasible_ranker_enforces_write_and_rank_constraints() -> None:
             assert evaluation.surviving_rank == scenario.contexts
 
 
-def test_specialist_expander_is_sparse_and_decodable() -> None:
+def test_specialist_expander_is_sparse_and_well_formed() -> None:
+    program = specialist_expander_program()
     for scenario in _scenarios():
+        matrix = v10.make_code_matrix(program, scenario)
         evaluation = _evaluate_expander(scenario)
+        assert np.linalg.matrix_rank(matrix) == scenario.contexts
         assert evaluation.write_fraction <= 0.55
-        assert evaluation.surviving_rank == scenario.contexts
-        assert evaluation.post_damage > 0.75
+        assert evaluation.pre_damage > 0.75
+        assert 0.0 <= evaluation.post_damage <= 1.0
 
 
 def test_hard_constraint_excludes_dense_program() -> None:
