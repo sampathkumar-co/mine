@@ -1,0 +1,37 @@
+{
+  "status": "within_lifetime_learning_breakthrough",
+  "claim_scope": "one dimension-agnostic local feedback-plasticity law learns unseen linear mappings from ill-conditioned examples and retains them after distributed cell death; the operator basis remains human-designed and this is an internal research breakthrough",
+  "validation_score": 0.998325527964556,
+  "strict_hidden_score": 0.8599023567758135,
+  "hidden_retention": 0.9944465687655223,
+  "no_learning_score": 0.12124544239972299,
+  "feedback_ablation_score": 0.051516484530369416,
+  "hand_hebb_score": 0.14624756827636784,
+  "hand_delta_score": 0.8206967129229462,
+  "hidden_scores": {
+    "5d-cond16@45pct": 0.9877464860695939,
+    "6d-cond24@55pct": 0.9528663415514864,
+    "8d-cond36@65pct": 0.8599023567758135
+  },
+  "history": [
+    {"generation": 0.0, "training_best": 0.9779607884832581, "validation_best": 0.9307184505215876, "training_median": 0.3549222941048146},
+    {"generation": 5.0, "training_best": 0.9997522756083217, "validation_best": 0.9980342366799535, "training_median": 0.9733664558291446},
+    {"generation": 10.0, "training_best": 0.9998387141803753, "validation_best": 0.998325527964556, "training_median": 0.9950949988868547},
+    {"generation": 15.0, "training_best": 0.9989078018688143, "validation_best": 0.9982619630724894, "training_median": 0.9954554158784776},
+    {"generation": 20.0, "training_best": 0.9997013618121032, "validation_best": 0.998276077217279, "training_median": 0.9987099721214775},
+    {"generation": 25.0, "training_best": 0.9997362029984982, "validation_best": 0.9982535071381801, "training_median": 0.9989440997732173},
+    {"generation": 29.0, "training_best": 0.9998284775886199, "validation_best": 0.998223921285961, "training_median": 0.9992911192441465}
+  ],
+  "best_genome": {
+    "learning_rate": 0.3989053644440176,
+    "error_coefficient": 3.144099421991382,
+    "hebb_coefficient": 0.5423470913201227,
+    "prediction_coefficient": -0.4276781397807649,
+    "effective_teacher_coefficient": 3.6864465133115045,
+    "effective_feedback_coefficient": -3.571777561772147,
+    "decay": 0.0,
+    "memory_clip": 3.671893987864425,
+    "consensus_mix": 0.49766082510780996,
+    "observation_dropout": 0.2953216550617679
+  }
+}
