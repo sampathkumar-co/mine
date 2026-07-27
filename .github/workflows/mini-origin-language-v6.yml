@@ -1,0 +1,130 @@
+name: Mini-ORIGIN Language v0.6
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/language_v6.py"
+      - "mini-origin/tests/test_language_v6.py"
+      - ".github/workflows/mini-origin-language-v6.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test v0.6 safeguards
+        run: pytest -q tests/test_language_v6.py
+
+  language-search:
+    name: language-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [61, 62, 63]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Synthesize and expand the plasticity language
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.language_v6
+          --seed ${{ matrix.seed }}
+          --output results/language-v6-seed-${{ matrix.seed }}.json
+      - name: Upload language evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-language-v6-seed-${{ matrix.seed }}
+          path: mini-origin/results/language-v6-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-language-study:
+    needs: [tests, language-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-language-v6-seed-*
+          path: language-artifacts
+          merge-multiple: true
+      - name: Aggregate independent language searches
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("language-artifacts/*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "best_program": data["best_program"],
+                  "macros": data["macros"],
+                  "strict_hidden_score": data["strict_hidden_score"],
+                  "no_library_strict_score": data["no_library_strict_score"],
+                  "delta_strict_score": data["delta_strict_score"],
+                  "hidden_scores": data["hidden_scores"],
+              })
+
+          passing = [row for row in rows if row["status"] == "external_breakthrough_candidate"]
+          gaps = [row["strict_hidden_score"] - row["no_library_strict_score"] for row in rows]
+          hidden = [row["strict_hidden_score"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_external_breakthrough_candidate"
+                  if len(passing) >= 2
+                  and statistics.median(hidden) >= 0.72
+                  and statistics.median(gaps) >= 0.16
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "self-expanding plasticity-language candidate; an external breakthrough cannot be "
+                  "certified without independent reproduction, stronger outside baselines and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": len(passing),
+              "passing_seeds": [row["seed"] for row in passing],
+              "hidden_min": min(hidden) if hidden else None,
+              "hidden_median": statistics.median(hidden) if hidden else None,
+              "library_gap_min": min(gaps) if gaps else None,
+              "library_gap_median": statistics.median(gaps) if gaps else None,
+              "runs": rows,
+          }
+          Path("language-v6-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
+          PY
+      - name: Upload aggregate language evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-language-v6-summary
+          path: language-v6-summary.json
+          retention-days: 90
