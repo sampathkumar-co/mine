@@ -6,6 +6,7 @@ import hmac
 import json
 import math
 import random
+import re
 import statistics
 
 
@@ -18,6 +19,7 @@ CONTRACT_FLOAT_FIELDS = {
     "oracle_ceiling",
     "operation_budget",
 }
+SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canon(value: object) -> str:
@@ -42,6 +44,10 @@ def _contract_digest_payload(value: dict[str, object]) -> dict[str, object]:
     for name in CONTRACT_FLOAT_FIELDS:
         payload[name] = f"float:{_canonical_float(float(payload[name]))}"
     return payload
+
+
+def _finite(*values: float) -> bool:
+    return all(math.isfinite(value) for value in values)
 
 
 @dataclass(frozen=True)
@@ -157,19 +163,62 @@ def valid_bundle(spec: Contract, sealed: Manifest, rng: random.Random) -> Bundle
 
 def verify(spec: Contract, sealed: Manifest, bundle: Bundle) -> dict[str, object]:
     problems: list[str] = []
-    if spec.score_threshold > spec.oracle_ceiling:
-        problems.append("threshold_exceeds_oracle")
-    if spec.median_threshold > spec.oracle_ceiling:
-        problems.append("median_exceeds_oracle")
+
+    # Intrinsic contract-schema validity. A self-consistent hash cannot make an
+    # ill-formed scientific claim contract valid.
+    if not spec.claim_id.strip():
+        problems.append("contract_empty_claim_id")
+    if not SHA256_PATTERN.fullmatch(spec.candidate_hash):
+        problems.append("contract_invalid_candidate_hash")
+    if spec.required_runs <= 0:
+        problems.append("contract_invalid_run_count")
+    if not 1 <= spec.min_successes <= max(spec.required_runs, 0):
+        problems.append("contract_invalid_success_requirement")
+    if not spec.required_checks:
+        problems.append("contract_missing_required_checks")
+    if any(not name.strip() for name in spec.required_checks):
+        problems.append("contract_empty_required_check")
+    if len(set(spec.required_checks)) != len(spec.required_checks):
+        problems.append("contract_duplicate_required_check")
+    if not _finite(
+        spec.score_threshold,
+        spec.median_threshold,
+        spec.min_control_gap,
+        spec.median_control_gap,
+        spec.min_ablation_gap,
+        spec.oracle_ceiling,
+        spec.operation_budget,
+    ):
+        problems.append("contract_non_finite_number")
+    if spec.oracle_ceiling <= 0.0:
+        problems.append("contract_invalid_oracle_ceiling")
+    if not 0.0 <= spec.score_threshold <= spec.oracle_ceiling:
+        problems.append("contract_invalid_score_threshold")
+    if not 0.0 <= spec.median_threshold <= spec.oracle_ceiling:
+        problems.append("contract_invalid_median_threshold")
+    if spec.min_control_gap < 0.0 or spec.median_control_gap < 0.0:
+        problems.append("contract_negative_control_gap")
+    if spec.min_ablation_gap < 0.0:
+        problems.append("contract_negative_ablation_gap")
+    if spec.operation_budget < 0.0:
+        problems.append("contract_negative_operation_budget")
+
     if sealed.contract_digest != spec.digest:
         problems.append("manifest_contract_mismatch")
     if sealed.candidate_hash != spec.candidate_hash:
         problems.append("manifest_candidate_mismatch")
     if not sealed.issued_after_freeze:
         problems.append("manifest_precedes_freeze")
+    if len(sealed.seeds) != spec.required_runs:
+        problems.append("manifest_wrong_seed_count")
+    if len(set(sealed.seeds)) != len(sealed.seeds):
+        problems.append("manifest_duplicate_seed")
+    if any(seed <= 0 for seed in sealed.seeds):
+        problems.append("manifest_nonpositive_seed")
     expected = _hash(f"{spec.digest}:sealed-v1:" + ",".join(map(str, sealed.seeds)))
     if sealed.commitment != expected:
         problems.append("seed_commitment_mismatch")
+
     if bundle.claim_id != spec.claim_id:
         problems.append("claim_id_mismatch")
     if len(bundle.runs) != spec.required_runs:
@@ -177,6 +226,8 @@ def verify(spec: Contract, sealed: Manifest, bundle: Bundle) -> dict[str, object
     seeds = [run.seed for run in bundle.runs]
     if len(set(seeds)) != len(seeds):
         problems.append("duplicate_seed")
+    if any(seed <= 0 for seed in seeds):
+        problems.append("nonpositive_run_seed")
     if set(seeds) != set(sealed.seeds):
         problems.append("seed_set_mismatch")
 
@@ -184,7 +235,10 @@ def verify(spec: Contract, sealed: Manifest, bundle: Bundle) -> dict[str, object
     successes = 0
     for index, run in enumerate(bundle.runs):
         prefix = f"run_{index}"
+        check_names = [name for name, _ in run.checks]
         checks = dict(run.checks)
+        if len(set(check_names)) != len(check_names):
+            problems.append(f"{prefix}_duplicate_check")
         for name in spec.required_checks:
             if not checks.get(name, False):
                 problems.append(f"{prefix}_failed_{name}")
@@ -196,9 +250,9 @@ def verify(spec: Contract, sealed: Manifest, bundle: Bundle) -> dict[str, object
             problems.append(f"{prefix}_manifest_mismatch")
         if not math.isclose(run.threshold_used, spec.score_threshold, abs_tol=1e-12):
             problems.append(f"{prefix}_threshold_changed")
-        if run.holdout_candidates > 1 or run.selected_after_holdout:
+        if run.holdout_candidates != 1 or run.selected_after_holdout:
             problems.append(f"{prefix}_holdout_selection")
-        if run.holdout_policy_violations:
+        if run.holdout_policy_violations != 0:
             problems.append(f"{prefix}_holdout_policy")
         values = (
             run.score,
@@ -210,10 +264,18 @@ def verify(spec: Contract, sealed: Manifest, bundle: Bundle) -> dict[str, object
         if not all(math.isfinite(value) for value in values):
             problems.append(f"{prefix}_non_finite")
             continue
-        if not 0 <= run.score <= spec.oracle_ceiling:
+        if not 0.0 <= run.score <= spec.oracle_ceiling:
             problems.append(f"{prefix}_outside_oracle")
+        if not 0.0 <= run.control <= spec.oracle_ceiling:
+            problems.append(f"{prefix}_control_outside_oracle")
+        if not 0.0 <= run.ablation <= spec.oracle_ceiling:
+            problems.append(f"{prefix}_ablation_outside_oracle")
+        if run.candidate_budget < 0.0 or run.control_budget < 0.0:
+            problems.append(f"{prefix}_negative_budget")
         if run.candidate_budget > spec.operation_budget + 1e-12:
             problems.append(f"{prefix}_budget_exceeded")
+        if run.control_budget > spec.operation_budget + 1e-12:
+            problems.append(f"{prefix}_control_budget_exceeded")
         if abs(run.candidate_budget - run.control_budget) > 1e-12:
             problems.append(f"{prefix}_budget_mismatch")
         control_gap = run.score - run.control
