@@ -1,0 +1,155 @@
+name: Mini-ORIGIN Operator Invention v0.21
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/operator_invention_v21.py"
+      - "mini-origin/tests/test_operator_invention_v21.py"
+      - ".github/workflows/mini-origin-operator-v21.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/operator_invention_v21.py"
+      - "mini-origin/tests/test_operator_invention_v21.py"
+      - ".github/workflows/mini-origin-operator-v21.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-operator-v21-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test operator-invention safeguards
+        run: pytest -q tests/test_operator_invention_v21.py
+
+  operator-search:
+    name: operator-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [601, 602, 603, 604, 605]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Discover, induce and freeze measurement operator
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.operator_invention_v21
+          --seed ${{ matrix.seed }}
+          --output results/operator-invention-v21-seed-${{ matrix.seed }}.json
+      - name: Upload v0.21 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-operator-v21-seed-${{ matrix.seed }}
+          path: mini-origin/results/operator-invention-v21-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, operator-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-operator-v21-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent operator-invention runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          rules = Counter()
+          expressions = Counter()
+          for filename in sorted(glob.glob("evidence/operator-invention-v21-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rules[data["operator_rule"]] += 1
+              expressions[data["expression"]] += 1
+              controls = data["fixed_operator_controls"]
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "candidate_gate": data["candidate_gate"],
+                  "operator_rule": data["operator_rule"],
+                  "expression": data["expression"],
+                  "hidden_accuracy": data["hidden_accuracy"],
+                  "hidden_invariance_error": data["hidden_invariance_error"],
+                  "lower_complexity_solutions": data["lower_complexity_solution_count"],
+                  "maximum_fixed_control": max(controls.values()),
+                  "random_median": data["random_matrix_control"]["median"],
+                  "default_difference": data["default_indistinguishability_max_difference"],
+              })
+
+          hidden = [row["hidden_accuracy"] for row in rows]
+          fixed_gaps = [row["hidden_accuracy"] - row["maximum_fixed_control"] for row in rows]
+          random_gaps = [row["hidden_accuracy"] - row["random_median"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_size_polymorphic_operator_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and min(hidden) >= 0.97
+                  and min(fixed_gaps) >= 0.15
+                  and min(random_gaps) >= 0.15
+                  and max(row["hidden_invariance_error"] for row in rows) <= 1e-10
+                  and max(row["lower_complexity_solutions"] for row in rows) == 0
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "the system discovers small invariant coordinate matrices, induces a size-polymorphic "
+                  "index contraction, freezes it, and transfers to unseen dimensions; the discovered "
+                  "same-index contraction is the classical inner product, so the result is not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "hidden_accuracy_min": min(hidden) if hidden else None,
+              "hidden_accuracy_median": statistics.median(hidden) if hidden else None,
+              "fixed_control_gap_min": min(fixed_gaps) if fixed_gaps else None,
+              "random_control_gap_min": min(random_gaps) if random_gaps else None,
+              "rule_frequency": dict(sorted(rules.items())),
+              "expression_frequency": dict(sorted(expressions.items())),
+              "rows": rows,
+          }
+          Path("operator-invention-v21-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.21 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-operator-v21-summary
+          path: operator-invention-v21-summary.json
+          retention-days: 90
