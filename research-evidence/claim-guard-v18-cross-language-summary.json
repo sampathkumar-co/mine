@@ -1,0 +1,17 @@
+{
+  "verdict": "cross_language_verification_passed",
+  "claim_scope": "independently implemented Python and JavaScript verifiers agree on independently generated frozen mutation cases; this is internal cross-language reproduction, not reproduction by an outside researcher or institution",
+  "run_count": 5,
+  "case_count_per_run": 18,
+  "total_frozen_case_bundles": 90,
+  "python_accuracy_min": 1.0,
+  "javascript_accuracy_min": 1.0,
+  "agreement_count": 5,
+  "missed_case_frequency": {},
+  "disagreement_frequency": {},
+  "initial_independent_suite_accuracy": 0.16666666666666666,
+  "initial_independent_suite_misses": 15,
+  "cross_language_digest_defect_found_and_fixed": true,
+  "workflow_run": 30291291257,
+  "external_breakthrough_certified": false
+}
