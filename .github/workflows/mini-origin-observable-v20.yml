@@ -1,0 +1,157 @@
+name: Mini-ORIGIN Observable Genesis v0.20
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/observable_genesis_v20.py"
+      - "mini-origin/tests/test_observable_genesis_v20.py"
+      - ".github/workflows/mini-origin-observable-v20.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/observable_genesis_v20.py"
+      - "mini-origin/tests/test_observable_genesis_v20.py"
+      - ".github/workflows/mini-origin-observable-v20.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-observable-v20-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test identifiability safeguards
+        run: pytest -q tests/test_observable_genesis_v20.py
+
+  observable-search:
+    name: observable-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [501, 502, 503, 504, 505]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Synthesize and freeze minimal observable
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.observable_genesis_v20
+          --seed ${{ matrix.seed }}
+          --output results/observable-genesis-v20-seed-${{ matrix.seed }}.json
+      - name: Upload v0.20 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-observable-v20-seed-${{ matrix.seed }}
+          path: mini-origin/results/observable-genesis-v20-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, observable-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-observable-v20-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent observable synthesis runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          expressions = Counter()
+          for filename in sorted(glob.glob("evidence/observable-genesis-v20-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              expression = data.get("expression", "")
+              expressions[expression] += 1
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "candidate_gate": data.get("candidate_gate", False),
+                  "expression": expression,
+                  "complexity": data.get("complexity"),
+                  "new_primitives": data.get("new_primitives", []),
+                  "default_difference": data.get("default_indistinguishability_max_difference"),
+                  "lower_complexity_solutions": data.get("lower_complexity_solution_count"),
+                  "hidden_accuracy": data.get("hidden_accuracy", 0.0),
+                  "atomic_accuracy": data.get("best_atomic_accuracy", 0.0),
+                  "polynomial_accuracy": data.get("degree_two_polynomial_accuracy", 0.0),
+                  "random_median": data.get("random_equal_complexity", {}).get("median", 0.0),
+              })
+
+          hidden = [row["hidden_accuracy"] for row in rows]
+          atomic_gaps = [row["hidden_accuracy"] - row["atomic_accuracy"] for row in rows]
+          random_gaps = [row["hidden_accuracy"] - row["random_median"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_proof_carrying_observable_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and min(hidden) >= 0.97
+                  and min(atomic_gaps) >= 0.10
+                  and min(random_gaps) >= 0.15
+                  and max(row["default_difference"] for row in rows) <= 1e-10
+                  and max(row["lower_complexity_solutions"] for row in rows) == 0
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "the compiler certifies insufficiency of the original interface and synthesizes "
+                  "a minimal separating observable before hidden dimensions are generated; this is "
+                  "not a world breakthrough unless it survives broader systems, stronger measurement-design "
+                  "controls, independent implementation, outside reproduction and peer review"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "hidden_accuracy_min": min(hidden) if hidden else None,
+              "hidden_accuracy_median": statistics.median(hidden) if hidden else None,
+              "atomic_gap_min": min(atomic_gaps) if atomic_gaps else None,
+              "random_gap_min": min(random_gaps) if random_gaps else None,
+              "polynomial_accuracy_median": statistics.median(
+                  row["polynomial_accuracy"] for row in rows
+              ) if rows else None,
+              "expression_frequency": dict(sorted(expressions.items())),
+              "rows": rows,
+          }
+          Path("observable-genesis-v20-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.20 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-observable-v20-summary
+          path: observable-genesis-v20-summary.json
+          retention-days: 90
