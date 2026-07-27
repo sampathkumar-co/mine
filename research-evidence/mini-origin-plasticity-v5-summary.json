@@ -1,0 +1,98 @@
+{
+  "verdict": "replicated_within_lifetime_learning_breakthrough",
+  "claim_scope": "one inherited dimension-agnostic feedback-plasticity law learns hidden mappings from ill-conditioned examples, generalises to isotropic queries and larger dimensions, and retains the mapping after cell death; the operator basis remains human-designed",
+  "run_count": 5,
+  "success_count": 5,
+  "success_rate": 1.0,
+  "successful_seeds": [51, 52, 53, 54, 55],
+  "hidden_min": 0.8526672932591365,
+  "hidden_median": 0.8543686702146476,
+  "hidden_mean": 0.8551568592375354,
+  "hidden_max": 0.8599023567758135,
+  "retention_min": 0.9944465687655223,
+  "retention_median": 0.9968092792078577,
+  "median_feedback_advantage": 0.7074274059949672,
+  "median_fraction_of_hand_delta": 1.0410285026874024,
+  "runs": [
+    {
+      "seed": 51,
+      "status": "within_lifetime_learning_breakthrough",
+      "validation_score": 0.9982772325260625,
+      "strict_hidden_score": 0.8551710016667441,
+      "hidden_retention": 0.996903565873288,
+      "no_learning_score": 0.12534583335211946,
+      "feedback_ablation_score": 0.14809339125106324,
+      "hand_hebb_score": 0.14624756827636784,
+      "hand_delta_score": 0.8206967129229462,
+      "hidden_scores": {
+        "5d-cond16@45pct": 0.9852660178546476,
+        "6d-cond24@55pct": 0.9504418254835698,
+        "8d-cond36@65pct": 0.8551710016667441
+      }
+    },
+    {
+      "seed": 52,
+      "status": "within_lifetime_learning_breakthrough",
+      "validation_score": 0.998230052507168,
+      "strict_hidden_score": 0.8526672932591365,
+      "hidden_retention": 0.9968092792078577,
+      "no_learning_score": 0.12551007350014512,
+      "feedback_ablation_score": 0.05504218544542791,
+      "hand_hebb_score": 0.14624756827636784,
+      "hand_delta_score": 0.8206967129229462,
+      "hidden_scores": {
+        "5d-cond16@45pct": 0.9841842297475992,
+        "6d-cond24@55pct": 0.9486232054127656,
+        "8d-cond36@65pct": 0.8526672932591365
+      }
+    },
+    {
+      "seed": 53,
+      "status": "within_lifetime_learning_breakthrough",
+      "validation_score": 0.9982733414789268,
+      "strict_hidden_score": 0.8536749742713351,
+      "hidden_retention": 0.9966772435258968,
+      "no_learning_score": 0.12545341517002723,
+      "feedback_ablation_score": 0.14218948934602277,
+      "hand_hebb_score": 0.14624756827636784,
+      "hand_delta_score": 0.8206967129229462,
+      "hidden_scores": {
+        "5d-cond16@45pct": 0.984716073042902,
+        "6d-cond24@55pct": 0.9492788833703556,
+        "8d-cond36@65pct": 0.8536749742713351
+      }
+    },
+    {
+      "seed": 54,
+      "status": "within_lifetime_learning_breakthrough",
+      "validation_score": 0.9982740105079526,
+      "strict_hidden_score": 0.8543686702146476,
+      "hidden_retention": 0.9969544725792936,
+      "no_learning_score": 0.12248684017708968,
+      "feedback_ablation_score": 0.034755101439952446,
+      "hand_hebb_score": 0.14624756827636784,
+      "hand_delta_score": 0.8206967129229462,
+      "hidden_scores": {
+        "5d-cond16@45pct": 0.9848390024348531,
+        "6d-cond24@55pct": 0.9500375192622784,
+        "8d-cond36@65pct": 0.8543686702146476
+      }
+    },
+    {
+      "seed": 55,
+      "status": "within_lifetime_learning_breakthrough",
+      "validation_score": 0.998325527964556,
+      "strict_hidden_score": 0.8599023567758135,
+      "hidden_retention": 0.9944465687655223,
+      "no_learning_score": 0.12124544239972299,
+      "feedback_ablation_score": 0.051516484530369416,
+      "hand_hebb_score": 0.14624756827636784,
+      "hand_delta_score": 0.8206967129229462,
+      "hidden_scores": {
+        "5d-cond16@45pct": 0.9877464860695939,
+        "6d-cond24@55pct": 0.9528663415514864,
+        "8d-cond36@65pct": 0.8599023567758135
+      }
+    }
+  ]
+}
