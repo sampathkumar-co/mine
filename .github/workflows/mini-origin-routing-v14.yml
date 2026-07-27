@@ -1,0 +1,126 @@
+name: Mini-ORIGIN Routing v0.14
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/information_routing_v14.py"
+      - "mini-origin/tests/test_information_routing_v14.py"
+      - ".github/workflows/mini-origin-routing-v14.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/information_routing_v14.py"
+      - "mini-origin/tests/test_information_routing_v14.py"
+      - ".github/workflows/mini-origin-routing-v14.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-routing-v14-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_information_routing_v14.py
+
+  information-routing:
+    name: routing-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [141, 142, 143]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Synthesize information-balanced write routing
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.information_routing_v14
+          --seed ${{ matrix.seed }}
+          --output results/routing-v14-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-routing-v14-seed-${{ matrix.seed }}
+          path: mini-origin/results/routing-v14-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate-routing-study:
+    needs: [tests, information-routing]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-routing-v14-seed-*
+          path: routing-artifacts
+          merge-multiple: true
+      - name: Aggregate independent information-routing searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows=[]
+          for filename in sorted(glob.glob("routing-artifacts/*.json")):
+              data=json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed":data["seed"],"status":data["status"],"program":data["program"],
+                  "strict_post_damage":data["strict_post_damage"],
+                  "strict_dense_post_damage":data["strict_dense_post_damage"],
+                  "strict_iid_post_damage":data["strict_iid_post_damage"],
+                  "strict_hand_post_damage":data["strict_hand_post_damage"],
+                  "min_relative_dense":data["min_relative_dense"],
+                  "min_retention":data["min_retention"],
+                  "max_write_fraction":data["max_write_fraction"],"hidden":data["hidden"]})
+          passing=[row for row in rows if row["status"]=="information_balanced_routing_external_candidate"]
+          relative=[row["min_relative_dense"] for row in rows]
+          iid=[row["strict_post_damage"]-row["strict_iid_post_damage"] for row in rows]
+          hand=[row["strict_post_damage"]-row["strict_hand_post_damage"] for row in rows]
+          retention=[row["min_retention"] for row in rows]
+          writes=[row["max_write_fraction"] for row in rows]
+          summary={
+              "verdict":"replicated_information_balanced_routing_candidate"
+              if len(passing)>=2 and statistics.median(relative)>=0.98
+              and statistics.median(iid)>=0.04 and statistics.median(hand)>=0.02
+              and statistics.median(retention)>=0.95 and statistics.median(writes)<=0.20
+              else "not_yet",
+              "claim_scope":"online information-geometry routing under targeted cell deletion and a hard write budget; external significance requires comparison with adaptive experimental-design and distributed-routing specialists",
+              "run_count":len(rows),"passing_count":len(passing),
+              "passing_seeds":[row["seed"] for row in passing],
+              "relative_dense_min":min(relative) if relative else None,
+              "relative_dense_median":statistics.median(relative) if relative else None,
+              "iid_gap_min":min(iid) if iid else None,"iid_gap_median":statistics.median(iid) if iid else None,
+              "hand_gap_min":min(hand) if hand else None,"hand_gap_median":statistics.median(hand) if hand else None,
+              "retention_min":min(retention) if retention else None,"retention_median":statistics.median(retention) if retention else None,
+              "write_max":max(writes) if writes else None,"write_median":statistics.median(writes) if writes else None,
+              "runs":rows}
+          Path("routing-v14-summary.json").write_text(json.dumps(summary,indent=2),encoding="utf-8")
+          print(json.dumps({key:value for key,value in summary.items() if key!="runs"},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-routing-v14-summary
+          path: routing-v14-summary.json
+          retention-days: 90
