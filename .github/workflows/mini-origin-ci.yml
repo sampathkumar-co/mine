@@ -63,13 +63,13 @@ jobs:
           cache-dependency-path: mini-origin/pyproject.toml
       - name: Install
         run: python -m pip install -e ".[dev]"
-      - name: Evolve a dimension-agnostic local plasticity law
+      - name: Evolve feedback plasticity on correlated examples
         run: >-
           mkdir -p results &&
           python -m mini_origin.plasticity_v5
           --seed ${{ matrix.seed }}
-          --population 56
-          --generations 36
+          --population 52
+          --generations 30
           --output results/plasticity-v5-seed-${{ matrix.seed }}.json
       - name: Upload within-lifetime learning evidence
         uses: actions/upload-artifact@v4
@@ -108,7 +108,8 @@ jobs:
                   "strict_hidden_score": data["strict_hidden_score"],
                   "hidden_retention": data["hidden_retention"],
                   "no_learning_score": data["no_learning_score"],
-                  "no_error_score": data["no_error_score"],
+                  "feedback_ablation_score": data["feedback_ablation_score"],
+                  "hand_hebb_score": data["hand_hebb_score"],
                   "hand_delta_score": data["hand_delta_score"],
                   "hidden_scores": data["hidden_scores"],
               })
@@ -123,18 +124,24 @@ jobs:
               row["strict_hidden_score"] / max(row["hand_delta_score"], 1e-12)
               for row in rows
           ]
+          margins = [
+              row["strict_hidden_score"]
+              - max(row["feedback_ablation_score"], row["hand_hebb_score"])
+              for row in rows
+          ]
           summary = {
               "verdict": (
                   "replicated_within_lifetime_learning_breakthrough"
                   if len(successful) >= 3
-                  and statistics.median(hidden) >= 0.78
+                  and statistics.median(hidden) >= 0.76
                   and statistics.median(retention) >= 0.90
+                  and statistics.median(margins) >= 0.16
                   else "not_yet"
               ),
               "claim_scope": (
-                  "one inherited dimension-agnostic local plasticity law learns unseen mappings "
-                  "during its lifetime and retains them after distributed cell death; the plasticity "
-                  "basis remains human-designed, so this is an internal research breakthrough"
+                  "one inherited dimension-agnostic feedback-plasticity law learns hidden mappings "
+                  "from ill-conditioned examples, generalises to isotropic queries and larger dimensions, "
+                  "and retains the mapping after cell death; the operator basis remains human-designed"
               ),
               "run_count": len(rows),
               "success_count": len(successful),
@@ -146,6 +153,7 @@ jobs:
               "hidden_max": max(hidden) if hidden else None,
               "retention_min": min(retention) if retention else None,
               "retention_median": statistics.median(retention) if retention else None,
+              "median_feedback_advantage": statistics.median(margins) if margins else None,
               "median_fraction_of_hand_delta": statistics.median(ratios) if ratios else None,
               "runs": rows,
           }
