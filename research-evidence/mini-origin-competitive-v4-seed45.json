@@ -1,0 +1,30 @@
+{
+  "status": "internal_milestone",
+  "claim_scope": "evolved competitive local routing approaches a transparent max-flood control across unseen damaged grids; this is not a new universal form of computation",
+  "validation_score": 0.9960924880250228,
+  "strict_hidden_score": 0.9558457468820206,
+  "hand_baseline_score": 0.9841900002761457,
+  "hidden_scores": {
+    "48x25@0.33": 0.9558457468820206,
+    "60x31@0.35": 0.9990870250058966,
+    "72x37@0.37": 0.9852459312960523
+  },
+  "history": [
+    {"generation": 0.0, "batch_best": 0.9824614930128771, "validation_best": 0.9834399792480034, "batch_median": 0.14162069354156412},
+    {"generation": 7.0, "batch_best": 0.9880253784408456, "validation_best": 0.9878279667195906, "batch_median": 0.9823588719596642},
+    {"generation": 14.0, "batch_best": 0.9902863246528176, "validation_best": 0.9931980070225479, "batch_median": 0.9824063062675392},
+    {"generation": 21.0, "batch_best": 0.9931538213482183, "validation_best": 0.9937793544617071, "batch_median": 0.9860676540574488},
+    {"generation": 28.0, "batch_best": 0.9923696807864407, "validation_best": 0.9960924880250228, "batch_median": 0.983921552758209},
+    {"generation": 35.0, "batch_best": 0.9918312031820755, "validation_best": 0.9926995620087758, "batch_median": 0.9829873099620775},
+    {"generation": 42.0, "batch_best": 0.9928963262851143, "validation_best": 0.9937288811392856, "batch_median": 0.9844319530151262},
+    {"generation": 49.0, "batch_best": 0.9922044205702855, "validation_best": 0.9952108302528099, "batch_median": 0.9876027336922663},
+    {"generation": 54.0, "batch_best": 0.9936122097241561, "validation_best": 0.9951280064801218, "batch_median": 0.9849855913864167}
+  ],
+  "best_genome": {
+    "magnitude_gains": [0.8779534637149089, 0.8716496181736823, 0.988652232944245, 0.7639529513999481, 0.5775267749084045],
+    "direction_bias": [-0.2622715027026613, 0.1539942656302678, 0.07200767786450038, 0.8598242761966026, -0.8539732966865465],
+    "temperature": 10.35458136891774,
+    "signal_scale": 1.748626863762168,
+    "inertia": 0.03428939085285905
+  }
+}
