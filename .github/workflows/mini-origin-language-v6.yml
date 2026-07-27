@@ -3,27 +3,25 @@ name: Mini-ORIGIN Language v0.6
 on:
   push:
     paths:
-      - "mini-origin/src/mini_origin/language_v6.py"
-      - "mini-origin/src/mini_origin/language_v6_fast.py"
-      - "mini-origin/tests/test_language_v6.py"
-      - ".github/workflows/mini-origin-language-v6.yml"
-  pull_request:
-    paths:
-      - "mini-origin/src/mini_origin/language_v6.py"
-      - "mini-origin/src/mini_origin/language_v6_fast.py"
-      - "mini-origin/tests/test_language_v6.py"
       - ".github/workflows/mini-origin-language-v6.yml"
   workflow_dispatch:
 
 concurrency:
-  group: mini-origin-language-v6-${{ github.event.pull_request.number || github.ref }}
+  group: mini-origin-language-v6-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
+  archived-study-notice:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "v0.6 is complete; use workflow_dispatch to reproduce the research matrix."
+
   tests:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,6 +39,7 @@ jobs:
         run: pytest -q tests/test_language_v6.py
 
   language-search:
+    if: github.event_name == 'workflow_dispatch'
     name: language-seed-${{ matrix.seed }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
@@ -74,6 +73,7 @@ jobs:
           retention-days: 90
 
   aggregate-language-study:
+    if: github.event_name == 'workflow_dispatch'
     needs: [tests, language-search]
     runs-on: ubuntu-latest
     steps:
@@ -116,8 +116,8 @@ jobs:
                   else "not_yet"
               ),
               "claim_scope": (
-                  "self-expanding plasticity-language candidate; an external breakthrough cannot be "
-                  "certified without independent reproduction, stronger outside baselines and peer review"
+                  "self-expanding plasticity-language candidate; external acceptance requires "
+                  "independent reproduction, stronger outside baselines and peer review"
               ),
               "run_count": len(rows),
               "passing_count": len(passing),
@@ -128,13 +128,10 @@ jobs:
               "library_gap_median": statistics.median(gaps) if gaps else None,
               "runs": rows,
           }
-          Path("language-v6-summary.json").write_text(
-              json.dumps(summary, indent=2), encoding="utf-8"
-          )
+          Path("language-v6-summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
           print(json.dumps({key: value for key, value in summary.items() if key != "runs"}, indent=2))
           PY
-      - name: Upload aggregate language evidence
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: mini-origin-language-v6-summary
           path: language-v6-summary.json
