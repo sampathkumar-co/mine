@@ -2,6 +2,16 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 
+const CONTRACT_FLOAT_FIELDS = new Set([
+  "score_threshold",
+  "median_threshold",
+  "min_control_gap",
+  "median_control_gap",
+  "min_ablation_gap",
+  "oracle_ceiling",
+  "operation_budget",
+]);
+
 function stable(value) {
   if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
   if (value && typeof value === "object") {
@@ -13,6 +23,34 @@ function stable(value) {
 
 function sha(value) {
   return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function canonicalFloat(value) {
+  if (!Number.isFinite(value)) throw new Error("contract numbers must be finite");
+  if (Object.is(value, -0) || value === 0) return "0";
+  let text = Number(value).toPrecision(17);
+  const parts = text.split("e");
+  let mantissa = parts[0];
+  if (mantissa.includes(".")) {
+    mantissa = mantissa.replace(/0+$/, "").replace(/\.$/, "");
+  }
+  if (parts.length === 1) return mantissa;
+  let exponent = parts[1];
+  const sign = exponent.startsWith("-") ? "-" : "+";
+  exponent = exponent.replace(/^[+-]/, "").replace(/^0+(?=\d)/, "");
+  return `${mantissa}e${sign}${exponent}`;
+}
+
+function contractDigestPayload(contract) {
+  const payload = clone(contract);
+  for (const name of CONTRACT_FLOAT_FIELDS) {
+    payload[name] = `float:${canonicalFloat(Number(payload[name]))}`;
+  }
+  return payload;
+}
+
+function contractDigest(contract) {
+  return sha(stable(contractDigestPayload(contract)));
 }
 
 function clone(value) {
@@ -43,13 +81,13 @@ function baseContract() {
 }
 
 function buildValid(contract, seed) {
-  const contractDigest = sha(stable(contract));
+  const digest = contractDigest(contract);
   const seeds = Array.from({ length: contract.required_runs }, (_, index) => seed * 1000 + index + 1);
   const manifest = {
-    contract_digest: contractDigest,
+    contract_digest: digest,
     candidate_hash: contract.candidate_hash,
     seeds,
-    commitment: sha(`${contractDigest}:sealed-v1:${seeds.join(",")}`),
+    commitment: sha(`${digest}:sealed-v1:${seeds.join(",")}`),
     issued_after_freeze: true,
   };
   const manifestDigest = sha(stable(manifest));
@@ -64,7 +102,7 @@ function buildValid(contract, seed) {
       candidate_budget: 0.20,
       control_budget: 0.20,
       threshold_used: contract.score_threshold,
-      contract_digest: contractDigest,
+      contract_digest: digest,
       candidate_hash: contract.candidate_hash,
       manifest_digest: manifestDigest,
       holdout_candidates: 1,
@@ -85,7 +123,7 @@ function buildValid(contract, seed) {
 }
 
 function refreshManifest(caseValue) {
-  const digest = sha(stable(caseValue.contract));
+  const digest = contractDigest(caseValue.contract);
   caseValue.manifest.contract_digest = digest;
   caseValue.manifest.candidate_hash = caseValue.contract.candidate_hash;
   caseValue.manifest.commitment = sha(`${digest}:sealed-v1:${caseValue.manifest.seeds.join(",")}`);
