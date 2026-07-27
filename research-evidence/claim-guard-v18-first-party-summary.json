@@ -1,0 +1,17 @@
+{
+  "verdict": "replicated_external_breakthrough_candidate",
+  "claim_scope": "prospective executable claim contracts prevent known autonomous-research validity failures before success can be reported; external status still requires independent mutation suites, outside implementation and peer review",
+  "run_count": 5,
+  "passing_count": 5,
+  "detection_min": 1.0,
+  "detection_median": 1.0,
+  "false_reject_max": 0.0,
+  "advantage_min": 0.8571428571428571,
+  "advantage_median": 0.8571428571428571,
+  "historical_replay_accuracy": 1.0,
+  "mutation_families": 14,
+  "invalid_trials_per_seed": 224,
+  "valid_trials_per_seed": 64,
+  "workflow_run": 30290195945,
+  "external_breakthrough_certified": false
+}
