@@ -18,19 +18,29 @@ def build_library() -> dict[str, dict[str, Any]]:
     }
 
 
+def description_length(artifact: dict[str, Any]) -> tuple[int, int, str]:
+    """Frozen MDL ordering: instruction count, canonical byte count, artifact hash."""
+    program = artifact["program"]
+    encoded = json.dumps(program, sort_keys=True, separators=(",", ":"))
+    return len(program), len(encoded.encode("utf-8")), str(artifact["name"])
+
+
 def select_artifact(
     library: dict[str, dict[str, Any]], demonstrations: list[World]
-) -> tuple[str, dict[str, Any], dict[str, bool]]:
+) -> tuple[str, dict[str, Any], dict[str, bool], dict[str, tuple[int, int, str]]]:
     # Selection uses execution against examples only. It never reads `case.mechanism`.
+    # Multiple languages may be extensionally correct on simple examples. The frozen
+    # MDL rule chooses the smallest executable semantics consistent with all evidence.
     matches = {
         name: solves(artifact, demonstrations)
         for name, artifact in sorted(library.items())
     }
     passing = [name for name, matched in matches.items() if matched]
-    if len(passing) != 1:
-        raise RuntimeError(f"expected one matching artifact, found {passing}")
-    selected = passing[0]
-    return selected, library[selected], matches
+    if not passing:
+        raise RuntimeError("no library artifact matches the demonstrations")
+    scores = {name: description_length(library[name]) for name in passing}
+    selected = min(passing, key=lambda name: scores[name])
+    return selected, library[selected], matches, scores
 
 
 def run(output_dir: Path) -> dict[str, Any]:
@@ -40,7 +50,7 @@ def run(output_dir: Path) -> dict[str, Any]:
     for hidden_mechanism in MECHANISMS:
         demonstrations = build_cases(hidden_mechanism, [5, 6], replicas=1)
         transfer = build_cases(hidden_mechanism, range(8, 14), replicas=2)
-        selected_name, artifact, match_vector = select_artifact(library, demonstrations)
+        selected_name, artifact, match_vector, mdl_scores = select_artifact(library, demonstrations)
 
         correct = 0
         records = []
@@ -60,13 +70,16 @@ def run(output_dir: Path) -> dict[str, Any]:
         if accuracy != 1.0:
             raise AssertionError(f"selected artifact failed hidden transfer for {hidden_mechanism}")
         if selected_name != hidden_mechanism:
-            raise AssertionError("execution-only selector chose the wrong library entry")
+            raise AssertionError("MDL selector chose the wrong library entry")
 
         episodes.append(
             {
                 "hidden_mechanism_used_only_for_scoring": hidden_mechanism,
                 "selected_library_entry": selected_name,
                 "match_vector": match_vector,
+                "mdl_scores_for_passing_artifacts": {
+                    name: list(score) for name, score in mdl_scores.items()
+                },
                 "transfer_accuracy": accuracy,
                 "records": records,
             }
@@ -74,7 +87,11 @@ def run(output_dir: Path) -> dict[str, Any]:
 
     report = {
         "benchmark": "RIFT-1 unlabeled selector",
-        "status": "library selection by demonstrations; no breakthrough claim",
+        "status": "MDL library selection by demonstrations; no breakthrough claim",
+        "selection_rule": "minimum instruction count, then canonical byte count, then artifact name",
+        "negative_result_preserved": (
+            "uniqueness selection failed because richer history-based artifacts also solve closure examples"
+        ),
         "library": library,
         "episodes": episodes,
     }
