@@ -5,6 +5,8 @@ import json
 from artifact_runtime import execute_artifact
 from prototype import diagnose_representation_failure, invent_artifact, run
 from rift0 import build_cases, build_report, validate_report
+from synthesis_experiment import run as run_synthesis
+from synthesizer import synthesize
 
 
 def test_benchmark_separates_bounded_language_from_fixed_point() -> None:
@@ -35,3 +37,21 @@ def test_prototype_writes_reproducible_artifacts(tmp_path) -> None:
     assert artifact["schema"] == "lexigen-language-artifact-v1"
     assert report["artifact_transfer"]["accuracy"] == 1.0
     assert persisted["status"] == "research scaffold; no novelty or breakthrough claim"
+
+
+def test_cegis_synthesizes_program_order_without_template() -> None:
+    diagnostic = build_cases(range(4, 7), replicas=1)
+    diagnosis = diagnose_representation_failure(diagnostic)
+    result = synthesize(diagnostic, diagnosis, max_length=6, max_instructions=256)
+    ops = [instruction["op"] for instruction in result.artifact["program"]]
+    assert "APPLY_STEP" in ops
+    assert "RETURN_IF_STABLE" in ops
+    assert "ADVANCE" in ops
+    assert "JUMP" in ops
+    assert result.programs_tested > 1
+
+
+def test_synthesis_experiment_transfers(tmp_path) -> None:
+    report = run_synthesis(tmp_path)
+    assert report["synthesized_transfer"]["accuracy"] == 1.0
+    assert report["status"] == "fixed-meta-language synthesis; no L4/L5 or breakthrough claim"
