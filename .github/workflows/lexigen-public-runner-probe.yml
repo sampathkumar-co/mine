@@ -1,0 +1,16 @@
+name: LEXIGEN Public Runner Probe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - lexigen-runner-probe.txt
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "LEXIGEN_PUBLIC_RUNNER_OK"
