@@ -1,0 +1,31 @@
+name: LEXIGEN v3 KMeans Frontier Extract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-frontier/kmeans/TRIGGER_ONCE"
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Extract only the sealed KMeans frontier record
+        working-directory: lexigen-frontier/kmeans
+        run: python -u extract.py
+      - name: Upload task-scoped frontier evidence or redacted diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-kmeans-frontier
+          path: lexigen-frontier/kmeans/kmeans-frontier.json
+          if-no-files-found: error
+          retention-days: 90
