@@ -1,0 +1,34 @@
+name: LEXIGEN v4 Reachability Prelock Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/TRIGGER_VALIDATE_ENGINE_R4"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile reachability-complete engine
+        working-directory: lexigen-v4
+        run: python -m compileall -q engine.py engine_v2.py engine_v3.py engine_v4.py selector.py validate_engine_v3.py validate_engine_v4.py
+      - name: Validate semantic fingerprint, mechanism closure, ablations and selector
+        working-directory: lexigen-v4
+        run: python -u validate_engine_v4.py
+      - name: Upload complete positive or negative prelock evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-engine-validation-r4
+          path: lexigen-v4/validation-evidence-r4/
+          if-no-files-found: error
+          retention-days: 90
