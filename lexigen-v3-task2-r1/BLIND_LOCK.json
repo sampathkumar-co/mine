@@ -1,0 +1,38 @@
+{
+  "campaign": "LEXIGEN World-Proof Campaign v3",
+  "task_index": 2,
+  "task": "kmeans",
+  "candidate_revision": 1,
+  "selected_candidate": "block_lloyd",
+  "training_workflow_run_id": 30362104314,
+  "training_artifact_id": 8689269421,
+  "training_artifact_digest": "sha256:527de52d63f21a2165958b8d53fa54e759f1bffe12ef3dcb455516ffdcca5efc",
+  "expected_test_manifest_name": "kmeans_T100ms_n278_size100_test.jsonl",
+  "expected_test_manifest_tree_oid": "f5f3fded57e9ca0fc4d1369477fd2176eeac15e2",
+  "git_blob_sha1": {
+    "candidates.py": "5eeb6c5b33798cce4d996b0ecde7126bb8c6cedf",
+    "requirements.txt": "6321fc38524e8ddb5728abb166cac7180c1013da",
+    "selected_solver.py": "4b7f1974df60c924d9ab8b335c6374312bcd26df",
+    "blind_shard.py": "30f4475171c519c2c4b1549f084fce8e0a2052e1",
+    "aggregate_blind.py": "5f4a24842abccfe7d7e55a5f09f7ead850483c58"
+  },
+  "workflow_git_blob_sha1": "f8d9aae823e6f2e5955ab255d751aecd9e345e5e",
+  "blind_gate": {
+    "valid": 100,
+    "count": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05
+  },
+  "execution_budget": {
+    "shards": 10,
+    "candidate_executions_per_record": 1,
+    "reference_executions_per_record": 1,
+    "invalid_output_retries": 0,
+    "timing_retries": 0,
+    "infrastructure_download_retries_before_execution": true
+  },
+  "test_data_status": "unopened",
+  "official_prior_result_report_status": "unopened_for_kmeans",
+  "candidate_changed_after_training": false,
+  "thresholds_changed_after_training": false
+}
