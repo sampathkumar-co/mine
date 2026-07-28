@@ -1,0 +1,162 @@
+name: Mini-ORIGIN Behavioral Quotient v0.31
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/behavioral_quotient_v31.py"
+      - "mini-origin/tests/test_behavioral_quotient_v31.py"
+      - ".github/workflows/mini-origin-quotient-v31.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/behavioral_quotient_v31.py"
+      - "mini-origin/tests/test_behavioral_quotient_v31.py"
+      - ".github/workflows/mini-origin-quotient-v31.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-quotient-v31-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: >-
+          pytest -q
+          tests/test_behavioral_quotient_v31.py
+          tests/test_cross_domain_runner_v30.py
+
+  quotient-study:
+    name: quotient-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1601, 1602, 1603, 1604, 1605]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Freeze quotient and evaluate hidden domains
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.behavioral_quotient_v31
+          --seed ${{ matrix.seed }}
+          --output results/quotient-v31-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-quotient-v31-seed-${{ matrix.seed }}
+          path: mini-origin/results/quotient-v31-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, quotient-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-quotient-v31-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate locked five-seed gate
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from pathlib import Path
+          rows = []
+          for filename in sorted(glob.glob("evidence/quotient-v31-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "selected_class": data["selected_class"],
+                  "accuracy": data["candidate"]["accuracy"],
+                  "invalid_rate": data["candidate"]["invalid_rate"],
+                  "log2_ratio": data["candidate"]["mean_log2_ratio"],
+                  "gini_worst_gain": data["gini_worst_case_gain"],
+                  "outcomes_worst_gain": data["max_outcomes_worst_case_gain"],
+                  "strict_gini_tasks": data["strict_gini_advantage_tasks"],
+                  "strict_outcomes_tasks": data["strict_max_outcomes_advantage_tasks"],
+                  "average_tradeoff": data["average_case_tradeoff"],
+                  "binary_proof": data["binary_equivalence_certificate"]["passed"],
+                  "divergence_proof": data["multioutcome_divergence_certificate"]["passed"],
+                  "trajectory_proof": data["exact_divergence_certificate"]["passed"],
+                  "class_digest": data["frozen_class_digest"],
+              })
+
+          passing = sum(row["candidate_gate"] for row in rows)
+          verdict = (
+              "replicated_behavioral_quotient_transfer_candidate"
+              if len(rows) == 5
+              and passing >= 4
+              and min(row["accuracy"] for row in rows) >= 0.985
+              and max(row["invalid_rate"] for row in rows) <= 0.01
+              and max(row["log2_ratio"] for row in rows) <= 1.15
+              and min(row["gini_worst_gain"] for row in rows) >= 0.40
+              and min(row["outcomes_worst_gain"] for row in rows) >= 0.40
+              and min(row["strict_gini_tasks"] for row in rows) >= 2
+              and min(row["strict_outcomes_tasks"] for row in rows) >= 2
+              and all(row["binary_proof"] for row in rows)
+              and all(row["divergence_proof"] for row in rows)
+              and all(row["trajectory_proof"] for row in rows)
+              else "not_yet"
+          )
+          summary = {
+              "verdict": verdict,
+              "claim_scope": (
+                  "query objectives are quotiented by exact binary-partition "
+                  "ordering before hidden data; the canonical minimax member "
+                  "then improves worst-case depth on multi-outcome diagnosis "
+                  "holdouts while accepting an explicit average-case tradeoff; "
+                  "this remains generalized binary search, not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": passing,
+              "accuracy_min": min(row["accuracy"] for row in rows),
+              "invalid_max": max(row["invalid_rate"] for row in rows),
+              "log2_ratio_max": max(row["log2_ratio"] for row in rows),
+              "gini_worst_gain_min": min(row["gini_worst_gain"] for row in rows),
+              "outcomes_worst_gain_min": min(row["outcomes_worst_gain"] for row in rows),
+              "average_tradeoff_median": statistics.median(row["average_tradeoff"] for row in rows),
+              "class_digest_count": len({row["class_digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("quotient-v31-summary.json").write_text(
+              json.dumps(summary, indent=2),
+              encoding="utf-8",
+          )
+          print(json.dumps({
+              key: value
+              for key, value in summary.items()
+              if key != "rows"
+          }, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-quotient-v31-summary
+          path: quotient-v31-summary.json
+          retention-days: 90
