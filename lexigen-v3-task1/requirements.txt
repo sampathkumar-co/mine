@@ -1,0 +1,6 @@
+numpy==2.5.1
+scipy==1.18.0
+osqp==1.1.0
+cvxpy==1.9.2
+clarabel==0.11.1
+threadpoolctl==3.6.0
