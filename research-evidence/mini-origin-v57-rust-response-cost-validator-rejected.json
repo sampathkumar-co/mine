@@ -1,0 +1,12 @@
+{
+  "status": "rejected_validator_representation_mismatch",
+  "development_gate": false,
+  "workflow_run_id": 30400575268,
+  "job_id": 90414097283,
+  "state_count": 195,
+  "reported_exact_match_count": 0,
+  "reported_mismatch_count": 195,
+  "root_cause": "The Python reference stored pareto_plan as a tuple while the Rust JSON decoder produced a list. Logged expected and actual numerical plans were identical; direct container-type comparison marked all plans unequal.",
+  "scientific_interpretation": "Mechanical validator failure only. This file records no successful reproduction claim. Frozen solver logic, exported states, parent digest, budgets, counters, and thresholds were not changed.",
+  "parent_digest": "5d0c281c66200ae378af25e6e6214e6b8b49b9fd144d4060fe29afc0a795a1cc"
+}
