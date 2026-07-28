@@ -6,12 +6,18 @@ on:
       - "lexigen/external-arcgen-gate4"
     paths:
       - "lexigen-language-genesis/external/TRIGGER_GATE4"
+  pull_request:
+    branches:
+      - "lexigen/language-genesis-frontier-v1"
+    paths:
+      - "lexigen-language-genesis/external/TRIGGER_GATE4"
 
 permissions:
   contents: write
 
 jobs:
   external-gate:
+    if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
@@ -19,11 +25,13 @@ jobs:
       GATE_NAME: arcgen-gate4
       GATE_DIR: ${{ github.workspace }}/.gate/arcgen-gate4
       EVIDENCE_DIR: lexigen-language-genesis/external/evidence/arcgen-gate4
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
     steps:
       - name: Check out frozen engine branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -101,14 +109,14 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add "$EVIDENCE_DIR"
           git commit -m "Freeze ARC-GEN gate 4 candidate before scoring"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          git push origin "HEAD:$TARGET_BRANCH"
           echo "CANDIDATE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Verify candidate is remotely committed
         run: |
           set -euo pipefail
           test -n "$CANDIDATE_COMMIT"
-          test "$(git ls-remote origin "refs/heads/$GITHUB_REF_NAME" | cut -f1)" = "$CANDIDATE_COMMIT"
+          test "$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | cut -f1)" = "$CANDIDATE_COMMIT"
 
       - name: Score sealed outputs once
         if: ${{ hashFiles('.gate/arcgen-gate4/candidate/candidate-predictions.json') != '' }}
@@ -149,7 +157,7 @@ jobs:
           fi
           git add "$EVIDENCE_DIR"
           git commit -m "Preserve ARC-GEN gate 4 one-shot result"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          git push origin "HEAD:$TARGET_BRANCH"
 
       - name: Assert hidden outputs were never committed
         run: |
