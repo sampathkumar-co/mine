@@ -1,0 +1,75 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "benchmark": "ARC-GEN 6bcdb01e post-failure sensor-state-machine growth",
+  "candidate_machines_tested": 16,
+  "certificate": {
+    "holdout_count": 10000,
+    "holdout_exact": 10000,
+    "machine_ablation_training_exact": false,
+    "machine_sha256": "402f9dd88c28afee1f794e6c466e36e9a1528867c9f476e7435b111e04d47656",
+    "portable_holdout_exact": 10000,
+    "portable_training_exact": true,
+    "schema": "lexigen-v10-state-machine-certificate-v1",
+    "task_source_sha256": "f9065c874bb3c8cf068a8c7a110bf2786bc2e7006d29bc3a886f2d15ceb5a311",
+    "training_exact": true,
+    "v9_fixed_grammar_found": false
+  },
+  "claim_boundary": "The machine is synthesized from generic state, sensor, vector and transition choices after gate 8 failed. A fresh sealed task is still required before any external breakthrough claim.",
+  "exact_machine_count": 2,
+  "gate": {
+    "ablation_fails": true,
+    "holdout_exact": true,
+    "new_production_absent_from_v9": true,
+    "no_finished_task_operator": true,
+    "portable_holdout_exact": true,
+    "portable_training_exact": true,
+    "sealed_outputs_untouched": true,
+    "training_exact": true
+  },
+  "generated_machine": {
+    "colours": {
+      "background": 7,
+      "obstacle": 8,
+      "trace": 3
+    },
+    "execution": {
+      "max_steps_factor": 8,
+      "op": "iterate_until_outside"
+    },
+    "name": "generated_state_machine_ed6437319261",
+    "provenance": {
+      "candidates_tested": 16,
+      "exact_candidate_count": 2,
+      "human_supplied_finished_task_operator": false,
+      "human_supplied_generic_state_machine_substrate": true,
+      "method": "typed sensor-transition grammar synthesis"
+    },
+    "schema": "lexigen-sensor-state-machine-v1",
+    "seed": {
+      "direction_mode": "away_from_boundary",
+      "op": "derive_heading_from_boundary_seed"
+    },
+    "transition": {
+      "op": "conditional_sensor_transition",
+      "trigger": "forward_is_obstacle",
+      "turn": "away_from_lateral_obstacle"
+    },
+    "types": {
+      "output": "Grid",
+      "sensor": "Grid\u00d7Point\u2192Colour",
+      "state": "(Point,Vector)",
+      "transition": "State\u00d7Sensors\u2192State"
+    }
+  },
+  "holdout_failures": [],
+  "holdout_seed_range": [
+    50000,
+    59999
+  ],
+  "portable_holdout_failures": [],
+  "source_sealed_outputs_accessed": false,
+  "source_task_id": "6bcdb01e",
+  "status": "conditional state-machine grammar candidate; not a blind breakthrough claim",
+  "test_prediction_count": 20,
+  "version": "v10"
+}

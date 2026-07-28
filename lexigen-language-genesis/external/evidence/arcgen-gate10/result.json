@@ -1,0 +1,11 @@
+﻿{
+    "protocol":  "arcgen-gate-v11-gate10",
+    "selected_task_id":  "b1948b0a",
+    "status":  "baseline-dominated pre-score gate",
+    "v6_fixed_language_found":  true,
+    "v11_candidate_found":  false,
+    "candidate_predictions_committed":  false,
+    "hidden_scoring_performed":  false,
+    "sealed_outputs_accessed":  false,
+    "interpretation":  "No language-growth evidence; do not create a new version from this task."
+}
