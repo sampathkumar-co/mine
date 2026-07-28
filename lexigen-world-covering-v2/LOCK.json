@@ -5,17 +5,22 @@
   "target_count": 3,
   "v1_reserved_count": 3,
   "target_identities_known_at_seal": false,
+  "reservation_rule": "exact_frozen_v1_selector_then_exclude_names",
+  "v1_selection_seed_material_sha256": "e5fe13c984890cf9c4e00519e51a366d7a604769ecfd17f820b185c833df5b49",
   "selection_seed_material_sha256": "f17033d3f6a6919fe41d9834f4e90c99433c450a2cfdce6d16cb5464dff632d4",
+  "evidence_normalization_rule": "correct_local_search_method_attribution_only",
   "git_blob_sha1": {
     "selector_solver.py": "51956e42e3804f48327e7c7f6d85d4f03bd341b3",
-    "common.py": "4f3f96308669d1a9eb01466abb38560b199d9164",
+    "common.py": "2b5be164ec7083a7f9c82ad33c177d2881909a55",
     "greedy.py": "a084a5542ccf13e5419552e861ec6e42aed72bdc",
     "local_search.py": "ac84179eb8c25ff057ddddd28012465e09f57a56",
     "solver_engine.py": "2850434005842b74338915b80d90812a1e2f4222",
+    "normalize_evidence.py": "823096cce7a8e9aa720881a706c3613797e7fa31",
     "verify_results.py": "d4888d288d6a5bacb8e3f26f53bf2d5f84758bba",
-    "PROTOCOL.md": "99ca9620bd8c97b91f071ef4e492bf6db3a56293",
+    "PROTOCOL.md": "0f6d9f2213d724d073eb477b18dec9e20a4b053b",
+    "STOP_CHECKPOINT.md": "0cf314b97cfb4e6e2e520a74976003a4c961cf04",
     "requirements.txt": "c21d857999fa45535759e0b9b5bf5c8bcf12649c",
-    "../.github/workflows/lexigen-world-covering-v2.yml": "d096b1875ff8006e73c06bcbe894eb41e8dbdac9"
+    "../.github/workflows/lexigen-world-covering-v2.yml": "bc01145f11d1e0bb6f95cd4a64db04cc6105690d"
   },
   "fixed_limits": {
     "targets": 3,
