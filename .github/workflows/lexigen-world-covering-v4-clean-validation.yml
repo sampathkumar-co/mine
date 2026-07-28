@@ -1,0 +1,45 @@
+name: Validate sealed LEXIGEN v4 clean
+on:
+  push:
+    branches:
+      - lexigen/world-covering-record-v4-clean-validation
+    paths:
+      - "lexigen-v4-clean-validation/**"
+      - ".github/workflows/lexigen-world-covering-v4-clean-validation.yml"
+permissions:
+  contents: read
+jobs:
+  validate-sealed-v4-clean:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5a1dbb94318e77cbe0c780f51c4e05d53deed4a0
+          path: sealed
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Snapshot-free validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd sealed/lexigen-world-covering-v4
+          python - <<'PY'
+          import hashlib, json, py_compile
+          from pathlib import Path
+          lock=json.loads(Path('LOCK.json').read_text())
+          for name,expected in lock['git_blob_sha1'].items():
+              data=Path(name).read_bytes()
+              actual=hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
+              if actual!=expected: raise SystemExit(f'LOCK_MISMATCH {name} {actual} {expected}')
+          for name in ('common.py','solver.py','selector_solver.py','verify_results.py'):
+              py_compile.compile(name,doraise=True)
+          import common
+          expected=['C(15,8,5)','C(11,6,5)','C(14,5,3)','C(12,7,5)','C(14,8,5)','C(16,7,4)','C(15,6,4)','C(17,9,5)','C(16,8,5)']
+          source=Path('common.py').read_text()
+          if any(name not in source for name in expected): raise SystemExit('LINEAGE_CONSTANT_MISSING')
+          t=common.Target('synthetic',6,3,2,20,1,'',19,20,15,60,0.0,'')
+          inc=common.build_incidence(t)
+          if len(inc.blocks)!=20 or len(inc.tsets)!=15: raise SystemExit('SYNTHETIC_INCIDENCE_MISMATCH')
+          print('SEALED_V4_CLEAN_SNAPSHOT_FREE_VALIDATION_OK')
+          PY
