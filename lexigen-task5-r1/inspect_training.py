@@ -30,6 +30,16 @@ def git_blob(data: bytes) -> str:
     return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
 
 
+def tuple_items(problem: object) -> list[dict[str, object]]:
+    if not isinstance(problem, dict) or problem.get("__type__") != "tuple":
+        raise TypeError(f"expected tagged tuple problem, received {problem}")
+    for key in ("items", "values", "data", "value"):
+        value = problem.get(key)
+        if isinstance(value, list):
+            return value
+    raise TypeError(f"tagged tuple has unsupported keys: {sorted(problem)}")
+
+
 def inspect() -> dict[str, object]:
     tree = json.loads(request_bytes(TREE_API))
     if not isinstance(tree, list):
@@ -46,11 +56,14 @@ def inspect() -> dict[str, object]:
         raise RuntimeError("empty training manifest")
 
     first_problem = rows[0]["problem"]
-    descriptors = []
-    for key, value in first_problem.items():
+    items = tuple_items(first_problem)
+    if len(items) != 2:
+        raise ValueError(f"expected two tuple items, received {len(items)}")
+    descriptors: list[tuple[str, str]] = []
+    for index, value in enumerate(items):
         if not isinstance(value, dict) or value.get("__type__") != "ndarray_ref":
-            raise TypeError(f"unexpected descriptor for {key}: {value}")
-        descriptors.append((key, str(value["npy_path"])))
+            raise TypeError(f"unexpected tuple item {index}: {value}")
+        descriptors.append((f"item_{index}", str(value["npy_path"])))
 
     first_arrays: dict[str, dict[str, object]] = {}
     with tempfile.TemporaryDirectory() as directory:
@@ -83,7 +96,7 @@ def inspect() -> dict[str, object]:
         "expected_test_manifest_tree_oid": test["oid"],
         "training_records": len(rows),
         "row_keys": sorted(rows[0]),
-        "problem_keys": sorted(first_problem),
+        "problem_encoding": {"__type__": "tuple", "item_count": len(items)},
         "k_values": k_values,
         "seed_min": min(int(row["seed"]) for row in rows),
         "seed_max": max(int(row["seed"]) for row in rows),
