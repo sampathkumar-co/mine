@@ -1,0 +1,34 @@
+{
+  "protocol": "LEXIGEN World Covering Record v1",
+  "status": "sealed_before_snapshot_or_target_access",
+  "sealed_at_utc": "2026-07-28T12:08:00Z",
+  "authoritative_branch": "lexigen/world-covering-record-v1",
+  "source_campaign_head": "32c897005c91865319f1b7da264b6162fc1ff4de",
+  "snapshot": {
+    "doi": "10.5281/zenodo.19735294",
+    "updated": "2026-04-24",
+    "file": "coverdata.json",
+    "url": "https://zenodo.org/records/19735294/files/coverdata.json?download=1"
+  },
+  "snapshot_md5": "b2c626b07f216aac830d344eff5ad523",
+  "target_count": 3,
+  "target_identities_known_at_seal": false,
+  "selection_seed_material_sha256": "cda6a34aa2e1529b30419c75ebc0d891209114da98ee6196798a30911c13b2ce",
+  "git_blob_sha1": {
+    "selector_solver.py": "d734695dc85dbe8a75fca6cc9437ed6f244a2fb7",
+    "verify_results.py": "bf38e5d59840adc3876c24823e20f0b0d09a7daa",
+    "PROTOCOL.md": "d4d193a6e976a44fd91b748288c280a09dbec67b",
+    "requirements.txt": "c21d857999fa45535759e0b9b5bf5c8bcf12649c",
+    "../.github/workflows/lexigen-world-covering-v1.yml": "552608e953c4885b9a3d645d1a11e2272d2c5e98"
+  },
+  "fixed_limits": {
+    "targets": 3,
+    "greedy_deterministic_attempts": 8,
+    "greedy_randomized_attempts": 24,
+    "cp_sat_seconds_per_target": 1200,
+    "cp_sat_workers": 4,
+    "workflow_executions": 1
+  },
+  "success_rule": "At least one independently verified covering with strictly fewer blocks than the frozen snapshot upper bound.",
+  "claim_rule": "A success is called a verified world-record candidate pending comparison with post-snapshot updates and external review; it is not called AGI or a proven optimal covering."
+}
