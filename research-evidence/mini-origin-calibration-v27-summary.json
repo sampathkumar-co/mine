@@ -1,0 +1,15 @@
+{
+  "verdict": "replicated_data_calibrated_decoder_candidate",
+  "workflow_run": 30363631871,
+  "run_count": 5,
+  "passing_count": 4,
+  "threshold_min": 0.1026501352831188,
+  "threshold_median": 0.11544875966059244,
+  "threshold_max": 0.14972505908041814,
+  "accuracy_min": 0.9817708333333334,
+  "low_signal_accuracy_min": 0.8955223880597015,
+  "fixed_gap_min": 0.01822916666666663,
+  "low_signal_gap_min": 0.10318448674613057,
+  "invalid_max": 0.018229166666666668,
+  "scientific_note": "Four seeds passed the locked gate. Seed 1201 missed the accuracy, weak-signal and invalidity requirements. The aggregate replication rule was four of five, so v0.27 passes narrowly but is not fully stable."
+}

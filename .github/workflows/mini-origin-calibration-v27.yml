@@ -1,0 +1,111 @@
+name: Mini-ORIGIN Calibrated Decoder v0.27
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/calibrated_decoder_v27.py"
+      - "mini-origin/tests/test_calibrated_decoder_v27.py"
+      - ".github/workflows/mini-origin-calibration-v27.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/calibrated_decoder_v27.py"
+      - "mini-origin/tests/test_calibrated_decoder_v27.py"
+      - ".github/workflows/mini-origin-calibration-v27.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_calibrated_decoder_v27.py
+
+  calibration-study:
+    name: calibration-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1201, 1202, 1203, 1204, 1205]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: >-
+          mkdir -p results &&
+          python -m mini_origin.calibrated_decoder_v27
+          --seed ${{ matrix.seed }}
+          --output results/calibrated-decoder-v27-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-calibration-v27-seed-${{ matrix.seed }}
+          path: mini-origin/results/calibrated-decoder-v27-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, calibration-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-calibration-v27-seed-*
+          path: evidence
+          merge-multiple: true
+      - run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+          rows=[]
+          for filename in sorted(glob.glob('evidence/calibrated-decoder-v27-seed-*.json')):
+              d=json.loads(Path(filename).read_text())
+              rows.append({
+                  'seed':d['seed'],'pass':d['candidate_gate'],
+                  'threshold':d['threshold_fit']['threshold'],
+                  'candidates':d['threshold_fit']['candidates_checked'],
+                  'accuracy':d['candidate']['accuracy'],
+                  'low_signal_accuracy':d['candidate']['low_signal_accuracy'],
+                  'invalid':d['candidate']['invalid_rate'],
+                  'fixed_gap':d['fixed_accuracy_gap'],
+                  'low_signal_gap':d['low_signal_accuracy_gap'],
+                  'random_gap':d['random_accuracy_gap']})
+          summary={
+              'verdict':'replicated_data_calibrated_decoder_candidate' if len(rows)==5 and sum(r['pass'] for r in rows)>=4 else 'not_yet',
+              'run_count':len(rows),'passing_count':sum(r['pass'] for r in rows),
+              'threshold_min':min(r['threshold'] for r in rows),
+              'threshold_median':statistics.median(r['threshold'] for r in rows),
+              'threshold_max':max(r['threshold'] for r in rows),
+              'accuracy_min':min(r['accuracy'] for r in rows),
+              'low_signal_accuracy_min':min(r['low_signal_accuracy'] for r in rows),
+              'fixed_gap_min':min(r['fixed_gap'] for r in rows),
+              'low_signal_gap_min':min(r['low_signal_gap'] for r in rows),
+              'invalid_max':max(r['invalid'] for r in rows),
+              'random_gap_min':min(r['random_gap'] for r in rows),
+              'rows':rows}
+          Path('calibrated-decoder-v27-summary.json').write_text(json.dumps(summary,indent=2))
+          print(json.dumps({k:v for k,v in summary.items() if k!='rows'},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-calibration-v27-summary
+          path: calibrated-decoder-v27-summary.json
+          retention-days: 90
