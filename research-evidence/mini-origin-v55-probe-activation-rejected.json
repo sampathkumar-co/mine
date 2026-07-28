@@ -1,0 +1,28 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "selected_policy": [4, 1],
+  "selection": {
+    "selected": true,
+    "probe_features": 4,
+    "probe_duplicates": 1,
+    "training_speedup_median": 0.9831941889334416,
+    "training_branch_reduction": 0.005892997320694815,
+    "training_max_runtime_ratio": 1.0474774587949403
+  },
+  "validation": {
+    "row_count": 12,
+    "optimum_match_count": 12,
+    "tasks_with_local_skips": 12,
+    "total_local_skips": 3653,
+    "subtree_call_reduction_fraction": 0.005618650700037864,
+    "branch_expansion_reduction_fraction": 0.005026360228562621,
+    "reported_speedup_median": 0.9805617951637968,
+    "patched_over_original_runtime_median": 1.019823764437631,
+    "patched_over_original_runtime_max": 1.0361500352162556,
+    "tasks_speedup_ge_1_03": 1
+  },
+  "workflow_run": 30391252300,
+  "artifact_digest": "sha256:99c19f4f9b053d2a08ecc006e215b544b789cbabaff0f323815e3e28590c8978",
+  "scientific_note": "A policy selected from observed exact duplicate partitions chose a four-feature probe requiring one duplicate. It preserved every validation optimum and limited maximum overhead to 3.6%, but captured only 0.50% branch reduction and remained 2.0% slower at median. Probe activation is rejected as a universal default-on PySTreeD policy. The external integration remains valuable as an opt-in high-redundancy mode, while further research should target the identification-tree objective where the quotient's exact-search gains are much larger."
+}
