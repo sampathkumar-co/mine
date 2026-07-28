@@ -49,7 +49,7 @@ def test_recolour_then_rotate_macro() -> None:
             as_grid([[7, 7], [0, 0]]),
         ),
         (
-            as_grid([[2, 0, 0], [2, 0, 0]]),
+            as_grid([[0, 0, 2], [0, 0, 2]]),
             as_grid([[7, 7], [0, 0], [0, 0]]),
         ),
     ]
