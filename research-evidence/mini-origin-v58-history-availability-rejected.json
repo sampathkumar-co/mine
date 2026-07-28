@@ -1,0 +1,34 @@
+{
+  "version": "v0.58",
+  "experiment": "history-aware availability quotient",
+  "status": "rejected",
+  "development_gate": false,
+  "frozen_head_sha": "b6a0b2324c5778e60ca2af6ed0c38724adce0a0f",
+  "workflow_run_id": 30406304111,
+  "artifact_id": 8706891085,
+  "artifact_digest": "sha256:6be1ca4f3428a97d87e1cdc20b63bec4a1f4b660d6c7d8a253c35474b4914229",
+  "counterexample_passed": true,
+  "theorem_task_count": 48,
+  "theorem_tasks_with_reduction": 48,
+  "theorem_mismatch_count": 0,
+  "base_state_count": 65,
+  "state_count": 195,
+  "quotient_solved_count": 195,
+  "plain_solved_count": 190,
+  "both_plan_match_count": 190,
+  "quotient_only_solved_count": 5,
+  "dominated_queries_removed": 112478479,
+  "expansion_ratio_lower_bound_median": 3.0995629868896066,
+  "expansion_ratio_lower_bound_p90": 6.213489675927542,
+  "budget_ladder_results": {
+    "10000": {"quotient_solved": 136, "plain_solved": 88},
+    "50000": {"quotient_solved": 185, "plain_solved": 140},
+    "250000": {"quotient_solved": 195, "plain_solved": 186},
+    "500000": {"quotient_solved": 195, "plain_solved": 190}
+  },
+  "failed_locked_requirements": {
+    "quotient_only_solved_count": {"required": 15, "observed": 5},
+    "expansion_ratio_lower_bound_p90": {"required": 8.0, "observed": 6.213489675927542}
+  },
+  "preservation_note": "The preregistered thresholds, solver, profiles, budgets and data hashes were not changed after observing the result. The theorem/equivalence result is positive, but the frozen development frontier gate is rejected."
+}
