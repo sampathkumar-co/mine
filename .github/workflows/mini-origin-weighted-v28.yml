@@ -1,0 +1,111 @@
+name: Mini-ORIGIN Weighted Transfer v0.28
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/weighted_tree_transfer_v28.py"
+      - "mini-origin/tests/test_weighted_tree_transfer_v28.py"
+      - ".github/workflows/mini-origin-weighted-v28.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/weighted_tree_transfer_v28.py"
+      - "mini-origin/tests/test_weighted_tree_transfer_v28.py"
+      - ".github/workflows/mini-origin-weighted-v28.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_weighted_tree_transfer_v28.py
+
+  weighted-study:
+    name: weighted-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1301, 1302, 1303, 1304, 1305]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: >-
+          mkdir -p results &&
+          python -m mini_origin.weighted_tree_transfer_v28
+          --seed ${{ matrix.seed }}
+          --output results/weighted-tree-v28-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-weighted-v28-seed-${{ matrix.seed }}
+          path: mini-origin/results/weighted-tree-v28-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, weighted-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-weighted-v28-seed-*
+          path: evidence
+          merge-multiple: true
+      - run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+          rows=[]
+          for f in sorted(glob.glob('evidence/weighted-tree-v28-seed-*.json')):
+              d=json.loads(Path(f).read_text())
+              rows.append({
+                  'seed':d['seed'],'pass':d['candidate_gate'],
+                  'policy':d['selected_policy'],
+                  'accuracy':d['candidate']['accuracy'],
+                  'mass_ratio':d['candidate']['mean_mass_ratio'],
+                  'violations':d['candidate']['half_mass_violation_rate'],
+                  'invalid':d['candidate']['invalid_rate'],
+                  'query_gain':d['unweighted_query_gain'],
+                  'mass_gain':d['unweighted_mass_ratio_gain'],
+                  'normalization_gap':d['normalization_accuracy_gap'],
+                  'proof':d['separator_certificate']['passed']})
+          summary={
+              'verdict':'replicated_weighted_tree_transfer_candidate' if len(rows)==5 and sum(r['pass'] for r in rows)>=4 else 'not_yet',
+              'run_count':len(rows),'passing_count':sum(r['pass'] for r in rows),
+              'accuracy_min':min(r['accuracy'] for r in rows),
+              'mass_ratio_max':max(r['mass_ratio'] for r in rows),
+              'violation_max':max(r['violations'] for r in rows),
+              'invalid_max':max(r['invalid'] for r in rows),
+              'query_gain_min':min(r['query_gain'] for r in rows),
+              'mass_gain_min':min(r['mass_gain'] for r in rows),
+              'normalization_gap_min':min(r['normalization_gap'] for r in rows),
+              'all_proofs_passed':all(r['proof'] for r in rows),
+              'rows':rows}
+          Path('weighted-tree-v28-summary.json').write_text(json.dumps(summary,indent=2))
+          print(json.dumps({k:v for k,v in summary.items() if k!='rows'},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-weighted-v28-summary
+          path: weighted-tree-v28-summary.json
+          retention-days: 90
