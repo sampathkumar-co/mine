@@ -1,0 +1,29 @@
+{
+  "verdict": "replicated_raw_predicate_compression_candidate",
+  "claim_scope": "raw-response predicate synthesis repeatedly compresses the v0.24 three-bit named alphabet into two learned relational predicates while preserving hidden closed-loop performance; this falsifies a vocabulary-independent reading of the v0.24 lower bound but remains grammar-bounded classical ordered-search synthesis, not a world breakthrough",
+  "workflow_run": 30362090766,
+  "run_count": 5,
+  "passing_count": 5,
+  "semantic_accuracy_min": 0.9974,
+  "semantic_accuracy_median": 0.998,
+  "minimum_state_accuracy_min": 0.989,
+  "semantic_gap_min": 0.1984,
+  "closed_loop_accuracy_min": 0.9946666666666667,
+  "closed_loop_accuracy_median": 0.9973333333333333,
+  "closed_loop_gap_min": 0.7376666666666667,
+  "invalid_transition_max": 0.0003333333333333333,
+  "human_gap_min": -0.005333333333333301,
+  "random_gap_min": 0.9388571428571428,
+  "program_digest_count": 4,
+  "predicate_family": [
+    "value(right) > learned threshold",
+    "value(right) - value(left) > learned threshold"
+  ],
+  "rows": [
+    {"seed": 1001, "predicates": ["value(right)>0.15000000", "value(right)-value(left)>0.15000000"], "semantic_accuracy": 0.9996, "minimum_state_accuracy": 0.998, "closed_loop_accuracy": 0.999, "closed_loop_gap": 0.7596666666666667},
+    {"seed": 1002, "predicates": ["value(right)>0.20000000", "value(right)-value(left)>0.20000000"], "semantic_accuracy": 0.998, "minimum_state_accuracy": 0.992, "closed_loop_accuracy": 0.996, "closed_loop_gap": 0.7466666666666667},
+    {"seed": 1003, "predicates": ["value(right)>0.15000000", "value(right)-value(left)>0.15000000"], "semantic_accuracy": 0.9992, "minimum_state_accuracy": 0.998, "closed_loop_accuracy": 0.9973333333333333, "closed_loop_gap": 0.738},
+    {"seed": 1004, "predicates": ["value(right)>0.15000000", "value(right)-value(left)>0.20000000"], "semantic_accuracy": 0.9978, "minimum_state_accuracy": 0.989, "closed_loop_accuracy": 0.9946666666666667, "closed_loop_gap": 0.7376666666666667},
+    {"seed": 1005, "predicates": ["value(right)>0.20000000", "value(right)-value(left)>0.15000000"], "semantic_accuracy": 0.9974, "minimum_state_accuracy": 0.995, "closed_loop_accuracy": 0.999, "closed_loop_gap": 0.741}
+  ]
+}
