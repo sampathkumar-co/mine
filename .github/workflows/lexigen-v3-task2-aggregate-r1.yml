@@ -1,0 +1,39 @@
+name: LEXIGEN v3 Task 2 KMeans Aggregate R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v3-task2/TRIGGER_AGGREGATE_R1"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  aggregate-existing-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download immutable shards from original training run
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 30362180027
+          pattern: lexigen-v3-kmeans-r1-shard-*
+          path: lexigen-v3-task2/train-downloaded
+      - name: Aggregate frozen gate without solver execution
+        working-directory: lexigen-v3-task2
+        run: python -u aggregate_train.py --input train-downloaded --output train-evidence
+      - name: Upload complete positive or negative evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-kmeans-r1-training-evidence
+          path: lexigen-v3-task2/train-evidence/
+          if-no-files-found: error
+          retention-days: 90
