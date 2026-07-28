@@ -1,0 +1,35 @@
+{
+  "colours": {
+    "background": 7,
+    "obstacle": 8,
+    "trace": 3
+  },
+  "execution": {
+    "max_steps_factor": 8,
+    "op": "iterate_until_outside"
+  },
+  "name": "generated_state_machine_ed6437319261",
+  "provenance": {
+    "candidates_tested": 16,
+    "exact_candidate_count": 2,
+    "human_supplied_finished_task_operator": false,
+    "human_supplied_generic_state_machine_substrate": true,
+    "method": "typed sensor-transition grammar synthesis"
+  },
+  "schema": "lexigen-sensor-state-machine-v1",
+  "seed": {
+    "direction_mode": "away_from_boundary",
+    "op": "derive_heading_from_boundary_seed"
+  },
+  "transition": {
+    "op": "conditional_sensor_transition",
+    "trigger": "forward_is_obstacle",
+    "turn": "away_from_lateral_obstacle"
+  },
+  "types": {
+    "output": "Grid",
+    "sensor": "Grid\u00d7Point\u2192Colour",
+    "state": "(Point,Vector)",
+    "transition": "State\u00d7Sensors\u2192State"
+  }
+}
