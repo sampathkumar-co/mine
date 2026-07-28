@@ -1,0 +1,172 @@
+name: Mini-ORIGIN Semantic Alphabet v0.24
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/semantic_alphabet_v24.py"
+      - "mini-origin/tests/test_semantic_alphabet_v24.py"
+      - ".github/workflows/mini-origin-semantic-v24.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/semantic_alphabet_v24.py"
+      - "mini-origin/tests/test_semantic_alphabet_v24.py"
+      - ".github/workflows/mini-origin-semantic-v24.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-semantic-v24-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test semantic lower-bound safeguards
+        run: pytest -q tests/test_semantic_alphabet_v24.py
+
+  semantic-search:
+    name: semantic-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [901, 902, 903, 904, 905]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Synthesize and freeze policy-independent alphabet
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.semantic_alphabet_v24
+          --seed ${{ matrix.seed }}
+          --output results/semantic-alphabet-v24-seed-${{ matrix.seed }}.json
+      - name: Upload v0.24 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-semantic-v24-seed-${{ matrix.seed }}
+          path: mini-origin/results/semantic-alphabet-v24-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, semantic-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-semantic-v24-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.24 runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          feature_sets = Counter()
+          for filename in sorted(glob.glob("evidence/semantic-alphabet-v24-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              features = "+".join(data["selected_program"]["features"])
+              feature_sets[features] += 1
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "candidate_gate": data["candidate_gate"],
+                  "features": data["selected_program"]["features"],
+                  "feature_count": data["semantic_certificate"]["selected_feature_count"],
+                  "semantic_accuracy": data["semantic_certificate"]["selected_accuracy"],
+                  "perfect_smaller": data["semantic_certificate"]["perfect_smaller_alphabets"],
+                  "best_smaller_semantic": data["semantic_certificate"]["best_smaller_accuracy"],
+                  "threshold_accuracy": data["activity_threshold"]["balanced_accuracy"],
+                  "hidden_accuracy": data["candidate"]["accuracy"],
+                  "lower_accuracy": data["candidate"]["lower_accuracy"],
+                  "upper_accuracy": data["candidate"]["upper_accuracy"],
+                  "alternating_accuracy": data["candidate"]["alternating_accuracy"],
+                  "invalid_transition_rate": data["candidate"]["invalid_transition_rate"],
+                  "smaller_accuracy": data["strongest_smaller_hidden"]["accuracy"],
+                  "smaller_gap": data["candidate_smaller_gap"],
+                  "random_median": data["random_codebook_control"]["median_accuracy"],
+                  "random_gap": data["candidate_random_gap"],
+                  "policy_floor": data["candidate_policy_floor"],
+                  "covariance_difference": data["observational_equivalence"]["maximum_covariance_difference"],
+                  "program_digest": data["frozen_program_digest"],
+              })
+
+          hidden = [row["hidden_accuracy"] for row in rows]
+          smaller_gaps = [row["smaller_gap"] for row in rows]
+          random_gaps = [row["random_gap"] for row in rows]
+          policy_floors = [row["policy_floor"] for row in rows]
+          invalid = [row["invalid_transition_rate"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_policy_independent_semantic_alphabet_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and min(hidden) >= 0.985
+                  and min(smaller_gaps) >= 0.06
+                  and min(random_gaps) >= 0.55
+                  and min(policy_floors) >= 0.98
+                  and max(invalid) <= 0.01
+                  and all(row["feature_count"] == 4 for row in rows)
+                  and all(row["semantic_accuracy"] == 1.0 for row in rows)
+                  and all(row["perfect_smaller"] == 0 for row in rows)
+                  and max(row["covariance_difference"] for row in rows) <= 1e-10
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "the system exhaustively proves a four-bit lower bound for policy-independent "
+                  "causal intervention semantics, freezes the exact alphabet, and transfers across "
+                  "lower, upper and alternating optimal query trees on unseen dimensions; this is "
+                  "formal automata/controller synthesis around classical binary search, not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "hidden_accuracy_min": min(hidden) if hidden else None,
+              "hidden_accuracy_median": statistics.median(hidden) if hidden else None,
+              "smaller_gap_min": min(smaller_gaps) if smaller_gaps else None,
+              "random_gap_min": min(random_gaps) if random_gaps else None,
+              "policy_floor_min": min(policy_floors) if policy_floors else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "feature_set_frequency": dict(sorted(feature_sets.items())),
+              "program_digest_count": len({row["program_digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("semantic-alphabet-v24-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.24 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-semantic-v24-summary
+          path: semantic-alphabet-v24-summary.json
+          retention-days: 90
