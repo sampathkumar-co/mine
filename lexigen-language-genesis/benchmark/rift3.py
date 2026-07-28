@@ -113,11 +113,14 @@ def execute_extended_family(
 
 
 def fits_family(instance: dict[str, Any], cases: list[CycleQueryWorld]) -> bool:
-    return all(
-        execute_extended_family(instance, case.step, case.seed)
-        == case.independently_verified_target()
-        for case in cases
-    )
+    for case in cases:
+        try:
+            predicted = execute_extended_family(instance, case.step, case.seed)
+        except (RuntimeError, ValueError):
+            return False
+        if predicted != case.independently_verified_target():
+            return False
+    return True
 
 
 def adapt_family(demonstrations: list[CycleQueryWorld]) -> tuple[dict[str, Any], int, bool]:
