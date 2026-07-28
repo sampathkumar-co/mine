@@ -1,0 +1,27 @@
+{
+  "verdict": "not_yet",
+  "claim_scope": "the exhaustive semantic certificate replicated exactly, but the preregistered six-point hidden-performance gap over the strongest smaller alphabet did not pass in any seed",
+  "run_count": 5,
+  "passing_count": 0,
+  "hidden_accuracy_min": 0.9905555555555555,
+  "hidden_accuracy_median": 0.9916666666666667,
+  "smaller_gap_min": 0.04749999999999999,
+  "smaller_gap_max": 0.05444444444444452,
+  "random_gap_min": 0.7427083333333333,
+  "policy_floor_min": 0.9883333333333333,
+  "invalid_transition_max": 0.0008333333333333334,
+  "feature_set_frequency": {
+    "left_exists+right_exists+left_active+right_active": 5
+  },
+  "semantic_certificate": {
+    "states": 7,
+    "feature_subsets_exhaustively_checked": 31,
+    "selected_feature_count": 4,
+    "selected_semantic_accuracy": 1.0,
+    "perfect_smaller_alphabets": 0,
+    "best_smaller_semantic_accuracy": 0.8571428571428571
+  },
+  "failure_reason": "all five seeds missed the locked 0.06 hidden accuracy gap over the strongest smaller alphabet; observed gaps were 0.0475 to 0.0544",
+  "workflow_run": 30359972968,
+  "external_breakthrough_certified": false
+}
