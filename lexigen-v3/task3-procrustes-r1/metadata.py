@@ -77,16 +77,23 @@ def main() -> None:
     rows = [json.loads(line) for line in raw.decode().splitlines() if line.strip()]
     if len(rows) != 100:
         raise RuntimeError(f"expected 100 training rows, received {len(rows)}")
-    dimensions = []
+
+    dimensions: list[int] = []
+    descriptor_pairs = set()
     for row in rows:
         problem = row["problem"]
         if sorted(problem) != ["A", "B"]:
             raise RuntimeError(f"unexpected problem keys: {sorted(problem)}")
+        a_desc = describe(problem["A"])
+        b_desc = describe(problem["B"])
+        descriptor_pairs.add(json.dumps([a_desc, b_desc], sort_keys=True))
         a_dim = dimension(problem["A"])
         b_dim = dimension(problem["B"])
-        if a_dim is None or a_dim != b_dim:
-            raise RuntimeError("matrix dimension metadata mismatch")
-        dimensions.append(a_dim)
+        if a_dim is not None and b_dim is not None:
+            if a_dim != b_dim:
+                raise RuntimeError("available matrix dimension metadata disagrees")
+            dimensions.append(a_dim)
+
     report = {
         "task": TASK,
         "dataset_revision": REVISION,
@@ -100,8 +107,10 @@ def main() -> None:
         "problem_keys": ["A", "B"],
         "first_A_descriptor": describe(rows[0]["problem"]["A"]),
         "first_B_descriptor": describe(rows[0]["problem"]["B"]),
-        "dimension_min": min(dimensions),
-        "dimension_max": max(dimensions),
+        "descriptor_pair_forms": [json.loads(value) for value in sorted(descriptor_pairs)],
+        "inline_dimension_metadata_available": len(dimensions) == len(rows),
+        "dimension_min": min(dimensions) if dimensions else None,
+        "dimension_max": max(dimensions) if dimensions else None,
         "dimension_values": sorted(set(dimensions)),
         "test_manifest_downloaded": False,
         "test_payloads_downloaded": 0,
