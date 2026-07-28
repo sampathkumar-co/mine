@@ -6,8 +6,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
-from rift1 import MECHANISMS if False else State  # type: ignore
-from rift1 import World, build_cases
+from rift1 import State, World, build_cases
 
 STOP_PREDICATES = ("stable", "repeat")
 FINALIZERS = ("current", "trace_union", "canonical_pair")
