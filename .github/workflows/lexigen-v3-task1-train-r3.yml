@@ -1,0 +1,85 @@
+name: LEXIGEN v3 Task 1 Train R3
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v3-task1-r3/TRIGGER_TRAIN_R3"
+
+permissions:
+  contents: read
+
+jobs:
+  train-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v3-task1-r3/requirements.txt
+      - name: Install frozen dependencies
+        working-directory: lexigen-v3-task1-r3
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Verify frozen final candidate family
+        working-directory: lexigen-v3-task1-r3
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = "8cfb67a8cc6f9b750d36f8c730aaa178b5f03c27"
+          data = Path("candidates.py").read_bytes()
+          actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+          if actual != expected:
+              raise SystemExit(f"candidate blob mismatch: {actual} != {expected}")
+          print("LEXIGEN_V3_TASK1_REVISION3_FROZEN")
+          PY
+      - name: Execute official training shard
+        working-directory: lexigen-v3-task1-r3
+        env:
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+          NUMEXPR_NUM_THREADS: "1"
+        run: python -u train_shard.py --shard ${{ matrix.shard }} --output train-artifacts/train-shard-${{ matrix.shard }}.jsonl
+      - name: Upload shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-task1-r3-shard-${{ matrix.shard }}
+          path: lexigen-v3-task1-r3/train-artifacts/train-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: train-shards
+    if: always() && needs.train-shards.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v3-task1-r3-shard-*
+          path: lexigen-v3-task1-r3/train-downloaded
+      - name: Aggregate fixed gate
+        working-directory: lexigen-v3-task1-r3
+        run: python -u aggregate_train.py --input train-downloaded --output train-evidence
+      - name: Upload complete training evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-task1-r3-training-evidence
+          path: lexigen-v3-task1-r3/train-evidence/
+          if-no-files-found: error
+          retention-days: 90
