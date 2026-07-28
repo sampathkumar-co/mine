@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import random
+from pathlib import Path
 
 import networkx as nx
 
@@ -40,13 +42,54 @@ for seed in range(20):
     ]
     problems.append({"num_nodes": node_count, "edges": edges})
 
+failures: list[dict[str, object]] = []
 for problem_index, problem in enumerate(problems):
     expected = reference(problem)
     for name, candidate in CANDIDATES.items():
-        result = candidate(problem)
-        points = result["articulation_points"]
-        assert isinstance(points, list), (problem_index, name, type(points))
-        assert all(isinstance(node, int) for node in points), (problem_index, name)
-        assert points == expected, (problem_index, name, expected, points)
+        try:
+            result = candidate(problem)
+            points = result["articulation_points"]
+            if not isinstance(points, list):
+                failures.append({
+                    "problem_index": problem_index,
+                    "candidate": name,
+                    "kind": "wrong_type",
+                    "actual_type": type(points).__name__,
+                })
+            elif not all(isinstance(node, int) for node in points):
+                failures.append({
+                    "problem_index": problem_index,
+                    "candidate": name,
+                    "kind": "non_integer_node",
+                    "actual": repr(points),
+                })
+            elif points != expected:
+                failures.append({
+                    "problem_index": problem_index,
+                    "candidate": name,
+                    "kind": "mismatch",
+                    "expected": expected,
+                    "actual": points,
+                    "num_nodes": problem["num_nodes"],
+                    "edges": problem["edges"],
+                })
+        except Exception as exc:
+            failures.append({
+                "problem_index": problem_index,
+                "candidate": name,
+                "kind": "exception",
+                "exception_type": type(exc).__name__,
+                "message": str(exc),
+                "num_nodes": problem["num_nodes"],
+                "edges": problem["edges"],
+            })
+
+Path("synthetic-diagnostics.json").write_text(
+    json.dumps({"failures": failures}, indent=2),
+    encoding="utf-8",
+)
+if failures:
+    print(json.dumps(failures[:5], indent=2), flush=True)
+    raise RuntimeError(f"synthetic exactness found {len(failures)} failures")
 
 print("synthetic articulation-point exactness passed")
