@@ -1,0 +1,35 @@
+{
+  "source": "UCI Machine Learning Repository",
+  "retrieved_utc": "2026-07-28",
+  "license": "CC BY 4.0",
+  "datasets": [
+    {
+      "name": "Car Evaluation",
+      "uci_id": 19,
+      "doi": "10.24432/C5JP48",
+      "archive": "car.zip",
+      "sha256": "1559d51dcf327f4f8c71b711ceed7fd95a382fc8d8e1998667f4f23b82860403"
+    },
+    {
+      "name": "Nursery",
+      "uci_id": 76,
+      "doi": "10.24432/C5P88W",
+      "archive": "nursery.zip",
+      "sha256": "914780f5e3050895216cb91f9e4a1408f3c0813b5854d5a6d6c601c2882091dd"
+    },
+    {
+      "name": "Balance Scale",
+      "uci_id": 12,
+      "doi": "10.24432/C5488X",
+      "archive": "balance.zip",
+      "sha256": "4f8ec31ea68c2f9e63f397b4c24cc1e345022b6886ab8f1bd69dd359b230125e"
+    },
+    {
+      "name": "Congressional Voting Records",
+      "uci_id": 105,
+      "doi": "10.24432/C5C01P",
+      "archive": "votes.zip",
+      "sha256": "ffec9d9328f28f151d95d2f8d36fd94ed8d2b0cdd0c9bd284bd8e65031a5e6a6"
+    }
+  ]
+}

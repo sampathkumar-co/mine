@@ -1,0 +1,1334 @@
+{
+  "status": "not_yet",
+  "claim_scope": "a label-aware experiment-selection objective is synthesized from a five-statistic grammar on previously opened external datasets, quotiented by exact behavior, frozen before four new UCI archives are opened, and evaluated on zero-error active class diagnosis; this is an external research candidate, not a world breakthrough",
+  "seed": 1801,
+  "candidate_gate": false,
+  "development_manifest": {
+    "source": "UCI Machine Learning Repository",
+    "license": "CC BY 4.0",
+    "all_hashes_match": true,
+    "rows": [
+      {
+        "name": "MONK's Problems",
+        "archive": "monks.zip",
+        "expected_sha256": "7501acef87251b1d427726d7c381a2488c166fbbf70ac4096e09f05951c30a29",
+        "actual_sha256": "7501acef87251b1d427726d7c381a2488c166fbbf70ac4096e09f05951c30a29",
+        "matched": true
+      },
+      {
+        "name": "Tic-Tac-Toe Endgame",
+        "archive": "tic-tac-toe.zip",
+        "expected_sha256": "c615fcd01bc23ab99daa36bbc30d897d53f7d3e151257880cada888c5451a586",
+        "actual_sha256": "c615fcd01bc23ab99daa36bbc30d897d53f7d3e151257880cada888c5451a586",
+        "matched": true
+      },
+      {
+        "name": "Zoo",
+        "archive": "zoo.zip",
+        "expected_sha256": "d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a",
+        "actual_sha256": "d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a",
+        "matched": true
+      },
+      {
+        "name": "Mushroom",
+        "archive": "mushroom.zip",
+        "expected_sha256": "face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a",
+        "actual_sha256": "face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a",
+        "matched": true
+      }
+    ]
+  },
+  "hidden_manifest": {
+    "source": "UCI Machine Learning Repository",
+    "license": "CC BY 4.0",
+    "all_hashes_match": true,
+    "rows": [
+      {
+        "name": "Car Evaluation",
+        "archive": "car.zip",
+        "expected_sha256": "1559d51dcf327f4f8c71b711ceed7fd95a382fc8d8e1998667f4f23b82860403",
+        "actual_sha256": "1559d51dcf327f4f8c71b711ceed7fd95a382fc8d8e1998667f4f23b82860403",
+        "matched": true
+      },
+      {
+        "name": "Nursery",
+        "archive": "nursery.zip",
+        "expected_sha256": "914780f5e3050895216cb91f9e4a1408f3c0813b5854d5a6d6c601c2882091dd",
+        "actual_sha256": "914780f5e3050895216cb91f9e4a1408f3c0813b5854d5a6d6c601c2882091dd",
+        "matched": true
+      },
+      {
+        "name": "Balance Scale",
+        "archive": "balance.zip",
+        "expected_sha256": "4f8ec31ea68c2f9e63f397b4c24cc1e345022b6886ab8f1bd69dd359b230125e",
+        "actual_sha256": "4f8ec31ea68c2f9e63f397b4c24cc1e345022b6886ab8f1bd69dd359b230125e",
+        "matched": true
+      },
+      {
+        "name": "Congressional Voting Records",
+        "archive": "votes.zip",
+        "expected_sha256": "ffec9d9328f28f151d95d2f8d36fd94ed8d2b0cdd0c9bd284bd8e65031a5e6a6",
+        "actual_sha256": "ffec9d9328f28f151d95d2f8d36fd94ed8d2b0cdd0c9bd284bd8e65031a5e6a6",
+        "matched": true
+      }
+    ]
+  },
+  "rotation": 0,
+  "training_tasks": [
+    "monk-2-train",
+    "monk-3-train",
+    "tic-tac-toe"
+  ],
+  "development_tasks": [
+    "monk-1-train",
+    "zoo",
+    "mushroom-development-512"
+  ],
+  "synthesis": {
+    "grammar_size": 70,
+    "quotient_class_count": 66,
+    "selected_class_size": 2,
+    "selected_weights": [
+      0,
+      0,
+      0,
+      4,
+      0
+    ],
+    "selected_expression": "4*unresolved_fraction",
+    "training": {
+      "tasks": {
+        "monk-2-train": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 4.254437869822485,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 169
+        },
+        "monk-3-train": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.598360655737705,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 122
+        },
+        "tic-tac-toe": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 4.949895615866389,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 958
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 3.9342313804755267,
+      "mean_worst_queries": 5.666666666666667,
+      "maximum_worst_queries": 7
+    },
+    "development": {
+      "tasks": {
+        "monk-1-train": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.717741935483871,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 124
+        },
+        "zoo": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.0792079207920793,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 101
+        },
+        "mushroom-development-512": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 1.4453125,
+          "worst_queries": 2,
+          "unresolved": 0,
+          "candidates": 512
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 2.0807541187586502,
+      "mean_worst_queries": 3.3333333333333335,
+      "maximum_worst_queries": 4
+    },
+    "classes": [
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        "canonical_expression": "4*inverse_outcomes",
+        "member_count": 1,
+        "digest": "4e50b1349188e61be6f93649abfb9178acb8e58ad288a7b9676f3b1492fafcbd",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        "canonical_expression": "4*unresolved_fraction",
+        "member_count": 2,
+        "digest": "f5050bb57c349811c3260260f06d2ba1461855c86329e14d99eb89b4ba554099",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          4,
+          0,
+          0
+        ],
+        "canonical_expression": "4*expected_entropy",
+        "member_count": 2,
+        "digest": "6778e3e3f8f01f0a5db779fa245983ec20918d1b53dee8c150c9855d61337f92",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          4,
+          0,
+          0,
+          0
+        ],
+        "canonical_expression": "4*expected_gini",
+        "member_count": 1,
+        "digest": "3caea3806eba095ba09032eb4e44c608200ed90fafc1aee01397586465ecc33c",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "canonical_expression": "4*worst_impure_fraction",
+        "member_count": 1,
+        "digest": "ff067949398880ce523029003e712885cd1610a10d382748a046d4f05d752e4c",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          1,
+          3
+        ],
+        "canonical_expression": "1*unresolved_fraction+3*inverse_outcomes",
+        "member_count": 1,
+        "digest": "291298ca6de6e25e834625651dc34a8d87cfddd24f1bfd4d9c57fe3fe0cbf523",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          2,
+          2
+        ],
+        "canonical_expression": "2*unresolved_fraction+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "6b18458e38ea72b76bc3960dacc246bd85505afaef6e0c70410e4f0270c7a8d4",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          1,
+          0,
+          3
+        ],
+        "canonical_expression": "1*expected_entropy+3*inverse_outcomes",
+        "member_count": 1,
+        "digest": "2fb63c76979187d5f4321a47deb2414fa60f5a4bbd35905daf116150d2b1ec85",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          1,
+          3,
+          0
+        ],
+        "canonical_expression": "1*expected_entropy+3*unresolved_fraction",
+        "member_count": 1,
+        "digest": "a5f4564a13c2a1ebf7761513f74f7c260208437dfc2875eb89e1f39cffe67b40",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          2,
+          0,
+          2
+        ],
+        "canonical_expression": "2*expected_entropy+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "fdf7b3d59c9f1b7c13255d75698a30e45852abb4998aab382afca013c666b5a9",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          2,
+          2,
+          0
+        ],
+        "canonical_expression": "2*expected_entropy+2*unresolved_fraction",
+        "member_count": 1,
+        "digest": "2085bea80f6f06ab125754903dd9e5e7b0d493719910dee63d3c2f1135d28dde",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          3,
+          0,
+          1
+        ],
+        "canonical_expression": "3*expected_entropy+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "1851b9d1ef344b60170c306e7ec5abbce6d2840678888fb1dfc06cef89aa234a",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          3,
+          1,
+          0
+        ],
+        "canonical_expression": "3*expected_entropy+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "e0677fe7cbaee3bc16f7ad01618d847289c419ee347fc441e4727f024ee3e7d1",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          0,
+          0,
+          3
+        ],
+        "canonical_expression": "1*expected_gini+3*inverse_outcomes",
+        "member_count": 1,
+        "digest": "b45d2a9b8c146bf6c8680829ae0e0f215a197e66e1e3d9c8a7ce815cf6f3fef2",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          0,
+          3,
+          0
+        ],
+        "canonical_expression": "1*expected_gini+3*unresolved_fraction",
+        "member_count": 1,
+        "digest": "37120a262b1a3e7a2d53b4d84548c5df4d1a19653047b459d3780fcd83a596e7",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          2,
+          0,
+          0,
+          2
+        ],
+        "canonical_expression": "2*expected_gini+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "eca4cc7a03e43c3f91e04600738e73d7d2e744961dd8c9d5ed3346f837c54265",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          2,
+          0,
+          2,
+          0
+        ],
+        "canonical_expression": "2*expected_gini+2*unresolved_fraction",
+        "member_count": 2,
+        "digest": "7fd08e05e26fd98b4f7fba699a03f30479370574a59b6ba2ed5286c33ebfe8f8",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          2,
+          2,
+          0,
+          0
+        ],
+        "canonical_expression": "2*expected_gini+2*expected_entropy",
+        "member_count": 1,
+        "digest": "c76834e6eedc0c60b26f9970d83bd9509007964a395a978b2cf684efeaac2050",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          3,
+          0,
+          0,
+          1
+        ],
+        "canonical_expression": "3*expected_gini+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "192c75ab00c2f9633c337974ad0e73e6eb035c4532d033ae39dec9d3e49b7f11",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          3,
+          0,
+          1,
+          0
+        ],
+        "canonical_expression": "3*expected_gini+1*unresolved_fraction",
+        "member_count": 2,
+        "digest": "da36283886ce7f42bc8b73b618e45694b7e0620090a8738c2b02eb2a40cc5386",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        "canonical_expression": "3*expected_gini+1*expected_entropy",
+        "member_count": 1,
+        "digest": "9753ec6b9b195a84c2f1c5f534af9102239080fd35bcbd0395962a1e18bf2abd",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          0,
+          0,
+          3
+        ],
+        "canonical_expression": "1*worst_impure_fraction+3*inverse_outcomes",
+        "member_count": 1,
+        "digest": "d57b312e486795c4a48da57ba894543e5c642b2270612e27e64f73821af03c0b",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          0,
+          3,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+3*unresolved_fraction",
+        "member_count": 1,
+        "digest": "ba93319a38f7bbaa48aa0520ec812560db374ae84112503359fef4a0f32b63b1",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          3,
+          0,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+3*expected_entropy",
+        "member_count": 1,
+        "digest": "90b33785d854416a9ea380fffa4bd4b497775e3c09f2cbf0d1e6b292a4b566e0",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          3,
+          0,
+          0,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+3*expected_gini",
+        "member_count": 1,
+        "digest": "ec0fe83ccb8450091175e4663be5a90101c04bc6de7d9a88994708c2406566b1",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          0,
+          0,
+          2
+        ],
+        "canonical_expression": "2*worst_impure_fraction+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "676020869f609775b2c55bea98f0f364c76e029e3589554d608e35119e8d90d0",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          0,
+          2,
+          0
+        ],
+        "canonical_expression": "2*worst_impure_fraction+2*unresolved_fraction",
+        "member_count": 1,
+        "digest": "8cc3a3f2167568515484b539dc01a579b327f46361b294ce04a0f9e784874bfc",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          2,
+          0,
+          0
+        ],
+        "canonical_expression": "2*worst_impure_fraction+2*expected_entropy",
+        "member_count": 1,
+        "digest": "4adbdb35502fd378bd4959cdf8e3e540574bda8c05ae3ce121c2dcf3d08fc3c7",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "canonical_expression": "2*worst_impure_fraction+2*expected_gini",
+        "member_count": 1,
+        "digest": "d8a379b1dea537619de7e2858679dfed9fbf073bc62d89477142de3ff7c18809",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          3,
+          0,
+          0,
+          0,
+          1
+        ],
+        "canonical_expression": "3*worst_impure_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "5ca2a27a7aa0198f0f401335e43217b1e345114b22a02284c4740ad0b88f569e",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          3,
+          0,
+          0,
+          1,
+          0
+        ],
+        "canonical_expression": "3*worst_impure_fraction+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "8873fd2970baaa0390b7faced3c4bb5ee4d5739db702c5f528cc23f35577ca59",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          3,
+          0,
+          1,
+          0,
+          0
+        ],
+        "canonical_expression": "3*worst_impure_fraction+1*expected_entropy",
+        "member_count": 1,
+        "digest": "6e0bfaec858f2b0927e710291a362b1679bac19dcbcf275f27845c49e11fadca",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          3,
+          1,
+          0,
+          0,
+          0
+        ],
+        "canonical_expression": "3*worst_impure_fraction+1*expected_gini",
+        "member_count": 1,
+        "digest": "772fa95b5e23104c847cde7a0f64b87ba082c475b92ce57f0a45ae3add29dfc5",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          1,
+          1,
+          2
+        ],
+        "canonical_expression": "1*expected_entropy+1*unresolved_fraction+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "adb602b444489b6e14b527a1c6a9a9c7df653bae8be2a228a8c1e4efb33254f6",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          1,
+          2,
+          1
+        ],
+        "canonical_expression": "1*expected_entropy+2*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "9f66e5ad42b465ea276b2706fd95473e704c4605d6460551199b8fa4fa185255",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          2,
+          1,
+          1
+        ],
+        "canonical_expression": "2*expected_entropy+1*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "16e6be4af4ec1db5840e2dd662fb7fb95b2659a5348ea13c7fe458fb4561a54f",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "canonical_expression": "1*expected_gini+1*unresolved_fraction+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "81c523183431c3e123c935635161de354dd85a4c7ade8b32126dbfc39d3dc0d2",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          0,
+          2,
+          1
+        ],
+        "canonical_expression": "1*expected_gini+2*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "531653f0302148b6d3141c01f644f4ecc708fdb8758c2d687a4bd0be866f9399",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          1,
+          0,
+          2
+        ],
+        "canonical_expression": "1*expected_gini+1*expected_entropy+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "f23a0441488aa068767cad588250e337c2a6243d29d57ef410bd9de3a1d52491",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          2,
+          0,
+          1
+        ],
+        "canonical_expression": "1*expected_gini+2*expected_entropy+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "f86fa4e0a57061e5af94aa0ded2cc71711876a887bccab4cbf058b716a1e009f",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          2,
+          1,
+          0
+        ],
+        "canonical_expression": "1*expected_gini+2*expected_entropy+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "4c8eda095a1687d0b7e8bec851044b982f38a74d23212d6f0941e1885bfcff2e",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          2,
+          0,
+          1,
+          1
+        ],
+        "canonical_expression": "2*expected_gini+1*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "bd4e56c78980809585051dbe4bed20f37b9f79569e7e28978da13e0c15787b6a",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          2,
+          1,
+          0,
+          1
+        ],
+        "canonical_expression": "2*expected_gini+1*expected_entropy+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "9e22f5837459d50466d0ad5c8ff3c260192de31e704a61bde3aec2fd0f56a0e1",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          0,
+          1,
+          2
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*unresolved_fraction+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "b83ff86fba35bfc4ea8be62381c78bc61f6507d786eb116aa6a63d9ed8003607",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          0,
+          2,
+          1
+        ],
+        "canonical_expression": "1*worst_impure_fraction+2*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "a27a2fff6a3daab77a663c5993fcb640b0b0c574f0387e07f7c38e10aa3b6d61",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_entropy+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "fdba93626680d322e0fd978864139c0775e99fc4b3742788a769fb8c5507f832",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          1,
+          2,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_entropy+2*unresolved_fraction",
+        "member_count": 1,
+        "digest": "464179ef687d1364d6c59ae277c99d5cf4074603f0f88865b35c213d2672c64e",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          2,
+          0,
+          1
+        ],
+        "canonical_expression": "1*worst_impure_fraction+2*expected_entropy+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "97e2ed87d82b23e6ff4d440c799307194de154e93cb5441861431fcfd81eaf0e",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          2,
+          1,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+2*expected_entropy+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "671197541cd9a7549c29aa7c92eb8b7feb54593e1586c72b8e9871c4e3367dcf",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          1,
+          0,
+          0,
+          2
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_gini+2*inverse_outcomes",
+        "member_count": 1,
+        "digest": "22817158ceb37e2a02686014f492a554463c179da070b6ab255b62346ef5d6d0",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          1,
+          0,
+          2,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_gini+2*unresolved_fraction",
+        "member_count": 1,
+        "digest": "d30bc46f5d16a0a59422a6fc67e3f658b395baf715ad66c1c41f3670739737ee",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          1,
+          2,
+          0,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_gini+2*expected_entropy",
+        "member_count": 1,
+        "digest": "bac3669c97d9d8df2a215c320b323fc2bc7ecdd2309f05b26e1a57ccf584b75e",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          2,
+          0,
+          0,
+          1
+        ],
+        "canonical_expression": "1*worst_impure_fraction+2*expected_gini+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "2567d58e6999df824e83d503b14ed0844782e1f9b5035ea493ac103dae1246d5",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          2,
+          0,
+          1,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+2*expected_gini+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "f06296b7b49a23a9067fc33f1f189b4429e9b94c5e37128010f86d7816a6b9f9",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          2,
+          1,
+          0,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+2*expected_gini+1*expected_entropy",
+        "member_count": 1,
+        "digest": "886f1df939fb638ed153fbb0b0816700df1d4fb5edf3cb1f1de7fea9782c7820",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          0,
+          1,
+          1
+        ],
+        "canonical_expression": "2*worst_impure_fraction+1*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "4ec0c86012613a2a4b5bc031650409b2023c595bb0c4c4b6a08b06d82f9a6e1c",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          1,
+          0,
+          1
+        ],
+        "canonical_expression": "2*worst_impure_fraction+1*expected_entropy+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "cc815670adf34e6b4102954db18547115796265b620d920182c7872ae86ddc71",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          1,
+          1,
+          0
+        ],
+        "canonical_expression": "2*worst_impure_fraction+1*expected_entropy+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "c2bd79e5d27ab1dc24305b0e25756eb2e8051ad051175eea88333fb42672eef9",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          1,
+          0,
+          0,
+          1
+        ],
+        "canonical_expression": "2*worst_impure_fraction+1*expected_gini+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "6d138331fd09da128561c8b7573a253b2a1cf9e940567e1f9a023ec8bcd856e8",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          1,
+          0,
+          1,
+          0
+        ],
+        "canonical_expression": "2*worst_impure_fraction+1*expected_gini+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "ef045d5742047812c8f0b3525c56bb5b549b60de3a407c7f9b1c0e93fb39eeb6",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "canonical_expression": "2*worst_impure_fraction+1*expected_gini+1*expected_entropy",
+        "member_count": 1,
+        "digest": "90744b21cf246220278410487769c68993bdeb2a4a4ff772eeb4f2c93770aa2c",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "canonical_expression": "1*expected_gini+1*expected_entropy+1*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "c4ef1995cfc4cb5349551b4fab7d298869ea9259fea4a98943afc7b4ddea0452",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          1,
+          1,
+          1
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_entropy+1*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "3b5daea4ec2e797babcc102c9a23a265f373bb4948d7b22a6bc8df9fb5ba121f",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          1,
+          0,
+          1,
+          1
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_gini+1*unresolved_fraction+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "2ce0756a54cb0e42b7cdd2373613a2e8baa3e311194368586014e9641def48f5",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          1,
+          1,
+          0,
+          1
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_gini+1*expected_entropy+1*inverse_outcomes",
+        "member_count": 1,
+        "digest": "61337d549a3dfafd70040e939e126022b972c4da3b6c16210616542cc9937cee",
+        "state_count": 1472
+      },
+      {
+        "canonical_weights": [
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "canonical_expression": "1*worst_impure_fraction+1*expected_gini+1*expected_entropy+1*unresolved_fraction",
+        "member_count": 1,
+        "digest": "3254d216f5335115e697df9ad94f3d3bc4d231ffb29674aff37b29028064339f",
+        "state_count": 1472
+      }
+    ]
+  },
+  "selected_class": {
+    "weights": [
+      0,
+      0,
+      0,
+      4,
+      0
+    ],
+    "expression": "4*unresolved_fraction",
+    "member_count": 2,
+    "class_digest": "f5050bb57c349811c3260260f06d2ba1461855c86329e14d99eb89b4ba554099"
+  },
+  "frozen_objective_digest": "15642c5cb2a9475479ad6e3683a1981c0472b4b87562deb1893712dc73cbcaa8",
+  "hidden_tasks": [
+    {
+      "name": "car-evaluation",
+      "rows": 1728,
+      "features": 6,
+      "labels": 4
+    },
+    {
+      "name": "nursery",
+      "rows": 12960,
+      "features": 8,
+      "labels": 5
+    },
+    {
+      "name": "balance-scale",
+      "rows": 625,
+      "features": 4,
+      "labels": 3
+    },
+    {
+      "name": "congressional-votes",
+      "rows": 435,
+      "features": 16,
+      "labels": 2
+    }
+  ],
+  "candidate": {
+    "tasks": {
+      "car-evaluation": {
+        "diagnosed_fraction": 1.0,
+        "mean_queries": 3.203125,
+        "worst_queries": 6,
+        "unresolved": 0,
+        "candidates": 1728
+      },
+      "nursery": {
+        "diagnosed_fraction": 1.0,
+        "mean_queries": 3.788425925925926,
+        "worst_queries": 8,
+        "unresolved": 0,
+        "candidates": 12960
+      },
+      "balance-scale": {
+        "diagnosed_fraction": 1.0,
+        "mean_queries": 3.608,
+        "worst_queries": 4,
+        "unresolved": 0,
+        "candidates": 625
+      },
+      "congressional-votes": {
+        "diagnosed_fraction": 1.0,
+        "mean_queries": 4.0137931034482754,
+        "worst_queries": 10,
+        "unresolved": 0,
+        "candidates": 435
+      }
+    },
+    "diagnosed_min": 1.0,
+    "diagnosed_mean": 1.0,
+    "mean_queries": 3.6533360073435506,
+    "mean_worst_queries": 7.0,
+    "maximum_worst_queries": 10
+  },
+  "controls": {
+    "worst_impurity": {
+      "tasks": {
+        "car-evaluation": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 5.152777777777778,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 1728
+        },
+        "nursery": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 6.9393518518518515,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 12960
+        },
+        "balance-scale": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.672,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 625
+        },
+        "congressional-votes": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.7701149425287355,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 435
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 4.883561143039591,
+      "mean_worst_queries": 6.25,
+      "maximum_worst_queries": 8
+    },
+    "gini": {
+      "tasks": {
+        "car-evaluation": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.9560185185185186,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 1728
+        },
+        "nursery": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.4574074074074073,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 12960
+        },
+        "balance-scale": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.552,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 625
+        },
+        "congressional-votes": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.0160919540229885,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 435
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 3.2453794699872285,
+      "mean_worst_queries": 6.5,
+      "maximum_worst_queries": 8
+    },
+    "entropy": {
+      "tasks": {
+        "car-evaluation": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.9502314814814814,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 1728
+        },
+        "nursery": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.4771604938271605,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 12960
+        },
+        "balance-scale": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.552,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 625
+        },
+        "congressional-votes": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.0160919540229885,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 435
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 3.2488709823329076,
+      "mean_worst_queries": 6.5,
+      "maximum_worst_queries": 8
+    },
+    "unresolved_mass": {
+      "tasks": {
+        "car-evaluation": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.203125,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 1728
+        },
+        "nursery": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.788425925925926,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 12960
+        },
+        "balance-scale": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.608,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 625
+        },
+        "congressional-votes": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 4.0137931034482754,
+          "worst_queries": 10,
+          "unresolved": 0,
+          "candidates": 435
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 3.6533360073435506,
+      "mean_worst_queries": 7.0,
+      "maximum_worst_queries": 10
+    },
+    "max_outcomes": {
+      "tasks": {
+        "car-evaluation": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 5.152777777777778,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 1728
+        },
+        "nursery": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 7.068518518518519,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 12960
+        },
+        "balance-scale": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.672,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 625
+        },
+        "congressional-votes": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 5.4,
+          "worst_queries": 10,
+          "unresolved": 0,
+          "candidates": 435
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 5.323324074074074,
+      "mean_worst_queries": 7.0,
+      "maximum_worst_queries": 10
+    }
+  },
+  "comparisons": {
+    "car-evaluation": {
+      "candidate_diagnosed": 1.0,
+      "best_control_diagnosed": 1.0,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 6,
+      "best_control_worst": 6,
+      "worst_gap": 0,
+      "candidate_mean": 3.203125,
+      "best_control_mean": 2.9502314814814814,
+      "mean_gap": 0.2528935185185186
+    },
+    "nursery": {
+      "candidate_diagnosed": 1.0,
+      "best_control_diagnosed": 1.0,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 8,
+      "best_control_worst": 8,
+      "worst_gap": 0,
+      "candidate_mean": 3.788425925925926,
+      "best_control_mean": 3.4574074074074073,
+      "mean_gap": 0.3310185185185186
+    },
+    "balance-scale": {
+      "candidate_diagnosed": 1.0,
+      "best_control_diagnosed": 1.0,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 4,
+      "best_control_worst": 4,
+      "worst_gap": 0,
+      "candidate_mean": 3.608,
+      "best_control_mean": 3.552,
+      "mean_gap": 0.05600000000000005
+    },
+    "congressional-votes": {
+      "candidate_diagnosed": 1.0,
+      "best_control_diagnosed": 1.0,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 10,
+      "best_control_worst": 7,
+      "worst_gap": 3,
+      "candidate_mean": 4.0137931034482754,
+      "best_control_mean": 3.0160919540229885,
+      "mean_gap": 0.997701149425287
+    }
+  },
+  "genuinely_composite": false,
+  "strict_hidden_wins": 0,
+  "minimum_diagnosed_gap": 0.0,
+  "maximum_worst_query_gap": 3,
+  "median_mean_query_gap": 0.2919560185185186
+}
