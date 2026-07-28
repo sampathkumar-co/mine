@@ -1,0 +1,2798 @@
+{
+  "status": "not_yet",
+  "claim_scope": "a one-branch state-dependent experiment-selection program is synthesized and trajectory-quotiented on previously opened UCI datasets, frozen before four new medical and biological archives are opened, and compared with all constant specialist policies; this is an external candidate, not a world breakthrough",
+  "seed": 1901,
+  "candidate_gate": false,
+  "development_manifest": {
+    "source": "UCI Machine Learning Repository",
+    "license": "CC BY 4.0",
+    "all_hashes_match": true,
+    "rows": [
+      {
+        "name": "MONK's Problems",
+        "archive": "monks.zip",
+        "expected_sha256": "7501acef87251b1d427726d7c381a2488c166fbbf70ac4096e09f05951c30a29",
+        "actual_sha256": "7501acef87251b1d427726d7c381a2488c166fbbf70ac4096e09f05951c30a29",
+        "matched": true
+      },
+      {
+        "name": "Tic-Tac-Toe Endgame",
+        "archive": "tic-tac-toe.zip",
+        "expected_sha256": "c615fcd01bc23ab99daa36bbc30d897d53f7d3e151257880cada888c5451a586",
+        "actual_sha256": "c615fcd01bc23ab99daa36bbc30d897d53f7d3e151257880cada888c5451a586",
+        "matched": true
+      },
+      {
+        "name": "Zoo",
+        "archive": "zoo.zip",
+        "expected_sha256": "d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a",
+        "actual_sha256": "d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a",
+        "matched": true
+      },
+      {
+        "name": "Mushroom",
+        "archive": "mushroom.zip",
+        "expected_sha256": "face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a",
+        "actual_sha256": "face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a",
+        "matched": true
+      }
+    ]
+  },
+  "v33_manifest": {
+    "source": "UCI Machine Learning Repository",
+    "license": "CC BY 4.0",
+    "all_hashes_match": true,
+    "rows": [
+      {
+        "name": "Car Evaluation",
+        "archive": "car.zip",
+        "expected_sha256": "1559d51dcf327f4f8c71b711ceed7fd95a382fc8d8e1998667f4f23b82860403",
+        "actual_sha256": "1559d51dcf327f4f8c71b711ceed7fd95a382fc8d8e1998667f4f23b82860403",
+        "matched": true
+      },
+      {
+        "name": "Nursery",
+        "archive": "nursery.zip",
+        "expected_sha256": "914780f5e3050895216cb91f9e4a1408f3c0813b5854d5a6d6c601c2882091dd",
+        "actual_sha256": "914780f5e3050895216cb91f9e4a1408f3c0813b5854d5a6d6c601c2882091dd",
+        "matched": true
+      },
+      {
+        "name": "Balance Scale",
+        "archive": "balance.zip",
+        "expected_sha256": "4f8ec31ea68c2f9e63f397b4c24cc1e345022b6886ab8f1bd69dd359b230125e",
+        "actual_sha256": "4f8ec31ea68c2f9e63f397b4c24cc1e345022b6886ab8f1bd69dd359b230125e",
+        "matched": true
+      },
+      {
+        "name": "Congressional Voting Records",
+        "archive": "votes.zip",
+        "expected_sha256": "ffec9d9328f28f151d95d2f8d36fd94ed8d2b0cdd0c9bd284bd8e65031a5e6a6",
+        "actual_sha256": "ffec9d9328f28f151d95d2f8d36fd94ed8d2b0cdd0c9bd284bd8e65031a5e6a6",
+        "matched": true
+      }
+    ]
+  },
+  "hidden_manifest": {
+    "source": "UCI Machine Learning Repository",
+    "license": "CC BY 4.0",
+    "all_hashes_match": true,
+    "rows": [
+      {
+        "name": "Breast Cancer",
+        "archive": "breast-cancer.zip",
+        "expected_sha256": "28062914fae034311a75eb061ef30d4d968fb1744dad49568c35b72dcf828de4",
+        "actual_sha256": "28062914fae034311a75eb061ef30d4d968fb1744dad49568c35b72dcf828de4",
+        "matched": true
+      },
+      {
+        "name": "Lymphography",
+        "archive": "lymphography.zip",
+        "expected_sha256": "082ff211040ad7dc2122e92441aa3eee494ab6496fecdcd86a440fe863ee5b6f",
+        "actual_sha256": "082ff211040ad7dc2122e92441aa3eee494ab6496fecdcd86a440fe863ee5b6f",
+        "matched": true
+      },
+      {
+        "name": "Primary Tumor",
+        "archive": "primary-tumor.zip",
+        "expected_sha256": "d866e8d1f358cdd51233982d4ab0680a19a6fd46be0517b5686196e5fa3c33f3",
+        "actual_sha256": "d866e8d1f358cdd51233982d4ab0680a19a6fd46be0517b5686196e5fa3c33f3",
+        "matched": true
+      },
+      {
+        "name": "Soybean (Large)",
+        "archive": "soybean-large.zip",
+        "expected_sha256": "c5701e50dd74b3c261d8ec1fd768d3392174a516edab6c661b0ce5dd2e133845",
+        "actual_sha256": "c5701e50dd74b3c261d8ec1fd768d3392174a516edab6c661b0ce5dd2e133845",
+        "matched": true
+      }
+    ]
+  },
+  "rotation": 0,
+  "training_tasks": [
+    "monk-2-train",
+    "monk-3-train",
+    "tic-tac-toe-subset-512",
+    "car-evaluation-subset-768",
+    "balance-scale"
+  ],
+  "development_tasks": [
+    "monk-1-train",
+    "zoo",
+    "mushroom-development-512",
+    "nursery-subset-1024",
+    "congressional-votes"
+  ],
+  "synthesis": {
+    "program_count": 385,
+    "quotient_class_count": 365,
+    "selected_class_size": 1,
+    "selected_program": "if(candidate_count_le:32:le)->worst_impurity:else->gini",
+    "training": {
+      "tasks": {
+        "monk-2-train": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 4.437869822485207,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 169,
+          "true_branch_count": 412,
+          "false_branch_count": 338
+        },
+        "monk-3-train": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.5081967213114753,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 122,
+          "true_branch_count": 62,
+          "false_branch_count": 244
+        },
+        "tic-tac-toe-subset-512": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 4.455078125,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 512,
+          "true_branch_count": 662,
+          "false_branch_count": 1619
+        },
+        "car-evaluation-subset-768": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.8385416666666665,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 768,
+          "true_branch_count": 565,
+          "false_branch_count": 1615
+        },
+        "balance-scale": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.68,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 625,
+          "true_branch_count": 1050,
+          "false_branch_count": 1250
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 3.58393726709267,
+      "mean_worst_queries": 5.4,
+      "maximum_worst_queries": 7,
+      "uses_both_branches": true
+    },
+    "development": {
+      "tasks": {
+        "monk-1-train": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.532258064516129,
+          "worst_queries": 3,
+          "unresolved": 0,
+          "candidates": 124,
+          "true_branch_count": 156,
+          "false_branch_count": 158
+        },
+        "zoo": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.405940594059406,
+          "worst_queries": 4,
+          "unresolved": 0,
+          "candidates": 101,
+          "true_branch_count": 104,
+          "false_branch_count": 139
+        },
+        "mushroom-development-512": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 1.4453125,
+          "worst_queries": 2,
+          "unresolved": 0,
+          "candidates": 512,
+          "true_branch_count": 0,
+          "false_branch_count": 740
+        },
+        "nursery-subset-1024": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.150390625,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 1024,
+          "true_branch_count": 750,
+          "false_branch_count": 2476
+        },
+        "congressional-votes": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.050574712643678,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 435,
+          "true_branch_count": 213,
+          "false_branch_count": 1114
+        }
+      },
+      "diagnosed_min": 1.0,
+      "diagnosed_mean": 1.0,
+      "mean_queries": 2.516895299243843,
+      "mean_worst_queries": 4.6,
+      "maximum_worst_queries": 7,
+      "uses_both_branches": true
+    },
+    "classes": [
+      {
+        "canonical": "entropy",
+        "member_count": 5,
+        "digest": "ebc495f8d3d7feab994837d630ae26c9b0d307abd81f06c4055221cb9f7e6027",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "gini",
+        "member_count": 5,
+        "digest": "73ef3e2ccb24b27515a8c68b6cf54fc23c477bda261ba87ad13f316817f30840",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "max_outcomes",
+        "member_count": 5,
+        "digest": "f48537f5d8b90160f46fdd32bd7f5651cebc62934ee89dfdcc3c25add7a81788",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "unresolved_mass",
+        "member_count": 5,
+        "digest": "94f6ad877de3c95acbc35721e4e4f38a141fa6dc8238693900687a3f1197b97b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "worst_impurity",
+        "member_count": 5,
+        "digest": "0c825d467149b429e3fa1d25c38947a39b52f56252e9cc686e6d9a774f5b18f6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "e469a4b344206b0eabcb8194eb7677f1c61bb145574d13dd2a3d25103bbacf83",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "5abde957147c9a36cc5533e70ff60f05f325a7aad06b9a1696efd74ec3272e8f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "0b4d48cc518cd60d199be55ced1524acd8de7f6f287ab9a4f0ae89c4853dd527",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "48f8c309dc59177e8cba1eb8764b01730bf987a72ab04acee2eddfc5c7ed0a50",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "ac02d7f6ad74c8855b554be2ad065f6d37fce345af1d6d808f2bd183e71c3b6f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "5d873973c96511fd79daaf3f83f23ee747f611cac8ae8d4c2987f7b657ccea97",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "514f3bec715fce1144f0ffafdd4b90a69160034d11733b73da3e7ed9357d7a25",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "6589ed42248e7728098e4f08472426675f49cd29d419c51fd8a58cd513a61c3d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "b0599933a7409ef6df066534f40bb13f1cf9f5b0efe3e678b80c0b5e01a37308",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "214b23abfad43e7a4d9eee42d676678b14cb14d9debc95ac7d4668f931d21eba",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "81da6228ba412f363669c8c75742bb109ce5876de60cde1d33cbe6105b8223b5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "4708e0796b0dbb5ec7d6222211cdb9804da60f2a5787589c816085abe58b66d1",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "b3a82a824a6445af162903a909209f0c25c0a0c9f0745962a99e75fd0539a164",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "31ab769506b06c20bde8fdde506f61ff37abd3b923dd54fd065510c4d60c0234",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "5b9df078d581cc5eeffeb9a3b0d59032bf87753500edad24c0593bedea2e769c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "24d55f5d71df3a3fa6fec37c96ed93bc5bd64c4ee1381ce28c38a94f4277d43f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "d4bff58cd002d958c7fee3269d193c161555c1c9f05d66aed64c40b7a81b3149",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "08e8997c283b29f31e282609fbfb67f85a2356ded61dbc7cad63e312c5475fcf",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "f6763a2cf10d7e783ed7f3b89d6655ba90aab0958a644ac14eb5bf7c54fd9b45",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:128:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "5096ec5b5840ad5bd1aaa4c87b577ba608a28e20c22463d18f03f36bb59bef09",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "08b910b1a5fe223fd9c51064c7e58afea048b1a05e008532377fd5a3d30aa38f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "773fcb4d1c0f8b5c1f882ebda16f408699e99e163120af93c043aa27dcb331e8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "2a9035d996538b332fdf3ec1e05e260b04fd12fc473fff0b32ae80ff38d5293b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "5fca2fbb3c7f4b778606fef84e0f18f9a42190014cfd9576b9e0ea31d683949d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "699d4ce7b02ab55ba888d95e60296969ab8930eb6c23454961b35c4bbd508e72",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "bc3e6c6110b2a69c9d0ed3cdab025d311f8530dbb6fa8c2a8eab474f694ed436",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "645f55d86c125fb264863e9f35dd859e161af6f93a817b54eeb33f533f8e778c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b1035d0118e78492524fbb374316289e838278210fc27ab557d4728bf4ccedc1",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "78f1e307b153a9a8eae7c195678df9fb2b5935fa12c6009c58a3dc0e68a49659",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "d71bd00ac41de234963cf992834c756688ee5c8fd81e60eb6b4007be7d8272db",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "324f58a876e4a2ccf42527a82a8ffb3d7bdf782130d3f9d72bead0a464d486d2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "2ca9aa3984c64062d5ad23f1362ed8568930b99835e3dbce7be5f7f81cceef36",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "d46966b696777b84af5600afc6b3cf1e30750706265dc4d719266c607540562c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "d56e26c023ed4a2c4d24263176f96dd7bd9748947a79654aa9b292c882b241de",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "58fa910427fac670ada939a7efdfca8f205e983bd8a587bb9a8b5ef1ebfbc446",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b2da40adb27ae793aa91785e2da8c3cb9c3718fee5768e04231fbc98f314cb73",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "2c3282e61f4003da0142c2b950e9b9db433ea5b7c716460ec006494c0060f72b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "2cc451dcc114cf581f308d6cb7c76f4b1531653bf4343a43d6ef0001330718b4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "cc8d3248809f2c88b37a7f941ed0646d5bd7a9a2e373d34af231492faa5cc3e3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:16:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "c01c56ed93e701c3785912abbc60b31fbd14b99ae6f000faa22831af88019be6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "bb6db633dd0267e0cffd70d64c1a0500c9045838bd365345e50799708d55f292",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "2097db1e299f9b2db919f663c4775f441fa03bbb0f5a8c2a5ee1de298717fb6b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "fe4ec011ebd0fcf65574f1152b167b3623eab27ea2a3e6aa86ca49d262aa903f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "f4806e0ebc492561dcd8e8921ccb3baddbe9e3ff8b7c0fbf3569d94d104d77a2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "f065e483e819a290571d5804939b2c1ca81a9953098677ed35ef9a2214aba6dc",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "1191d35c58010db43fcc286c2997d22e65e72a15a55b9d22b51ac8223fd127b6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "b68ee3cf0dd2541a38dd9ac61332d41798da86c6c9704c1032e4c33a5018cbf9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "41f68ff1afb6d6837095008533259b0be39aa4803d93ebaa52668b6df4d81325",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "9a42bcdd63d650cbf015d1b808fd6bd5af5b12f784ccc77fab83630506632e4e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "d95351eb72eab94ef2e96016fbe074175c07dd787a1cf25ef0622d1458bdaaf3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "ddf27f74d72459629692bfc8ceda0f33f63d4a5e3b566b757a45cb5c878c5a69",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "9f62d0f2de43668b1f31c525d7d561eda9e64a5450761e11a65e39971a2a4be4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "85f087fabdec0b021a9d4a72e7a76637e6815baf3e1d3d3525b4e0918a484239",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "25e73ed0a3ac1a45e03985aba20d3a90e1acbeaa2f6cafc0d3db452681a017c1",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "f4b73b2e8106de8ca996c99dc68f63266fe1b4513906a774d74540383801fac4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "77fd26b651140005d884a409c16e2180ca2418df91d8265c5ea9cd879c011254",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "7a18efd0964b4d02e7c9303aaae95002f8fab36bf6bda342bfaa9d17d26faec5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "4e339466de2dd8dba8b8e7afa691fb246d2742fd01dbc454331f9925b23979e0",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "8d9ca762f0fbc05ed80055513ee427d71b0dfbfe9f018deeff60e400590889cf",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:32:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "b10834213c0d3b7620783b2f3d45d34fce3357efb099da60810effb6efd5f0df",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "3bc4a769d7198a642f2cf4ad765c306ee3f4e59b0dde98f10a0605e0bf431b83",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "82f1dd5b0530d62ce916e86cdbe8542e3a8b29e422807f8ebe05f57111b71884",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "3c05a36a602ad37ebf8e9d2c93962cb8741a6b3f051aaee0502525cb988fb2fb",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b46285fe2d996c291d336b70b8c789a03d714ea36ec278a22a1af9e1ea39a1fd",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "48a6e0bb2afaec0d90751c848eba2c263c516077a026e73ecb2c764a718d6e49",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "728c26270a2ad1232f856cb501f544df941e37e8e7f047d5d6b0758365c5529c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "5dd7e6e53b02ef598eb8659681c7df1b6dcd5125984330660421d2ea8c27b2bd",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "d43f87aecf50ee0bee769e8f147413a4a2050a3801c91bcac47ac85bef68218c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "3a0db50a6026920d7116689d4eaa5e8be53c2b50c0e32bf0587b83b4c491c2c8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "e3d1731585bb430bd71a09f424641f596a756a6ecfcb3041bead0a9398a4c989",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "1e528f6603b40f89a5f7a67a15a50d575d69d71b1563e38a3b5b8ece4aadf1e0",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b7e3befb5218cb6345e43f1ccc96c428614c3435cf391de09a17478805cc2079",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "7f1b5318a610e7f896ee7141dca4808ce69ed2ac5e5ba8e1bfc61dd3dd3dc9ca",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "5c354c9b8c729d1f0605000587ad9c93260829fd550bc0e35be624f6628ba018",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "fcf9b996ee89873c9a6f726b50a0f9ebb54d060905006efbe7b3da772474c40f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "3e6fc9e01d1c74cf7c074193be736b06c6ab954d3791208c51974ca76d71dc12",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "e02a027ccd23c78af9d51bcbf5d4808b9f3c4f9692ad00f29b5824d8dbcf1042",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "c64f0f9c5e1787bc058323d65dc0bd79f6b0cf1667fd2671fa91ca33247dd4ca",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "9bbe0d006fe2eab7d036f00d2024ca7f0f4520611c8372be399dfe314a92edc4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:64:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "adfdab689daf8436bca5e62ca5c5bc25d1e3650f7eafdd97d2a54806788db234",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "0275cb7b0ca07a65383458c90e53e0e5a8c599b3d7002a0b373c78bbac5a3da0",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "d6723e91dfbd828470b9ebaed1a2eca0bfeb010a7ebac791455e79844ebadeea",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "68071212cfee4e15551e524fa67f8fc569dfafc248870e4ceb585452b77495a5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "6e79bf62c30a7c4920d4e33133dcbf43d798f5a92053de3cf3cc6ff076e4f82f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "d98442bf13e0d7d119f9e7410da63a841e7648f78716ecfe830883e3f88ca63e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "b8eeffd4ce1f87a436d7a1246c57620c444e1fa44a025fe50ebef9e69308ccdb",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "4779b6a4efdeadc44f31528819ef91f0eca1fc09a8e4ef4edc00e3d1058980b8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "5d3a8d19ebdceb6843a2a825a21abb311b2b0aa8bed32ca31fd9a70adc7f8223",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "c9d1087877d274fffdb80423a2de837e839c39fd6dfd41882cf2885853f85792",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "d2839dae9f63c9049ada89d189f23647c7dcebef3b7eb8dd3824edc2bcb83386",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "208072b2947658ffc8500c3674c9eb6ce31fbcf8c006695b7832e2bdb4fe1764",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "c73c16bd4aa270c7c23725fdec97ce784431d30d3010dc2d44e4f9be1e10f85b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "0382d4258d351d12ee2f677e8a4f8741bea56c34e77f2c7f8685d879376f269e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "92f88982e55dd6027cdb889a48512e5e143220822238ed61dfa1660fcf3ce4ca",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "db075d48b3f2248ef4b0ed0ba8cff3942d686c3bcbf504c891e13a4aa76d48c9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "8284af236f6591a3bf49144a6d2523f6d67d367ad13582ce604778cddc4144b5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "5b52ceb8d127f3788afa493624147292b649814ad1841f1e71affdda271b3c69",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "5bb0e88c1d55a1f0ae9a7ca439ae99a9a5f01aa6d5d469141c8299834212d2af",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "3a3e0b1976bc1afcd568eecb9e8398cabd2182da72dad2d7b60eb82c74d4ebd8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(candidate_count_le:8:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "31932d32b3f6116a1485401775cff958701d19c07f7cd22e23e3afe89fd4aedc",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "6baeca7e393f1fb112b0fde4c537fea31ee6ced175b9cac323f8af57c93c1af0",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "6e85a3b564121f5a12088288feb1e2d19a3b5b24836611bf8589b8272f7382ee",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "8839d98bcc5acc2d3319da1d7b175cfd604eb7496ecb023261e96cfb6f4ac195",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "999f0f0bd970e774046f70753ba14089ff825507a5ddfe81fbe956f2b8497026",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "a3d06d801f3758a503ae79e734831655838d3f507e94e1be26199c8ce60f749b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "68ec49e5315d19d46e5cf1fd3372a91cdb32cc466f11bb42b0348f6a6602ac11",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "621712444d59a64b4c3cf5f24e9806c73e4a053f7d2482cde4e7c79568fe52d2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "92836500016ac56befe680784930d7c6ccb03cd401a208268d0c2e24f4dd9327",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "9bacd50cceb439cc8dfb2ad59036b54428208242cd7c5412b50ce8012ee92d4a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "a9d3c4a17bb26e7fe48e4d00ef032dc5d918bfc117b4503bad5c34c5b55e241e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "18c1361021e7b4bf1ce863f965b50c051ab83ec3c80e02eaaedb422c2a3af8b2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "9ba25daf314936bffc94a37a794afc8150bdf42140054e979cd4556988a0f779",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "b70208c80ca1f4b71fbac1bfc4ea8a3a88ccf879aa026c8c707a862435ea516f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "44948b3359c121670995ccda92e50eb248d4c558fdb3f85524a96a7ec984aaa6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "fdf388b4d4ee562c4abb03c933c4f2f19a171c260b3025cd02118d4d101c453a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "cc26817de1a29bf039ad39cbdb9c4c93db86322dd968937278575f4f074c30d5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "bd8cdee317f46135018b9d24acff73c978408abfc525dae1d8e2abb14c2ff3cc",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "c0f98ad6af66675f320a1ae488266d76fdaf0e35923889a9eab7f472f807449a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "6ebd8a74929d61050c2d899adcb16fd4aedb96690dfdd3e71cf7cefb14f445c3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:2:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "aa4f74c6369ccc06e58db7d7fb042db2cef16db9406aa5d2460c6fda25250bcf",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "69d3345d3da6fe441d19a23ea2f0d44060baa706134569ad43e4783e4977760f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "117c2c77f802102d7dea43397bc65d9f60874276d051b856be945692feff3988",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "f4855f5e240016e6ecfd7deef1d5c9deb02fdc0f01422be24345f7c31a2f549b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "a48f57a6abbf4b2bd481be544d491661873a84faee009c840b783f7eb51a00df",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "496ba4195e0518e57b416a6b808479a2055483d500e622294ed15d270db6abf4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "c529b53983843127f5e12bc6574ba6ecbef4ed6b761d60e68c22de9aed40291d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "3c2f053dbc16512fa24065fcaea337ed71b11fb4c9f394af910747b36bb8e3a7",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "142ed1f76340ae6e9732cbf4241f26c3433c060001e42d12d8c785f553798576",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "3e3a2afaa496946797a9b1fc3abdd3759ad74e97ecea0fe0e7eb66e5eedf12ab",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "0d16390cdf732510266ee6c5b8b672808ece1ffd3d913f31c3300cff664943ac",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "4cc0b70b2c64826b91274c1f89765655f26acfe27bf367e784ac85e3ca9c2a7e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "1f57bdfbf1015e01b1ff54801a54e65dc76043f69f6b5f4197563ccc6dabf1ef",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "666e9caa6f832737dcc08373f7f7e6328e993574963abb2b2d37247415d1a1a8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "1c30cab72f3a6f4ed75784e4de09d9deaca2b967c1ee68ac72df7ed000c5662a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "ac519cc99195516576f5ba0ae8e458cf0ec76ad4f8368fdb8e98d33160a8d0aa",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "8d457d4e70533373a3f42be6a7c339bd30ba3a0c31b4665ad462ac96598c5db8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "e9162b2040713e082e1d799ac6b0a5a64a121c9480099881209f9160c8044301",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "c20350b45991ea1ddc2d92c1a00bbf7e2aed8b3f1858cff3971561cdb66d90e3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "786d6ae332fe4b6f295d51cccbcbeab55e805ee188aa69d7ee4c252119a52d58",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:3:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "13ce8d1f6382906642aa162394b50e743fb31ee04bb125afab43d125e3ebf022",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "126cf012569c86154cfc40ea2c16e7ed62a15d577e543098c79d174f23ea2fb2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "5ed6dc4476527d55f5a2918b5469bc2e5a6f66d1b81961598315e829890302d8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "554c3705a39d6af7ffbd011c146d3bfb5bad2f382bdd8faee4aa4c8c0c6d2f7b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b0d8ca38450aad714eebf28a7807ebdc5b0cff57074950c12063153cd04f258d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "56aa6fb4893ebc56f9e6ca823e8781afbdef792557aac9bbdc62bc4f6989f8ab",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "a3e060c0bd2c2c41261c359fa05f3d19c2a3706174dd544e4df70da7d7998d94",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "c3a9b2e3b0eb9a80a3b0b317fd89992b054f6ecface8b91a1ea189de09895494",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "00e808ef691341288f637bd633575f902691cd2ad5348b0ec917cc9f53edd69d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "fa32aacb6f667045a0b7adc79ddf611fe14491fccc8dcbf29ff397e15f6b07fa",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "d8c1754133bf92c9623aee9e9cd6a0fb7ec899f1432d29d2c5c92bc43cdedd6a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "61e553da4f8ff2723cf1d7df8ab2ebdb095570a64cefdcc4aa9d82b8c6fd453d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "2fdf301d8982d3f25d03fccc48fcfd6c8790e5a482f37c16256168365a6d866a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "bc50abacfcbf7ae4cf03fbe1e59a68869524a40106bc9b4cfcc8e92e5d782f14",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "8b0d5adb37e6fff9a7b750739c20ba6d4a939c37076cbac84fde02469686d7ab",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "f21fe115a6757000f11289ed71ab1e7936546843b05fe638cef2bb14d74dd1b5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "eb3990090281ab88820075aa777cd75988a8f1af3833ef212a8373e3f2923fb8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "3544876be42a5025dcdeaa5e9ccd437a4b9b2245fe253e973ead88f47e2b63da",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "ad8a127608d5214b81ba0ffb9da9043b78b66552c20a0df9d17ba9ec149adaaa",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "faf9e76cfc6a26da0d76c9ac2f638a3b04a0102d8cf90a090feeb6ad4ad5bf64",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(label_count_le:4:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "3262f1767f2b2b27307cb3ec332a08e30d8b0e603dd41eaac20fd775e091bb41",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "b3ab2e8b892937db2e221cc5b0c8d15793bb8deb3bec2f610b0126a32e2e09ff",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "10baf8a419a0a28c88fe26d14484e523b7807192f3010d6ad7a0c2369f239761",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "7299e9e1fabb8a81bc9a4b38dbb0ec9744946b9ff21258c0e6fe4c3b41eae157",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "4929886da795654efa3834a4c5d97f0e023a47526a0064d2f7dea59f4103aa05",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "d8b7b334d1b5068893eb51dc712d09651e364c87d3eaba234be932c0d8b2f1b8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "1364b25b0a5973768967e616a7a6d8ddd18725b95eac7abc6b16bdf20af03c6c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "14279bf6be7f3a2aa4dc765c002d902109b26669e80b036aaab93cd153bfde84",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "2bcd0958d9c4a8510eaa4ce6dabfe088fb495a27777fed8ae2a821c6cbf450a6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "8b5835801603f8a32be05db1c73b376e8abc1d5bb02840fcdff3a565919e2460",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "ef9d7100f4f57d0722839d0f5ba3f57539db24f4f3b34b908f491e59f3754e98",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "dd065caf391bd03e13ad3d34292fe248682d4688d506f1aa80ac5dce90a813c9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "fb114a09d6b96efeeb033ce08420ec8c7ea2212a31263df077f1c8d2c5e95ba1",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "3afca89154f73ae2316ff077df00d93135fbd2c67cea88f6cca6bd5dfdae70c3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "77ae63482723a980456a556c5ae856b3f2812b4171f1b4bc8a0e010f056c7541",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "ead0b22b0242320a34bdca321b8711c2370b869fc1cfc0a014d3cd974f1a189a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "f343a34108244a6a10c15fd9637661923edfdaf19bf40c9aad8451aab7bf0664",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "a62549b48af00bab5b3dabbf07483f0ec412721ada16971be6f53e0895014d70",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "4deceda1debd9476c304cccad0c7e9975493bef14cf49f8ee7b744edd2396812",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "d31713cf2d6b4c8b4b7bb012a9d6ccf9dd3da53493abd094f535829d4bc9304f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.55:ge)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "7be0d639ae016721fd601d493bc71d91b607799d9a95c85a51db6b445a820bfb",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "be9b1cfd014321b914d254737cfe2d71ea7a868e2de3609a5c3e9f3ef22fdbbf",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "3dfa9ae30178eede261113ad24e74e068febe61ee23c06cab90d972ee9a32fd9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "931eb02a457ec09e0044a9957cc29c299c08c9b1ee3679b533e79601bfc45621",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "90e28a308720e23fba82cb99a4624a397ea8df36db6ab559d8a0e2813d2c79b4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "6ff997c6adc67e77ed1b50e6bd292be11d23f71cc1efeaebdf1aa114bb42f154",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "a522456b91813cd241e05f0ee8f661b21c833a6559137c1ec08c6c3c4245012e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "34480c21f6d9acbc1ec8089df4d1f9e9ee119a68f75645afa2c92ed8a88850fb",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "e3cf00030993b7087ccf50fc49aadc453b51fe77b67443e3ffbfe10268fc2eb7",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "bfb2c226861f8f3eb2688e8632b71e157b76923dfc91d2094a80b40979f754da",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "f15055ea3b422a53f327e1a0d91ddab81f54ace62cd4738ba4d043376c281167",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "e53a4a502f6bda5020a594b8448a17f132d50923ac30a44d90fbd9ffdddd53ed",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "ee817194bc55f889e0dc7d0b880695b148d8e92ece4e7ccc39551ace6c520c96",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "59e52766ba346f81940ac7eedf2fdf8a5d5ddbd43213ed02c19b2a63bce2c801",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "cf6db0a3f29cf2ded92a9e785db516ad550bc37f20419e6f068c338d1b243aeb",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "8292ce8775c7167a151073f23aabc94615c8863c63fd68a0e94b4a18a88f55b2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "67c4d20f095bf7588650afd8b8d87f88546bf28ee67a207fd5916f2cb17ad1e7",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "d6363dda2706844ce823833ca4bb6a7480e11b9492351c312b6dddd5355fc06a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "ba3448d6490d88b8d0e58953b31e150ee3fa0392ce4d14228bbe1d43de24759e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "47e149b099cc4c52a18b13b17d0a09bb6802476c4ebe11b900ad331f4b8ac0e8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.7:ge)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "2d2ce64054391d26719785ecd557c308754fca4e712336f7f7b94703a3d6edd4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "7d0ebefd8d756ec11a19158edb96743bd5a9cb5167b98318891f1a1e43f058e5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "4766c70d5654d24f4c8925f98ef30b3545ba4c6308251e58987352aaf8f219fe",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "799671cc98c764ae94a27fe986d39a1e97f96a65a391f2c424df8a4962058cbb",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b54a363e28755c36f71186fa3155f5efe259d3d0df725ee191c412c272b868a6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "57beb472993930b4afb9a3f019958c86dde66fa82a397765fd0ebfef72dfb02e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "f3b17b491d65ab57050e48a5a7fdcbc24c7b26258f457c2017ce67052051352f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "1ecdeb39f560d6242057d6fc08dce21a2ace332f21ad0c8c678de061df124e4f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "9da49dcd2ca3c96bca63fd8375652d8a0d46219317dfaae9a39067117ced2716",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "3f91c352e03cf027d4f16e054d69e0b137a0934c1cb17217f94dc55c8351e7cf",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "284a70af0ad2749e08f7761cdcc1cd450f2094eb3ca474c92cc782f007028a66",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "3677d5edc12d53d74c092577a3730e50f63615279995f55c33683f5611e9ef85",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "419e7f42f7ce9de11c6bef5d6790c17f006001c7e9a88c06799f4bdf6a4ee45e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "c19dfdf0a85f5765427933b6c68aaeddb3a2c3edac8b1ce8574f377d649827b0",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "daee37c9ed6f62faafd243910b5b80d0e2623005a070e2b8511a92aeb57b110c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "bcfd12a5b8bda630be5f6aacfd8838baa0d0e3c26b1d1eaf67abe44f916c715f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "c192b154cc49f75aa50465d6961971403cf7ccbc788fffb937db5c46be527634",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "6f83df366eb4a473eeb952df9c64fed55ac51767c71a3d679fd92fc21d43b1cf",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "a4e861bae66e6defb3d8f2412df959f7e7da6bf8489cc2f86737ee96575ba250",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "ccb83828db202a33b20588b313e83b1add95447460e1b8a8ee6aa7e9d4cb6b82",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(majority_fraction_ge:0.85:ge)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "5776c7eaf21ae83471f98131b7cc03c4e570a3e6b2a1b1fb34e9a8b85850085a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "5f64fc1f11f1d5f8a88c863b580df8152122c556af30816fbb22d0bb3f2a74ae",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "7a84ffa9bd2068403f6661518f7ce639725683b79142da5a014f46c68a0e6c63",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "8a67d93be2f081ff673f8273b581c56470475b4120aeaae8a8a9ab9e89cdb15a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "33ed640a015bfcddc6692e6818fe747bd02eecf73a5d331f4ead8c6ef80e6f08",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "045af7cca24f520cc76ac68d95f04a5500d7a7bfe3f236db830adce726092877",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "550e61c3f2be1f6d73e12b9a0cab9bb395e19178aa675870a7abfe9ab84386c6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "9293b54215d67d6e67ab991f58b5fc448e37348f2e93c9f70b25626f5bcd2fe9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "6e72be904df5dff25238922d54e915703a2e6771568f54be8879772d35eba4f8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "618764cfb121e7a492ae85430985137c0437c11a416c81462a9de486c8be8c5c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "00ef7d3e8cebed6fbd0aa57d42c69308c05f08be5dfa332aa66af813035bbad7",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "7355d92b2601fcc56ecc0a9c8e121979697f61eb7b4c36a4e23eb3aa6ee9563e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "0a6f801e4fec0fa8d3eaa2bd8f7b389e55db855bc32fffa07176dea634a73b08",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "8f1402b27650b9cb4d07ba6e6fc5e35e848ec7b806c7a0fc30dbafda536660ca",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "795394f927b060e5b41887eefcafb844510f389c3afd72e347fc46a016adf731",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "072182dd3df88d851b2f10c5f4ae16f4ef2b18d5663c31f42268d730b65bcb9c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "1c0c0e4d9ab0e412b3be3c48c6adae1376f04799a27f0cc13376d9aa356b3d35",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "6e156407b269676ea0fabfd3b234ac5fb15dc648b35bef2a575dfb4095b38f02",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "cb9bdb8083e0e5ee92087b3df87a20fda0cd5f35c755a5f32bff15b17c668ccc",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "a3bfe62286547d155810241938e94873d5701019c13b62e7f3fb8696ae157d56",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.25:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "88323d37518ca4c17b739a3917edaa80b8ad7482d4fafce80ed677f0c504d3f4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "dfa528293cab1a468ad7fe6cfb4d4b6e2f639a3149e03c032394776c8e719101",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "3468307d39763eb66b292daeb5b78aee255d2a3183e09d8813205d940787b23c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "8d11413cac85d6aaac5c20e11ee0f71539a532748a6a2028847db08d0c388f09",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "10ba379a7445080689e2e457feb7d375c5cedd00db94024a313f178a78aa9ed6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "3e4e576ec1bdfa676be36652f3c8c86a9dc5038e9bfc685e2862d680dcef44f6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "5958740d0150605165507f6764c3a1c76ad40dc8f1f9d2c2a939ac7be5af7543",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "5b7809d88c24abeff1f9aa901825dadac0dae362adc3082ac3e604e7e247b24f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "7da592d6cc4d5f1ac8230b77817cbd87034e9d6eb2fce172a06ef031ff23d33f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "4b0eb0c082f9ee64da3ce32959151b588395cf85377ee672aeff92d9e86cd610",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "d9150820a6ffeee9a172ac0de335d87984afc887c112677aff80ff44e85edf8e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "7ddd1b3d273439bac069359a0657b3f338f4fbd1db9f4610e3947bca7a99084d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "e83c5fbf138cb2e9d6bb8b978715205149321b8ecb54baacfb922ae0cf6fc42d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "570777b8a7322f39976555e72fbdd2104949dcb943c41fcdf064af7528077f27",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "5a69052373488072ceed7c831b8774c6ccc4ad5fa5f5dad2fb0fbfca787b5ef3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "135c9bc2644af0fad013c272f336c268b064eb664cc64379ddfc57d5f79c2e0f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "552890c64bd2008d1994e181477ad706b8a502a29a2d9d789f2df16cdb7063ef",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "50aa93939591db91be17702474782db375609ec6236ab4027fb2e5d10fa02e6d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "1a6d480a5e1e905efb9fba95b252e6870256097c8485ef63d24eea48f5f1353e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "ea170a2f869422fc0b2b65238b61f8d751b2660d9824e4abe03dd7a9c10691f5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.5:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "803543055bffc5f34d8543dd6fb2a132e12d0c91ae177bb2e8b44efdfb704a03",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "0fc83d99914cf378e0e530590dd70e7ef461bac3cdf435643815c09b0438696e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "6c855b45c437d7c4d163b1b50b1982037b4313acf0f57bd6984a4c80c1bd2b18",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "e4af24475d28e77d141209e801654ff8c055e51e3de76c777e80ad685266afa1",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "dd52bfb425f48642fb10af5b4e0d16c3934046be9ce657d82a4de6528606689a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "7faf13a331cd0ef5a5312f7846adffe394147efc4a3227ec65bfbbca240abdd9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "9871bf4c41047f33f645c7d6f8daf4db1266c481ededca16c9495b7ae2c4ab3e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "26f690c916563e6c2b95dff8c797d6ef46dedbb8773039039b9dca7de132379a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "0088b02b9abe5dd5a2fa959432749aef63fbba8375dff2c0b21aa53b23ed0252",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "6e2561c4c2c758d29443269f43d45ebb8df8e5900966533df25b5a60902b5815",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "6dd8e6c9c7880ace69af43515bb102d8c4e6ae15c386c5d050bd0510519ced25",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "c50a91fbca6f0c6ed3a15b66c063754cfaa71a049da143babb0d934e6039e6ad",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "96e65d18d99697986e98a21341086cd9fd168baba899a647e0fff95eb5341e97",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "4c24743cbc1c19015807c31ebf75045532b91e68f374b987dd0b5cb212f55b2d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "c7b09c4deb4d14d2a4a27dbc735a25899ccef487dea797a58a2e74dfcac7b608",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "0459359edb4c321bf9dee3b57232951a28d23eb9d0a4ae015c9d22d136c8bbb2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b0ab175aaa6e23fc207bf713f81eaa82e3dbbeafb3a98f47fe64a0fc52c732cd",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "f2f3fd7cc09508c3674e67e16ae5250cc85e2d0ab5cc7f75e99ff9669bf4c606",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "d0fa1e90d53b76d89a245879394715b65c5c6b28cc964fe1f29f2d8978d77a5d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "b87d2c824d9e8326c31315d7a413fd98568ab12502ebab04b32cb2d89783805d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(normalized_entropy_le:0.75:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "ec81b41d2ffa2877afa8b0cc4c62577690d0e9ca36c8b42af6571a46f630554b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "1baf05de6245f254453d801094da9c7a9d58f84cfa7104324a541a29f25a83dc",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "9309b08cecf3fca03a784120b99915d8e79e1543bb8ce56e03c20d2efeff3473",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "6118e10b8af7d12edb0ff7fd5070c1bf22d7aa932cdeb09e05342f9e9133685d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "3d014dead8ba51c98b1bce726d0a845da4b7e97962a59b91bf403662debc4e89",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "299ea1bddafc4a7a58fcbb850c7a8417a88109590d3cb66172c07a3f62fab03c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "7713b2549dab1fda1845409aaffcd75f51600f5ae0462264cca0d2b2b08bd014",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "9e6db884c1d046e4f08748a7553299d70bda37e778ef6cde98db3b493e34bb8b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "afccd141e601ac21976712b7162a36501418c4c333842d3657e0da6233b13134",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "01df1344637226834376b8acaeef63acdecfa81af1bd453501b665bf9408ee5b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "1abd8039c1e51e7b40f48e70fd712e53cd50e9b24a01c7782a8a67ca53cec683",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "dcf829f73cfc60ca9df2a340a62f68ba78799764b0411777f36ff927b5f96751",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "9c97f4b280eb0ddef1204d70870bd5eb6e532380863a5792677348d69eaa4355",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "a24c024773be986764b5e8df0f7e68ecaf07c0b8c1261c7bf88a132265202b9b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "7e280e07d40a3049724c90ab083355dd4f6634e40f9d3c0de7d93ba79dcd36f1",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "fb00bcbfbbb8dd6b8a0528825b3e1c55d82c8a78774f20975842e699936aeee5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "fb20d8cd93dc9b3310156e2e27ed18c4f6c1b91cb3f4320875d02bf100dc7073",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "8a7af4b5549b10551137f35e253cc81c7bab7e2512b698a3d4969f4186639c26",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "44716a6193eb69fb9617e9396d7cef1854d0a04b372140bee34c751173619e1e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "dcd1817857f0c410571e4666b807cc8b5feea82636e62d21c50fea59537c1e56",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:12:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "1c22fd94fecf3c7f683d6f009e0d44026ff4ecd020c25fdd7b79ee3d7605121e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "996178ae89e4bb5eac0a022a4e8e21b37ac993bf9343440b5d836035d1dd5797",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "081a88004523ab0cc1feea6e488d581039c3d2ec8db35c11879d60c4b2b1ddea",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "3fe16cf2feda2261b81fc6dc3f7c6ac73413b7a1395838cded6778f074c6575b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "ee90486f3d8fff5b69269c67b50b6b728776190dc59ed79e08613b7d510f503a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "0a5a2ce483dfe4f3f7244d76d559db9806b6b71f67a0e092e9ab080fc7ebb69b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "ae698b3576843e73764c8ddaf14c18df9bd707dbd0c90e1ae4ec41293e1df171",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "7955f3fe81adfa0077db323e752317c1b5e93a6aab568e394acc8c0575ef51dc",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "82e2f97d58b018d897c6cf07643fcffa0bef0c680d8e55bc114bed1e593afbe9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "80d5d81a27317659c9b83b4c88e1df7cc76c3816ed69e2305a8de6263b5d0c69",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "61db07b5f2c781cf788050c18b420207f3763162c5c21ea297ef94b32135fda2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "938f244171d1be2aa812a463582a01dca097b559f19a9230ac9c569b11cde84d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "899da9f6f5239d7dcc1cecf50d8f73c66b1a46717e162c33bea057f1cd6fa7a4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "f3ac9fa950442925cdcc0879a68aa1742e7e36c3c8516662f9b921c80fa532f3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "86d4064528ac6ae16e4c93ae098581bd5422c184bf69c9a6ec5d6acf458b411b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "151777cbb1479a9e8b734432fef6bad8860352b08f82c6f9c002e4905918fd6c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "a2fef3c0f8605997663842ae3abf215d8cd13db1e0fad829a49a37df6b4959a3",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "308ebacd5d2c05a28083c2f4808a0c9a724317901c1209684443d26b2da4eed5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "6fab4971721dec40d0d3e485a2112522fe026fd95635f5d85c6184189dd261f5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "66df7eb6fba9c88936f676b42d041d12c246be5408795cf12711fb3b2d9e3bfa",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:2:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "737e0c8eac730729a838262bae2d70f1dbf2f600301bee691864b7abc0eeaf13",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "09213d6587a76831cd5aa59003c003834fadbd90e2a7e79ee404e9c28aaf9084",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "81dbb70d85bf32126bd753814a0ccaf854e60f8814c74fab251ce877c9a4faa7",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "5b49e55ee6bfb56b3498b6e9896264e56804e6f041c0681cacc5b892a03476d8",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "61e4422739e0f53811d3c6ba59ac57be0d900334bcdede43ea697eec7e89d673",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "ee4e5f6e4705437931d070f2688d5fd48f11d40fb1aef852e5c13bb36c210291",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "354a57f3171ca744b785ebbaeb956a991c645ae697bf56ed0ba8d70ad96e66fa",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "8b8d353d2cd55e7766952e5c361b8d7c942a27b54a10690de4bd821d26e8b321",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "c062d739f74daf98f88a4fbe2f6548f27961f1a22284773254c2ce3c71216ec2",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "02824ee167c0292576606cda24fb642e3b4a6447af0a8dc276fb62a3332d028a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "2b60f4617c9cfd3fb79e9eb1ed9a96dc7967bf99c16469d1a2a3fc15f7b9b791",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "b9d7c89d33531c7e6d7ed26aaf684570a661e3d21bdf21da2840e4bfd9eac4e6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "fc834c091b5f350c24b37994d7b6c32631b139502932d8084137d45ab68ee86e",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "dd98cb5a040d89e15acd9720308be33e3e3e08ebcacf9ddeab1879fa3d2d2e58",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "5c0fda626f72a3be09a1be4d69a55d54f69a2db0163b7099ee5bbae63a8a4738",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "c38174727c77c5d01d3d24592ad5b994aa35e6059225c5457210361266e6cd2f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "e77b3548114ce3d18d3bfe6e12ca2a35857434e61a7be577da21dfa009a748c7",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "0719b3eea841f9d6de2a55f0f7c8bd470ab940094a42b77a92f98b24586b3a19",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "13af4aa5d706fc8733aefdaf45ff06b6a7fd8ad30fdd00847e1f353b208c9fcf",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "a738c20ab89e38bc061adeebf0c8275d10fcea8a2829bea993a2db8198a0929d",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:4:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "186b881ffbfcefb4b315e647d330c667fe3197c36b1fad1f3fef47f69a20e25b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->entropy:else->gini",
+        "member_count": 1,
+        "digest": "9ea85901491564bc1349ae11aa1d472c93a711b8b55581efeef9b728f4ab0e4a",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->entropy:else->max_outcomes",
+        "member_count": 1,
+        "digest": "f11455478da8bfe2cdf2d8db4c937318b05d6224b1e81a036c865e39661ae3e6",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->entropy:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "103bea4d794b5cbc50ae3abbfa6a6cab531d4b513d89a9168cb2a068bc1609ff",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->entropy:else->worst_impurity",
+        "member_count": 1,
+        "digest": "4821703796d58aa100b89493f46ee9231d8e8eb5018d80db27e67b002598bc69",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->gini:else->entropy",
+        "member_count": 1,
+        "digest": "04abf544071a1abc21393610d9585e5dbe31d156b3bda2aa454352a4e2b533c4",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->gini:else->max_outcomes",
+        "member_count": 1,
+        "digest": "1263d2b911efbc37d25b4fa9e4c3eb2b1c7622251dd1a704d56eb5ec1ea7c7e9",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->gini:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "0d81eb4564d0677cac3c23a450ea8196e40514d1120cca75cdcf5ad97d918a6c",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->gini:else->worst_impurity",
+        "member_count": 1,
+        "digest": "b51b4a722593e25928d6a0237a2ada052919f372060ad277a2f7a2361ae303a5",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->max_outcomes:else->entropy",
+        "member_count": 1,
+        "digest": "7135c0c1f4a80bceda06ec3911df5d38382eb5fe77dc95052923f96c33598d1b",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->max_outcomes:else->gini",
+        "member_count": 1,
+        "digest": "7f5fa9b0f9719658ea5623a07e160e3633fc9c225be2890e5bd44befef00c8ba",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->max_outcomes:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "1bada936d0cf05f9708f6ff6711b1f7335e35c0c50ac4396130c7c664f953d38",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->max_outcomes:else->worst_impurity",
+        "member_count": 1,
+        "digest": "08b27959324b684f581705faecb08a3d0a31b3f8cfafe917d344dba425a922ee",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->unresolved_mass:else->entropy",
+        "member_count": 1,
+        "digest": "b41a3b13e36ef925c573939cb261ad02cae784ebea9be1c77fe1ea85ebe54a3f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->unresolved_mass:else->gini",
+        "member_count": 1,
+        "digest": "f819a2aedb5faeab17721417dbc35dd9b5ca04b3dad3150d2de6db7a19cf8163",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->unresolved_mass:else->max_outcomes",
+        "member_count": 1,
+        "digest": "b8fdfd5d66e5a521399c9022a9979b538811268bf8d5225b8087e0a324fbdf33",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->unresolved_mass:else->worst_impurity",
+        "member_count": 1,
+        "digest": "94d155397ff687d752f57fbd1cb08a0aedd43482d8dd33ddd86236d043624f4f",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->worst_impurity:else->entropy",
+        "member_count": 1,
+        "digest": "dfdf8f76b16cb785ceb1f2b873e4fb844688240d0d8b315fce5853ddda37ee08",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->worst_impurity:else->gini",
+        "member_count": 1,
+        "digest": "3696fc115d8d6a06251ea8466a7f9046c293103597b795a2d50a8ecfd8dab953",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->worst_impurity:else->max_outcomes",
+        "member_count": 1,
+        "digest": "57fd84d12a9ed0a71f979c3b5ebc76a1f477d919bc4d754b2efd72963f0e72dd",
+        "trajectory_count": 4392
+      },
+      {
+        "canonical": "if(remaining_features_le:8:le)->worst_impurity:else->unresolved_mass",
+        "member_count": 1,
+        "digest": "8a789a34d2ce4079fa4f33362984ebaad38b80b307a1001609cbadb14f7aac4f",
+        "trajectory_count": 4392
+      }
+    ]
+  },
+  "selected_class": {
+    "program": "if(candidate_count_le:32:le)->worst_impurity:else->gini",
+    "condition": "candidate_count_le:32:le",
+    "when_true": "worst_impurity",
+    "when_false": "gini",
+    "member_count": 1,
+    "class_digest": "4e339466de2dd8dba8b8e7afa691fb246d2742fd01dbc454331f9925b23979e0"
+  },
+  "frozen_program_digest": "d2f0badc6c433bd514d5a00f6c78bf29c9845cd5ff25a869686a62db907769da",
+  "hidden_tasks": [
+    {
+      "name": "breast-cancer",
+      "rows": 286,
+      "features": 9,
+      "labels": 2
+    },
+    {
+      "name": "lymphography",
+      "rows": 148,
+      "features": 18,
+      "labels": 4
+    },
+    {
+      "name": "primary-tumor",
+      "rows": 339,
+      "features": 17,
+      "labels": 21
+    },
+    {
+      "name": "soybean-large",
+      "rows": 683,
+      "features": 35,
+      "labels": 19
+    }
+  ],
+  "candidate": {
+    "tasks": {
+      "breast-cancer": {
+        "diagnosed_fraction": 0.9545454545454546,
+        "mean_queries": 3.5944055944055946,
+        "worst_queries": 6,
+        "unresolved": 13,
+        "candidates": 286,
+        "true_branch_count": 408,
+        "false_branch_count": 620
+      },
+      "lymphography": {
+        "diagnosed_fraction": 1.0,
+        "mean_queries": 3.0405405405405403,
+        "worst_queries": 5,
+        "unresolved": 0,
+        "candidates": 148,
+        "true_branch_count": 129,
+        "false_branch_count": 321
+      },
+      "primary-tumor": {
+        "diagnosed_fraction": 0.8171091445427728,
+        "mean_queries": 6.905604719764011,
+        "worst_queries": 12,
+        "unresolved": 62,
+        "candidates": 339,
+        "true_branch_count": 1147,
+        "false_branch_count": 1194
+      },
+      "soybean-large": {
+        "diagnosed_fraction": 0.9970717423133236,
+        "mean_queries": 3.8111273792093705,
+        "worst_queries": 9,
+        "unresolved": 2,
+        "candidates": 683,
+        "true_branch_count": 370,
+        "false_branch_count": 2233
+      }
+    },
+    "diagnosed_min": 0.8171091445427728,
+    "diagnosed_mean": 0.9421815853503878,
+    "mean_queries": 4.3379195584798795,
+    "mean_worst_queries": 8.0,
+    "maximum_worst_queries": 12,
+    "uses_both_branches": true
+  },
+  "controls": {
+    "worst_impurity": {
+      "tasks": {
+        "breast-cancer": {
+          "diagnosed_fraction": 0.9545454545454546,
+          "mean_queries": 3.395104895104895,
+          "worst_queries": 6,
+          "unresolved": 13,
+          "candidates": 286,
+          "true_branch_count": 971,
+          "false_branch_count": 0
+        },
+        "lymphography": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.7837837837837838,
+          "worst_queries": 5,
+          "unresolved": 0,
+          "candidates": 148,
+          "true_branch_count": 412,
+          "false_branch_count": 0
+        },
+        "primary-tumor": {
+          "diagnosed_fraction": 0.8171091445427728,
+          "mean_queries": 6.542772861356932,
+          "worst_queries": 12,
+          "unresolved": 62,
+          "candidates": 339,
+          "true_branch_count": 2218,
+          "false_branch_count": 0
+        },
+        "soybean-large": {
+          "diagnosed_fraction": 0.9970717423133236,
+          "mean_queries": 4.407027818448023,
+          "worst_queries": 7,
+          "unresolved": 2,
+          "candidates": 683,
+          "true_branch_count": 3010,
+          "false_branch_count": 0
+        }
+      },
+      "diagnosed_min": 0.8171091445427728,
+      "diagnosed_mean": 0.9421815853503878,
+      "mean_queries": 4.282172339673409,
+      "mean_worst_queries": 7.5,
+      "maximum_worst_queries": 12,
+      "uses_both_branches": false
+    },
+    "gini": {
+      "tasks": {
+        "breast-cancer": {
+          "diagnosed_fraction": 0.9545454545454546,
+          "mean_queries": 3.5524475524475525,
+          "worst_queries": 6,
+          "unresolved": 13,
+          "candidates": 286,
+          "true_branch_count": 1016,
+          "false_branch_count": 0
+        },
+        "lymphography": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.1216216216216215,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 148,
+          "true_branch_count": 462,
+          "false_branch_count": 0
+        },
+        "primary-tumor": {
+          "diagnosed_fraction": 0.8171091445427728,
+          "mean_queries": 7.20353982300885,
+          "worst_queries": 13,
+          "unresolved": 62,
+          "candidates": 339,
+          "true_branch_count": 2442,
+          "false_branch_count": 0
+        },
+        "soybean-large": {
+          "diagnosed_fraction": 0.9970717423133236,
+          "mean_queries": 3.8038067349926794,
+          "worst_queries": 9,
+          "unresolved": 2,
+          "candidates": 683,
+          "true_branch_count": 2598,
+          "false_branch_count": 0
+        }
+      },
+      "diagnosed_min": 0.8171091445427728,
+      "diagnosed_mean": 0.9421815853503878,
+      "mean_queries": 4.420353933017676,
+      "mean_worst_queries": 8.5,
+      "maximum_worst_queries": 13,
+      "uses_both_branches": false
+    },
+    "entropy": {
+      "tasks": {
+        "breast-cancer": {
+          "diagnosed_fraction": 0.9545454545454546,
+          "mean_queries": 3.5524475524475525,
+          "worst_queries": 6,
+          "unresolved": 13,
+          "candidates": 286,
+          "true_branch_count": 1016,
+          "false_branch_count": 0
+        },
+        "lymphography": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.1216216216216215,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 148,
+          "true_branch_count": 462,
+          "false_branch_count": 0
+        },
+        "primary-tumor": {
+          "diagnosed_fraction": 0.8171091445427728,
+          "mean_queries": 6.817109144542773,
+          "worst_queries": 13,
+          "unresolved": 62,
+          "candidates": 339,
+          "true_branch_count": 2311,
+          "false_branch_count": 0
+        },
+        "soybean-large": {
+          "diagnosed_fraction": 0.9970717423133236,
+          "mean_queries": 3.7701317715959006,
+          "worst_queries": 10,
+          "unresolved": 2,
+          "candidates": 683,
+          "true_branch_count": 2575,
+          "false_branch_count": 0
+        }
+      },
+      "diagnosed_min": 0.8171091445427728,
+      "diagnosed_mean": 0.9421815853503878,
+      "mean_queries": 4.315327522551962,
+      "mean_worst_queries": 8.75,
+      "maximum_worst_queries": 13,
+      "uses_both_branches": false
+    },
+    "unresolved_mass": {
+      "tasks": {
+        "breast-cancer": {
+          "diagnosed_fraction": 0.9545454545454546,
+          "mean_queries": 3.674825174825175,
+          "worst_queries": 7,
+          "unresolved": 13,
+          "candidates": 286,
+          "true_branch_count": 1051,
+          "false_branch_count": 0
+        },
+        "lymphography": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 2.7027027027027026,
+          "worst_queries": 5,
+          "unresolved": 0,
+          "candidates": 148,
+          "true_branch_count": 400,
+          "false_branch_count": 0
+        },
+        "primary-tumor": {
+          "diagnosed_fraction": 0.8171091445427728,
+          "mean_queries": 9.064896755162241,
+          "worst_queries": 16,
+          "unresolved": 62,
+          "candidates": 339,
+          "true_branch_count": 3073,
+          "false_branch_count": 0
+        },
+        "soybean-large": {
+          "diagnosed_fraction": 0.9970717423133236,
+          "mean_queries": 4.638360175695461,
+          "worst_queries": 13,
+          "unresolved": 2,
+          "candidates": 683,
+          "true_branch_count": 3168,
+          "false_branch_count": 0
+        }
+      },
+      "diagnosed_min": 0.8171091445427728,
+      "diagnosed_mean": 0.9421815853503878,
+      "mean_queries": 5.020196202096395,
+      "mean_worst_queries": 10.25,
+      "maximum_worst_queries": 16,
+      "uses_both_branches": false
+    },
+    "max_outcomes": {
+      "tasks": {
+        "breast-cancer": {
+          "diagnosed_fraction": 0.9545454545454546,
+          "mean_queries": 3.660839160839161,
+          "worst_queries": 7,
+          "unresolved": 13,
+          "candidates": 286,
+          "true_branch_count": 1047,
+          "false_branch_count": 0
+        },
+        "lymphography": {
+          "diagnosed_fraction": 1.0,
+          "mean_queries": 3.1486486486486487,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 148,
+          "true_branch_count": 466,
+          "false_branch_count": 0
+        },
+        "primary-tumor": {
+          "diagnosed_fraction": 0.8171091445427728,
+          "mean_queries": 6.887905604719764,
+          "worst_queries": 12,
+          "unresolved": 62,
+          "candidates": 339,
+          "true_branch_count": 2335,
+          "false_branch_count": 0
+        },
+        "soybean-large": {
+          "diagnosed_fraction": 0.9970717423133236,
+          "mean_queries": 4.581259150805271,
+          "worst_queries": 8,
+          "unresolved": 2,
+          "candidates": 683,
+          "true_branch_count": 3129,
+          "false_branch_count": 0
+        }
+      },
+      "diagnosed_min": 0.8171091445427728,
+      "diagnosed_mean": 0.9421815853503878,
+      "mean_queries": 4.569663141253211,
+      "mean_worst_queries": 8.25,
+      "maximum_worst_queries": 12,
+      "uses_both_branches": false
+    }
+  },
+  "comparisons": {
+    "breast-cancer": {
+      "candidate_diagnosed": 0.9545454545454546,
+      "best_control_diagnosed": 0.9545454545454546,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 6,
+      "best_control_worst": 6,
+      "worst_gap": 0,
+      "candidate_mean": 3.5944055944055946,
+      "best_control_mean": 3.395104895104895,
+      "mean_gap": 0.1993006993006996
+    },
+    "lymphography": {
+      "candidate_diagnosed": 1.0,
+      "best_control_diagnosed": 1.0,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 5,
+      "best_control_worst": 5,
+      "worst_gap": 0,
+      "candidate_mean": 3.0405405405405403,
+      "best_control_mean": 2.7027027027027026,
+      "mean_gap": 0.3378378378378377
+    },
+    "primary-tumor": {
+      "candidate_diagnosed": 0.8171091445427728,
+      "best_control_diagnosed": 0.8171091445427728,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 12,
+      "best_control_worst": 12,
+      "worst_gap": 0,
+      "candidate_mean": 6.905604719764011,
+      "best_control_mean": 6.542772861356932,
+      "mean_gap": 0.36283185840707954
+    },
+    "soybean-large": {
+      "candidate_diagnosed": 0.9970717423133236,
+      "best_control_diagnosed": 0.9970717423133236,
+      "diagnosed_gap": 0.0,
+      "candidate_worst": 9,
+      "best_control_worst": 7,
+      "worst_gap": 2,
+      "candidate_mean": 3.8111273792093705,
+      "best_control_mean": 3.7701317715959006,
+      "mean_gap": 0.040995607613469875
+    }
+  },
+  "state_dependent": true,
+  "strict_hidden_wins": 0,
+  "minimum_diagnosed_gap": 0.0,
+  "maximum_worst_query_gap": 2,
+  "median_mean_query_gap": 0.26856926856926866
+}

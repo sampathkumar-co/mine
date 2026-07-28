@@ -1,0 +1,35 @@
+{
+  "source": "UCI Machine Learning Repository",
+  "retrieved_utc": "2026-07-28",
+  "license": "CC BY 4.0",
+  "datasets": [
+    {
+      "name": "Breast Cancer",
+      "uci_id": 14,
+      "doi": "10.24432/C51P4M",
+      "archive": "breast-cancer.zip",
+      "sha256": "28062914fae034311a75eb061ef30d4d968fb1744dad49568c35b72dcf828de4"
+    },
+    {
+      "name": "Lymphography",
+      "uci_id": 63,
+      "doi": "10.24432/C54598",
+      "archive": "lymphography.zip",
+      "sha256": "082ff211040ad7dc2122e92441aa3eee494ab6496fecdcd86a440fe863ee5b6f"
+    },
+    {
+      "name": "Primary Tumor",
+      "uci_id": 83,
+      "doi": "10.24432/C5W02J",
+      "archive": "primary-tumor.zip",
+      "sha256": "d866e8d1f358cdd51233982d4ab0680a19a6fd46be0517b5686196e5fa3c33f3"
+    },
+    {
+      "name": "Soybean (Large)",
+      "uci_id": 90,
+      "doi": "10.24432/C5JG6Z",
+      "archive": "soybean-large.zip",
+      "sha256": "c5701e50dd74b3c261d8ec1fd768d3392174a516edab6c661b0ce5dd2e133845"
+    }
+  ]
+}

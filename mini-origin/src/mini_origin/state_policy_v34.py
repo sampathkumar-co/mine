@@ -253,32 +253,120 @@ def trace(
     )
 
 
+def analyse_task(
+    task: base.ClassTask,
+    program: StatePolicy,
+) -> tuple[tuple[object, ...], ...]:
+    """Compute each reachable diagnostic state exactly once."""
+    results: list[tuple[object, ...] | None] = [None] * task.candidate_count
+
+    def assign(
+        allowed: int,
+        correct: bool,
+        queries: int,
+        true_count: int,
+        false_count: int,
+        trajectory: tuple[tuple[object, ...], ...],
+    ) -> None:
+        mask = allowed
+        while mask:
+            bit = mask & -mask
+            candidate = bit.bit_length() - 1
+            results[candidate] = (
+                correct,
+                queries,
+                true_count,
+                false_count,
+                trajectory,
+            )
+            mask ^= bit
+    def visit(
+        allowed: int,
+        remaining: int,
+        queries: int,
+        true_count: int,
+        false_count: int,
+        trajectory: tuple[tuple[object, ...], ...],
+    ) -> None:
+        prediction = base.pure_label(task, allowed)
+        if prediction is not None:
+            mask = allowed
+            while mask:
+                bit = mask & -mask
+                candidate = bit.bit_length() - 1
+                results[candidate] = (
+                    prediction == task.labels[candidate],
+                    queries,
+                    true_count,
+                    false_count,
+                    trajectory,
+                )
+                mask ^= bit
+            return
+        try:
+            query, branch, objective_name = select_query(
+                task, allowed, remaining, program
+            )
+        except RuntimeError:
+            assign(allowed, False, queries, true_count, false_count, trajectory)
+            return
+        shape = base.bucket_shape(task, allowed, query)
+        step = (
+            allowed.bit_count(),
+            remaining.bit_count(),
+            base.label_counts(task, allowed),
+            branch,
+            objective_name,
+            shape,
+        )
+        next_remaining = remaining & ~(1 << query)
+        next_true = true_count + int(branch)
+        next_false = false_count + int(not branch)
+        covered = 0
+        for mask in task.masks_for(query).values():
+            child = allowed & mask
+            if not child:
+                continue
+            covered |= child
+            visit(
+                child,
+                next_remaining,
+                queries + 1,
+                next_true,
+                next_false,
+                trajectory + (step,),
+            )
+        if covered != allowed:
+            raise AssertionError("query outcomes did not partition state")
+
+    visit(
+        task.full_mask,
+        (1 << task.query_count) - 1,
+        0,
+        0,
+        0,
+        (),
+    )
+    if any(row is None for row in results):
+        raise AssertionError("not every candidate received a trajectory")
+    return tuple(row for row in results if row is not None)
+
+
 def evaluate(
     task: base.ClassTask,
     program: StatePolicy,
 ) -> ProgramEvaluation:
-    diagnosed = 0
-    query_counts = []
-    true_count = 0
-    false_count = 0
-    for candidate in range(task.candidate_count):
-        correct, queries, true_rows, false_rows, _ = trace(
-            task,
-            program,
-            candidate,
-        )
-        diagnosed += int(correct)
-        query_counts.append(queries)
-        true_count += true_rows
-        false_count += false_rows
+    rows = analyse_task(task, program)
+    diagnosed = sum(int(bool(row[0])) for row in rows)
+    query_counts = [int(row[1]) for row in rows]
     return ProgramEvaluation(
         diagnosed_fraction=diagnosed / task.candidate_count,
         mean_queries=float(np.mean(query_counts)),
         worst_queries=max(query_counts),
         unresolved=task.candidate_count - diagnosed,
         candidates=task.candidate_count,
-        true_branch_count=true_count,
-        false_branch_count=false_count,
+        true_branch_count=sum(int(row[2]) for row in rows),
+        false_branch_count=sum(int(row[3]) for row in rows),
     )
 
 
@@ -288,12 +376,8 @@ def trajectory_signature(
 ) -> tuple[object, ...]:
     rows = []
     for task_index, task in enumerate(tasks):
-        for candidate in range(task.candidate_count):
-            correct, queries, _, _, trajectory = trace(
-                task,
-                program,
-                candidate,
-            )
+        for candidate, result in enumerate(analyse_task(task, program)):
+            correct, queries, _, _, trajectory = result
             rows.append(
                 (
                     task_index,
@@ -304,7 +388,6 @@ def trajectory_signature(
                 )
             )
     return tuple(rows)
-
 
 def quotient_programs(
     tasks: list[base.ClassTask],
