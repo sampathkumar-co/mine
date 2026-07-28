@@ -1,0 +1,20 @@
+{
+  "verdict": "not_yet",
+  "workflow_run": 30364433803,
+  "run_count": 5,
+  "passing_count": 3,
+  "accuracy_min": 1.0,
+  "accuracy_median": 1.0,
+  "mean_queries_median": 7.497916666666667,
+  "log2_ratio_max": 0.9996527777777778,
+  "invalid_max": 0.0,
+  "first_gap_min": 0.9104166666666667,
+  "random_gap_min": 0.2875,
+  "all_proofs_passed": true,
+  "policy_count": 2,
+  "policy_frequency": {
+    "query=minimax_bucket;decoder=argmin": 3,
+    "query=gini;decoder=argmin": 2
+  },
+  "scientific_note": "All five seeds achieved perfect hidden accuracy and near-information-limit query counts on unseen binary-code and subset-diagnosis domains. The locked gate nevertheless failed because only three seeds selected the exact minimax-bucket expression; two selected the behaviorally equivalent gini expression. The exact identity requirement was not relaxed after seeing results."
+}
