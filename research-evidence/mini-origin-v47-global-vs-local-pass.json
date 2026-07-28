@@ -1,0 +1,23 @@
+{
+  "status": "state_local_advantage_certified",
+  "development_gate": true,
+  "state_count": 65,
+  "local_solved_count": 65,
+  "global_solved_count": 55,
+  "local_only_solved_count": 10,
+  "both_plan_match_count": 55,
+  "expansion_ratio_lower_bound_median": 16.104208416833668,
+  "expansion_ratio_lower_bound_p90": 54.487053522172374,
+  "budget_ladder_results": {
+    "10000": {"local_solved": 58, "global_solved": 25},
+    "50000": {"local_solved": 65, "global_solved": 42},
+    "250000": {"local_solved": 65, "global_solved": 55}
+  },
+  "local_only_task_distribution": {
+    "audiology-standardized": 9,
+    "chess-kr-vs-kp": 1
+  },
+  "workflow_run": 30383999206,
+  "artifact_digest": "sha256:f7a1fc32e89c1f6305eabef6984fadfe98551faec87698c5fae5d81db91f318a",
+  "scientific_note": "The comparator performs one-time response-partition duplicate removal at the root of every benchmark state, a stronger per-state analogue of whole-dataset duplicate-feature preprocessing. Descendant-specific canonicalisation still solved ten additional states under an equal 250,000-expansion budget and reduced exact expansions by 16.1x median and 54.5x p90, with zero optimum mismatch whenever both solvers completed. This isolates the contribution from known global duplicate-feature removal."
+}
