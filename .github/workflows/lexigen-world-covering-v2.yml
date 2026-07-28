@@ -41,7 +41,9 @@ jobs:
           if lock["snapshot_md5"] != "b2c626b07f216aac830d344eff5ad523":
               raise SystemExit("snapshot commitment changed")
           if lock["target_count"] != 3 or lock["v1_reserved_count"] != 3:
-              raise SystemExit("target slice changed")
+              raise SystemExit("target counts changed")
+          if lock["reservation_rule"] != "exact_frozen_v1_selector_then_exclude_names":
+              raise SystemExit("v1 reservation rule changed")
           print("LEXIGEN_WORLD_COVERING_V2_LOCK_VERIFIED")
           PY
 
@@ -57,6 +59,10 @@ jobs:
           code=${PIPESTATUS[0]}
           echo "$code" > artifacts/solver-exit-code.txt
           exit "$code"
+
+      - name: Normalize deterministic evidence attribution
+        if: always() && hashFiles('lexigen-world-covering-v2/artifacts/SUMMARY.json') != ''
+        run: python -u normalize_evidence.py --summary artifacts/SUMMARY.json
 
       - name: Independently verify serialized candidates
         if: always() && hashFiles('lexigen-world-covering-v2/artifacts/SUMMARY.json') != ''
