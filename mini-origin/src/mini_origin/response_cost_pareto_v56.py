@@ -641,13 +641,17 @@ def hereditary_pareto_theorem(
                     cell_cost(profile, query, cell)
                     for cell in right_signature
                 )
+                # Strict dominance at an ancestor may become equality after
+                # descendants remove the only strictly cheaper response cell.
+                # Weak componentwise dominance is the hereditary property
+                # needed to preserve the lexicographic objective metrics.
                 if not (
-                    vector_dominates(
-                        left_vector, right_vector
-                    )
-                    or (
-                        left_vector == right_vector
-                        and dominator < query
+                    len(left_vector) == len(right_vector)
+                    and all(
+                        left <= right
+                        for left, right in zip(
+                            left_vector, right_vector
+                        )
                     )
                 ):
                     violations.append({
