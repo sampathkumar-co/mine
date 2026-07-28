@@ -1,0 +1,33 @@
+name: LEXIGEN v4 Frozen Engine Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/TRIGGER_VALIDATE_ENGINE"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile frozen engine
+        working-directory: lexigen-v4
+        run: python -m compileall -q engine.py selector.py validate_engine.py
+      - name: Validate mechanism graph, baselines and selector
+        working-directory: lexigen-v4
+        run: python -u validate_engine.py
+      - name: Upload immutable synthetic validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-engine-validation
+          path: lexigen-v4/validation-evidence/
+          if-no-files-found: error
+          retention-days: 90
