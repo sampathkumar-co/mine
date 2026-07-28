@@ -18,8 +18,12 @@ class SynthesisResult:
     active_case_names: tuple[str, ...]
 
 
+def _canonical_program(program: tuple[dict[str, Any], ...]) -> bytes:
+    return json.dumps(program, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
 def _artifact_for(program: tuple[dict[str, Any], ...], evidence: dict[str, Any]) -> dict[str, Any]:
-    canonical_program = json.dumps(program, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    canonical_program = _canonical_program(program)
     evidence_bytes = json.dumps(evidence, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return {
         "schema": "lexigen-language-artifact-v1",
@@ -31,6 +35,7 @@ def _artifact_for(program: tuple[dict[str, Any], ...], evidence: dict[str, Any])
             "method": "counterexample-guided enumerative bytecode synthesis",
             "program_sha256": hashlib.sha256(canonical_program).hexdigest(),
             "evidence_sha256": hashlib.sha256(evidence_bytes).hexdigest(),
+            "enumeration_order": "deterministic SHA-256 order, not opcode order",
             "warning": (
                 "Opcode meanings and the opcode inventory remain human supplied. "
                 "This is autonomous composition inside a fixed meta-language, not autonomous semantic invention."
@@ -53,18 +58,22 @@ def _instruction_variants(length: int) -> tuple[dict[str, Any], ...]:
 
 def _candidate_programs(max_length: int = 6) -> Iterable[tuple[dict[str, Any], ...]]:
     # The synthesizer receives a generic opcode inventory, not a program template.
-    # Cheap semantic coverage filters remove programs that cannot express repeated
-    # transition, state advancement, conditional termination, and control flow.
+    # Coverage filters only require operations needed to express repeated transition,
+    # state advancement, conditional termination, and control flow. Candidate order is
+    # hashed so the target is not favoured by the human ordering of opcode names.
     required = {"APPLY_STEP", "RETURN_IF_STABLE", "ADVANCE", "JUMP"}
     for length in range(1, max_length + 1):
         variants = _instruction_variants(length)
+        candidates: list[tuple[dict[str, Any], ...]] = []
         for program in itertools.product(variants, repeat=length):
             ops = {str(instruction["op"]) for instruction in program}
             if not required.issubset(ops):
                 continue
             if sum(1 for instruction in program if instruction["op"] == "JUMP") > 2:
                 continue
-            yield program
+            candidates.append(program)
+        candidates.sort(key=lambda program: hashlib.sha256(_canonical_program(program)).digest())
+        yield from candidates
 
 
 def _solves(artifact: dict[str, Any], cases: list[World], max_instructions: int) -> bool:
