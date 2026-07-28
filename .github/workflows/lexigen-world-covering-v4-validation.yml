@@ -1,0 +1,40 @@
+name: Validate sealed LEXIGEN v4
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4-validation/**"
+      - ".github/workflows/lexigen-world-covering-v4-validation.yml"
+permissions: {contents: read}
+jobs:
+  validate-sealed-v4:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: e0a52eb4ade35b71f1f93ca73f74c3710928a5bc
+          path: sealed
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify sealed bytes without snapshot access
+        working-directory: sealed/lexigen-world-covering-v4
+        run: |
+          python - <<'PY'
+          import hashlib,json,py_compile
+          from pathlib import Path
+          lock=json.loads(Path('LOCK.json').read_text())
+          for name,expected in lock['git_blob_sha1'].items():
+            data=Path(name).read_bytes()
+            actual=hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
+            assert actual==expected,(name,actual,expected)
+          for name in ('common.py','solver.py','selector_solver.py','verify_results.py'):
+            py_compile.compile(name,doraise=True)
+          import common
+          assert common.EXPECTED['v1']==['C(15,8,5)','C(11,6,5)','C(14,5,3)']
+          assert common.EXPECTED['v2']==['C(12,7,5)','C(14,8,5)','C(16,7,4)']
+          assert common.EXPECTED['v3']==['C(15,6,4)','C(17,9,5)','C(16,8,5)']
+          t=common.Target('synthetic',6,3,2,20,1,'',19,20,15,60,0.0,'')
+          inc=common.incidence(t)
+          assert len(inc.blocks)==20 and len(inc.tsets)==15
+          print('SEALED_V4_SNAPSHOT_FREE_VALIDATION_OK')
+          PY
