@@ -1,0 +1,42 @@
+{
+  "protocol": "download_hash_only_no_record_parsing_v1",
+  "source": "UCI Machine Learning Repository",
+  "license": "CC BY 4.0",
+  "workflow_run": 30378134046,
+  "workflow_artifact_digest": "sha256:d75f06d62a707e5189467d8ec0b13f9246653f6ebc7119822be0b7b0a23ef6a1",
+  "archive_count": 4,
+  "rows": [
+    {
+      "name": "Hayes-Roth",
+      "archive": "hayes-roth.zip",
+      "url": "https://archive.ics.uci.edu/static/public/44/hayes%2Broth.zip",
+      "doi": "10.24432/C5501T",
+      "bytes": 3488,
+      "sha256": "c034173ccd2f04e887afa8688be86ec10d72f2f1e8481e967ac60d8d04a711f1"
+    },
+    {
+      "name": "SPECT Heart",
+      "archive": "spect-heart.zip",
+      "url": "https://archive.ics.uci.edu/static/public/95/spect%2Bheart.zip",
+      "doi": "10.24432/C5P304",
+      "bytes": 3669,
+      "sha256": "0df4ab4903ce89626df28e9f8436d84399a68bc45d6d16a4c1f0dd53028449fa"
+    },
+    {
+      "name": "Audiology Standardized",
+      "archive": "audiology-standardized.zip",
+      "url": "https://archive.ics.uci.edu/static/public/8/audiology%2Bstandardized.zip",
+      "doi": "10.24432/C5TP4R",
+      "bytes": 5557,
+      "sha256": "f7995f55d0bba2763e1fd3cd2999be27bf2671a75a1af80b4aaa8732a8f044ce"
+    },
+    {
+      "name": "Dermatology",
+      "archive": "dermatology.zip",
+      "url": "https://archive.ics.uci.edu/static/public/33/dermatology.zip",
+      "doi": "10.24432/C5FK5P",
+      "bytes": 6119,
+      "sha256": "c86e681b3bd02d838b3602d88700b007952bb57eb80162c7ed8966d426f5c6c8"
+    }
+  ]
+}
