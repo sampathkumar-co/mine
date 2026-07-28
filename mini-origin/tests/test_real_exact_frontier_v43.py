@@ -1,4 +1,4 @@
-from mini_origin import real_exact_frontier_v43 as v43
+from mini_origin import real_exact_frontier_runner_v43 as v43
 from mini_origin import state_policy_v34 as v34
 
 
