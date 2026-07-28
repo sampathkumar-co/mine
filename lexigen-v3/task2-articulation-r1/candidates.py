@@ -19,7 +19,7 @@ class Solution(TypedDict):
 def rustworkx_native(problem: Problem) -> Solution:
     graph = rx.PyGraph()
     graph.add_nodes_from([None] * problem["num_nodes"])
-    graph.add_edges_from_no_data(problem["edges"])
+    graph.add_edges_from_no_data((int(u), int(v)) for u, v in problem["edges"])
     points = sorted(int(node) for node in rx.articulation_points(graph))
     return {"articulation_points": points}
 
