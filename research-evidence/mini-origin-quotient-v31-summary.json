@@ -1,0 +1,25 @@
+{
+  "verdict": "replicated_behavioral_quotient_transfer_candidate",
+  "claim_scope": "query objectives are quotiented by exact binary-partition ordering before hidden data; the canonical minimax member then improves worst-case depth on multi-outcome diagnosis holdouts while accepting an explicit average-case tradeoff; this remains generalized binary search, not a world breakthrough",
+  "workflow_run": 30370722564,
+  "run_count": 5,
+  "passing_count": 5,
+  "accuracy_min": 1.0,
+  "invalid_max": 0.0,
+  "log2_ratio_max": 0.54453125,
+  "gini_worst_gain_min": 0.5,
+  "outcomes_worst_gain_min": 0.5,
+  "strict_gini_advantage_tasks_min": 2,
+  "strict_max_outcomes_advantage_tasks_min": 2,
+  "average_tradeoff_median": 0.1171875,
+  "class_digest_count": 1,
+  "frozen_class_digest": "6cd279ad9c0989219e4196e12c049a1758c3063fd48a471cf4662c5f9545c80e",
+  "seeds": [1601, 1602, 1603, 1604, 1605],
+  "per_seed": [
+    {"seed": 1601, "passed": true, "accuracy": 1.0, "invalid_rate": 0.0, "log2_ratio": 0.5419270833333333, "gini_worst_gain": 0.5, "outcomes_worst_gain": 0.5, "strict_gini_tasks": 2, "strict_outcomes_tasks": 2, "average_tradeoff": 0.1171875},
+    {"seed": 1602, "passed": true, "accuracy": 1.0, "invalid_rate": 0.0, "log2_ratio": 0.54453125, "gini_worst_gain": 0.5, "outcomes_worst_gain": 0.5, "strict_gini_tasks": 2, "strict_outcomes_tasks": 2, "average_tradeoff": 0.08854166666666652},
+    {"seed": 1603, "passed": true, "accuracy": 1.0, "invalid_rate": 0.0, "log2_ratio": 0.540625, "gini_worst_gain": 0.5, "outcomes_worst_gain": 0.5, "strict_gini_tasks": 2, "strict_outcomes_tasks": 2, "average_tradeoff": 0.15625},
+    {"seed": 1604, "passed": true, "accuracy": 1.0, "invalid_rate": 0.0, "log2_ratio": 0.5401909722222222, "gini_worst_gain": 0.5, "outcomes_worst_gain": 0.5, "strict_gini_tasks": 2, "strict_outcomes_tasks": 2, "average_tradeoff": 0.078125},
+    {"seed": 1605, "passed": true, "accuracy": 1.0, "invalid_rate": 0.0, "log2_ratio": 0.5419270833333333, "gini_worst_gain": 0.5, "outcomes_worst_gain": 0.5, "strict_gini_tasks": 2, "strict_outcomes_tasks": 2, "average_tradeoff": 0.140625}
+  ]
+}
