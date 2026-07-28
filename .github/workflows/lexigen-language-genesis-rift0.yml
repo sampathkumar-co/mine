@@ -1,4 +1,4 @@
-name: Lexigen Language Genesis RIFT-0
+name: Lexigen Language Genesis RIFT Gates
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  rift0:
+  rift:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -26,17 +26,21 @@ jobs:
       - name: Install test runner
         run: python -m pip install --disable-pip-version-check pytest==8.3.5
 
-      - name: Run frozen benchmark validation
+      - name: Run RIFT-0 frozen benchmark validation
         working-directory: lexigen-language-genesis/benchmark
         run: python rift0.py --output artifacts/rift0/rift0-report.json
 
-      - name: Run counterexample-guided prototype
+      - name: Run RIFT-0 template scaffold
         working-directory: lexigen-language-genesis/benchmark
         run: python prototype.py --output-dir artifacts/rift0
 
-      - name: Synthesize bytecode ordering without a program template
+      - name: Synthesize RIFT-0 bytecode ordering
         working-directory: lexigen-language-genesis/benchmark
         run: python synthesis_experiment.py --output-dir artifacts/rift0
+
+      - name: Run RIFT-1 multi-mechanism synthesis
+        working-directory: lexigen-language-genesis/benchmark
+        run: python rift1.py --output-dir artifacts/rift1
 
       - name: Run independent tests
         working-directory: lexigen-language-genesis/benchmark
@@ -44,12 +48,16 @@ jobs:
 
       - name: Hash preserved evidence
         working-directory: lexigen-language-genesis/benchmark
-        run: sha256sum artifacts/rift0/*.json | tee artifacts/rift0/SHA256SUMS
+        run: |
+          sha256sum artifacts/rift0/*.json | tee artifacts/rift0/SHA256SUMS
+          sha256sum artifacts/rift1/*.json | tee artifacts/rift1/SHA256SUMS
 
       - name: Upload immutable synthetic evidence
         uses: actions/upload-artifact@v4
         with:
-          name: lexigen-language-genesis-rift0-${{ github.sha }}
-          path: lexigen-language-genesis/benchmark/artifacts/rift0/
+          name: lexigen-language-genesis-rift-${{ github.sha }}
+          path: |
+            lexigen-language-genesis/benchmark/artifacts/rift0/
+            lexigen-language-genesis/benchmark/artifacts/rift1/
           if-no-files-found: error
           retention-days: 90
