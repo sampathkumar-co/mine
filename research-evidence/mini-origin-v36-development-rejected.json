@@ -1,0 +1,42 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "domain_count": 14,
+  "policy_count": 150,
+  "selected_policy": "exact_if(candidates<=16,features<=10):else->worst_impurity",
+  "profile": {
+    "diagnosed_regret_max": 0.0,
+    "worst_query_regret_max": 0,
+    "mean_query_regret_max": 1.4778645833333335,
+    "mean_query_regret_median": 0.2483670594262295,
+    "strict_wins": 3,
+    "no_harm_tasks": 5,
+    "exact_query_uses": 4352
+  },
+  "frozen_selector_digest": "ee8878711e5a31a3f43cb647775eae7b1b93797abc5f5bcfb455bfb2c14265b8",
+  "bounded_protocol_digest": "fd5972eec559654ced59e6fa618b01d0a9dd5763bb8331c260912e85b58b4233",
+  "workflow_run": 30376955303,
+  "artifact_digest": "sha256:a805b2a679166144d96e8ed6ca2c29662fb5407a50d1c8cf2e6932b36c060196",
+  "scientific_note": "Rejected without changing thresholds: exact tail search preserved diagnosis and improved worst depth on two domains, but its universal fallback produced positive median and maximum mean-query regret.",
+  "strict_wins": [
+    "breast-cancer",
+    "primary-tumor",
+    "tic-tac-toe-subset-512"
+  ],
+  "task_mean_query_regret": {
+    "balance-scale": 0.1200000000000001,
+    "breast-cancer": -0.024475524475524146,
+    "car-evaluation-subset-768": 1.4778645833333335,
+    "congressional-votes": 0.754022988505747,
+    "lymphography": 0.08108108108108114,
+    "monk-1-train": 0.0,
+    "monk-2-train": 0.029585798816567532,
+    "monk-3-train": 0.180327868852459,
+    "mushroom-development-512": 0.31640625,
+    "nursery-subset-1024": 1.326171875,
+    "primary-tumor": -0.008849557522123241,
+    "soybean-large": 0.6368960468521228,
+    "tic-tac-toe-subset-512": 0.373046875,
+    "zoo": 0.3267326732673266
+  }
+}
