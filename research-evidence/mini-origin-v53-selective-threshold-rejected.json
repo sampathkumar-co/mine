@@ -1,0 +1,28 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "selected_threshold": 12,
+  "selection": {
+    "selected": true,
+    "threshold": 12,
+    "training_speedup_median": 0.9818677665453295,
+    "training_branch_reduction": 0.0008458054315818586,
+    "training_max_runtime_ratio": 1.0528572960223006
+  },
+  "validation": {
+    "row_count": 12,
+    "optimum_match_count": 12,
+    "tasks_with_local_skips": 5,
+    "total_local_skips": 401,
+    "subtree_call_reduction_fraction": 0.00042032225330168593,
+    "branch_expansion_reduction_fraction": 0.0004302178125193956,
+    "reported_speedup_median": 0.9780874873081825,
+    "patched_over_original_runtime_median": 1.0224101427695689,
+    "patched_over_original_runtime_max": 1.0487943353925062,
+    "tasks_speedup_ge_1_03": 0
+  },
+  "frozen_selective_digest": "aa9a99fcc5124e8ec54f1941910256b18d577c7bd366c9a4e7c63ff64f729b64",
+  "workflow_run": 30389766769,
+  "artifact_digest": "sha256:adda861007c1644621dc3dbbd85ac882d7f350def53b5fc15149c0f4be25918a",
+  "scientific_note": "A candidate-set-size threshold was selected without using validation data. Threshold 12 preserved all validation optima and kept worst regression below 5%, but activated on only five tasks, removed 0.043% of branch expansions, and remained 2.2% slower at median. State size alone is therefore rejected as a sufficient benefit predictor."
+}
