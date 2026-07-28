@@ -1,0 +1,176 @@
+name: Mini-ORIGIN Adaptive Measurement v0.28
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/adaptive_measurement_v28.py"
+      - "mini-origin/tests/test_adaptive_measurement_v28.py"
+      - ".github/workflows/mini-origin-adaptive-v28.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/adaptive_measurement_v28.py"
+      - "mini-origin/tests/test_adaptive_measurement_v28.py"
+      - ".github/workflows/mini-origin-adaptive-v28.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-adaptive-v28-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_adaptive_measurement_v28.py
+
+  adaptive-study:
+    name: adaptive-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1301, 1302, 1303, 1304, 1305]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Synthesize confidence-triggered measurement
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.adaptive_measurement_v28
+          --seed ${{ matrix.seed }}
+          --output results/adaptive-measurement-v28-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-adaptive-v28-seed-${{ matrix.seed }}
+          path: mini-origin/results/adaptive-measurement-v28-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, adaptive-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-adaptive-v28-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.28 searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/adaptive-measurement-v28-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              policy = data["selected_policy"]
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "rule": policy["rule"],
+                  "right_threshold": policy["right_threshold"],
+                  "difference_threshold": policy["difference_threshold"],
+                  "trigger_margin": policy["trigger_margin"],
+                  "base_replicates": policy["base_replicates"],
+                  "extra_replicates": policy["extra_replicates"],
+                  "step_action_labels_used": data["search"]["step_action_labels_used"],
+                  "development_worst": data["search"]["development_worst_accuracy"],
+                  "hidden_worst": data["candidate"]["minimum_accuracy"],
+                  "hidden_mean": data["candidate"]["mean_accuracy"],
+                  "mean_replicates": data["candidate"]["mean_replicates_per_query"],
+                  "maximum_mean_replicates": data["candidate"]["maximum_mean_replicates_per_query"],
+                  "invalid_transition_max": data["candidate"]["maximum_invalid_transition_rate"],
+                  "fixed_256_gap": data["fixed_256_gap"],
+                  "fixed_512_gap": data["fixed_512_gap"],
+                  "specialist_gap": data["specialist_gap"],
+                  "query_gap": data["wrong_query_gap"],
+                  "random_gap": data["random_gap"],
+                  "sample_saving": data["sample_saving_vs_768"],
+                  "digest": data["frozen_policy_digest"],
+              })
+
+          development = [row["development_worst"] for row in rows]
+          hidden = [row["hidden_worst"] for row in rows]
+          hidden_mean = [row["hidden_mean"] for row in rows]
+          samples = [row["mean_replicates"] for row in rows]
+          maximum_samples = [row["maximum_mean_replicates"] for row in rows]
+          invalid = [row["invalid_transition_max"] for row in rows]
+          fixed_256 = [row["fixed_256_gap"] for row in rows]
+          fixed_512 = [row["fixed_512_gap"] for row in rows]
+          specialist = [row["specialist_gap"] for row in rows]
+          query = [row["query_gap"] for row in rows]
+          random_gap = [row["random_gap"] for row in rows]
+          saving = [row["sample_saving"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_adaptive_measurement_efficiency_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and all(row["rule"] == "lower_midpoint" for row in rows)
+                  and all(not row["step_action_labels_used"] for row in rows)
+                  and min(development) >= 0.985
+                  and min(hidden) >= 0.985
+                  and max(maximum_samples) <= 600.0
+                  and max(invalid) <= 0.01
+                  and min(fixed_256) >= 0.03
+                  and min(fixed_512) >= 0.005
+                  and min(specialist) >= -0.01
+                  and min(query) >= 0.20
+                  and min(random_gap) >= 0.45
+                  and min(saving) >= 0.20
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "terminal-reward synthesis repeatedly discovers confidence-triggered extra measurement that preserves hidden deep-chain accuracy while saving at least 20% of samples relative to a fixed 768-replicate specialist; the causal family and measurement grammar remain human supplied, so this is not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "development_worst_min": min(development) if development else None,
+              "hidden_worst_min": min(hidden) if hidden else None,
+              "hidden_worst_median": statistics.median(hidden) if hidden else None,
+              "hidden_mean_min": min(hidden_mean) if hidden_mean else None,
+              "mean_replicates_max": max(samples) if samples else None,
+              "maximum_stratum_mean_replicates": max(maximum_samples) if maximum_samples else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "fixed_256_gap_min": min(fixed_256) if fixed_256 else None,
+              "fixed_512_gap_min": min(fixed_512) if fixed_512 else None,
+              "specialist_gap_min": min(specialist) if specialist else None,
+              "query_gap_min": min(query) if query else None,
+              "random_gap_min": min(random_gap) if random_gap else None,
+              "sample_saving_min": min(saving) if saving else None,
+              "policy_digest_count": len({row["digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("adaptive-measurement-v28-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-adaptive-v28-summary
+          path: adaptive-measurement-v28-summary.json
+          retention-days: 90
