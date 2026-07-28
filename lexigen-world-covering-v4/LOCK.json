@@ -1,0 +1,31 @@
+{
+  "protocol": "LEXIGEN World Covering Record v4 clean successor",
+  "status": "sealed_before_snapshot_or_target_access",
+  "snapshot_md5": "b2c626b07f216aac830d344eff5ad523",
+  "target_count": 3,
+  "reserved_count": 9,
+  "target_identities_known_at_seal": false,
+  "lineage_rule": "reproduce exact v1, corrected-v2, and v3 lineages in order; abort on mismatch; exclude all nine",
+  "git_blob_sha1": {
+    "common.py": "cadae19b13bd1e66257d2b1d2910f64f7e93b62f",
+    "solver.py": "32b2c390f0866784bef186d164b21443681153be",
+    "selector_solver.py": "40929afb91299c041481bae3a1fa830b9c5872de",
+    "verify_results.py": "9378487109843067af078efe0685b739ab23d6ed",
+    "PROTOCOL.md": "c3b52e4f6857e20d374a2f437b86326a66506633",
+    "requirements.txt": "c21d857999fa45535759e0b9b5bf5c8bcf12649c",
+    "../.github/workflows/lexigen-world-covering-v4.yml": "e1b0eb7af052049b27d827e5480be019e75fde6a"
+  },
+  "fixed_limits": {
+    "targets": 3,
+    "reserved_targets": 9,
+    "greedy_deterministic_attempts": 12,
+    "greedy_randomized_attempts": 36,
+    "repair_rounds": 42,
+    "repair_seconds_per_target": 360,
+    "full_cp_seconds_per_target": 1050,
+    "cp_workers": 4,
+    "workflow_executions": 1
+  },
+  "success_rule": "At least one independently verified covering strictly smaller than the frozen snapshot upper bound.",
+  "claim_rule": "Verified world-record candidate pending current authoritative record comparison and independent review."
+}
