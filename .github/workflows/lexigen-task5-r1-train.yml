@@ -1,0 +1,70 @@
+name: LEXIGEN Task 5 Revision 1 Train
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-task5-r1/TRIGGER_TRAIN_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  train-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen numerical dependency
+        run: python -m pip install numpy==2.5.1
+      - name: Build frozen OpenMP candidate
+        working-directory: lexigen-task5-r1
+        run: |
+          NUMPY_INCLUDE=$(python -c 'import numpy; print(numpy.get_include())')
+          gcc -O3 -fopenmp -shared -fPIC $(python3-config --includes) -I"$NUMPY_INCLUDE" native_outer.c \
+            -o lexigen_outer_native$(python3-config --extension-suffix)
+      - name: Execute official training shard
+        working-directory: lexigen-task5-r1
+        run: python -u train_shard.py --shard ${{ matrix.shard }} --output artifacts/shard-${{ matrix.shard }}.jsonl
+      - name: Upload shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task5-r1-shard-${{ matrix.shard }}
+          path: lexigen-task5-r1/artifacts/shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: train-shards
+    if: always() && needs.train-shards.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-task5-r1-shard-*
+          path: lexigen-task5-r1/downloaded
+      - name: Aggregate fixed training gate
+        working-directory: lexigen-task5-r1
+        run: python -u aggregate_train.py --input downloaded --output evidence
+      - name: Upload aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task5-r1-training-evidence
+          path: lexigen-task5-r1/evidence/
+          if-no-files-found: error
+          retention-days: 90
