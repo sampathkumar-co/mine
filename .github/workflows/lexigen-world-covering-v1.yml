@@ -33,10 +33,11 @@ jobs:
           from pathlib import Path
 
           lock = json.loads(Path("LOCK.json").read_text(encoding="utf-8"))
-          for name, expected in lock["sha256"].items():
-              actual = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          for name, expected in lock["git_blob_sha1"].items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
               if actual != expected:
-                  raise SystemExit(f"frozen hash mismatch for {name}: {actual} != {expected}")
+                  raise SystemExit(f"frozen Git-blob mismatch for {name}: {actual} != {expected}")
           if lock["snapshot_md5"] != "b2c626b07f216aac830d344eff5ad523":
               raise SystemExit("snapshot commitment changed")
           if lock["target_count"] != 3:
