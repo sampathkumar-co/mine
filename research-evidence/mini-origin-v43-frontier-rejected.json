@@ -1,0 +1,22 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "frontier_state_count": 36,
+  "quotient_solved_count": 36,
+  "plain_solved_count": 29,
+  "quotient_only_solved_count": 7,
+  "both_plan_match_count": 29,
+  "gini_certificate_count": 36,
+  "gini_certificate_pass_count": 6,
+  "expansion_ratio_lower_bound_median": 17.58554934474667,
+  "expansion_ratio_lower_bound_p90": 103.94102492823836,
+  "budget_ladder_results": {
+    "10000": {"quotient_solved": 36, "plain_solved": 12},
+    "50000": {"quotient_solved": 36, "plain_solved": 19},
+    "250000": {"quotient_solved": 36, "plain_solved": 29}
+  },
+  "frozen_frontier_digest": "f4b050c1c647a809fbb5c54ad4d63ea8764eda77146e25760fc00f298c342365",
+  "workflow_run": 30381919840,
+  "artifact_digest": "sha256:0e83e002dbbcb36ad5a6964d1a05201fc3eeb6bbfee96f8bbe6e11b10886f9be",
+  "scientific_note": "Rejected without changing thresholds. The quotient solved every selected real state, including seven where the plain exact solver exceeded 250,000 expansions, and showed 17.6x median / 104x p90 reduction. The gate failed because only 36 rather than 50 states met the structural selection and because the assumed equivalence between the codebase's label-impurity Gini control and the uniform expected-elimination criterion was false. v0.44 must implement the latter explicitly and compare it with an average-cost exact solver."
+}
