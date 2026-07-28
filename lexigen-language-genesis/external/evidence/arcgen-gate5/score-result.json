@@ -1,0 +1,10 @@
+{
+  "exact_pairs": 20,
+  "pair_accuracy": 1.0,
+  "pair_count": 20,
+  "predictions_sha256": "7fe1f51eb00b5b6eeb2aec38683b1a83e1d1278c4e969e12214c9fb74463f6ef",
+  "protocol": "arcgen-gate-v6",
+  "sealed_outputs_sha256": "5bd17693d449eb4e70e915b0fe7cb6263c42c6d873fd4f0e309161258400c420",
+  "selected_task_id": "9dfd6313",
+  "task_solved": true
+}
