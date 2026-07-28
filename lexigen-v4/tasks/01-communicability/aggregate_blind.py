@@ -119,20 +119,20 @@ def main() -> None:
             "v3_compatible_harmonic": v3["harmonic_speedup"],
             "v4_minus_v3_harmonic": float(v4["harmonic_speedup"]) - float(v3["harmonic_speedup"]),
             "v4_minus_no_transfer_harmonic": float(v4["harmonic_speedup"]) - float(no_transfer["harmonic_speedup"]),
-            "v4_beats_v3": bool(v4["passes_blind_gate"] and (not v3["passes_blind_gate"] or float(v4["harmonic_speedup"]) > float(v3["harmonic_speedup"]))),
+            "v4_beats_v3": bool(v4["passes_blind_gate"] and (not v3["passes_blind_gate"] or float(v4["harmonic_speedup"]) > float(v3["harmonic_speedup"])),
             "transfer_advantage_observed": bool(float(v4["harmonic_speedup"]) > float(no_transfer["harmonic_speedup"]) * 1.02 or v4["passes_blind_gate"] != no_transfer["passes_blind_gate"])
         },
         "execution_integrity": {
-            "candidate_changed_after_training": false,
-            "thresholds_changed_after_training": false,
+            "candidate_changed_after_training": False,
+            "thresholds_changed_after_training": False,
             "candidate_executions_per_arm_per_record": 1,
             "reference_executions_per_record": 1,
             "invalid_output_retries": 0,
-            "successful_records_rerun": false
+            "successful_records_rerun": False
         },
-        "reports_opened": false,
-        "public_solvers_opened": false,
-        "human_task_specific_solver_design": false
+        "reports_opened": False,
+        "public_solvers_opened": False,
+        "human_task_specific_solver_design": False
     }
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "blind-summary.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
