@@ -1,0 +1,177 @@
+name: Mini-ORIGIN Estimator Switch v0.30
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/estimator_switch_v30.py"
+      - "mini-origin/tests/test_estimator_switch_v30.py"
+      - ".github/workflows/mini-origin-switch-v30.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/estimator_switch_v30.py"
+      - "mini-origin/tests/test_estimator_switch_v30.py"
+      - ".github/workflows/mini-origin-switch-v30.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-switch-v30-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_estimator_switch_v30.py
+
+  switch-study:
+    name: switch-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1501, 1502, 1503, 1504, 1505]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Synthesize online estimator switch
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.estimator_switch_v30
+          --seed ${{ matrix.seed }}
+          --output results/estimator-switch-v30-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-switch-v30-seed-${{ matrix.seed }}
+          path: mini-origin/results/estimator-switch-v30-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, switch-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-switch-v30-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.30 searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/estimator-switch-v30-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              policy = data["selected_policy"]
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "rule": policy["rule"],
+                  "robust_aggregator": policy["robust_aggregator"],
+                  "skew_threshold": policy["skew_threshold"],
+                  "tail_threshold": policy["tail_threshold"],
+                  "step_action_labels_used": data["search"]["step_action_labels_used"],
+                  "development_worst": data["search"]["development_worst_accuracy"],
+                  "hidden_worst": data["candidate"]["minimum_accuracy"],
+                  "hidden_mean": data["candidate"]["mean_accuracy"],
+                  "mean_replicates": data["candidate"]["mean_replicates_per_query"],
+                  "maximum_mean_replicates": data["candidate"]["maximum_mean_replicates_per_query"],
+                  "invalid_transition_max": data["candidate"]["maximum_invalid_transition_rate"],
+                  "robust_rate_min": data["candidate"]["minimum_robust_estimator_rate"],
+                  "robust_rate_max": data["candidate"]["maximum_robust_estimator_rate"],
+                  "portfolio_gap": data["portfolio_gap"],
+                  "fixed_gap": data["fixed_switch_gap"],
+                  "query_gap": data["wrong_query_gap"],
+                  "random_gap": data["random_gap"],
+                  "sample_saving": data["sample_saving_vs_1024"],
+                  "switch_range": data["hidden_switch_rate_range"],
+                  "digest": data["frozen_policy_digest"],
+              })
+
+          development = [row["development_worst"] for row in rows]
+          hidden = [row["hidden_worst"] for row in rows]
+          hidden_mean = [row["hidden_mean"] for row in rows]
+          mean_samples = [row["mean_replicates"] for row in rows]
+          max_samples = [row["maximum_mean_replicates"] for row in rows]
+          invalid = [row["invalid_transition_max"] for row in rows]
+          portfolio = [row["portfolio_gap"] for row in rows]
+          fixed = [row["fixed_gap"] for row in rows]
+          query = [row["query_gap"] for row in rows]
+          random_gap = [row["random_gap"] for row in rows]
+          saving = [row["sample_saving"] for row in rows]
+          switch_range = [row["switch_range"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_online_estimator_switch_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and all(row["rule"] == "lower_midpoint" for row in rows)
+                  and all(not row["step_action_labels_used"] for row in rows)
+                  and min(development) >= 0.98
+                  and min(hidden) >= 0.97
+                  and max(max_samples) <= 720.0
+                  and max(invalid) <= 0.01
+                  and min(portfolio) >= 0.02
+                  and min(fixed) >= -0.01
+                  and min(query) >= 0.20
+                  and min(random_gap) >= 0.45
+                  and min(saving) >= 0.25
+                  and min(switch_range) >= 0.20
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "terminal-reward synthesis repeatedly learns a sample-diagnostic switch between mean and robust aggregation and transfers to fresh symmetric-heavy-tail and asymmetric-skew laws while saving samples; the diagnostic grammar and causal family remain human supplied, so this is not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "robust_aggregators": sorted({row["robust_aggregator"] for row in rows}),
+              "development_worst_min": min(development) if development else None,
+              "hidden_worst_min": min(hidden) if hidden else None,
+              "hidden_worst_median": statistics.median(hidden) if hidden else None,
+              "hidden_mean_min": min(hidden_mean) if hidden_mean else None,
+              "mean_replicates_max": max(mean_samples) if mean_samples else None,
+              "maximum_stratum_mean_replicates": max(max_samples) if max_samples else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "portfolio_gap_min": min(portfolio) if portfolio else None,
+              "fixed_gap_min": min(fixed) if fixed else None,
+              "query_gap_min": min(query) if query else None,
+              "random_gap_min": min(random_gap) if random_gap else None,
+              "sample_saving_min": min(saving) if saving else None,
+              "switch_range_min": min(switch_range) if switch_range else None,
+              "policy_digest_count": len({row["digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("estimator-switch-v30-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-switch-v30-summary
+          path: estimator-switch-v30-summary.json
+          retention-days: 90
