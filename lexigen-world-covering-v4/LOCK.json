@@ -1,0 +1,24 @@
+{
+  "protocol": "LEXIGEN World Covering Record v4",
+  "status": "sealed_before_snapshot_or_target_access",
+  "snapshot_md5": "b2c626b07f216aac830d344eff5ad523",
+  "lineage_rule": "reproduce exact v1, corrected-v2, v3; abort on mismatch; exclude all nine",
+  "target_count": 3,
+  "git_blob_sha1": {
+    "common.py": "499fc11b59d8367ee384d2e90df13060e1d23b75",
+    "solver.py": "64331e6801b731d85bcce5b3ede6d76525c3c530",
+    "selector_solver.py": "6714cd3ab86469b2c56b4e7767169dece52d19c8",
+    "verify_results.py": "37667e37c1482fac7e1af5a926383141998e9e8a",
+    "PROTOCOL.md": "3adb16ca72f719e9c5e2fc517d2b9ca3f6b88bf6",
+    "requirements.txt": "c21d857999fa45535759e0b9b5bf5c8bcf12649c",
+    "../.github/workflows/lexigen-world-covering-v4.yml": "4a2339335cf310b4d0746d205ed050a3a50ed28e"
+  },
+  "fixed_limits": {
+    "workflow_executions": 1,
+    "targets": 3,
+    "restricted_cp_seconds": 240,
+    "full_cp_seconds": 1500,
+    "cp_workers": 4
+  },
+  "success_rule": "At least one independently verified covering strictly smaller than frozen snapshot upper bound."
+}
