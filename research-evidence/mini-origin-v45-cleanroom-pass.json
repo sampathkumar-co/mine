@@ -1,0 +1,24 @@
+{
+  "status": "independent_reproduction_passed",
+  "independent_reproduction_gate": true,
+  "state_count": 65,
+  "exact_plan_match_count": 65,
+  "greedy_plan_match_count": 65,
+  "query_saving_match_count": 65,
+  "expansion_count_match_count": 65,
+  "aggregate_summary_match": true,
+  "cleanroom_summary": {
+    "status": "cleanroom_reproduced",
+    "strict_exact_gain_count": 58,
+    "aggregate_total_query_saving_vs_greedy": 666,
+    "budget_ladder_exact_solved": {
+      "10000": 58,
+      "50000": 65,
+      "250000": 65
+    }
+  },
+  "workflow_run": 30383243946,
+  "artifact_digest": "sha256:6f1eab5d41f889dd623d9d5fa479251931408b87853b29b4776c72dc86ccdc1f",
+  "independence_note": "The v0.45 module rewrote the plan representation, purity test, response-partition construction, canonicalisation, dynamic program, memoisation, expansion accounting and expected-elimination greedy comparator. It imported no v0.44 planner, prior plan type or prior quotient helper. It reused only frozen dataset loaders, the task interface and the preregistered state harvester.",
+  "scientific_note": "A separately implemented solver reproduced all 65 v0.44 state-level exact plans, greedy plans, query savings and exact expansion counts, as well as all aggregate results. This removes the most direct single-implementation explanation for the v0.44 result."
+}
