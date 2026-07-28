@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -11,30 +13,66 @@ API = f"https://huggingface.co/api/datasets/oripress/AlgoTune/tree/{REVISION}/da
 BASE = f"https://huggingface.co/datasets/oripress/AlgoTune/resolve/{REVISION}/data/{TASK}"
 
 
-def request_bytes(url: str) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": "LEXIGEN-v3-task1-metadata"})
-    with urllib.request.urlopen(request, timeout=180) as response:
-        return response.read()
+def request_bytes(url: str) -> tuple[bytes, int]:
+    delays = (0, 5, 15, 30, 60)
+    last_error: Exception | None = None
+    for attempt, delay in enumerate(delays, start=1):
+        if delay:
+            time.sleep(delay)
+        request = urllib.request.Request(url, headers={"User-Agent": "LEXIGEN-v3-task1-metadata"})
+        try:
+            with urllib.request.urlopen(request, timeout=180) as response:
+                return response.read(), attempt
+        except urllib.error.HTTPError as exc:
+            last_error = exc
+            if exc.code not in (429, 500, 502, 503, 504):
+                raise
+        except urllib.error.URLError as exc:
+            last_error = exc
+    raise RuntimeError(f"metadata request exhausted infrastructure retries: {last_error}")
+
+
+def describe(value: object) -> dict[str, object]:
+    if isinstance(value, list):
+        result: dict[str, object] = {"encoding": "list", "length": len(value)}
+        if value and isinstance(value[0], list):
+            result["first_inner_length"] = len(value[0])
+        return result
+    if isinstance(value, dict):
+        result = {
+            "encoding": str(value.get("__type__", "mapping")),
+            "keys": sorted(value),
+        }
+        for key in ("shape", "dtype", "npy_path", "bin_path", "size"):
+            if key in value:
+                result[key] = value[key]
+        return result
+    return {"encoding": type(value).__name__}
 
 
 def main() -> None:
-    entries = json.loads(request_bytes(API))
+    api_raw, api_attempts = request_bytes(API)
+    entries = json.loads(api_raw)
+    if isinstance(entries, dict):
+        entries = entries.get("items", entries.get("siblings", []))
+    if not isinstance(entries, list):
+        raise TypeError(f"unexpected tree response type: {type(entries).__name__}")
     files = [entry for entry in entries if entry.get("type") == "file"]
     train = next(entry for entry in files if str(entry["path"]).endswith("_train.jsonl"))
     test = next(entry for entry in files if str(entry["path"]).endswith("_test.jsonl"))
     train_name = Path(str(train["path"])).name
     test_name = Path(str(test["path"])).name
 
-    raw = request_bytes(f"{BASE}/{train_name}?download=true")
+    raw, train_attempts = request_bytes(f"{BASE}/{train_name}?download=true")
     rows = [json.loads(line) for line in raw.decode().splitlines() if line.strip()]
     if len(rows) != 100:
         raise RuntimeError(f"expected 100 training rows, received {len(rows)}")
     first_problem = rows[0]["problem"]
-    x0 = first_problem["x0"]
-    scenarios = first_problem["loss_scenarios"]
     report = {
         "dataset_revision": REVISION,
         "task": TASK,
+        "directory_request_attempts": api_attempts,
+        "training_request_attempts": train_attempts,
         "train_manifest": train_name,
         "train_tree_oid": train.get("oid"),
         "train_lfs": train.get("lfs"),
@@ -43,9 +81,8 @@ def main() -> None:
         "training_records": len(rows),
         "first_row_keys": sorted(rows[0]),
         "problem_keys": sorted(first_problem),
-        "n_dims": len(x0),
-        "n_scenarios": len(scenarios),
-        "scenario_width": len(scenarios[0]),
+        "x0_structure": describe(first_problem["x0"]),
+        "loss_scenarios_structure": describe(first_problem["loss_scenarios"]),
         "beta": first_problem["beta"],
         "kappa": first_problem["kappa"],
         "seed_min": min(int(row["seed"]) for row in rows),
