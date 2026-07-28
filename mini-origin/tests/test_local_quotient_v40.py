@@ -1,6 +1,5 @@
 from mini_origin import exact_tail_v36 as v36
 from mini_origin import local_quotient_v40 as v40
-from mini_origin import safe_portfolio_v37 as v37
 from mini_origin import state_policy_v34 as v34
 
 
@@ -48,14 +47,23 @@ def test_quotient_exact_matches_unquotiented_optimum() -> None:
 
 
 def test_accepted_exact_subtree_is_executed_completely() -> None:
+    class DominatedFallback:
+        def solve(self, allowed: int, remaining: int) -> v36.Plan:
+            del remaining
+            return v36.Plan(
+                diagnosed=0,
+                worst_queries=99,
+                total_queries=99 * allowed.bit_count(),
+                query=0,
+            )
+
     task = duplicate_task()
     exact = v40.LocalQuotientPlanner(task)
-    fallback = v37.FallbackPlanner(task, "first")
     result = v40.evaluate(
         task,
-        v40.QuotientPolicy(8, "first"),
+        v40.QuotientPolicy(8, "worst_impurity"),
         exact,
-        fallback,
+        DominatedFallback(),
     )
     plan = exact.solve(
         task.full_mask,
