@@ -68,7 +68,7 @@ jobs:
 
       - name: Run external ARC language tests
         working-directory: lexigen-language-genesis/external
-        run: python -m pytest -q test_arc_language.py test_arc_language_v3.py test_arc_language_v4.py test_arc_language_v5.py
+        run: python -m pytest -q test_arc_language.py test_arc_language_v3.py test_arc_language_v4.py test_arc_language_v5.py test_arc_language_v6.py
 
       - name: Hash preserved evidence
         working-directory: lexigen-language-genesis/benchmark
