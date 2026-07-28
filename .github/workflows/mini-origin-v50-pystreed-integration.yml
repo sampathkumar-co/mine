@@ -1,0 +1,61 @@
+name: Mini-ORIGIN PySTreeD Integration v0.50
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/pystreed_integration_v50.py"
+      - "mini-origin/tests/test_pystreed_integration_v50.py"
+      - ".github/workflows/mini-origin-v50-pystreed-integration.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/pystreed_integration_v50.py"
+      - "mini-origin/tests/test_pystreed_integration_v50.py"
+      - ".github/workflows/mini-origin-v50-pystreed-integration.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v50-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  external-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify integration protocol
+        run: pytest -q tests/test_pystreed_integration_v50.py
+      - name: Clone pinned PySTreeD source
+        run: |
+          rm -rf results/v50
+          mkdir -p results/v50
+          git clone --filter=blob:none https://github.com/AlgTUDelft/pystreed.git results/v50/pystreed-source
+          git -C results/v50/pystreed-source checkout 9ad41626a1f26c4b7481e8360c5c8b1871e10d96
+          test "$(git -C results/v50/pystreed-source rev-parse HEAD)" = "9ad41626a1f26c4b7481e8360c5c8b1871e10d96"
+      - name: Build, patch and benchmark original versus local quotient
+        run: >-
+          python -m mini_origin.pystreed_integration_v50
+          --source results/v50/pystreed-source
+          --work results/v50/work
+          --output results/v50/pystreed-integration.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v50-pystreed-integration
+          path: |
+            mini-origin/results/v50/pystreed-integration.json
+            mini-origin/results/v50/work/datasets
+          if-no-files-found: warn
+          retention-days: 90
