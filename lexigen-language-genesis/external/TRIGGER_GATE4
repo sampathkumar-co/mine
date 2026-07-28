@@ -1,0 +1,5 @@
+ARC-GEN external gate 4 trigger
+Engine commit parent: cb9cdaf0002798ce4c4034f64b64118372728839
+Protocol implementation: arcgen-gate-v5
+ARC-GEN evaluator commit: a15cbdb44c776610aeeb9f487a06af875d3d0878
+The workflow must commit any candidate before hidden scoring.
