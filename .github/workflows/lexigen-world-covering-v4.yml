@@ -1,0 +1,64 @@
+name: LEXIGEN World Covering Record v4
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-world-covering-v4/TRIGGER_ONCE"
+permissions:
+  contents: read
+jobs:
+  discover-covering-records-v4:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: lexigen-world-covering-v4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-world-covering-v4/requirements.txt
+      - name: Verify frozen v4 lock
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          lock=json.loads(Path('LOCK.json').read_text())
+          for name,expected in lock['git_blob_sha1'].items():
+              data=Path(name).read_bytes()
+              actual=hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
+              if actual!=expected: raise SystemExit(f'blob mismatch {name}: {actual} != {expected}')
+          if lock['snapshot_md5']!='b2c626b07f216aac830d344eff5ad523': raise SystemExit('snapshot changed')
+          if lock['reserved_count']!=9 or lock['target_count']!=3: raise SystemExit('lineage count changed')
+          print('LEXIGEN_V4_LOCK_VERIFIED')
+          PY
+      - name: Install frozen dependency
+        run: python -m pip install -r requirements.txt
+      - name: Execute one blind v4 search
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          set +e
+          python -u selector_solver.py --output artifacts 2>&1 | tee artifacts/execution.log
+          code=${PIPESTATUS[0]}
+          echo "$code" > artifacts/solver-exit-code.txt
+          exit "$code"
+      - name: Independently verify candidates
+        if: always() && hashFiles('lexigen-world-covering-v4/artifacts/SUMMARY.json') != ''
+        shell: bash
+        run: |
+          set +e
+          python -u verify_results.py --summary artifacts/SUMMARY.json --output artifacts/INDEPENDENT_VERIFICATION.json 2>&1 | tee artifacts/verification.log
+          code=${PIPESTATUS[0]}
+          echo "$code" > artifacts/verifier-exit-code.txt
+          exit "$code"
+      - name: Upload immutable v4 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-world-covering-v4-evidence
+          path: lexigen-world-covering-v4/artifacts/
+          if-no-files-found: error
+          retention-days: 90
