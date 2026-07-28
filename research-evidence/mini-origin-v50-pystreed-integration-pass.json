@@ -1,0 +1,28 @@
+{
+  "status": "pystreed_integration_candidate",
+  "external_integration_gate": true,
+  "pinned_repository": "AlgTUDelft/pystreed",
+  "pinned_commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+  "scope": "PySTreeD Accuracy only: constant feature identity cost, no task constraints, binary splits. Other PySTreeD tasks are not claimed safe.",
+  "dataset_count": 4,
+  "row_count": 8,
+  "optimum_match_count": 8,
+  "augmented_total_local_skips": 59586,
+  "augmented_original_subtree_calls": 363329,
+  "augmented_patched_subtree_calls": 253200,
+  "augmented_subtree_call_reduction_fraction": 0.30311095453432013,
+  "augmented_original_branch_expansions": 309921,
+  "augmented_patched_branch_expansions": 217427,
+  "augmented_branch_expansion_reduction_fraction": 0.29844379696761436,
+  "augmented_reported_speedup_median": 1.1096438330512794,
+  "native_patched_over_original_runtime_max": 1.2017746913580247,
+  "selected_source_paths": [
+    "data/cost-sensitive/nursery/nursery-train-85.csv",
+    "data/cost-sensitive/mushroom/mushroom-train-71.csv",
+    "data/cost-sensitive/mushroom/mushroom-train-60.csv",
+    "data/cost-sensitive/diabetes/diabetes-train-42.csv"
+  ],
+  "workflow_run": 30387526010,
+  "artifact_digest": "sha256:23d634e6d6a234d8699be167315e7940038fd189d6b617beecb4f254c8dc63cb",
+  "scientific_note": "A descendant-specific split quotient was integrated into the pinned PySTreeD Accuracy solver. Original and patched binaries proved identical score, depth and node-count optima on four native datasets and four deterministic descendant-equivalence variants. The patch eliminated 59586 equivalent feature branches, reduced augmented subtree calls by 30.3% and branch expansions by 29.8%, and achieved 1.11x median reported runtime speedup. Native tasks preserved exact optima but showed up to 20.2% runtime overhead from the deliberately simple linear partition archive, motivating a hashed implementation and a fresh native holdout."
+}
