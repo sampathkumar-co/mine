@@ -1,0 +1,13 @@
+{
+  "candidate_budget": 75000,
+  "candidates_tested": 75000,
+  "hidden_scoring_performed": false,
+  "inventory_size": 386,
+  "language_program_found": false,
+  "protocol": "arcgen-gate-v5",
+  "sealed_outputs_accessed_by_scorer": false,
+  "selected_task_id": "228f6490",
+  "signatures_seen": 30469,
+  "single_primitive_baseline_found": false,
+  "status": "failed before hidden scoring; no predictions were produced"
+}
