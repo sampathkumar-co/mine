@@ -4,11 +4,11 @@ import argparse
 import hashlib
 import importlib
 import json
-import random
 import sys
 from pathlib import Path
 from typing import Any
 
+from constructive_arcgen_v8 import generate as generate_constructive
 from meta_runtime_v8 import as_grid, canonical_json, execute_extension, to_json_grid
 from meta_synthesizer_v8 import synthesize_meta_extension
 from portable_runtime_v8 import as_grid as portable_grid
@@ -46,10 +46,11 @@ def generated_cases(arcgen_root: Path, start: int, count: int):
     sys.path.insert(0, str(arcgen_root))
     task = importlib.import_module("tasks.task_1d61978c")
     cases = []
-    for seed in range(start, start + count):
-        random.seed(seed)
-        item = task.generate()
+    for offset, seed in enumerate(range(start, start + count), start=1):
+        item = generate_constructive(task, seed)
         cases.append((seed, as_grid(item["input"]), as_grid(item["output"])))
+        if offset % 1_000 == 0:
+            print(json.dumps({"generated_holdout_cases": offset}), flush=True)
     return cases
 
 
@@ -59,6 +60,17 @@ def run(redacted: Path, arcgen_root: Path, output_dir: Path) -> dict[str, Any]:
     if result.extension is None:
         raise AssertionError("v8 failed to synthesize a meta-grammar extension")
     extension = result.extension
+    print(
+        json.dumps(
+            {
+                "candidate_extensions_tested": result.candidates_tested,
+                "exact_extension_count": result.exact_candidate_count,
+                "generated_extension": extension["name"],
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
     exact_training = all(execute_extension(extension, source) == target for source, target in examples)
     portable_training = all(
         execute_portable(extension, portable_grid(source)) == target for source, target in examples
@@ -68,19 +80,28 @@ def run(redacted: Path, arcgen_root: Path, output_dir: Path) -> dict[str, Any]:
     holdout = generated_cases(arcgen_root, 30_000, 10_000)
     failures = []
     portable_failures = []
-    for seed, source, target in holdout:
+    for offset, (seed, source, target) in enumerate(holdout, start=1):
         primary = execute_extension(extension, source)
         portable = execute_portable(extension, portable_grid(source))
         if primary != target:
             failures.append(seed)
         if portable != target or portable != primary:
             portable_failures.append(seed)
+        if offset % 1_000 == 0:
+            print(
+                json.dumps(
+                    {
+                        "validated_holdout_cases": offset,
+                        "primary_failures": len(failures),
+                        "portable_failures": len(portable_failures),
+                    }
+                ),
+                flush=True,
+            )
     predictions = [to_json_grid(execute_extension(extension, source)) for source in tests]
 
     extension_sha = hashlib.sha256(canonical_json(extension).encode()).hexdigest()
-    training_sha = hashlib.sha256(
-        canonical_json(payload["train"]).encode()
-    ).hexdigest()
+    training_sha = hashlib.sha256(canonical_json(payload["train"]).encode()).hexdigest()
     task_source = arcgen_root / "tasks" / "task_1d61978c.py"
     certificate = {
         "schema": "lexigen-v8-meta-extension-certificate-v1",
@@ -92,6 +113,7 @@ def run(redacted: Path, arcgen_root: Path, output_dir: Path) -> dict[str, Any]:
         "holdout_count": len(holdout),
         "holdout_exact": len(holdout) - len(failures),
         "portable_holdout_exact": len(holdout) - len(portable_failures),
+        "holdout_generation": "constructive parameters rendered by pinned official ARC-GEN task",
         "v7_fixed_grammar_found": v7_found,
         "simple_fixed_baseline_found": result.fixed_grammar_baseline_found,
         "extension_ablation_training_exact": all(source == target for source, target in examples),
