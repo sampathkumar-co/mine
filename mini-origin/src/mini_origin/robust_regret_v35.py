@@ -22,27 +22,49 @@ class RegretProfile:
     uses_both_branches: bool
 
 
+def control_baselines(
+    tasks: list[object],
+) -> dict[str, dict[str, float | int]]:
+    """Evaluate each constant specialist once per task."""
+    controls = v34.constant_programs()
+    baselines: dict[str, dict[str, float | int]] = {}
+    for task in tasks:
+        rows = [
+            v34.evaluate(task, program)
+            for program in controls.values()
+        ]
+        best_diagnosed = max(
+            row.diagnosed_fraction for row in rows
+        )
+        eligible = [
+            row
+            for row in rows
+            if row.diagnosed_fraction >= best_diagnosed - 1e-12
+        ]
+        baselines[task.name] = {
+            "best_diagnosed": best_diagnosed,
+            "best_worst": min(
+                row.worst_queries for row in eligible
+            ),
+            "best_mean": min(
+                row.mean_queries for row in eligible
+            ),
+        }
+    return baselines
+
+
 def task_regret(
     task: object,
     candidate: v34.StatePolicy,
-    controls: dict[str, v34.StatePolicy],
-) -> dict[str, float | int]:
+    baseline: dict[str, float | int],
+) -> dict[str, float | int | bool]:
     candidate_row = v34.evaluate(task, candidate)
-    control_rows = {
-        name: v34.evaluate(task, program)
-        for name, program in controls.items()
-    }
-    best_diagnosed = max(
-        row.diagnosed_fraction for row in control_rows.values()
+    best_diagnosed = float(baseline["best_diagnosed"])
+    best_worst = int(baseline["best_worst"])
+    best_mean = float(baseline["best_mean"])
+    diagnosed_regret = (
+        best_diagnosed - candidate_row.diagnosed_fraction
     )
-    eligible = [
-        row
-        for row in control_rows.values()
-        if row.diagnosed_fraction >= best_diagnosed - 1e-12
-    ]
-    best_worst = min(row.worst_queries for row in eligible)
-    best_mean = min(row.mean_queries for row in eligible)
-    diagnosed_regret = best_diagnosed - candidate_row.diagnosed_fraction
     worst_regret = candidate_row.worst_queries - best_worst
     mean_regret = candidate_row.mean_queries - best_mean
     strict_win = int(
@@ -63,6 +85,7 @@ def task_regret(
         "mean_query_regret": float(mean_regret),
         "strict_win": strict_win,
         "no_harm": no_harm,
+        "uses_both_branches": candidate_row.uses_both_branches,
         "candidate_diagnosed": candidate_row.diagnosed_fraction,
         "candidate_worst": candidate_row.worst_queries,
         "candidate_mean": candidate_row.mean_queries,
@@ -75,24 +98,45 @@ def task_regret(
 def profile_program(
     tasks: list[object],
     program: v34.StatePolicy,
+    baselines: dict[str, dict[str, float | int]],
 ) -> tuple[RegretProfile, dict[str, object]]:
-    controls = v34.constant_programs()
     rows = {
-        task.name: task_regret(task, program, controls)
+        task.name: task_regret(
+            task,
+            program,
+            baselines[task.name],
+        )
         for task in tasks
     }
-    diagnosed = [row["diagnosed_regret"] for row in rows.values()]
-    worst = [row["worst_query_regret"] for row in rows.values()]
-    mean = [row["mean_query_regret"] for row in rows.values()]
-    aggregate = v34.aggregate(tasks, program)
+    diagnosed = [
+        float(row["diagnosed_regret"])
+        for row in rows.values()
+    ]
+    worst = [
+        int(row["worst_query_regret"])
+        for row in rows.values()
+    ]
+    mean = [
+        float(row["mean_query_regret"])
+        for row in rows.values()
+    ]
     profile = RegretProfile(
         diagnosed_regret_max=float(max(diagnosed)),
         worst_query_regret_max=int(max(worst)),
         mean_query_regret_median=float(np.median(mean)),
         mean_query_regret_max=float(max(mean)),
-        strict_wins=sum(int(row["strict_win"]) for row in rows.values()),
-        no_harm_tasks=sum(int(row["no_harm"]) for row in rows.values()),
-        uses_both_branches=bool(aggregate["uses_both_branches"]),
+        strict_wins=sum(
+            int(row["strict_win"])
+            for row in rows.values()
+        ),
+        no_harm_tasks=sum(
+            int(row["no_harm"])
+            for row in rows.values()
+        ),
+        uses_both_branches=any(
+            bool(row["uses_both_branches"])
+            for row in rows.values()
+        ),
     )
     return profile, rows
 
@@ -120,11 +164,26 @@ def select_robust_program(
 ) -> tuple[v34.ProgramClass, RegretProfile, dict[str, object]]:
     programs = v34.grammar()
     classes = v34.quotient_programs(tasks, programs)
+    baselines = control_baselines(tasks)
     rows = []
     for value in classes:
-        profile, details = profile_program(tasks, value.canonical)
-        rows.append((robust_score(profile, value.canonical), value, profile, details))
-    _, selected, profile, details = max(rows, key=lambda row: row[0])
+        profile, details = profile_program(
+            tasks,
+            value.canonical,
+            baselines,
+        )
+        rows.append(
+            (
+                robust_score(profile, value.canonical),
+                value,
+                profile,
+                details,
+            )
+        )
+    _, selected, profile, details = max(
+        rows,
+        key=lambda row: row[0],
+    )
     return selected, profile, {
         "program_count": len(programs),
         "quotient_class_count": len(classes),
@@ -138,7 +197,9 @@ def select_robust_program(
 def opened_domain_pool() -> list[object]:
     tasks: list[object] = []
     for rotation in range(3):
-        training, development = v34.opened_training_and_development(rotation)
+        training, development = (
+            v34.opened_training_and_development(rotation)
+        )
         tasks.extend(training)
         tasks.extend(development)
     tasks.extend([
@@ -174,7 +235,11 @@ def run() -> dict[str, object]:
         and profile.no_harm_tasks == len(tasks)
     )
     return {
-        "status": "robust_regret_selector_ready" if development_gate else "not_yet",
+        "status": (
+            "robust_regret_selector_ready"
+            if development_gate
+            else "not_yet"
+        ),
         "claim_scope": (
             "a state-dependent policy is selected by worst held-out-domain regret "
             "against all constant specialists across every previously opened UCI "
@@ -210,7 +275,10 @@ def main() -> None:
     args = parser.parse_args()
     report = run()
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    args.output.write_text(
+        json.dumps(report, indent=2),
+        encoding="utf-8",
+    )
     print(json.dumps({
         "status": report["status"],
         "selected": report["selected_class"],
