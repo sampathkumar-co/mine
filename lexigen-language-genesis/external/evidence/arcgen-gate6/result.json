@@ -1,0 +1,17 @@
+{
+  "protocol": "arcgen-gate-v6-gate6",
+  "selected_task_id": "1d61978c",
+  "status": "permanent_pre_score_failure",
+  "frozen_engine_commit": "00985d50cda406e1d989bd2abd8916abf923315b",
+  "candidate_budget": 75000,
+  "candidates_tested": 75000,
+  "signatures_seen": 17536,
+  "language_program_found": false,
+  "single_primitive_baseline_found": false,
+  "predictions_committed": false,
+  "hidden_scoring_performed": false,
+  "sealed_outputs_accessed": false,
+  "redacted_task_sha256": "39761256901613ed58ac3959ab4c03f1351d3bbcb7d6df407bcadd5d4faa70e3",
+  "sealed_outputs_sha256": "c844e8bfa298754e7e902a3ce2837bb69446667f98f8ebdbf9230b09b179d4cd",
+  "interpretation": "The frozen v6 language could not express the untouched task within its committed search budget. This task is reserved as an external failure target for later language-generation engines and must never be rescored as gate 6."
+}
