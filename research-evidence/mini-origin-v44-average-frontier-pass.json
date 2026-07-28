@@ -1,0 +1,23 @@
+{
+  "status": "average_cost_exact_frontier_candidate",
+  "development_gate": true,
+  "frontier_state_count": 65,
+  "quotient_solved_count": 65,
+  "plain_solved_count": 47,
+  "quotient_only_solved_count": 18,
+  "both_plan_match_count": 47,
+  "exact_dominates_greedy_count": 65,
+  "strict_exact_gain_count": 58,
+  "aggregate_total_query_saving_vs_greedy": 666,
+  "expansion_ratio_lower_bound_median": 22.70212765957447,
+  "expansion_ratio_lower_bound_p90": 113.21432117133405,
+  "budget_ladder_results": {
+    "10000": {"quotient_solved": 58, "plain_solved": 19},
+    "50000": {"quotient_solved": 65, "plain_solved": 32},
+    "250000": {"quotient_solved": 65, "plain_solved": 47}
+  },
+  "frozen_frontier_digest": "f5b3b897989021b53d6a3db2a1e1c4ba1db518ac693063ee15048c18dea026d1",
+  "workflow_run": 30382340387,
+  "artifact_digest": "sha256:62a1f72f102987a894b4d21f8776e0f3fe6b2b23b3c690e09f2cf4173e14b2b7",
+  "scientific_note": "The state-local quotient passed every locked average-cost ODT frontier criterion. On 65 structurally selected real UCI-derived states it preserved every exact optimum, solved eighteen states where the matched unquotiented exact solver exceeded 250,000 expansions, reduced exact query expansions by 22.7x median and 113x p90, and strictly improved the directly implemented expected-elimination greedy approximation on 58 states while saving 666 aggregate query operations. This is a serious algorithmic breakthrough candidate. Independent implementation and novelty review remain required before a world-class claim."
+}
