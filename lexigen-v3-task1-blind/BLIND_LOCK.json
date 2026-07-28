@@ -1,0 +1,60 @@
+{
+  "protocol": "LEXIGEN World-Proof Campaign v3",
+  "task": "cvar_projection",
+  "candidate_revision": 3,
+  "status": "locked_before_test_access",
+  "created_before_test_manifest_or_payload_download": true,
+  "test_data_opened": false,
+  "selected_candidate": "pruned_hybrid6",
+  "authoritative_private_repository": "sampathkumar-co/attendance-app",
+  "authoritative_private_branch": "lexigen/world-proof-v3",
+  "authoritative_private_prelock_commit": "2c47fedb04a4c013d46e73f3da6ea82cbefe0a3e",
+  "public_runner_repository": "sampathkumar-co/mine",
+  "public_runner_branch": "lexigen/v3-task1-blind",
+  "public_runner_prelock_commit": "34c093adab9553dd4cc81a3593bcc810cf5d2b5d",
+  "training_evidence": {
+    "workflow_run_id": 30360009255,
+    "artifact_id": 8688425511,
+    "artifact_digest": "sha256:cbe43c1115ee021eb8e5fc25a150ab9cfb2f99f92be5ed8a27d7d399455e99dd",
+    "valid": 100,
+    "count": 100,
+    "harmonic_speedup": 5.297863218123317,
+    "minimum_speedup": 2.9476725017137877,
+    "maximum_objective_ratio": 1.0079035489513741
+  },
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "expected_test_manifest": "cvar_projection_T100ms_n9_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "194db2639d41ee0c91b2f171932e7984ad4aed3a",
+  "git_blob_sha1": {
+    "candidate.py": "21c6962cc2681f3a3292522b1dacb73f138a6ac0",
+    "blind_shard.py": "de63076392b507c72f65c7cdeaa0ed4b4b293a44",
+    "aggregate_blind.py": "0df0ecd05c20877cb9327b3ec7180e05f79cd35e",
+    "public_blind_workflow.yml": "c25dd51f90c3f5a3bbc8c91653a6d0f064613237",
+    "transcript.jsonl": "0d784b32822c6e4ae3240e167e76583201a3e188"
+  },
+  "blind_gate": {
+    "required_valid": 100,
+    "required_count": 100,
+    "minimum_harmonic_speedup": 1.5,
+    "minimum_per_record_speedup": 1.05,
+    "maximum_objective_ratio": 1.01,
+    "cvar_feasibility_epsilon": 0.0001
+  },
+  "execution_contract": {
+    "data_accessing_blind_runs_allowed": 1,
+    "shards": 10,
+    "maximum_parallel_shards": 5,
+    "candidate_executions_per_test_record": 1,
+    "reference_executions_per_test_record": 1,
+    "candidate_retries_after_invalid_output": 0,
+    "candidate_or_threshold_changes_after_lock": false,
+    "download_retries_are_infrastructure_only": true,
+    "zero_byte_preexecution_infrastructure_failure_may_be_completed_without_rerunning_successful_records": true
+  },
+  "official_frontier_access": {
+    "allowed_before_blind_result": false,
+    "report": "oripress/AlgoTune reports/agent_summary.json at dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+    "comparison_rule": "Only after blind sealing; record requires Lexigen speedup at least 1.05 times the largest numeric official final_speedup."
+  },
+  "claim_boundary": "Passing counts as one clean blind win in the precommitted eight-task v3 campaign. Official-frontier leadership is a separate post-hoc gate and may be assessed only after the blind result is sealed."
+}
