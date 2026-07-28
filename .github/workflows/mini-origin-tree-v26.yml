@@ -1,0 +1,173 @@
+name: Mini-ORIGIN Tree Compiler v0.26
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/tree_compiler_v26.py"
+      - "mini-origin/tests/test_tree_compiler_v26.py"
+      - ".github/workflows/mini-origin-tree-v26.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/tree_compiler_v26.py"
+      - "mini-origin/tests/test_tree_compiler_v26.py"
+      - ".github/workflows/mini-origin-tree-v26.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-tree-v26-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_tree_compiler_v26.py
+
+  tree-study:
+    name: tree-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1101, 1102, 1103, 1104, 1105]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Synthesize and freeze tree search policy
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.tree_compiler_v26
+          --seed ${{ matrix.seed }}
+          --output results/tree-compiler-v26-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-tree-v26-seed-${{ matrix.seed }}
+          path: mini-origin/results/tree-compiler-v26-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, tree-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-tree-v26-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.26 searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/tree-compiler-v26-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              query = data["selected_policy"]["query"]
+              decoder = data["selected_policy"]["decoder"]
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "query": query,
+                  "decoder": decoder,
+                  "separator_family": query in {"argmin(sum_distance)", "argmin(largest_component)"},
+                  "decoder_family": decoder.startswith("minimum_below"),
+                  "accuracy": data["candidate"]["accuracy"],
+                  "mean_queries": data["candidate"]["mean_queries"],
+                  "mean_log2_ratio": data["candidate"]["mean_log2_ratio"],
+                  "half_shrink_violation_rate": data["candidate"]["half_shrink_violation_rate"],
+                  "invalid_rate": data["candidate"]["invalid_rate"],
+                  "proof_passed": data["exact_certificate"]["passed"],
+                  "proof_failures": data["exact_certificate"]["failures"],
+                  "query_gain": data["reduced_mean_query_gain"],
+                  "shrink_gap": data["reduced_half_shrink_gap"],
+                  "random_gap": data["random_accuracy_gap"],
+                  "passive_gap": data["passive_accuracy_gap"],
+                  "human_query_gap": data["human_mean_query_gap"],
+                  "digest": data["frozen_policy_digest"],
+              })
+
+          accuracy = [row["accuracy"] for row in rows]
+          mean_queries = [row["mean_queries"] for row in rows]
+          ratios = [row["mean_log2_ratio"] for row in rows]
+          violations = [row["half_shrink_violation_rate"] for row in rows]
+          invalid = [row["invalid_rate"] for row in rows]
+          query_gain = [row["query_gain"] for row in rows]
+          shrink_gap = [row["shrink_gap"] for row in rows]
+          random_gap = [row["random_gap"] for row in rows]
+          passive_gap = [row["passive_gap"] for row in rows]
+          human_gap = [row["human_query_gap"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_tree_separator_compiler_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and all(row["separator_family"] for row in rows)
+                  and all(row["decoder_family"] for row in rows)
+                  and all(row["proof_passed"] for row in rows)
+                  and min(accuracy) >= 0.985
+                  and max(ratios) <= 1.15
+                  and max(violations) == 0.0
+                  and max(invalid) <= 0.01
+                  and min(query_gain) >= 0.10
+                  and min(shrink_gap) >= 0.05
+                  and min(random_gap) >= 0.50
+                  and min(passive_gap) >= 0.80
+                  and max(human_gap) <= 0.10
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "one frozen grammar search repeatedly induces a half-separating tree query expression and "
+                  "a raw minimum-response direction decoder, then transfers to unseen structured and random "
+                  "trees up to 127 nodes with an exact shrink certificate; this is a broad internal transfer "
+                  "milestone but instantiates established centroid-search ideas"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "accuracy_min": min(accuracy) if accuracy else None,
+              "accuracy_median": statistics.median(accuracy) if accuracy else None,
+              "mean_queries_median": statistics.median(mean_queries) if mean_queries else None,
+              "mean_log2_ratio_max": max(ratios) if ratios else None,
+              "half_shrink_violation_max": max(violations) if violations else None,
+              "invalid_rate_max": max(invalid) if invalid else None,
+              "query_gain_min": min(query_gain) if query_gain else None,
+              "shrink_gap_min": min(shrink_gap) if shrink_gap else None,
+              "random_gap_min": min(random_gap) if random_gap else None,
+              "passive_gap_min": min(passive_gap) if passive_gap else None,
+              "human_query_gap_max": max(human_gap) if human_gap else None,
+              "policy_digest_count": len({row["digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("tree-compiler-v26-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({k: v for k, v in summary.items() if k != "rows"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-tree-v26-summary
+          path: tree-compiler-v26-summary.json
+          retention-days: 90
