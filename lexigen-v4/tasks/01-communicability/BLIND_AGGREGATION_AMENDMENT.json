@@ -1,0 +1,28 @@
+{
+  "task": "communicability",
+  "revision": 1,
+  "classification": "infrastructure_failure_after_all_blind_executions",
+  "original_blind_run_id": 30376286181,
+  "original_blind_head_sha": "b703e038849fb2e7ddad3aa5c4eacfe07075c306",
+  "original_aggregator_git_blob_sha1": "a735115437d99c4eb4c8d42a894b077c88354547",
+  "amended_aggregator_git_blob_sha1": "6acc0098df9ed7a51cc58292936d714e10c663d2",
+  "exact_change": "Replace invalid JSON-style Python literals false with False in report-only fields.",
+  "candidate_executions_in_amendment": 0,
+  "reference_executions_in_amendment": 0,
+  "blind_records_reexecuted": 0,
+  "scientific_rules_changed": false,
+  "candidates_changed": false,
+  "thresholds_changed": false,
+  "raw_shard_artifacts": [
+    [8695064028, "sha256:8c40e3f0000e032424ab3db6e2600d6507efec448954836c426b4bb5a118efde"],
+    [8695059749, "sha256:8587a126e7c5b704c9ea4876a0334d1770b081252b9f7fdd35760e0476b81678"],
+    [8695068569, "sha256:4ed95e5d3e333e30a445bf0ab2e509188f1e41e670174dec93922590eb2f1c1f"],
+    [8695062091, "sha256:ed5808e7d8fbad2d41e983e790b71fea5826ea548dc212f6b4f8f40655c87e0e"],
+    [8695066935, "sha256:2c37bbcd7d28e8eef85788d149e5d36c8b258f865458249912f33d46e2947058"],
+    [8695077384, "sha256:ab5000a65ce3ee9e449c2679db87b96d8cf797c11911ed2c8336c957bc870869"],
+    [8695075479, "sha256:a454f333b0b04f5f6684c94b2fc02b9c8b9b4b995dea337d7d339467bb295cb9"],
+    [8695079692, "sha256:f840f000912d327de64aa3f51407a49dc5feb5b1f5c14ab5528eb7264b44c2d1"],
+    [8695079660, "sha256:eed99b0b54d479839d9dc813e4dbe08d3d40a1c011ac3b3b95c6e4dab6f02726"],
+    [8695085879, "sha256:b97d866c030b69bd7d895d5af8c83d4d2b540281cb2d4001ee8ed7e991dbe875"]
+  ]
+}
