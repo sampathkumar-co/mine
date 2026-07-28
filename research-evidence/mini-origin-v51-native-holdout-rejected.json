@@ -1,0 +1,47 @@
+{
+  "status": "not_yet",
+  "native_holdout_gate": false,
+  "development_gate": false,
+  "pinned_repository": "AlgTUDelft/pystreed",
+  "pinned_commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+  "development_summary": {
+    "row_count": 4,
+    "optimum_match_count": 4,
+    "tasks_with_local_skips": 4,
+    "total_local_skips": 3928,
+    "subtree_call_reduction_fraction": 0.031918924038643715,
+    "branch_expansion_reduction_fraction": 0.030624134021917104,
+    "reported_speedup_median": 0.839134566255884,
+    "patched_over_original_runtime_median": 1.193372468320085,
+    "patched_over_original_runtime_max": 1.2464683794891658
+  },
+  "holdout_summary": {
+    "row_count": 8,
+    "optimum_match_count": 8,
+    "tasks_with_local_skips": 8,
+    "total_local_skips": 10469,
+    "original_subtree_calls": 408858,
+    "patched_subtree_calls": 391731,
+    "subtree_call_reduction_fraction": 0.0418898492875277,
+    "original_branch_expansions": 352142,
+    "patched_branch_expansions": 337640,
+    "branch_expansion_reduction_fraction": 0.04118225034219147,
+    "reported_speedup_median": 0.8929823918805118,
+    "patched_over_original_runtime_median": 1.1203144517438912,
+    "patched_over_original_runtime_max": 1.2428035387222092,
+    "tasks_speedup_ge_1_05": 1
+  },
+  "selected_holdout_paths": [
+    "data/cost-sensitive/annealing/annealing-test-54.csv",
+    "data/cost-sensitive/wine/wine-train-18.csv",
+    "data/cost-sensitive/hepatitis/hepatitis-train-109.csv",
+    "data/cost-sensitive/flare/flare-train-88.csv",
+    "data/cost-sensitive/heart/heart-train-93.csv",
+    "data/cost-sensitive/hepatitis/hepatitis-train-97.csv",
+    "data/cost-sensitive/iris/iris-train-32.csv",
+    "data/cost-sensitive/flare/flare-train-57.csv"
+  ],
+  "workflow_run": 30388180699,
+  "artifact_digest": "sha256:d67e503a5d50da1f6f5e657674324e1eed2a38bd40721ef1879013ecd6f23793",
+  "scientific_note": "The collision-checked ADataViewBitSet hash implementation preserved all four development and eight previously unseen native exact optima and reduced holdout subtree calls and feature branch expansions by about 4.2%. However, constructing and hashing dynamic bitsets for every candidate feature introduced enough overhead to make median native runtime 12.0% slower. The implementation is therefore rejected for practical integration despite correctness and deterministic search reduction."
+}
