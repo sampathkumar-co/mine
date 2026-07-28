@@ -1,0 +1,96 @@
+name: LEXIGEN Task 5 Revision 1 Blind Once
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-task5-r1/TRIGGER_BLIND_ONCE"
+
+permissions:
+  contents: read
+
+jobs:
+  blind-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install exact numerical dependency
+        run: python -m pip install numpy==2.5.1
+      - name: Verify frozen lock before test access
+        working-directory: lexigen-task5-r1
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          lock = json.loads(Path("BLIND_LOCK.json").read_text(encoding="utf-8"))
+          expected = lock["git_blob_sha1"]
+          for name in ("candidate.py", "native_outer.c", "blind_shard.py", "aggregate_blind.py"):
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != expected[name]:
+                  raise SystemExit(f"frozen hash mismatch for {name}: {actual} != {expected[name]}")
+          if lock["expected_test_manifest_lfs_sha256"] != "7c96c6cb4b391f0268625869217c50a5948eddd15a44d0d5f650e8f2adf04538":
+              raise SystemExit("unexpected committed test-manifest content hash")
+          if lock["execution_contract"]["candidate_retries_after_invalid_output"] != 0:
+              raise SystemExit("candidate retry policy changed")
+          if lock["selected_candidate"] != "native_parallel8":
+              raise SystemExit("selected candidate changed")
+          print("LEXIGEN_TASK5_BLIND_LOCK_VERIFIED")
+          PY
+      - name: Build frozen native candidate
+        working-directory: lexigen-task5-r1
+        run: |
+          gcc -O3 -shared -fPIC -fopenmp \
+            $(python3-config --includes) \
+            -I$(python -c 'import numpy; print(numpy.get_include())') \
+            native_outer.c \
+            -o lexigen_outer_native$(python3-config --extension-suffix) \
+            -fopenmp
+      - name: Execute one blind shard
+        working-directory: lexigen-task5-r1
+        run: python -u blind_shard.py --shard ${{ matrix.shard }} --output blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+      - name: Upload blind shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task5-r1-blind-shard-${{ matrix.shard }}
+          path: lexigen-task5-r1/blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: blind-shards
+    if: always() && needs.blind-shards.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-task5-r1-blind-shard-*
+          path: lexigen-task5-r1/blind-downloaded
+      - name: Aggregate immutable blind gate
+        working-directory: lexigen-task5-r1
+        run: python -u aggregate_blind.py --input blind-downloaded --output blind-evidence
+      - name: Upload complete blind evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task5-r1-blind-evidence
+          path: lexigen-task5-r1/blind-evidence/
+          if-no-files-found: error
+          retention-days: 90

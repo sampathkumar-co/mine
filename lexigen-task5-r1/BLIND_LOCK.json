@@ -1,0 +1,56 @@
+{
+  "protocol": "LEXIGEN Autonomous Unseen-Task Discovery v2",
+  "task": "outer_product",
+  "candidate_revision": 1,
+  "status": "locked_before_test_access",
+  "created_before_test_manifest_or_payload_download": true,
+  "test_data_opened": false,
+  "authoritative_private_repository": "sampathkumar-co/attendance-app",
+  "authoritative_private_branch": "lexigen/autonomous-discovery-v2",
+  "authoritative_private_prelock_commit": "49f8fbbe3a52cf431b076ac899fccac8f5a666d0",
+  "public_runner_repository": "sampathkumar-co/mine",
+  "public_runner_branch": "lexigen/task5-public-runner-r1",
+  "public_runner_prelock_commit": "9576f1e70d9e567b96674387cdc451082098e9a4",
+  "selected_candidate": "native_parallel8",
+  "selected_thread_count": 8,
+  "training_evidence": {
+    "workflow_run_id": 30350968729,
+    "artifact_id": 8684865962,
+    "artifact_digest": "sha256:eca5a667d45e592cc89de5167917a3e5c3d82687a92d41d69c08dc19a3cb97cf",
+    "valid": 100,
+    "count": 100,
+    "harmonic_speedup": 1.5965895889379178,
+    "minimum_speedup": 1.337475384728964,
+    "maximum_absolute_error": 0.0
+  },
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "expected_test_manifest": "outer_product_T100ms_n10630_size100_test.jsonl",
+  "expected_test_manifest_tree_oid": "a4ab4cb2fc915f91a4cdc057ae078d652585e667",
+  "expected_test_manifest_lfs_sha256": "7c96c6cb4b391f0268625869217c50a5948eddd15a44d0d5f650e8f2adf04538",
+  "git_blob_sha1": {
+    "candidate.py": "15c0a6987329d21a52a194a3e0fd22660a68d8d0",
+    "native_outer.c": "ec8928512f15edad97e4f1484a4fd4ed1f15f2c6",
+    "blind_shard.py": "98073461efda538c4509647999b547621dff2a3d",
+    "aggregate_blind.py": "71be74fb8caa2f280769057c2eeaab4d779435a0",
+    "transcript.jsonl": "bb7b8e0d63b94342a8b29c7e293f24c80cf73877",
+    "public_blind_workflow.yml": "022b1faee4447a4c1fcadacc6391b45f570c9eda"
+  },
+  "blind_gate": {
+    "required_valid": 100,
+    "required_count": 100,
+    "minimum_harmonic_speedup": 1.5,
+    "minimum_per_record_speedup": 1.05,
+    "maximum_absolute_error": 0.0
+  },
+  "execution_contract": {
+    "data_accessing_blind_runs_allowed": 1,
+    "shards": 10,
+    "candidate_executions_per_test_record": 1,
+    "reference_executions_per_test_record": 1,
+    "candidate_retries_after_invalid_output": 0,
+    "candidate_or_threshold_changes_after_lock": false,
+    "download_retries_are_infrastructure_only": true,
+    "zero_test_access_preflight_failure_may_be_relocked": true
+  },
+  "claim_boundary": "Passing establishes a second autonomous unseen-task blind benchmark win in Campaign v2 and a fourth blind win across the two frozen campaigns. It would strengthen evidence for repeatable systems-algorithm discovery, but would not alone establish mathematical novelty, universal self-improvement, independent peer review, or a world-level general breakthrough."
+}

@@ -1,0 +1,33 @@
+name: LEXIGEN Task 5 Revision 1 Metadata
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-task5-r1/TRIGGER_METADATA_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-training-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen numerical dependency
+        run: python -m pip install numpy==2.5.1
+      - name: Inspect official training metadata only
+        working-directory: lexigen-task5-r1
+        run: python -u inspect_training.py
+      - name: Upload metadata evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task5-r1-training-metadata
+          path: lexigen-task5-r1/training-metadata.json
+          if-no-files-found: error
+          retention-days: 90
