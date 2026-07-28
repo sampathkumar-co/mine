@@ -1,0 +1,47 @@
+name: LEXIGEN v3 World SHA256 R1 Metadata
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v3-world/task3-sha256-r1/TRIGGER_METADATA"
+
+permissions:
+  contents: read
+
+jobs:
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen SHA-256 candidate sources before metadata access
+        working-directory: lexigen-v3-world/task3-sha256-r1
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              "candidates.py": "93ce7f387b7faa9869e2fcf8e4946c256e625ac0",
+              "native_sha256.c": "ab643a83c7f4e69d86f11c49a8fe0229040ac1af",
+          }
+          for name, blob in expected.items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != blob:
+                  raise SystemExit(f"{name} mismatch: {actual} != {blob}")
+          print("LEXIGEN_V3_WORLD_SHA256_R1_FROZEN")
+          PY
+      - name: Inspect training descriptors and untouched test object identity
+        working-directory: lexigen-v3-world/task3-sha256-r1
+        run: python -u metadata.py
+      - name: Upload immutable metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-world-sha256-r1-metadata
+          path: lexigen-v3-world/task3-sha256-r1/metadata.json
+          if-no-files-found: error
+          retention-days: 90
