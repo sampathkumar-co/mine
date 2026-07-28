@@ -34,6 +34,10 @@ jobs:
         working-directory: lexigen-language-genesis/benchmark
         run: python prototype.py --output-dir artifacts/rift0
 
+      - name: Synthesize bytecode ordering without a program template
+        working-directory: lexigen-language-genesis/benchmark
+        run: python synthesis_experiment.py --output-dir artifacts/rift0
+
       - name: Run independent tests
         working-directory: lexigen-language-genesis/benchmark
         run: python -m pytest -q
