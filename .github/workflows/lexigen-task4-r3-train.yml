@@ -1,0 +1,75 @@
+name: LEXIGEN Task 4 Revision 3 Train
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-public-runner/task4-r3/TRIGGER_TRAIN_R3"
+
+permissions:
+  contents: read
+
+jobs:
+  train-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    defaults:
+      run:
+        working-directory: lexigen-public-runner/task4-r3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen dependency
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Execute official training shard
+        run: |
+          mkdir -p artifacts/shards
+          python -u train_shard.py --shard ${{ matrix.shard }} --output artifacts/shards/shard-${{ matrix.shard }}.jsonl
+      - name: Upload shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task4-r3-shard-${{ matrix.shard }}
+          path: lexigen-public-runner/task4-r3/artifacts/shards/shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: warn
+          retention-days: 90
+
+  aggregate:
+    runs-on: ubuntu-24.04
+    needs: train-shards
+    if: always()
+    defaults:
+      run:
+        working-directory: lexigen-public-runner/task4-r3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-task4-r3-shard-*
+          path: lexigen-public-runner/task4-r3/artifacts/downloaded
+          merge-multiple: true
+      - name: Aggregate fixed gate
+        shell: bash
+        run: |
+          mkdir -p artifacts/aggregate
+          set +e
+          python -u aggregate_train.py --input artifacts/downloaded --output artifacts/aggregate 2>&1 | tee artifacts/aggregate/verification.log
+          code=${PIPESTATUS[0]}
+          echo "$code" > artifacts/aggregate/exit-code.txt
+          exit "$code"
+      - name: Upload aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task4-r3-training-evidence
+          path: lexigen-public-runner/task4-r3/artifacts/aggregate/
+          if-no-files-found: warn
+          retention-days: 90
