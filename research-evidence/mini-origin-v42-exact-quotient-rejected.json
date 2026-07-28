@@ -1,0 +1,37 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "frozen_benchmark_digest": "338cfc90f5afd477b8124e42681ccdc707394f3c577c060d16c00124476deee6",
+  "workflow_run": 30381218489,
+  "artifact_digest": "sha256:1c4ea9d7dbb8a353929d35acd99ce00a9d0cc714b6c80c1fb0abc3347ca7c893",
+  "theorem_certificate": {
+    "task_count": 40,
+    "theorem_pass_count": 40,
+    "plan_match_count": 40,
+    "passed": true
+  },
+  "real_state_benchmark": {
+    "task_count": 22,
+    "matched_state_count": 725,
+    "matched_plan_count": 725,
+    "plan_mismatch_count": 0,
+    "expansion_ratio_median": 1.627906976744186,
+    "expansion_ratio_p90": 7.492723492723494,
+    "state_ratio_median": 2.0,
+    "challenge_state_count": 103,
+    "challenge_quotient_only_solved": 0,
+    "challenge_both_solved": 103,
+    "challenge_both_plan_matches": 103,
+    "maximum_plain_expansions": 15984,
+    "maximum_quotient_expansions": 1204
+  },
+  "synthetic_challenge_benchmark": {
+    "task_count": 32,
+    "quotient_solved_count": 32,
+    "plain_solved_count": 2,
+    "quotient_only_solved": 30,
+    "both_solved_count": 2,
+    "both_plan_matches": 2
+  },
+  "scientific_note": "Rejected without changing thresholds. Hereditary-equivalence checks and all 725 real exact-optimum comparisons passed with zero mismatches. Median and 90th-percentile real query-expansion reductions were 1.63x and 7.49x. The locked gate nevertheless failed because the matched unquotiented solver completed all 103 selected real challenge states within 50,000 expansions; only synthetic duplicate-query challenges exhausted it."
+}
