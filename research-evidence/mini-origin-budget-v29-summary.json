@@ -1,0 +1,14 @@
+{
+  "verdict": "not_yet",
+  "workflow_run": 30364060859,
+  "run_count": 5,
+  "passing_count": 0,
+  "accuracy_min": 1.0,
+  "invalid_max": 0.0,
+  "mean_observation_ratio_max": 0.7776829643296433,
+  "mean_observation_ratio_median": 0.7637019531739075,
+  "p95_observation_ratio_max": 0.9813432835820896,
+  "accuracy_gap_min": 0.0,
+  "selected_program": "batches=32,96,192,384,512;z=1.96",
+  "scientific_note": "All runs retained perfect accuracy, but none met the preregistered efficiency gate. Mean savings were only about 22-25 percent versus the required 40 percent, and p95 savings were far below the required 20 percent. Thresholds were not lowered."
+}
