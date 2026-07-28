@@ -1,0 +1,27 @@
+name: LEXIGEN Task 4 Revision 3 Synthetic Gate
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/lexigen-task4-r3-synthetic.yml"
+      - "lexigen-public-runner/task4-r3/**"
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-exactness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: lexigen-public-runner/task4-r3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependency
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Execute synthetic exactness and diagnostic benchmark
+        run: python -u synthetic_test.py
