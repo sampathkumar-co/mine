@@ -1,0 +1,3 @@
+Reveal only the six authentic gate-4 training pairs for task 228f6490.
+Verify both committed hashes before publishing.
+Never commit hidden test outputs.
