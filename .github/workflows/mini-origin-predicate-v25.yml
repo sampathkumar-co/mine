@@ -1,0 +1,169 @@
+name: Mini-ORIGIN Predicate Genesis v0.25
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/predicate_genesis_v25.py"
+      - "mini-origin/tests/test_predicate_genesis_v25.py"
+      - ".github/workflows/mini-origin-predicate-v25.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/predicate_genesis_v25.py"
+      - "mini-origin/tests/test_predicate_genesis_v25.py"
+      - ".github/workflows/mini-origin-predicate-v25.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-predicate-v25-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_predicate_genesis_v25.py
+
+  predicate-study:
+    name: predicate-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1001, 1002, 1003, 1004, 1005]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Synthesize and freeze raw-response predicates
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.predicate_genesis_v25
+          --seed ${{ matrix.seed }}
+          --output results/predicate-genesis-v25-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-predicate-v25-seed-${{ matrix.seed }}
+          path: mini-origin/results/predicate-genesis-v25-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, predicate-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-predicate-v25-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.25 searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/predicate-genesis-v25-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              predicates = data["selected_program"]["predicates"]
+              family_ok = (
+                  len(predicates) == 2
+                  and any(text.startswith("value(right)>") for text in predicates)
+                  and any(text.startswith("value(right)-value(left)>") for text in predicates)
+              )
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "predicates": predicates,
+                  "family_ok": family_ok,
+                  "minimum_predicate_count": data["grammar_relative_certificate"]["minimum_predicate_count"],
+                  "all_single_predicates_refuted": data["grammar_relative_certificate"]["all_single_predicates_refuted"],
+                  "semantic_accuracy": data["candidate_semantic"]["macro_accuracy"],
+                  "minimum_state_accuracy": data["candidate_semantic"]["minimum_state_accuracy"],
+                  "semantic_gap": data["semantic_gap"],
+                  "closed_loop_accuracy": data["candidate_closed_loop"]["accuracy"],
+                  "closed_loop_gap": data["closed_loop_gap"],
+                  "invalid_transition_rate": data["candidate_closed_loop"]["invalid_transition_rate"],
+                  "human_gap": data["human_gap"],
+                  "random_gap": data["random_gap"],
+                  "digest": data["frozen_program_digest"],
+              })
+
+          semantic = [row["semantic_accuracy"] for row in rows]
+          minimum_state = [row["minimum_state_accuracy"] for row in rows]
+          semantic_gap = [row["semantic_gap"] for row in rows]
+          loop = [row["closed_loop_accuracy"] for row in rows]
+          loop_gap = [row["closed_loop_gap"] for row in rows]
+          invalid = [row["invalid_transition_rate"] for row in rows]
+          human = [row["human_gap"] for row in rows]
+          random_gap = [row["random_gap"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_raw_predicate_compression_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and all(row["family_ok"] for row in rows)
+                  and all(row["minimum_predicate_count"] == 2 for row in rows)
+                  and all(row["all_single_predicates_refuted"] for row in rows)
+                  and min(semantic) >= 0.985
+                  and min(minimum_state) >= 0.97
+                  and min(semantic_gap) >= 0.15
+                  and min(loop) >= 0.985
+                  and min(loop_gap) >= 0.02
+                  and max(invalid) <= 0.01
+                  and min(human) >= -0.01
+                  and min(random_gap) >= 0.45
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "raw-response predicate synthesis repeatedly compresses the v0.24 three-bit named alphabet "
+                  "into two learned relational predicates while preserving hidden closed-loop performance; "
+                  "this falsifies a vocabulary-independent reading of the v0.24 lower bound but remains "
+                  "grammar-bounded classical ordered-search synthesis, not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "semantic_accuracy_min": min(semantic) if semantic else None,
+              "semantic_accuracy_median": statistics.median(semantic) if semantic else None,
+              "minimum_state_accuracy_min": min(minimum_state) if minimum_state else None,
+              "semantic_gap_min": min(semantic_gap) if semantic_gap else None,
+              "closed_loop_accuracy_min": min(loop) if loop else None,
+              "closed_loop_accuracy_median": statistics.median(loop) if loop else None,
+              "closed_loop_gap_min": min(loop_gap) if loop_gap else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "human_gap_min": min(human) if human else None,
+              "random_gap_min": min(random_gap) if random_gap else None,
+              "program_digest_count": len({row["digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("predicate-genesis-v25-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({k: v for k, v in summary.items() if k != "rows"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-predicate-v25-summary
+          path: predicate-genesis-v25-summary.json
+          retention-days: 90
