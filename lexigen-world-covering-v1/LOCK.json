@@ -13,7 +13,7 @@
   "snapshot_md5": "b2c626b07f216aac830d344eff5ad523",
   "target_count": 3,
   "target_identities_known_at_seal": false,
-  "selection_seed_material_sha256": "cda6a34aa2e1529b30419c75ebc0d891209114da98ee6196798a30911c13b2ce",
+  "selection_seed_material_sha256": "e5fe13c984890cf9c4e00519e51a366d7a604769ecfd17f820b185c833df5b49",
   "git_blob_sha1": {
     "selector_solver.py": "d734695dc85dbe8a75fca6cc9437ed6f244a2fb7",
     "verify_results.py": "bf38e5d59840adc3876c24823e20f0b0d09a7daa",
