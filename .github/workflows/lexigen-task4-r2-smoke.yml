@@ -1,0 +1,32 @@
+name: LEXIGEN Task 4 Revision 2 Synthetic Smoke
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-task4-r2/**"
+      - ".github/workflows/lexigen-task4-r2-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exactness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install exact reference dependency
+        run: python -m pip install cryptography==46.0.3
+      - name: Build frozen native candidate
+        working-directory: lexigen-task4-r2
+        run: |
+          gcc -O3 -shared -fPIC $(python3-config --includes) native_chacha.c \
+            -o lexigen_chacha_native$(python3-config --extension-suffix) \
+            -lcrypto -pthread
+      - name: Run synthetic exactness suite
+        working-directory: lexigen-task4-r2
+        run: python -u smoke_test.py
