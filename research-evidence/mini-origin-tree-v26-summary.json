@@ -1,0 +1,23 @@
+{
+  "verdict": "replicated_tree_separator_compiler_candidate",
+  "claim_scope": "one frozen grammar search repeatedly induces a half-separating tree query expression and a raw minimum-response direction decoder, then transfers to unseen structured and random trees up to 127 nodes with an exact shrink certificate; this is a broad internal transfer milestone but instantiates established centroid-search ideas",
+  "workflow_run": 30363158383,
+  "run_count": 5,
+  "passing_count": 5,
+  "accuracy_min": 1.0,
+  "accuracy_median": 1.0,
+  "mean_queries_median": 3.234375,
+  "mean_log2_ratio_max": 0.5739285714285715,
+  "half_shrink_violation_max": 0.0,
+  "invalid_rate_max": 0.0,
+  "query_gain_min": 0.23124999999999973,
+  "shrink_gap_min": 0.3391304347826087,
+  "random_gap_min": 0.96875,
+  "passive_gap_min": 0.9712928436127647,
+  "human_query_gap_max": 0.009375000000000355,
+  "policy_digest_count": 1,
+  "selected_policy": {
+    "query": "argmin(sum_distance)",
+    "decoder": "minimum_below(threshold=0.20000000)"
+  }
+}
