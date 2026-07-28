@@ -41,8 +41,7 @@ def previous_baselines(examples) -> dict[str, bool]:
         sys.path.insert(0, str(folder_path))
         try:
             module = importlib.import_module(module_name)
-            function = getattr(module, function_name)
-            result = function(examples)
+            result = getattr(module, function_name)(examples)
             results[folder] = getattr(result, result_field) is not None
         except Exception:
             results[folder] = False
@@ -53,23 +52,73 @@ def previous_baselines(examples) -> dict[str, bool]:
     return results
 
 
-def generate_holdout(arcgen_root: Path, start: int, count: int):
-    sys.path.insert(0, str(arcgen_root))
+def generate_cases(arcgen_root: Path, start: int, count: int, label: str):
+    if str(arcgen_root) not in sys.path:
+        sys.path.insert(0, str(arcgen_root))
     task = importlib.import_module("tasks.task_33067df9")
     cases = []
     for offset, seed in enumerate(range(start, start + count), start=1):
         item = generate_constructive(task, seed)
         cases.append((seed, as_grid(item["input"]), as_grid(item["output"])))
         if offset % 1_000 == 0:
-            print(json.dumps({"generated_holdout_cases": offset}), flush=True)
+            print(json.dumps({f"generated_{label}_cases": offset}), flush=True)
     return cases
+
+
+def stage_summary(program: dict[str, Any]) -> dict[str, Any]:
+    stages = program["stages"]
+    return {
+        "extract": stages[0]["mode"],
+        "background": stages[0]["background"],
+        "output_shape": [stages[1]["output_height"], stages[1]["output_width"]],
+        "margin": stages[1]["margin"],
+        "gap": stages[1]["gap"],
+        "relation": stages[2]["predicate"],
+        "precedence": stages[3]["mode"],
+        "canvas_background": stages[4]["canvas_background"],
+        "skip_background_tiles": stages[4]["skip_background_tiles"],
+    }
 
 
 def run(redacted: Path, arcgen_root: Path, output_dir: Path) -> dict[str, Any]:
     payload, examples, tests = load_redacted(redacted)
+    initial_count = len(examples)
+    discovery = generate_cases(arcgen_root, 60_000, 10_000, "discovery")
+    rounds: list[dict[str, Any]] = []
+    used_counterexamples: set[int] = set()
+
+    for round_index in range(8):
+        result = synthesize_pipeline(examples)
+        if result.program is None:
+            raise AssertionError("v11 pipeline grammar became inconsistent with accumulated evidence")
+        program = result.program
+        failure = next(
+            (
+                (seed, source, target)
+                for seed, source, target in discovery
+                if seed not in used_counterexamples and execute_pipeline(program, source) != target
+            ),
+            None,
+        )
+        rounds.append(
+            {
+                "round": round_index,
+                "program_sha256": hashlib.sha256(canonical_json(program).encode()).hexdigest(),
+                "stages": stage_summary(program),
+                "exact_candidate_count": result.exact_candidate_count,
+                "counterexample_seed": None if failure is None else failure[0],
+            }
+        )
+        if failure is None:
+            break
+        used_counterexamples.add(failure[0])
+        examples.append((failure[1], failure[2]))
+    else:
+        raise AssertionError("v11 exceeded frozen counterexample round budget")
+
     result = synthesize_pipeline(examples)
     if result.program is None:
-        raise AssertionError("v11 failed to synthesize a compositional pipeline")
+        raise AssertionError("v11 final compositional pipeline is missing")
     program = result.program
     training_exact = all(execute_pipeline(program, source) == target for source, target in examples)
     portable_training = all(execute_portable(program, portable_grid(source)) == target for source, target in examples)
@@ -77,16 +126,19 @@ def run(redacted: Path, arcgen_root: Path, output_dir: Path) -> dict[str, Any]:
     print(
         json.dumps(
             {
-                "candidates_tested": result.candidates_tested,
-                "exact_candidates": result.exact_candidate_count,
+                "cegis_rounds": len(rounds),
+                "counterexamples": sorted(used_counterexamples),
+                "candidates_tested_final": result.candidates_tested,
+                "exact_candidates_final": result.exact_candidate_count,
                 "pipeline": program["name"],
                 "prior_baselines": baselines,
+                "stages": stage_summary(program),
             }
         ),
         flush=True,
     )
 
-    holdout = generate_holdout(arcgen_root, 60_000, 10_000)
+    holdout = generate_cases(arcgen_root, 70_000, 10_000, "holdout")
     failures = []
     portable_failures = []
     for offset, (seed, source, target) in enumerate(holdout, start=1):
@@ -125,20 +177,25 @@ def run(redacted: Path, arcgen_root: Path, output_dir: Path) -> dict[str, Any]:
     report = {
         "version": "v11",
         "benchmark": "ARC-GEN 33067df9 post-failure unified compositional pipeline",
-        "status": "unified typed pipeline mechanism candidate; not a blind breakthrough claim",
+        "status": "counterexample-guided unified pipeline mechanism candidate; not a blind breakthrough claim",
         "arcgen_commit": ARCGEN_COMMIT,
         "source_task_id": TASK_ID,
         "source_sealed_outputs_accessed": False,
-        "candidate_pipelines_tested": result.candidates_tested,
-        "exact_pipeline_count": result.exact_candidate_count,
+        "initial_demonstration_count": initial_count,
+        "counterexample_count": len(used_counterexamples),
+        "counterexample_seeds": sorted(used_counterexamples),
+        "rounds": rounds,
+        "candidate_pipelines_tested_final": result.candidates_tested,
+        "exact_pipeline_count_final": result.exact_candidate_count,
         "generated_pipeline": program,
         "certificate": certificate,
-        "holdout_seed_range": [60_000, 69_999],
+        "discovery_seed_range": [60_000, 69_999],
+        "holdout_seed_range": [70_000, 79_999],
         "holdout_failures": failures,
         "portable_holdout_failures": portable_failures,
         "test_prediction_count": len(predictions),
         "claim_boundary": (
-            "v11 composes generic lattice extraction, layout, relation, precedence and rendering stages after gate 9 failed. "
+            "v11 composes generic stages and uses public post-failure counterexamples to resolve underdetermined precedence. "
             "The stage inventory remains human supplied; a fresh sealed gate and cross-family transfer are required."
         ),
     }
@@ -165,8 +222,10 @@ def run(redacted: Path, arcgen_root: Path, output_dir: Path) -> dict[str, Any]:
     predictions_path.write_text(json.dumps({"predictions": predictions}, indent=2) + "\n", encoding="utf-8")
     summary = {
         "pipeline": program["name"],
-        "candidates_tested": result.candidates_tested,
-        "exact_pipeline_count": result.exact_candidate_count,
+        "counterexamples": sorted(used_counterexamples),
+        "cegis_rounds": len(rounds),
+        "candidates_tested_final": result.candidates_tested,
+        "exact_pipeline_count_final": result.exact_candidate_count,
         "holdout_accuracy": certificate["holdout_exact"] / certificate["holdout_count"],
         "prior_baselines": baselines,
         "report_sha256": hashlib.sha256(report_path.read_bytes()).hexdigest(),
