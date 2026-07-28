@@ -1,0 +1,78 @@
+{
+  "protocol": "LEXIGEN Autonomous Unseen-Task Discovery v2",
+  "task": "outer_product",
+  "candidate_revision": 1,
+  "status": "infrastructure_completion_locked_before_missing_shard_data_access",
+  "purpose": "Complete only shards 2 and 7, whose original jobs received HTTP 429 before any manifest bytes or candidate execution.",
+  "selected_candidate": "native_parallel8",
+  "selected_thread_count": 8,
+  "candidate_changed": false,
+  "thresholds_changed": false,
+  "successful_records_rerun": false,
+  "completion_shards": [2, 7],
+  "completion_record_indices": [3, 8, 13, 18, 23, 28, 33, 38, 43, 48, 53, 58, 63, 68, 73, 78, 83, 88, 93, 98],
+  "original_blind_run": {
+    "workflow_run_id": 30355933562,
+    "head_sha": "de47d69968dc0ab671d5f93f50666c02f39fc2dc",
+    "successful_shards": [0, 1, 3, 4, 5, 6, 8, 9],
+    "failed_shards": [2, 7],
+    "completed_records": 80,
+    "valid_records": 80,
+    "harmonic_speedup": 1.6034039501673678,
+    "minimum_speedup": 1.405224910635449,
+    "maximum_absolute_error": 0.0,
+    "partial_summary_sha256": "909de78dd25169a5f89aa58ae08d6b95d5b69e454b7cdfdc60e27c25e46f5ec0",
+    "partial_results_sha256": "0adbca1d8239867a2fea912adf65790fa04a7d9f1292128f32bd7699f3676952"
+  },
+  "original_failure": "HTTP 429 before manifest bytes and before candidate execution",
+  "failure_forensics": {
+    "workflow_run_id": 30356435917,
+    "artifact_id": 8686982124,
+    "artifact_digest": "sha256:f8b3e2343d330aecff923fb7cfa4ca64a27f74d3d586cd0787eaf011e51a037a",
+    "job_90264020646_log_sha256": "44eede796bd328690148a30ce5f33ecefac52c944e7ab27210f66edb019925e7",
+    "job_90264020765_log_sha256": "af5fd21599cb2aec42e137c9ad1ec0b89310ba99a46c2ad6fcac661101d442f9",
+    "evidence": "Both traces terminate in urllib.error.HTTPError: HTTP Error 429: Too Many Requests at the initial manifest urlopen call. No row decoding, candidate timing, reference timing, or output artifact occurred."
+  },
+  "original_success_artifacts": [
+    {"shard": 0, "artifact_id": 8686789182, "digest": "sha256:3cd8f88da99b4c1227d783ec237122fe58c14875f11050fa8c29729be707bfcd"},
+    {"shard": 1, "artifact_id": 8686786924, "digest": "sha256:fd1fd2d0150c0b26edf5a8603a0650a77ab361be54ebc280572c22f0605e9dc0"},
+    {"shard": 3, "artifact_id": 8686789061, "digest": "sha256:0adacf0098d720ea0acbe490597eedf6e21dced4b7b17906d79ccca54796174a"},
+    {"shard": 4, "artifact_id": 8686790022, "digest": "sha256:f508feab5c7b65df9850df88bd30f8956cc9dc2193df1a8c47dc326314e098e6"},
+    {"shard": 5, "artifact_id": 8686789402, "digest": "sha256:65407326bc3b2e8e62fa0123007525e3eed372fbca714d4d402550324cba4ab8"},
+    {"shard": 6, "artifact_id": 8686786687, "digest": "sha256:2cf8c7847fbb8a3b0690fd07dbaa32d97f71281f03449aa00c34d625c175a6bc"},
+    {"shard": 8, "artifact_id": 8686788913, "digest": "sha256:9a672074f7b9e3a6662f64d0951e75e36ad9fdc074196a9908d2c4cd614ec7ee"},
+    {"shard": 9, "artifact_id": 8686789554, "digest": "sha256:70c7feccb11ca202ecb5d175ae606159b24609e41c89108f54d64c5f535b7154"}
+  ],
+  "public_completion_repository": "sampathkumar-co/mine",
+  "public_completion_branch": "lexigen/task5-blind-completion",
+  "public_completion_prelock_commit": "38a00e25f7987da4b4cebb3ebb864555d88cfc43",
+  "git_blob_sha1": {
+    "candidate.py": "15c0a6987329d21a52a194a3e0fd22660a68d8d0",
+    "native_outer.c": "ec8928512f15edad97e4f1484a4fd4ed1f15f2c6",
+    "blind_completion_shard.py": "f443423952c734dc5424565e74c63ae297bbec5a",
+    "aggregate_completion.py": "52a79a712eda9fb0c88e252791298da65f56bf24",
+    "completion_workflow.yml": "1ec31bb359582636d408125212d04b5dbfb09b43"
+  },
+  "manifest": {
+    "name": "outer_product_T100ms_n10630_size100_test.jsonl",
+    "lfs_sha256": "7c96c6cb4b391f0268625869217c50a5948eddd15a44d0d5f650e8f2adf04538"
+  },
+  "completion_contract": {
+    "maximum_parallel_shards": 1,
+    "download_retries_are_infrastructure_only": true,
+    "candidate_executions_per_missing_record": 1,
+    "reference_executions_per_missing_record": 1,
+    "candidate_retries_after_invalid_output": 0,
+    "successful_record_executions": 0,
+    "candidate_or_threshold_changes_after_partial_result": false
+  },
+  "blind_gate": {
+    "required_valid": 100,
+    "required_count": 100,
+    "minimum_harmonic_speedup": 1.5,
+    "minimum_per_record_speedup": 1.05,
+    "maximum_absolute_error": 0.0
+  },
+  "disclosure": "The 80-record partial result was known before completion. This cannot influence the immutable candidate, thread count, threshold, missing shard set, or per-record execution budget; those remain unchanged and hash-bound.",
+  "test_data_status": "The 80 successful records were executed once. The 20 completion records have not yet been downloaded or executed."
+}
