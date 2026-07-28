@@ -1,0 +1,18 @@
+{
+  "verdict": "not_yet",
+  "claim_scope": "the system consistently synthesized the same three-bit intervention-response alphabet and transferred with high accuracy, but the preregistered statistical irreducibility gap over every two-bit alphabet did not replicate",
+  "run_count": 5,
+  "passing_count": 3,
+  "hidden_accuracy_min": 0.9925,
+  "hidden_accuracy_median": 0.9939285714285714,
+  "reduced_gap_min": 0.011428571428571455,
+  "random_gap_min": 0.9305952380952381,
+  "human_gap_min": -0.0014285714285713347,
+  "invalid_transition_max": 0.0014285714285714286,
+  "feature_set_frequency": {
+    "left_exists+left_active+right_active": 5
+  },
+  "failure_reason": "only three of five seeds exceeded the locked 0.02 hidden-accuracy gap over the best smaller alphabet",
+  "workflow_run": 30359386838,
+  "external_breakthrough_certified": false
+}
