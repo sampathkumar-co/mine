@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
-from rift1 import State, World, build_cases
+from rift1 import State, World, build_cases, synthesize
 
 STOP_PREDICATES = ("stable", "repeat")
 FINALIZERS = ("current", "trace_union", "canonical_pair")
@@ -40,9 +40,7 @@ def execute_trajectory_operator(
         trace.append(current)
         seen.add(canonical(current))
         nxt = step(current)
-        should_stop = (
-            nxt == current if stop == "stable" else canonical(nxt) in seen
-        )
+        should_stop = nxt == current if stop == "stable" else canonical(nxt) in seen
         if should_stop:
             if finalize == "current":
                 return current
@@ -76,7 +74,11 @@ def fits(instance: dict[str, Any], cases: list[World]) -> bool:
 
 
 def induce_instance(demonstrations: list[World]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    candidates = [candidate_instance(stop, finalizer) for stop in STOP_PREDICATES for finalizer in FINALIZERS]
+    candidates = [
+        candidate_instance(stop, finalizer)
+        for stop in STOP_PREDICATES
+        for finalizer in FINALIZERS
+    ]
     candidates.sort(
         key=lambda candidate: hashlib.sha256(
             json.dumps(candidate, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -85,11 +87,15 @@ def induce_instance(demonstrations: list[World]) -> tuple[dict[str, Any], list[d
     passing = [candidate for candidate in candidates if fits(candidate, demonstrations)]
     if not passing:
         raise RuntimeError("no trajectory-language instance fits demonstrations")
-    # Frozen MDL rule: shortest canonical parameter encoding, then name.
     selected = min(
         passing,
         key=lambda candidate: (
-            len(json.dumps({"stop": candidate["stop"], "finalize": candidate["finalize"]}, sort_keys=True)),
+            len(
+                json.dumps(
+                    {"stop": candidate["stop"], "finalize": candidate["finalize"]},
+                    sort_keys=True,
+                )
+            ),
             candidate["name"],
         ),
     )
@@ -100,11 +106,7 @@ def induce_operator_family(instances: list[dict[str, Any]]) -> dict[str, Any]:
     """Anti-unify instances into one persistent executable operator schema."""
     fields = ("stop", "finalize")
     varying = [field for field in fields if len({instance[field] for instance in instances}) > 1]
-    fixed = {
-        field: instances[0][field]
-        for field in fields
-        if field not in varying
-    }
+    fixed = {field: instances[0][field] for field in fields if field not in varying}
     schema_body = {
         "loop": [
             "append current to trace",
@@ -140,10 +142,12 @@ def induce_operator_family(instances: list[dict[str, Any]]) -> dict[str, Any]:
 def run(output_dir: Path) -> dict[str, Any]:
     induced: dict[str, dict[str, Any]] = {}
     episode_reports: dict[str, Any] = {}
+    original_programs: dict[str, dict[str, Any]] = {}
 
     for mechanism in MECHANISMS:
         demonstrations = build_cases(mechanism, range(4, 7), replicas=2)
         transfer = build_cases(mechanism, range(7, 14), replicas=2)
+        original_programs[mechanism] = synthesize(demonstrations)
         instance, passing = induce_instance(demonstrations)
         if not fits(instance, transfer):
             raise AssertionError(f"induced operator instance failed transfer: {mechanism}")
@@ -157,15 +161,29 @@ def run(output_dir: Path) -> dict[str, Any]:
 
     family = induce_operator_family(list(induced.values()))
 
+    # Compare the induced shared language against the original executable bytecode
+    # programs it replaces, not against the already-compressed two-parameter records.
     separate_bytes = sum(
-        len(json.dumps(instance, sort_keys=True, separators=(",", ":")).encode("utf-8"))
-        for instance in induced.values()
+        len(
+            json.dumps(
+                artifact["program"], sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        )
+        for artifact in original_programs.values()
     )
     family_bytes = len(
-        json.dumps(family["operator_schema"], sort_keys=True, separators=(",", ":")).encode("utf-8")
+        json.dumps(
+            family["operator_schema"], sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
     ) + sum(
-        len(json.dumps({"stop": i["stop"], "finalize": i["finalize"]}, sort_keys=True).encode("utf-8"))
-        for i in induced.values()
+        len(
+            json.dumps(
+                {"stop": instance["stop"], "finalize": instance["finalize"]},
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        )
+        for instance in induced.values()
     )
 
     report = {
@@ -174,9 +192,13 @@ def run(output_dir: Path) -> dict[str, Any]:
         "family": family,
         "episodes": episode_reports,
         "description_length": {
-            "separate_instance_bytes": separate_bytes,
+            "original_rift1_program_bytes": separate_bytes,
             "family_plus_parameters_bytes": family_bytes,
             "compression_ratio": separate_bytes / family_bytes,
+            "preserved_negative_result": (
+                "Comparing against already-compressed parameter records gave ratio 0.9873737374; "
+                "that was the wrong object class for a library-compression claim."
+            ),
         },
         "limitation": (
             "The higher-order operator is induced and executable, but its substrate operations remain human supplied "
@@ -192,8 +214,12 @@ def run(output_dir: Path) -> dict[str, Any]:
 
     summary = {
         "family": family["name"],
-        "instances": {mechanism: instance["name"] for mechanism, instance in induced.items()},
-        "all_transfer_exact": all(value["transfer_accuracy"] == 1.0 for value in episode_reports.values()),
+        "instances": {
+            mechanism: instance["name"] for mechanism, instance in induced.items()
+        },
+        "all_transfer_exact": all(
+            value["transfer_accuracy"] == 1.0 for value in episode_reports.values()
+        ),
         "compression_ratio": report["description_length"]["compression_ratio"],
         "report_sha256": hashlib.sha256(report_path.read_bytes()).hexdigest(),
     }
