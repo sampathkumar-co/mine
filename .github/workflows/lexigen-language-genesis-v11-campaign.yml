@@ -1,0 +1,37 @@
+name: Lexigen v11 Campaign Freeze
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/external/V11_CAMPAIGN.md"
+      - "lexigen-language-genesis/external/arcgen_campaign_v11.py"
+      - ".github/workflows/lexigen-language-genesis-v11-campaign.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freeze-campaign:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out campaign commit
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate wrapper
+        working-directory: lexigen-language-genesis/external
+        run: python -m py_compile arcgen_campaign_v11.py arcgen_gate_v11.py
+      - name: Verify language implementation is unchanged
+        run: |
+          git diff --exit-code c0b32603fc367506bc1721a6e8a480fd8fe882b2 -- \
+            lexigen-language-genesis/v7 \
+            lexigen-language-genesis/v8 \
+            lexigen-language-genesis/v9 \
+            lexigen-language-genesis/v10 \
+            lexigen-language-genesis/v11
+      - name: Hash campaign manifest
+        run: sha256sum lexigen-language-genesis/external/V11_CAMPAIGN.md
