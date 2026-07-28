@@ -1,0 +1,76 @@
+{
+  "status": "reviewed_source_audit_complete",
+  "workflow_run": 30383609697,
+  "artifact_digest": "sha256:7e25b792a7e0f2bbc18429f0ed7a9fc1fe196868b65b7fec963b093944d5b56e",
+  "automated_summary": {
+    "repository_count": 5,
+    "available_repository_count": 4,
+    "strong_candidate_count_before_review": 1,
+    "possible_candidate_count_before_review": 7
+  },
+  "pinned_snapshots": [
+    {
+      "name": "PySTreeD",
+      "commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+      "files_scanned": 126,
+      "lines_scanned": 18771
+    },
+    {
+      "name": "DL8.5",
+      "commit": "a7f0fee72b4c17bbcb727050ba102db7dda10119",
+      "files_scanned": 77,
+      "lines_scanned": 9445
+    },
+    {
+      "name": "OSDT",
+      "commit": "d28ff434d5a90a1e49ffcbcab170c9ce457a605f",
+      "files_scanned": 3,
+      "lines_scanned": 1442
+    },
+    {
+      "name": "GOSDT",
+      "commit": "b9116d0557613dc42ff1fcefcf0bc0be91db1620",
+      "files_scanned": 44,
+      "lines_scanned": 6998
+    }
+  ],
+  "unavailable_snapshot": {
+    "name": "MurTree",
+    "requested_revision": "86e439ef537e40cb93afa641aafe2078",
+    "reason": "The Bitbucket repository was reachable, but the requested revision could not be checked out in the frozen workflow. It was preserved as unavailable rather than replaced."
+  },
+  "manual_review": [
+    {
+      "repository": "PySTreeD",
+      "classification": "related_but_not_equivalent",
+      "finding": "PySTreeD globally disables binary features that are identical across every training instance during preprocessing.",
+      "evidence": "src/solver/solver.cpp lines 1258-1274 at the pinned commit compare every feature pair across the full data and disable the later duplicate.",
+      "distinction": "The recursive general-case solver later loops through each remaining non-disabled feature. It does not recompute equivalence from the response partitions induced on the current descendant data view. Its similarity lower bound compares archived subproblem datasets and transfers cached branch assignments, which is a separate cache/lower-bound mechanism."
+    },
+    {
+      "repository": "DL8.5",
+      "classification": "automated_false_positive",
+      "finding": "The only strong automated candidate came from depthTwoComputer.cpp, where support statistics, root tests and removal of the already-used attribute appear in one lexical window.",
+      "evidence": "core/src/depthTwoComputer.cpp lines 109-119 remove only last_added from the candidate list; lines 150 onward enumerate each feature and child feature. No equality of induced partitions, masks or supports is used to collapse different attributes.",
+      "distinction": "Support-intersection helpers compute split counts and constraints, not canonical classes of equivalent tests."
+    },
+    {
+      "repository": "OSDT",
+      "classification": "no_equivalent_implementation_found",
+      "finding": "The pinned source contains equivalent-point/support bounds and symmetry-aware leaf caching, but the audit found no local test-partition canonicalisation candidate.",
+      "distinction": "The equivalence is attached to captured instances/leaves, not to different tests producing the same current response partition."
+    },
+    {
+      "repository": "GOSDT",
+      "classification": "no_equivalent_implementation_found",
+      "finding": "The pinned source contains support- and subproblem-based bounds/caching, but the audit found no local test-partition canonicalisation candidate.",
+      "distinction": "Similar-support logic concerns subproblems or captured samples rather than grouping tests by equal descendant partitions."
+    }
+  ],
+  "reviewed_conclusion": "No implementation equivalent to v0.44's descendant-specific response-partition quotient was found in the four accessible pinned source snapshots. The closest source-level prior art found was PySTreeD's one-time global duplicate-feature preprocessing. This is evidence of a distinct implementation contribution, not proof of universal or publication-level novelty.",
+  "limitations": [
+    "MurTree's requested source revision was not available to the reproducible workflow.",
+    "The audit cannot cover proprietary code, unindexed historical versions, unpublished implementations or all terminology variants.",
+    "A no-hit source scan is not a mathematical novelty proof; expert literature review and independent implementation comparison remain necessary."
+  ]
+}

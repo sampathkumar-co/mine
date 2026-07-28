@@ -1,0 +1,46 @@
+{
+  "protocol": "pinned_public_source_audit_v1",
+  "target_mechanism": "Within an exact identification-tree search state, group remaining tests by the unordered partition they induce on the current candidate hypotheses; expand one canonical representative per partition class and memoise using the canonical remaining-test set.",
+  "repositories": [
+    {
+      "name": "PySTreeD",
+      "path": "pystreed",
+      "source_url": "https://github.com/AlgTUDelft/pystreed.git",
+      "expected_commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+      "family": "dynamic-programming optimal predictive decision trees"
+    },
+    {
+      "name": "DL8.5",
+      "path": "pydl85",
+      "source_url": "https://github.com/aia-uclouvain/pydl8.5.git",
+      "expected_commit": "a7f0fee72b4c17bbcb727050ba102db7dda10119",
+      "family": "cache-based branch-and-bound optimal predictive decision trees"
+    },
+    {
+      "name": "OSDT",
+      "path": "osdt",
+      "source_url": "https://github.com/xiyanghu/OSDT.git",
+      "expected_commit": "d28ff434d5a90a1e49ffcbcab170c9ce457a605f",
+      "family": "optimal sparse predictive decision trees"
+    },
+    {
+      "name": "GOSDT",
+      "path": "gosdt",
+      "source_url": "https://github.com/ubc-systopia/gosdt-guesses.git",
+      "expected_commit": "b9116d0557613dc42ff1fcefcf0bc0be91db1620",
+      "family": "generalised optimal sparse predictive decision trees"
+    },
+    {
+      "name": "MurTree",
+      "path": "murtree",
+      "source_url": "https://bitbucket.org/EmirD/murtree.git",
+      "expected_commit": "86e439ef537e40cb93afa641aafe2078",
+      "family": "dynamic-programming optimal predictive decision trees"
+    }
+  ],
+  "interpretation_rules": [
+    "Subproblem similarity, equivalent branches, similar supports, equivalent points, and duplicate rows are not classified as the target mechanism unless the code also canonicalises or skips query-like objects according to equality of their induced local response partitions.",
+    "A zero automated-candidate count is not a proof of novelty; all plausible candidates and core branching files require manual review.",
+    "The audit makes no claim about unavailable proprietary code, unindexed historical versions, or methods described only outside the audited source snapshots."
+  ]
+}
