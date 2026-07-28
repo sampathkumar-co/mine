@@ -1,0 +1,66 @@
+{
+  "status": "external_local_quotient_candidate",
+  "external_gate": true,
+  "passing_count": 5,
+  "run_count": 5,
+  "permutation_digest_count": 1,
+  "archive_verification_digest_count": 1,
+  "frozen_configuration": {
+    "candidate_threshold": 12,
+    "parent_compiler_digest": "3f6fe829f99a27c9c2a4e26756715f8949db87a009169f917544b8f26c19d538",
+    "seeds": [2301, 2302, 2303, 2304, 2305]
+  },
+  "frozen_compiler_digest": "875cc2912e10cc6bd69acf74a074065dcc43d6cb8314ef35890c8baac07df357",
+  "workflow_run": 30380450353,
+  "artifact_digest": "sha256:3fdfbf19e57f86d0937d2fcc2d96661c6d332bf7967a3124a533698346b5f8b6",
+  "seed_metrics": {
+    "strict_wins": 2,
+    "large_domain_strict_wins": 2,
+    "aggregate_total_query_saving": 408.9999999999996,
+    "exact_query_uses": 2957,
+    "raw_queries_seen": 22614717,
+    "quotient_queries_seen": 1402371,
+    "metrics_digest": "cef032f73ba582707f54e77120162ca09a73ec69ab7ac366c16ae4a45ce10bc5"
+  },
+  "task_results": {
+    "chess-kr-vs-kp": {
+      "baseline": "worst_impurity",
+      "candidate": "worst_impurity+local_quotient_exact_tail",
+      "diagnosed_gap": 0.0,
+      "worst_query_gap": -1,
+      "mean_query_gap": -0.04098873591989971,
+      "total_query_saving": 130.9999999999995,
+      "exact_query_uses": 587,
+      "candidate_count": 3196,
+      "feature_count": 36,
+      "label_count": 2
+    },
+    "splice-junction": {
+      "baseline": "worst_impurity",
+      "candidate": "worst_impurity+local_quotient_exact_tail",
+      "diagnosed_gap": 0.0,
+      "worst_query_gap": 0,
+      "mean_query_gap": -0.08714733542319753,
+      "total_query_saving": 278.0000000000001,
+      "exact_query_uses": 2321,
+      "candidate_count": 3190,
+      "feature_count": 60,
+      "label_count": 3
+    },
+    "hepatitis": {
+      "diagnosed_gap": 0.0,
+      "worst_query_gap": 0,
+      "mean_query_gap": 0.0,
+      "total_query_saving": 0.0,
+      "exact_query_uses": 4
+    },
+    "teaching-assistant": {
+      "diagnosed_gap": 0.0,
+      "worst_query_gap": 0,
+      "mean_query_gap": 0.0,
+      "total_query_saving": 0.0,
+      "exact_query_uses": 45
+    }
+  },
+  "scientific_note": "The frozen v0.40 compiler passed every locked criterion on four previously untouched UCI domains under five independent row permutations. This is broad external transfer evidence. It is not yet a world-class result because comparison is against fixed greedy specialists rather than established optimal-decision-tree systems."
+}
