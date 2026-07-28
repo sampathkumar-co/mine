@@ -1,0 +1,3 @@
+Regenerate gate 4 from committed selection and seal hashes.
+Publish only the six training pairs after the permanent pre-score failure.
+Never commit sealed outputs or hidden test outputs.
