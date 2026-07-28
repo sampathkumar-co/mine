@@ -1,0 +1,96 @@
+name: Mini-ORIGIN v0.41 Data Commitment
+
+on:
+  push:
+    paths:
+      - ".github/workflows/mini-origin-v41-data-commitment.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/mini-origin-v41-data-commitment.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v41-commitment-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  commit-archives:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download and hash without parsing records
+        run: |
+          mkdir -p commitment
+          python - <<'PY'
+          import hashlib
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          sources = [
+              {
+                  "name": "Chess (King-Rook vs. King-Pawn)",
+                  "archive": "chess-kr-vs-kp.zip",
+                  "url": "https://cdn.uci-ics-mlr-prod.aws.uci.edu/22/chess%2Bking%2Brook%2Bvs%2Bking%2Bpawn.zip",
+                  "doi": "10.24432/C5DK5C",
+              },
+              {
+                  "name": "Molecular Biology (Splice-junction Gene Sequences)",
+                  "archive": "splice.zip",
+                  "url": "https://archive.ics.uci.edu/static/public/69/molecular%2Bbiology%2Bsplice%2Bjunction%2Bgene%2Bsequences.zip",
+                  "doi": "10.24432/C5M888",
+              },
+              {
+                  "name": "Hepatitis",
+                  "archive": "hepatitis.zip",
+                  "url": "https://archive.ics.uci.edu/static/public/46/hepatitis.zip",
+                  "doi": "10.24432/C5Q59J",
+              },
+              {
+                  "name": "Teaching Assistant Evaluation",
+                  "archive": "teaching-assistant.zip",
+                  "url": "https://archive.ics.uci.edu/static/public/100/teaching%2Bassistant%2Bevaluation.zip",
+                  "doi": "10.24432/C55P6M",
+              },
+          ]
+          rows = []
+          for source in sources:
+              path = Path("commitment") / source["archive"]
+              request = urllib.request.Request(
+                  source["url"],
+                  headers={"User-Agent": "Mini-ORIGIN-v0.41/1.0"},
+              )
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  payload = response.read()
+              path.write_bytes(payload)
+              rows.append({
+                  **source,
+                  "bytes": len(payload),
+                  "sha256": hashlib.sha256(payload).hexdigest(),
+              })
+          manifest = {
+              "protocol": "download_hash_only_no_record_parsing_v1",
+              "source": "UCI Machine Learning Repository",
+              "license": "CC BY 4.0",
+              "frozen_parent_compiler_digest": "3f6fe829f99a27c9c2a4e26756715f8949db87a009169f917544b8f26c19d538",
+              "archive_count": len(rows),
+              "rows": rows,
+          }
+          Path("commitment/v41-commitment.json").write_text(
+              json.dumps(manifest, indent=2),
+              encoding="utf-8",
+          )
+          print(json.dumps(manifest, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v41-data-commitment
+          path: commitment
+          retention-days: 90

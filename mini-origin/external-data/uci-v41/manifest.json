@@ -1,0 +1,43 @@
+{
+  "protocol": "download_hash_only_no_record_parsing_v1",
+  "source": "UCI Machine Learning Repository",
+  "license": "CC BY 4.0",
+  "frozen_parent_compiler_digest": "3f6fe829f99a27c9c2a4e26756715f8949db87a009169f917544b8f26c19d538",
+  "workflow_run": 30379911829,
+  "workflow_artifact_digest": "sha256:ee0c5db1f854144fbb9c9bb4f188e80877b3b6832735ed230e8357c723b8f555",
+  "archive_count": 4,
+  "rows": [
+    {
+      "name": "Chess (King-Rook vs. King-Pawn)",
+      "archive": "chess-kr-vs-kp.zip",
+      "url": "https://cdn.uci-ics-mlr-prod.aws.uci.edu/22/chess%2Bking%2Brook%2Bvs%2Bking%2Bpawn.zip",
+      "doi": "10.24432/C5DK5C",
+      "bytes": 13844,
+      "sha256": "bd2c3201aa5a70369bc4ab047180be3dda1805073a483d372cd7b1f31d0f1eb2"
+    },
+    {
+      "name": "Molecular Biology (Splice-junction Gene Sequences)",
+      "archive": "splice.zip",
+      "url": "https://archive.ics.uci.edu/static/public/69/molecular%2Bbiology%2Bsplice%2Bjunction%2Bgene%2Bsequences.zip",
+      "doi": "10.24432/C5M888",
+      "bytes": 167041,
+      "sha256": "3e7ce5dcbeec8c221f57dda495611b9d6ec9525551f445419f5c74cc38067e4e"
+    },
+    {
+      "name": "Hepatitis",
+      "archive": "hepatitis.zip",
+      "url": "https://archive.ics.uci.edu/static/public/46/hepatitis.zip",
+      "doi": "10.24432/C5Q59J",
+      "bytes": 6235,
+      "sha256": "8573c2898714fb32ef8162291dcabd483a1ba9701123cab262f5acace3112d87"
+    },
+    {
+      "name": "Teaching Assistant Evaluation",
+      "archive": "teaching-assistant.zip",
+      "url": "https://archive.ics.uci.edu/static/public/100/teaching%2Bassistant%2Bevaluation.zip",
+      "doi": "10.24432/C55P6M",
+      "bytes": 1629,
+      "sha256": "65f77e4ac3e356db99e8f7c4a06834d06316e9ae040492d31fcc64705d6dd0a0"
+    }
+  ]
+}
