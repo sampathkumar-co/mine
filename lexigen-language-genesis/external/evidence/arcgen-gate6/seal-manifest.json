@@ -1,0 +1,13 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "demonstration_count": 6,
+  "eligible_task_count": 900,
+  "hidden_test_count": 20,
+  "lexigen_commit": "00985d50cda406e1d989bd2abd8916abf923315b",
+  "protocol": "arcgen-gate-v6-gate6",
+  "redacted_task_sha256": "39761256901613ed58ac3959ab4c03f1351d3bbcb7d6df407bcadd5d4faa70e3",
+  "sealed_outputs_sha256": "c844e8bfa298754e7e902a3ce2837bb69446667f98f8ebdbf9230b09b179d4cd",
+  "selected_task_id": "1d61978c",
+  "selection_digest": "ecab8c3d40fde231c3fa9f23b32a96a1344200748ebb642728c7147d605c2867",
+  "selection_index": 83
+}
