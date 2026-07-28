@@ -1,0 +1,12 @@
+{
+  "candidate_budget": 75000,
+  "candidates_tested": 75000,
+  "inventory_size": 265,
+  "language_program_found": false,
+  "max_depth": 3,
+  "protocol": "arcgen-gate-v5",
+  "redacted_task_sha256": "5c94d6883519db3fdc320a2ee87baebff8e3faadb1d33ab7daabfe5f39c61ebb",
+  "selected_task_id": "45bbe264",
+  "signatures_seen": 24614,
+  "single_primitive_baseline_found": false
+}
