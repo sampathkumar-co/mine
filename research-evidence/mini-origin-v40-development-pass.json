@@ -1,0 +1,39 @@
+{
+  "status": "local_quotient_compiler_ready",
+  "development_gate": true,
+  "domain_count": 18,
+  "threshold_count": 8,
+  "selected_threshold": 12,
+  "profile": {
+    "no_harm_tasks": 18,
+    "coordinate_certificate_tasks": 18,
+    "strict_wins": 12,
+    "new_domain_strict_wins": 3,
+    "minimum_diagnosed_gap": 0.0,
+    "maximum_tied_diagnosis_worst_gap": 0,
+    "maximum_fully_tied_mean_gap": 0.0,
+    "aggregate_total_query_saving": 524.0,
+    "exact_query_uses": 2124,
+    "raw_queries_seen": 2155406,
+    "quotient_queries_seen": 559460
+  },
+  "frozen_compiler_digest": "3f6fe829f99a27c9c2a4e26756715f8949db87a009169f917544b8f26c19d538",
+  "cache_reuse": "exact_and_fallback_planners_shared_across_thresholds",
+  "workflow_run": 30379247016,
+  "artifact_digest": "sha256:a47462b39ce5fb0dc1e945f065f049f2819698c0d3354511c377c3b253c0b452",
+  "scientific_note": "State-local query quotienting passed every locked development criterion across eighteen opened UCI domains. It reduced 2,155,406 raw query examinations to 559,460 partition representatives and recovered strict gains on SPECT Heart, Audiology Standardized and Dermatology, where v0.39 had made no exact replacement.",
+  "strict_win_domains": [
+    "breast-cancer",
+    "congressional-votes",
+    "lymphography",
+    "monk-2-train",
+    "monk-3-train",
+    "nursery-subset-1024",
+    "primary-tumor",
+    "soybean-large",
+    "tic-tac-toe-subset-512",
+    "spect-heart",
+    "audiology-standardized",
+    "dermatology"
+  ]
+}
