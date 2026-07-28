@@ -1,0 +1,13 @@
+﻿{
+    "gate_id":  "v11-campaign-09",
+    "selected_task_id":  "12997ef3",
+    "status":  "generator-invalid-before-seal",
+    "redacted_package_created":  false,
+    "sealed_outputs_created":  false,
+    "solver_run":  false,
+    "hidden_outputs_accessed":  false,
+    "generator_source_sha256":  "2c59d39e1013d91140e7f16aa100950145ea5fa8011d2b7e6175b610f195380c",
+    "error_type":  "ValueError",
+    "error_message":  "empty range in randrange(1, 1)",
+    "policy":  "Task remains in campaign denominator and is not replaced. No language evidence is claimed."
+}
