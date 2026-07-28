@@ -1,0 +1,61 @@
+name: Mini-ORIGIN PySTreeD Selective Threshold v0.53
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/pystreed_selective_threshold_v53.py"
+      - "mini-origin/tests/test_pystreed_selective_threshold_v53.py"
+      - ".github/workflows/mini-origin-v53-selective-threshold.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/pystreed_selective_threshold_v53.py"
+      - "mini-origin/tests/test_pystreed_selective_threshold_v53.py"
+      - ".github/workflows/mini-origin-v53-selective-threshold.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v53-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  selective-threshold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify selective threshold protocol
+        run: pytest -q tests/test_pystreed_selective_threshold_v53.py
+      - name: Clone pinned PySTreeD source
+        run: |
+          rm -rf results/v53
+          mkdir -p results/v53
+          git clone --filter=blob:none https://github.com/AlgTUDelft/pystreed.git results/v53/pystreed-source
+          git -C results/v53/pystreed-source checkout 9ad41626a1f26c4b7481e8360c5c8b1871e10d96
+          test "$(git -C results/v53/pystreed-source rev-parse HEAD)" = "9ad41626a1f26c4b7481e8360c5c8b1871e10d96"
+      - name: Select and validate activation threshold
+        run: >-
+          python -m mini_origin.pystreed_selective_threshold_v53
+          --source results/v53/pystreed-source
+          --work results/v53/work
+          --output results/v53/pystreed-selective-threshold.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v53-selective-threshold
+          path: |
+            mini-origin/results/v53/pystreed-selective-threshold.json
+            mini-origin/results/v53/work/datasets
+          if-no-files-found: warn
+          retention-days: 90
