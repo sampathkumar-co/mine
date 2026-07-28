@@ -1,0 +1,141 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "benchmark": "ARC-GEN 33067df9 post-failure unified compositional pipeline",
+  "candidate_pipelines_tested_final": 5184,
+  "certificate": {
+    "holdout_count": 10000,
+    "holdout_exact": 10000,
+    "pipeline_ablation_training_exact": false,
+    "portable_holdout_exact": 10000,
+    "portable_training_exact": true,
+    "prior_baselines": {
+      "v10": false,
+      "v7": false,
+      "v8": false,
+      "v9": false
+    },
+    "program_sha256": "97360fd838cf8768ab6cfa4ac30077d0d592db01aaf94494e24ef92509f58303",
+    "schema": "lexigen-v11-compositional-certificate-v1",
+    "task_source_sha256": "c123ae2f3c4a5edfddde3e4d60c99d801c233342a349bc961936200d9856c838",
+    "training_exact": true
+  },
+  "claim_boundary": "v11 composes generic stages and uses public post-failure counterexamples to resolve underdetermined precedence. The stage inventory remains human supplied; a fresh sealed gate and cross-family transfer are required.",
+  "counterexample_count": 1,
+  "counterexample_seeds": [
+    60001
+  ],
+  "discovery_seed_range": [
+    60000,
+    69999
+  ],
+  "exact_pipeline_count_final": 8,
+  "gate": {
+    "ablation_fails": true,
+    "holdout_exact": true,
+    "new_pipeline_absent_from_prior_versions": true,
+    "no_finished_task_operator": true,
+    "portable_holdout_exact": true,
+    "portable_training_exact": true,
+    "sealed_outputs_untouched": true,
+    "training_exact": true
+  },
+  "generated_pipeline": {
+    "name": "generated_compositional_pipeline_ea7ffa0c9fe8",
+    "provenance": {
+      "candidates_tested": 5184,
+      "exact_candidate_count": 8,
+      "human_supplied_finished_task_operator": false,
+      "human_supplied_generic_stage_substrates": true,
+      "method": "typed multi-stage pipeline synthesis"
+    },
+    "schema": "lexigen-compositional-pipeline-v1",
+    "stages": [
+      {
+        "background": 0,
+        "kind": "extract_lattice",
+        "mode": "compress_blank_axes"
+      },
+      {
+        "gap": 2,
+        "kind": "allocate_layout",
+        "margin": 2,
+        "output_height": 26,
+        "output_width": 26
+      },
+      {
+        "kind": "build_relations",
+        "predicate": "equal_nonbackground"
+      },
+      {
+        "kind": "apply_precedence",
+        "mode": "horizontal_then_vertical_unclaimed"
+      },
+      {
+        "canvas_background": 0,
+        "kind": "render",
+        "skip_background_tiles": false
+      }
+    ],
+    "types": [
+      "Grid",
+      "Lattice",
+      "Relations",
+      "Plan",
+      "Grid"
+    ]
+  },
+  "holdout_failures": [],
+  "holdout_seed_range": [
+    70000,
+    79999
+  ],
+  "initial_demonstration_count": 6,
+  "portable_holdout_failures": [],
+  "rounds": [
+    {
+      "counterexample_seed": 60001,
+      "exact_candidate_count": 24,
+      "program_sha256": "97dabfe944da2ee86ffb99aaaf8b8c229c4642fbd04525e494fc4d744b430287",
+      "round": 0,
+      "stages": {
+        "background": 0,
+        "canvas_background": 0,
+        "extract": "compress_blank_axes",
+        "gap": 2,
+        "margin": 2,
+        "output_shape": [
+          26,
+          26
+        ],
+        "precedence": "all_edges",
+        "relation": "equal_nonbackground",
+        "skip_background_tiles": false
+      }
+    },
+    {
+      "counterexample_seed": null,
+      "exact_candidate_count": 8,
+      "program_sha256": "97360fd838cf8768ab6cfa4ac30077d0d592db01aaf94494e24ef92509f58303",
+      "round": 1,
+      "stages": {
+        "background": 0,
+        "canvas_background": 0,
+        "extract": "compress_blank_axes",
+        "gap": 2,
+        "margin": 2,
+        "output_shape": [
+          26,
+          26
+        ],
+        "precedence": "horizontal_then_vertical_unclaimed",
+        "relation": "equal_nonbackground",
+        "skip_background_tiles": false
+      }
+    }
+  ],
+  "source_sealed_outputs_accessed": false,
+  "source_task_id": "33067df9",
+  "status": "counterexample-guided unified pipeline mechanism candidate; not a blind breakthrough claim",
+  "test_prediction_count": 20,
+  "version": "v11"
+}
