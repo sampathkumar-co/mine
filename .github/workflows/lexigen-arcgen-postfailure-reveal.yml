@@ -1,0 +1,97 @@
+name: Lexigen ARC-GEN Post-Failure Training Reveal
+
+on:
+  pull_request:
+    branches:
+      - "lexigen/language-genesis-frontier-v1"
+    paths:
+      - "lexigen-language-genesis/external/REVEAL_GATE4_TRAINING"
+
+permissions:
+  contents: write
+
+jobs:
+  reveal-training-only:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      ARCGEN_COMMIT: a15cbdb44c776610aeeb9f487a06af875d3d0878
+      EVIDENCE_DIR: lexigen-language-genesis/external/evidence/arcgen-gate4
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+      REGEN_DIR: ${{ github.workspace }}/.gate/postfailure-regeneration
+    steps:
+      - name: Check out failed gate branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Clone pinned ARC-GEN evaluator
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/google/ARC-GEN.git .arc-gen
+          git -C .arc-gen fetch --depth 1 origin "$ARCGEN_COMMIT"
+          git -C .arc-gen checkout "$ARCGEN_COMMIT"
+          git -C .arc-gen submodule update --init --recursive --depth 1
+
+      - name: Regenerate and verify committed seal
+        working-directory: lexigen-language-genesis/external
+        run: |
+          set -euo pipefail
+          mkdir -p "$REGEN_DIR"
+          python arcgen_gate_v5.py seal \
+            --selection "$GITHUB_WORKSPACE/$EVIDENCE_DIR/selection.json" \
+            --arcgen-root "$GITHUB_WORKSPACE/.arc-gen" \
+            --output-dir "$REGEN_DIR"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          evidence = Path(os.environ["GITHUB_WORKSPACE"]) / os.environ["EVIDENCE_DIR"]
+          regenerated = Path(os.environ["REGEN_DIR"])
+          manifest = json.loads((evidence / "seal-manifest.json").read_text())
+          redacted = regenerated / "redacted-task.json"
+          sealed = regenerated / "sealed-outputs.json"
+          redacted_hash = hashlib.sha256(redacted.read_bytes()).hexdigest()
+          sealed_hash = hashlib.sha256(sealed.read_bytes()).hexdigest()
+          assert redacted_hash == manifest["redacted_task_sha256"]
+          assert sealed_hash == manifest["sealed_outputs_sha256"]
+
+          package = json.loads(redacted.read_text())
+          training_only = {
+              "status": "published only after permanent pre-score failure",
+              "protocol": package["protocol"],
+              "selected_task_id": package["selected_task_id"],
+              "redacted_task_sha256": redacted_hash,
+              "sealed_outputs_sha256": sealed_hash,
+              "train": package["train"],
+          }
+          (evidence / "training-demonstrations.json").write_text(
+              json.dumps(training_only, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+
+      - name: Commit training demonstrations only
+        run: |
+          set -euo pipefail
+          git config user.name "Lexigen Evidence Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$EVIDENCE_DIR/training-demonstrations.json"
+          git commit -m "Publish ARC-GEN gate 4 training examples after failure"
+          git push origin "HEAD:$TARGET_BRANCH"
+
+      - name: Assert no hidden material entered Git
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -E 'sealed-outputs|hidden-output|test-outputs'; then
+            echo "Hidden output material entered Git history" >&2
+            exit 1
+          fi
