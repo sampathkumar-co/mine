@@ -60,12 +60,14 @@ def _osqp(problem: Problem, eps_abs: float, eps_rel: float, max_iter: int) -> So
 
     scenario_count, dimension = scenarios.shape
     variable_count = dimension + 1 + scenario_count
+
     quadratic = sparse.diags(
         np.concatenate((np.full(dimension, 2.0), np.zeros(1 + scenario_count))),
         format="csc",
     )
     linear = np.zeros(variable_count, dtype=np.float64)
     linear[:dimension] = -2.0 * x0
+
     scenario_constraints = sparse.hstack(
         (
             sparse.csc_matrix(scenarios),
@@ -149,6 +151,7 @@ def cutting_plane(problem: Problem) -> Solution:
         violation_at_x0 = matrix @ x0 - alpha
         if dual.size != matrix.shape[0]:
             dual = np.pad(dual, (0, matrix.shape[0] - dual.size))
+
         result = minimize(
             fun=lambda weights: 0.5 * float(weights @ gram @ weights)
             - float(violation_at_x0 @ weights),
