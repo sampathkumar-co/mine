@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "lexigen-language-genesis/v9/**"
+      - "lexigen-language-genesis/external/arcgen_gate_v9.py"
       - ".github/workflows/lexigen-language-genesis-v9.yml"
   workflow_dispatch:
 
@@ -44,6 +45,10 @@ jobs:
       - name: Run v9 adversarial tests
         working-directory: current/lexigen-language-genesis/v9
         run: python -m pytest -q
+
+      - name: Validate sealed-gate adapter imports
+        working-directory: current/lexigen-language-genesis/external
+        run: python -m py_compile arcgen_gate_v9.py
 
       - name: Reproduce v9 mechanism gate
         working-directory: current/lexigen-language-genesis/v9
