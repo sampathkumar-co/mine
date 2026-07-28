@@ -1,0 +1,56 @@
+name: LEXIGEN v4 Task 1 Blind Aggregate Recovery R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/01-communicability/TRIGGER_AGGREGATE_BLIND_R1"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  aggregate-original-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify immutable campaign locks and aggregation amendment
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          amendment = json.loads(Path("tasks/01-communicability/BLIND_AGGREGATION_AMENDMENT.json").read_text())
+          if amendment["original_blind_run_id"] != 30376286181:
+              raise SystemExit("original blind run mismatch")
+          if amendment["candidate_executions_in_amendment"] != 0 or amendment["reference_executions_in_amendment"] != 0:
+              raise SystemExit("aggregation amendment execution budget is not zero")
+          print("LEXIGEN_V4_TASK1_AGGREGATION_ONLY_AMENDMENT_VERIFIED")
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: sampathkumar-co/mine
+          run-id: 30376286181
+          pattern: lexigen-v4-task1-communicability-blind-r1-shard-*
+          path: lexigen-v4/tasks/01-communicability/blind-downloaded-original
+      - name: Aggregate original immutable blind records without solver imports
+        working-directory: lexigen-v4/tasks/01-communicability
+        run: python -u aggregate_blind_standalone.py --input blind-downloaded-original --output blind-evidence-recovered --diagnostic blind-aggregation-diagnostic
+      - name: Upload recovered evidence and diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task1-communicability-blind-r1-recovered-diagnostic
+          path: |
+            lexigen-v4/tasks/01-communicability/blind-evidence-recovered/
+            lexigen-v4/tasks/01-communicability/blind-aggregation-diagnostic/
+          if-no-files-found: error
+          retention-days: 90
