@@ -4,12 +4,14 @@ on:
   push:
     paths:
       - "mini-origin/src/mini_origin/external_local_quotient_v41.py"
+      - "mini-origin/src/mini_origin/external_local_quotient_seed_v41.py"
       - "mini-origin/tests/test_external_local_quotient_v41.py"
       - "mini-origin/external-data/uci-v41/manifest.json"
       - ".github/workflows/mini-origin-v41-external-local-quotient.yml"
   pull_request:
     paths:
       - "mini-origin/src/mini_origin/external_local_quotient_v41.py"
+      - "mini-origin/src/mini_origin/external_local_quotient_seed_v41.py"
       - "mini-origin/tests/test_external_local_quotient_v41.py"
       - "mini-origin/external-data/uci-v41/manifest.json"
       - ".github/workflows/mini-origin-v41-external-local-quotient.yml"
@@ -23,9 +25,8 @@ permissions:
   contents: read
 
 jobs:
-  external-gate:
+  tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
     defaults:
       run:
         working-directory: mini-origin
@@ -37,15 +38,144 @@ jobs:
           cache: pip
           cache-dependency-path: mini-origin/pyproject.toml
       - run: python -m pip install -e ".[dev]"
-      - name: Verify frozen protocol and parsers
-        run: pytest -q tests/test_external_local_quotient_v41.py
-      - name: Evaluate five untouched row permutations
+      - run: pytest -q tests/test_external_local_quotient_v41.py
+
+  seed:
+    name: external-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [2301, 2302, 2303, 2304, 2305]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Evaluate frozen row permutation
         run: >-
           mkdir -p results &&
-          python -m mini_origin.external_local_quotient_v41
-          --output results/v41-external.json
+          python -m mini_origin.external_local_quotient_seed_v41
+          --seed ${{ matrix.seed }}
+          --output results/v41-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v41-seed-${{ matrix.seed }}
+          path: mini-origin/results/v41-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, seed]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-v41-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Apply the locked external gate
+        run: |
+          python - <<'PY'
+          import glob
+          import hashlib
+          import json
+          from pathlib import Path
+
+          files = sorted(glob.glob("evidence/v41-seed-*.json"))
+          payloads = [
+              json.loads(Path(path).read_text(encoding="utf-8"))
+              for path in files
+          ]
+          reports = [row["seed_report"] for row in payloads]
+          verifications = [row["archive_verification"] for row in payloads]
+          passing = sum(int(row["candidate_gate"]) for row in reports)
+          digests = {row["metrics_digest"] for row in reports}
+          verification_digests = {
+              hashlib.sha256(
+                  json.dumps(row, sort_keys=True).encode("utf-8")
+              ).hexdigest()
+              for row in verifications
+          }
+          all_hashes = all(
+              row["all_hashes_match"] for row in verifications
+          )
+          gate = (
+              len(reports) == 5
+              and all_hashes
+              and passing >= 4
+              and len(digests) == 1
+              and len(verification_digests) == 1
+          )
+          manifest_rows = verifications[0]["rows"] if verifications else []
+          compiler_digest = hashlib.sha256(
+              json.dumps(
+                  {
+                      "parent_digest": "3f6fe829f99a27c9c2a4e26756715f8949db87a009169f917544b8f26c19d538",
+                      "candidate_threshold": 12,
+                      "seeds": [2301, 2302, 2303, 2304, 2305],
+                      "manifest": manifest_rows,
+                      "gate": {
+                          "passing_seeds": 4,
+                          "strict_wins_per_seed": 2,
+                          "large_domain_wins_per_seed": 1,
+                          "aggregate_saving_per_seed": 10.0,
+                          "permutation_invariance": True,
+                      },
+                  },
+                  sort_keys=True,
+              ).encode("utf-8")
+          ).hexdigest()
+          result = {
+              "status": (
+                  "external_local_quotient_candidate"
+                  if gate
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "the frozen state-local partition quotient and exact-subtree "
+                  "compiler is evaluated on four previously untouched UCI domains "
+                  "under five row permutations; a pass is broad external transfer "
+                  "evidence, but its components remain exact decision-tree search "
+                  "and known impurity heuristics rather than a world breakthrough"
+              ),
+              "external_gate": gate,
+              "passing_count": passing,
+              "run_count": len(reports),
+              "permutation_digest_count": len(digests),
+              "archive_verification_digest_count": len(verification_digests),
+              "archive_verification": verifications[0] if verifications else None,
+              "frozen_configuration": {
+                  "candidate_threshold": 12,
+                  "parent_compiler_digest": "3f6fe829f99a27c9c2a4e26756715f8949db87a009169f917544b8f26c19d538",
+                  "seeds": [2301, 2302, 2303, 2304, 2305],
+              },
+              "frozen_compiler_digest": compiler_digest,
+              "seed_reports": reports,
+          }
+          Path("v41-external.json").write_text(
+              json.dumps(result, indent=2),
+              encoding="utf-8",
+          )
+          print(json.dumps({
+              "status": result["status"],
+              "external_gate": result["external_gate"],
+              "passing_count": result["passing_count"],
+              "permutation_digest_count": result[
+                  "permutation_digest_count"
+              ],
+              "compiler_digest": result["frozen_compiler_digest"],
+          }, indent=2))
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: mini-origin-v41-external
-          path: mini-origin/results/v41-external.json
+          path: v41-external.json
           retention-days: 90
