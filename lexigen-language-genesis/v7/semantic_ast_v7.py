@@ -49,6 +49,14 @@ def inferred_background(grid: Grid) -> int:
     return min(counts, key=lambda colour: (-counts[colour], colour))
 
 
+def border_mode_colours(grid: Grid) -> set[int]:
+    height, width = grid_shape(grid)
+    border = [grid[r][c] for r in range(height) for c in range(width) if r in (0, height - 1) or c in (0, width - 1)]
+    counts = Counter(border)
+    maximum = max(counts.values())
+    return {colour for colour, count in counts.items() if count == maximum}
+
+
 def neighbours(point: Point, height: int, width: int) -> Iterable[Point]:
     row, col = point
     for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
@@ -116,8 +124,7 @@ def bbox_shape(region: Region) -> tuple[int, int]:
     return max(rows) - min(rows) + 1, max(cols) - min(cols) + 1
 
 
-def extract_holes(grid: Grid, frame_colour: int, boundary_mode: str) -> list[Region]:
-    background = inferred_background(grid)
+def extract_holes(grid: Grid, background: int, frame_colour: int, boundary_mode: str) -> list[Region]:
     height, width = grid_shape(grid)
     holes: list[Region] = []
     for region in components_for_colour(grid, background):
@@ -133,18 +140,19 @@ def extract_holes(grid: Grid, frame_colour: int, boundary_mode: str) -> list[Reg
     return sorted(holes, key=lambda region: (region.anchor, region.area))
 
 
-def extract_objects(grid: Grid, frame_colour: int, exclude_frame: bool) -> list[Region]:
-    background = inferred_background(grid)
+def extract_objects(grid: Grid, background: int, frame_colour: int, exclude_frame: bool, colour_role: str = "any") -> list[Region]:
     colours = sorted({cell for row in grid for cell in row})
     excluded = {background}
     if exclude_frame:
         excluded.add(frame_colour)
-    objects = [
-        region
-        for colour in colours
-        if colour not in excluded
-        for region in components_for_colour(grid, colour)
-    ]
+    objects: list[Region] = []
+    for colour in colours:
+        if colour in excluded:
+            continue
+        components = components_for_colour(grid, colour)
+        if colour_role == "single_component" and len(components) != 1:
+            continue
+        objects.extend(components)
     return sorted(objects, key=lambda region: (region.area, region.colour, region.anchor))
 
 
@@ -187,11 +195,13 @@ def stable_matching(
 def execute_ast(ast: dict[str, Any], grid: Grid) -> Grid:
     if ast.get("schema") != "lexigen-arc-relational-ast-v1":
         raise SemanticRuntimeError("unsupported semantic AST schema")
+    background = int(ast["scene"]["background_colour"])
     frame_colour = int(ast["scene"]["frame_colour"])
     boundary_mode = str(ast["scene"]["hole_boundary"])
     exclude_frame = bool(ast["scene"]["exclude_frame_objects"])
-    holes = extract_holes(grid, frame_colour, boundary_mode)
-    objects = extract_objects(grid, frame_colour, exclude_frame)
+    colour_role = str(ast["scene"].get("object_colour_role", "any"))
+    holes = extract_holes(grid, background, frame_colour, boundary_mode)
+    objects = extract_objects(grid, background, frame_colour, exclude_frame, colour_role)
     matches = stable_matching(objects, holes, ast["match"])
 
     values = [list(row) for row in grid]
@@ -199,7 +209,7 @@ def execute_ast(ast: dict[str, Any], grid: Grid) -> Grid:
     for source, destination in matches:
         if erase_source:
             for row, col in source.points:
-                values[row][col] = inferred_background(grid)
+                values[row][col] = background
         for row, col in destination.points:
             values[row][col] = source.colour
     return tuple(tuple(row) for row in values)
@@ -211,11 +221,16 @@ def ast_description_length(ast: dict[str, Any]) -> int:
     boundary_cost = 0 if ast["scene"]["hole_boundary"] == "all" else 2
     exclusion_cost = 0 if ast["scene"]["exclude_frame_objects"] else 1
     erasure_cost = 1 if ast["render"]["erase_source"] else 0
-    return 8 + feature_cost + symmetry_cost + boundary_cost + exclusion_cost + erasure_cost
+    role_cost = 1 if ast["scene"].get("object_colour_role") == "single_component" else 0
+    return 9 + feature_cost + role_cost + symmetry_cost + boundary_cost + exclusion_cost + erasure_cost
 
 
 def candidate_asts(examples: Sequence[tuple[Grid, Grid]]) -> list[dict[str, Any]]:
     colours = sorted({cell for pair in examples for grid in pair for row in grid for cell in row})
+    background_sets = [border_mode_colours(source) for source, _ in examples]
+    backgrounds = sorted(set.intersection(*background_sets))
+    if not backgrounds:
+        backgrounds = sorted(set.union(*background_sets))
     predicates = [
         {"feature": "area", "symmetry": "identity"},
         {"feature": "bbox", "symmetry": "identity"},
@@ -223,21 +238,26 @@ def candidate_asts(examples: Sequence[tuple[Grid, Grid]]) -> list[dict[str, Any]
         {"feature": "normalised_points", "symmetry": "dihedral"},
     ]
     candidates: list[dict[str, Any]] = []
-    for frame_colour, boundary_mode, exclude_frame, predicate, erase_source in itertools.product(
+    for background_colour, frame_colour, boundary_mode, exclude_frame, colour_role, predicate, erase_source in itertools.product(
+        backgrounds,
         colours,
         ("all", "any"),
         (True, False),
+        ("any", "single_component"),
         predicates,
         (True, False),
     ):
+        if background_colour == frame_colour:
+            continue
         candidates.append(
             {
                 "schema": "lexigen-arc-relational-ast-v1",
                 "scene": {
-                    "background": "most_frequent",
+                    "background_colour": background_colour,
                     "frame_colour": frame_colour,
                     "hole_boundary": boundary_mode,
                     "exclude_frame_objects": exclude_frame,
+                    "object_colour_role": colour_role,
                 },
                 "match": predicate,
                 "render": {
@@ -280,9 +300,11 @@ def synthesize_ast(examples: Sequence[tuple[Grid, Grid]]) -> SynthesisResult:
     minimal = [ast for ast in exact if ast_description_length(ast) == minimum_length]
     semantic_keys = {
         (
+            ast["scene"]["background_colour"],
             ast["scene"]["frame_colour"],
             ast["scene"]["hole_boundary"],
             ast["scene"]["exclude_frame_objects"],
+            ast["scene"].get("object_colour_role"),
             ast["match"]["feature"],
             ast["match"].get("symmetry"),
             ast["render"]["erase_source"],

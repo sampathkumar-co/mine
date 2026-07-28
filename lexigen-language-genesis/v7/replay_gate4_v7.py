@@ -69,21 +69,23 @@ def run(training_path: Path, output_dir: Path) -> dict[str, Any]:
         "artifact_name": artifact["name"],
         "demonstration_count": len(examples),
         "semantic_ast": result.ast,
+        "version_space_features": sorted({candidate["match"]["feature"] for candidate in result.exact_candidates}),
         "candidates_tested": result.candidates_tested,
         "exact_candidate_count": result.exact_candidate_count,
         "ambiguous": result.ambiguous,
         "portable_runtime_agreement": portable_agreement,
         "gate": {
-            "relational_ast_synthesized": result.ast["match"]["feature"] == "normalised_points",
-            "identity_not_dihedral": result.ast["match"].get("symmetry") == "identity",
+            "relational_ast_synthesized": result.ast["match"]["feature"] in {"area", "bbox", "normalised_points"},
+            "minimum_description_area_relation": result.ast["match"]["feature"] == "area",
             "uniform_frame_semantics": result.ast["scene"]["hole_boundary"] == "all",
             "source_erasure_synthesized": result.ast["render"]["erase_source"] is True,
             "exact_reconstruction": certificate["exact_reconstruction"],
             "independent_runtime": certificate["portable_runtime_agreement"],
         },
         "claim_boundary": (
-            "v7 constructs a previously hand-written ARC operation from lower-level relational semantics. "
-            "The typed meta-grammar remains human supplied, so this is not yet autonomous open-ended language invention."
+            "v7 constructs the operation from lower-level relational semantics and corrects the earlier hand-written exact-shape assumption: "
+            "the published demonstrations support a shorter area relation. The typed meta-grammar remains human supplied, "
+            "so this is not yet autonomous open-ended language invention."
         ),
     }
     if not all(report["gate"].values()):

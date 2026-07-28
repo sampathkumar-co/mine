@@ -96,10 +96,11 @@ def execute_portable(ast: dict[str, Any], grid: Grid) -> Grid:
         raise PortableRuntimeError("unsupported AST")
 
     height, width = _shape(grid)
-    background = _background(grid)
+    background = int(ast["scene"]["background_colour"])
     frame = int(ast["scene"]["frame_colour"])
     boundary_mode = str(ast["scene"]["hole_boundary"])
     exclude_frame = bool(ast["scene"]["exclude_frame_objects"])
+    colour_role = str(ast["scene"].get("object_colour_role", "any"))
 
     holes: list[frozenset[Point]] = []
     for points in _components(grid, background):
@@ -125,7 +126,10 @@ def execute_portable(ast: dict[str, Any], grid: Grid) -> Grid:
         excluded.add(frame)
     objects: list[tuple[int, frozenset[Point]]] = []
     for colour in sorted({cell for row in grid for cell in row} - excluded):
-        objects.extend((colour, points) for points in _components(grid, colour))
+        components = _components(grid, colour)
+        if colour_role == "single_component" and len(components) != 1:
+            continue
+        objects.extend((colour, points) for points in components)
     objects.sort(key=lambda item: (len(item[1]), item[0], min(item[1])))
 
     used: set[int] = set()

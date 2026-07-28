@@ -1,0 +1,44 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "candidates_tested_final": 1152,
+  "claim_boundary": "The task family and seed ranges were examined during v7 development, so this is not a blind result. It demonstrates counterexample-guided refinement from area matching to a source-role predicate.",
+  "counterexample_seeds": [
+    10006
+  ],
+  "discovery_seed_range": [
+    10000,
+    10099
+  ],
+  "exact_candidate_count_final": 20,
+  "heldout_accuracy": 1.0,
+  "heldout_case_count": 200,
+  "heldout_failures": [],
+  "heldout_seed_range": [
+    10100,
+    10299
+  ],
+  "portable_runtime_agreement": true,
+  "semantic_ast": {
+    "match": {
+      "feature": "area",
+      "symmetry": "identity"
+    },
+    "render": {
+      "erase_source": true,
+      "op": "paint_destination_from_source_colour",
+      "preserve_unmatched": true
+    },
+    "scene": {
+      "background_colour": 0,
+      "exclude_frame_objects": true,
+      "frame_colour": 5,
+      "hole_boundary": "all",
+      "object_colour_role": "single_component"
+    },
+    "schema": "lexigen-arc-relational-ast-v1"
+  },
+  "source_sealed_outputs_accessed": false,
+  "source_task_id": "228f6490",
+  "status": "retrospective external-family mechanism validation; no breakthrough claim",
+  "version": "v7"
+}
