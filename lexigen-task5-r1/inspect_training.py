@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
-import tempfile
 import traceback
 import urllib.parse
 import urllib.request
@@ -32,12 +32,27 @@ def git_blob(data: bytes) -> str:
 
 def tuple_items(problem: object) -> list[dict[str, object]]:
     if not isinstance(problem, dict) or problem.get("__type__") != "tuple":
-        raise TypeError(f"expected tagged tuple problem, received {problem}")
+        raise TypeError(f"expected tagged tuple problem, received type={type(problem).__name__}")
     for key in ("items", "values", "data", "value"):
         value = problem.get(key)
         if isinstance(value, list):
             return value
     raise TypeError(f"tagged tuple has unsupported keys: {sorted(problem)}")
+
+
+def decode_embedded_array(value: object) -> np.ndarray:
+    if not isinstance(value, dict) or value.get("__type__") != "ndarray_b64":
+        raise TypeError(
+            f"expected ndarray_b64 descriptor, received "
+            f"{value.get('__type__') if isinstance(value, dict) else type(value).__name__}"
+        )
+    dtype = np.dtype(str(value["dtype"]))
+    shape = tuple(int(dimension) for dimension in value["shape"])
+    raw = base64.b64decode(str(value["data_b64"]), validate=True)
+    expected_bytes = int(np.prod(shape, dtype=np.int64)) * dtype.itemsize
+    if len(raw) != expected_bytes:
+        raise ValueError(f"embedded array byte length {len(raw)} != expected {expected_bytes}")
+    return np.frombuffer(raw, dtype=dtype).reshape(shape)
 
 
 def inspect() -> dict[str, object]:
@@ -59,28 +74,19 @@ def inspect() -> dict[str, object]:
     items = tuple_items(first_problem)
     if len(items) != 2:
         raise ValueError(f"expected two tuple items, received {len(items)}")
-    descriptors: list[tuple[str, str]] = []
-    for index, value in enumerate(items):
-        if not isinstance(value, dict) or value.get("__type__") != "ndarray_ref":
-            raise TypeError(f"unexpected tuple item {index}: {value}")
-        descriptors.append((f"item_{index}", str(value["npy_path"])))
 
     first_arrays: dict[str, dict[str, object]] = {}
-    with tempfile.TemporaryDirectory() as directory:
-        root = Path(directory)
-        for key, relative in descriptors:
-            payload = root / Path(relative).name
-            payload.write_bytes(request_bytes(f"{BASE}/{relative}?download=true"))
-            array = np.load(payload, allow_pickle=False)
-            first_arrays[key] = {
-                "shape": list(array.shape),
-                "dtype": str(array.dtype),
-                "c_contiguous": bool(array.flags.c_contiguous),
-                "f_contiguous": bool(array.flags.f_contiguous),
-                "nbytes": int(array.nbytes),
-                "minimum": float(np.min(array)),
-                "maximum": float(np.max(array)),
-            }
+    for index, value in enumerate(items):
+        array = decode_embedded_array(value)
+        first_arrays[f"item_{index}"] = {
+            "shape": list(array.shape),
+            "dtype": str(array.dtype),
+            "c_contiguous": bool(array.flags.c_contiguous),
+            "f_contiguous": bool(array.flags.f_contiguous),
+            "nbytes": int(array.nbytes),
+            "minimum": float(np.min(array)),
+            "maximum": float(np.max(array)),
+        }
 
     k_values = sorted({int(row["k"]) for row in rows if row.get("k") is not None})
     return {
@@ -96,7 +102,11 @@ def inspect() -> dict[str, object]:
         "expected_test_manifest_tree_oid": test["oid"],
         "training_records": len(rows),
         "row_keys": sorted(rows[0]),
-        "problem_encoding": {"__type__": "tuple", "item_count": len(items)},
+        "problem_encoding": {
+            "__type__": "tuple",
+            "item_count": len(items),
+            "item_type": "ndarray_b64",
+        },
         "k_values": k_values,
         "seed_min": min(int(row["seed"]) for row in rows),
         "seed_max": max(int(row["seed"]) for row in rows),
