@@ -5,11 +5,13 @@ on:
     paths:
       - "mini-origin/src/mini_origin/robust_regret_v35.py"
       - "mini-origin/src/mini_origin/state_policy_v34.py"
+      - "mini-origin/tests/test_robust_regret_v35.py"
       - ".github/workflows/mini-origin-v35-robust-regret.yml"
   pull_request:
     paths:
       - "mini-origin/src/mini_origin/robust_regret_v35.py"
       - "mini-origin/src/mini_origin/state_policy_v34.py"
+      - "mini-origin/tests/test_robust_regret_v35.py"
       - ".github/workflows/mini-origin-v35-robust-regret.yml"
   workflow_dispatch:
 
@@ -35,6 +37,8 @@ jobs:
           cache: pip
           cache-dependency-path: mini-origin/pyproject.toml
       - run: python -m pip install -e ".[dev]"
+      - name: Verify exact baseline caching
+        run: pytest -q tests/test_robust_regret_v35.py
       - name: Run robust regret selector
         run: >-
           mkdir -p results &&
