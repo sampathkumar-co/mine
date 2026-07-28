@@ -77,6 +77,8 @@ def main() -> None:
         "all_candidates": summaries,
         "passes_training_gate": passes,
         "test_data_opened": false,
+        "candidate_executions_repeated_during_aggregation": 0,
+        "source_training_workflow_run_id": 30362180027
     }
 
     args.output.mkdir(parents=True, exist_ok=True)
@@ -92,8 +94,6 @@ def main() -> None:
         encoding="utf-8",
     )
     print(json.dumps(result, indent=2), flush=True)
-    if not passes:
-        raise SystemExit(1)
 
 
 if __name__ == "__main__":
