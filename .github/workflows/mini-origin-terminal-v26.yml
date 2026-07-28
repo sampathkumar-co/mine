@@ -1,0 +1,162 @@
+name: Mini-ORIGIN Terminal Reward v0.26
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/terminal_reward_v26.py"
+      - "mini-origin/tests/test_terminal_reward_v26.py"
+      - ".github/workflows/mini-origin-terminal-v26.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/terminal_reward_v26.py"
+      - "mini-origin/tests/test_terminal_reward_v26.py"
+      - ".github/workflows/mini-origin-terminal-v26.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-terminal-v26-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_terminal_reward_v26.py
+
+  terminal-study:
+    name: terminal-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1101, 1102, 1103, 1104, 1105]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Search from terminal success only
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.terminal_reward_v26
+          --seed ${{ matrix.seed }}
+          --output results/terminal-reward-v26-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-terminal-v26-seed-${{ matrix.seed }}
+          path: mini-origin/results/terminal-reward-v26-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, terminal-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-terminal-v26-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.26 searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/terminal-reward-v26-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "rule": data["selected_program"]["rule"],
+                  "predicates": data["selected_program"]["predicates"],
+                  "step_action_labels_used": data["search"]["step_action_labels_used"],
+                  "training_accuracy": data["selected_program"]["training_accuracy"],
+                  "development_accuracy": data["selected_program"]["development_accuracy"],
+                  "hidden_accuracy": data["candidate"]["accuracy"],
+                  "invalid_transition_rate": data["candidate"]["invalid_transition_rate"],
+                  "single_gap": data["single_predicate_gap"],
+                  "query_gap": data["wrong_query_gap"],
+                  "specialist_gap": data["specialist_gap"],
+                  "random_gap": data["random_gap"],
+                  "digest": data["frozen_program_digest"],
+              })
+
+          hidden = [row["hidden_accuracy"] for row in rows]
+          development = [row["development_accuracy"] for row in rows]
+          invalid = [row["invalid_transition_rate"] for row in rows]
+          single = [row["single_gap"] for row in rows]
+          query = [row["query_gap"] for row in rows]
+          specialist = [row["specialist_gap"] for row in rows]
+          random_gap = [row["random_gap"] for row in rows]
+          family_ok = [
+              row["rule"] == "lower_midpoint"
+              and len(row["predicates"]) == 2
+              and any(text.startswith("value(right)>") for text in row["predicates"])
+              and any(text.startswith("value(right)-value(left)>") for text in row["predicates"])
+              for row in rows
+          ]
+          summary = {
+              "verdict": (
+                  "replicated_terminal_reward_controller_genesis_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and all(family_ok)
+                  and all(not row["step_action_labels_used"] for row in rows)
+                  and all(row["training_accuracy"] == 1.0 for row in rows)
+                  and min(development) >= 0.985
+                  and min(hidden) >= 0.985
+                  and max(invalid) <= 0.01
+                  and min(single) >= 0.20
+                  and min(query) >= 0.20
+                  and min(specialist) >= -0.01
+                  and min(random_gap) >= 0.45
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "the system jointly discovers an optimal query rule, two raw-response predicates and an action table using only terminal root-identification success, then transfers to hidden chains up to size 127; the search grammar and causal family remain human supplied, so this is not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "development_accuracy_min": min(development) if development else None,
+              "hidden_accuracy_min": min(hidden) if hidden else None,
+              "hidden_accuracy_median": statistics.median(hidden) if hidden else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "single_gap_min": min(single) if single else None,
+              "query_gap_min": min(query) if query else None,
+              "specialist_gap_min": min(specialist) if specialist else None,
+              "random_gap_min": min(random_gap) if random_gap else None,
+              "program_digest_count": len({row["digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("terminal-reward-v26-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-terminal-v26-summary
+          path: terminal-reward-v26-summary.json
+          retention-days: 90
