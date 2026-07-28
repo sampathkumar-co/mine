@@ -1,0 +1,33 @@
+{
+  "status": "cost_prior_quotient_candidate",
+  "development_gate": true,
+  "theorem_task_count": 48,
+  "theorem_pass_count": 48,
+  "theorem_plan_match_count": 48,
+  "base_state_count": 65,
+  "weighted_state_count": 195,
+  "local_solved_count": 195,
+  "plain_solved_count": 141,
+  "local_only_vs_plain_count": 54,
+  "global_solved_count": 165,
+  "local_only_vs_global_count": 30,
+  "local_plain_match_count": 141,
+  "local_global_match_count": 165,
+  "exact_dominates_greedy_count": 195,
+  "strict_exact_gain_count": 166,
+  "aggregate_expected_cost_saving_vs_greedy": 133291,
+  "cost_sensitive_representative_changes": 169,
+  "plain_expansion_ratio_lower_bound_median": 22.70212765957447,
+  "plain_expansion_ratio_lower_bound_p90": 121.04599567099567,
+  "global_expansion_ratio_lower_bound_median": 16.104208416833668,
+  "global_expansion_ratio_lower_bound_p90": 54.728765323992995,
+  "budget_ladder_results": {
+    "10000": {"local_solved": 174, "global_solved": 75, "plain_solved": 57},
+    "50000": {"local_solved": 195, "global_solved": 126, "plain_solved": 96},
+    "250000": {"local_solved": 195, "global_solved": 165, "plain_solved": 141}
+  },
+  "frozen_weighted_digest": "cfdbb2d072d426d7b4a684986af23d573976809fc1fa0949e4edb5579b6012b0",
+  "workflow_run": 30385064231,
+  "artifact_digest": "sha256:b5923a75b4c8267d6250b4525e1be551661253dda375aff7c6507bdc0d05bad0",
+  "scientific_note": "Under three preregistered non-uniform prior and unequal static test-cost profiles, state-local cheapest-representative quotienting preserved every matched exact optimum, solved all 195 weighted real states, extended the exact frontier by 54 states over plain search and 30 over one-time global quotienting, and strictly improved weighted expected-elimination-per-cost greedy on 166 states while saving 133291 aggregate prior-weighted cost units. The theorem excludes response-dependent costs, state-dependent future costs, and exogenous descendant availability."
+}
