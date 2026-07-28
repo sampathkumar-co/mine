@@ -1,0 +1,172 @@
+name: Mini-ORIGIN Outcome Alphabet v0.23
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/outcome_alphabet_v23.py"
+      - "mini-origin/tests/test_outcome_alphabet_v23.py"
+      - ".github/workflows/mini-origin-outcome-v23.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/outcome_alphabet_v23.py"
+      - "mini-origin/tests/test_outcome_alphabet_v23.py"
+      - ".github/workflows/mini-origin-outcome-v23.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-outcome-v23-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test v0.23 safeguards
+        run: pytest -q tests/test_outcome_alphabet_v23.py
+
+  outcome-search:
+    name: outcome-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [801, 802, 803, 804, 805]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Synthesize and freeze outcome alphabet
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.outcome_alphabet_v23
+          --seed ${{ matrix.seed }}
+          --output results/outcome-alphabet-v23-seed-${{ matrix.seed }}.json
+      - name: Upload v0.23 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-outcome-v23-seed-${{ matrix.seed }}
+          path: mini-origin/results/outcome-alphabet-v23-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, outcome-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-outcome-v23-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.23 runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          feature_sets = Counter()
+          for filename in sorted(glob.glob("evidence/outcome-alphabet-v23-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              features = "+".join(data["selected_program"]["features"])
+              feature_sets[features] += 1
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "candidate_gate": data["candidate_gate"],
+                  "features": data["selected_program"]["features"],
+                  "feature_count": len(data["selected_program"]["features"]),
+                  "threshold": data["selected_program"]["threshold"],
+                  "training_accuracy": data["selected_program"]["training_accuracy"],
+                  "development_accuracy": data["selected_program"]["development_accuracy"],
+                  "hidden_accuracy": data["candidate"]["accuracy"],
+                  "invalid_transition_rate": data["candidate"]["invalid_transition_rate"],
+                  "reduced_accuracy": data["best_reduced_control"]["accuracy"],
+                  "human_accuracy": data["human_decoder_control"]["accuracy"],
+                  "random_median_accuracy": data["random_codebook_control"]["median_accuracy"],
+                  "reduced_gap": data["candidate_reduced_gap"],
+                  "random_gap": data["candidate_random_gap"],
+                  "human_gap": data["candidate_human_gap"],
+                  "minimal": data["outcome_synthesis"]["minimal_within_tolerance"],
+                  "covariance_difference": data["observational_equivalence"]["maximum_covariance_difference"],
+                  "query_optimality": data["hidden_query_optimality"],
+                  "decoder_digest": data["frozen_decoder_digest"],
+              })
+
+          hidden = [row["hidden_accuracy"] for row in rows]
+          reduced_gaps = [row["reduced_gap"] for row in rows]
+          random_gaps = [row["random_gap"] for row in rows]
+          human_gaps = [row["human_gap"] for row in rows]
+          invalid = [row["invalid_transition_rate"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_self_synthesized_outcome_alphabet_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and min(hidden) >= 0.985
+                  and min(reduced_gaps) >= 0.02
+                  and min(random_gaps) >= 0.45
+                  and min(human_gaps) >= -0.01
+                  and max(invalid) <= 0.01
+                  and max(row["feature_count"] for row in rows) <= 3
+                  and all(row["minimal"] for row in rows)
+                  and all(row["query_optimality"] for row in rows)
+                  and max(row["covariance_difference"] for row in rows) <= 1e-10
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "the system jointly synthesizes a compact Boolean alphabet over continuous "
+                  "intervention responses and an action lookup table, freezes it with the midpoint "
+                  "query program, and transfers to irregular unseen causal-chain sizes; this remains "
+                  "finite-state controller and decision-tree synthesis around classical binary search, "
+                  "not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "hidden_accuracy_min": min(hidden) if hidden else None,
+              "hidden_accuracy_median": statistics.median(hidden) if hidden else None,
+              "reduced_gap_min": min(reduced_gaps) if reduced_gaps else None,
+              "random_gap_min": min(random_gaps) if random_gaps else None,
+              "human_gap_min": min(human_gaps) if human_gaps else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "feature_set_frequency": dict(sorted(feature_sets.items())),
+              "decoder_digest_count": len({row["decoder_digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("outcome-alphabet-v23-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.23 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-outcome-v23-summary
+          path: outcome-alphabet-v23-summary.json
+          retention-days: 90
