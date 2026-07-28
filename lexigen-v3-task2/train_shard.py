@@ -1,0 +1,177 @@
+from __future__ import annotations
+
+import argparse
+import gc
+import hashlib
+import json
+import tempfile
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+from typing import Callable
+
+import numpy as np
+from sklearn.cluster import KMeans
+from threadpoolctl import threadpool_limits
+
+from candidates import CANDIDATES, Problem, Solution
+
+REVISION = "bb02811fa47ca1c833baaa344949bcd8fb307ac8"
+TASK = "kmeans"
+MANIFEST = "kmeans_T100ms_n278_size100_train.jsonl"
+EXPECTED_SHA256 = "c82ea6e3f6b517bd7cb717d455f3ad26d5fc22f2b38fa5a1933c4502b2d65bcf"
+BASE = f"https://huggingface.co/datasets/oripress/AlgoTune/resolve/{REVISION}/data/{TASK}"
+SHARDS = 10
+
+
+def request_bytes(url: str) -> bytes:
+    last_error: Exception | None = None
+    for delay in (0, 5, 15, 30, 60):
+        if delay:
+            time.sleep(delay)
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": "LEXIGEN-v3-kmeans-r1-train"})
+            with urllib.request.urlopen(request, timeout=180) as response:
+                return response.read()
+        except urllib.error.HTTPError as exc:
+            last_error = exc
+            if exc.code not in (429, 500, 502, 503, 504):
+                raise
+        except urllib.error.URLError as exc:
+            last_error = exc
+    raise RuntimeError(f"download exhausted infrastructure retries before execution: {last_error}")
+
+
+def reference(problem: Problem) -> Solution:
+    data = np.asarray(problem["X"], dtype=np.float64)
+    clusters = int(problem["k"])
+    return KMeans(n_clusters=clusters).fit(data).labels_.astype(np.int64, copy=False).tolist()
+
+
+def timed(fn: Callable[[Problem], Solution], problem: Problem) -> tuple[Solution | None, float | None, str | None]:
+    try:
+        with threadpool_limits(limits=1):
+            start = time.perf_counter()
+            solution = fn(problem)
+            elapsed = time.perf_counter() - start
+        return solution, elapsed, None
+    except Exception as exc:
+        return None, None, f"{type(exc).__name__}: {exc}"
+
+
+def loss(data: np.ndarray, labels: np.ndarray) -> float:
+    total = 0.0
+    if labels.size == 0:
+        return float("inf")
+    for cluster in range(int(np.max(labels)) + 1):
+        points = data[labels == cluster]
+        if points.size == 0:
+            continue
+        center = np.mean(points, axis=0)
+        total += float(np.sum((points - center) ** 2, dtype=np.float64))
+    return total
+
+
+def validate(problem: Problem, solution: Solution | None, reference_solution: Solution) -> tuple[bool, float, float, float, str | None]:
+    try:
+        data = np.asarray(problem["X"], dtype=np.float64)
+        clusters = int(problem["k"])
+        candidate = np.asarray(solution if solution is not None else [], dtype=np.int64)
+        reference_labels = np.asarray(reference_solution, dtype=np.int64)
+        if candidate.shape != (data.shape[0],):
+            return False, float("inf"), float("inf"), float("inf"), "label_length"
+        if np.any(candidate < 0) or np.any(candidate >= clusters):
+            return False, float("inf"), float("inf"), float("inf"), "label_range"
+        candidate_loss = loss(data, candidate)
+        reference_loss = loss(data, reference_labels)
+        ratio = candidate_loss / reference_loss if reference_loss > 0.0 else (1.0 if candidate_loss == 0.0 else float("inf"))
+        valid = bool(0.95 * candidate_loss <= reference_loss + 1e-5)
+        return valid, candidate_loss, reference_loss, ratio, None if valid else "inertia_quality"
+    except Exception as exc:
+        return False, float("inf"), float("inf"), float("inf"), f"{type(exc).__name__}: {exc}"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--shard", type=int, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if not 0 <= args.shard < SHARDS:
+        raise ValueError("invalid shard")
+
+    raw = request_bytes(f"{BASE}/{MANIFEST}?download=true")
+    if hashlib.sha256(raw).hexdigest() != EXPECTED_SHA256:
+        raise RuntimeError("training manifest hash mismatch")
+    rows = [json.loads(line) for line in raw.decode().splitlines() if line.strip()]
+    if len(rows) != 100:
+        raise RuntimeError(f"expected 100 training rows, received {len(rows)}")
+
+    records: list[dict[str, object]] = []
+    with tempfile.TemporaryDirectory() as directory:
+        temporary = Path(directory)
+        for index, row in enumerate(rows):
+            if index % SHARDS != args.shard:
+                continue
+            descriptor = row["problem"]["X"]
+            relative = str(descriptor["npy_path"])
+            payload = temporary / Path(relative).name
+            payload.write_bytes(request_bytes(f"{BASE}/{relative}?download=true"))
+            data = np.load(payload, allow_pickle=False)
+            problem: Problem = {"X": data, "k": int(row["problem"]["k"])}
+
+            names = list(CANDIDATES)
+            shift = index % len(names)
+            names = names[shift:] + names[:shift]
+            if index % 2 == 0:
+                reference_solution, reference_s, reference_error = timed(reference, problem)
+                candidate_results = [(name, *timed(CANDIDATES[name], problem)) for name in names]
+                execution_order = "reference_first"
+            else:
+                candidate_results = [(name, *timed(CANDIDATES[name], problem)) for name in names]
+                reference_solution, reference_s, reference_error = timed(reference, problem)
+                execution_order = "candidates_first"
+            if reference_solution is None or reference_s is None or reference_error is not None:
+                raise RuntimeError(f"reference failed on record {index + 1}: {reference_error}")
+
+            for name, solution, candidate_s, candidate_error in candidate_results:
+                valid, candidate_loss, reference_loss, inertia_ratio, validation_reason = validate(
+                    problem, solution, reference_solution
+                )
+                speedup = reference_s / candidate_s if candidate_s else 0.0
+                record = {
+                    "index": index + 1,
+                    "seed": int(row["seed"]),
+                    "candidate": name,
+                    "valid": valid,
+                    "failure_reason": candidate_error or validation_reason,
+                    "candidate_loss": candidate_loss,
+                    "reference_loss": reference_loss,
+                    "inertia_ratio": inertia_ratio,
+                    "candidate_s": candidate_s,
+                    "reference_s": reference_s,
+                    "speedup": speedup,
+                    "clusters": int(problem["k"]),
+                    "samples": int(data.shape[0]),
+                    "dimensions": int(data.shape[1]),
+                    "shard": args.shard,
+                    "execution_order": execution_order,
+                }
+                records.append(record)
+                print(
+                    f"[{index + 1}/100] {name} valid={valid} speedup={speedup:.3f} inertia_ratio={inertia_ratio:.6f}",
+                    flush=True,
+                )
+            del data, problem, reference_solution, candidate_results
+            payload.unlink(missing_ok=True)
+            gc.collect()
+
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
+        "\n".join(json.dumps(record, separators=(",", ":")) for record in records) + "\n",
+        encoding="utf-8",
+    )
+
+
+if __name__ == "__main__":
+    main()
