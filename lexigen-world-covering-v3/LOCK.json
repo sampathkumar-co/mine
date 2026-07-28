@@ -1,0 +1,40 @@
+{
+  "protocol": "LEXIGEN World Covering Record v3",
+  "status": "sealed_before_snapshot_or_target_access",
+  "snapshot_md5": "b2c626b07f216aac830d344eff5ad523",
+  "target_count": 3,
+  "reserved_count": 6,
+  "target_identities_known_at_seal": false,
+  "lineage_rule": "reproduce_exact_v1_then_corrected_v2_then_exclude_all_six",
+  "seed_material_sha256": {
+    "v1": "e5fe13c984890cf9c4e00519e51a366d7a604769ecfd17f820b185c833df5b49",
+    "v2": "f17033d3f6a6919fe41d9834f4e90c99433c450a2cfdce6d16cb5464dff632d4",
+    "v3": "89ff8fea30805c1590dbf24786cc64abed80e58955935ae797ac52d8856c837b"
+  },
+  "git_blob_sha1": {
+    "common.py": "9ee2bed05754b8317ad7d92421a24df9c3b4caf5",
+    "greedy.py": "7601174302d84f37cd9810edce20ff0df94419e9",
+    "repair.py": "4631dcd49c487b0a3b3f039800868447900c53fb",
+    "solver_engine.py": "fedb7f3e3e101d816c23e73ade51132e4c1d8e40",
+    "selector_solver.py": "bb690079507463b6dd98f30f90393308c389cf7a",
+    "verify_results.py": "c8c8eed60ad6df56acd9f32d3c8d26e68c0ca68c",
+    "PROTOCOL.md": "451e46186244f22ee06ade73eba3c192004be636",
+    "STOP_CHECKPOINT.md": "851c275efc78cdbc22208c0b46007be96213ba41",
+    "requirements.txt": "c21d857999fa45535759e0b9b5bf5c8bcf12649c",
+    "../.github/workflows/lexigen-world-covering-v3.yml": "0f776ea6a137ca39c2eacece7f59e3638295ae1c"
+  },
+  "fixed_limits": {
+    "targets": 3,
+    "reserved_targets": 6,
+    "greedy_deterministic_attempts": 10,
+    "greedy_randomized_attempts": 30,
+    "repair_restarts": 8,
+    "repair_seconds_per_target": 180,
+    "restricted_cp_seconds_per_target": 180,
+    "full_cp_seconds_per_target": 1250,
+    "cp_workers": 4,
+    "workflow_executions": 1
+  },
+  "success_rule": "At least one independently verified covering strictly smaller than the frozen snapshot upper bound.",
+  "claim_rule": "Verified world-record candidate pending current-record comparison and independent review; not AGI or proven optimality."
+}
