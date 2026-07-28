@@ -10,7 +10,12 @@ from arc_language_v4 import primitive_inventory as inventory_v4
 
 
 def parse_top_left_legend(grid: Grid) -> tuple[list[tuple[int, int]], Grid]:
-    """Parse consecutive `source, fill, 0...` rows and erase the legend."""
+    """Parse consecutive top-left source/fill pairs and erase only those cells.
+
+    A legend row may also contain unrelated body pixels beyond columns zero and
+    one; those pixels are preserved. The legend ends at the first row whose
+    first two cells are not both non-background.
+    """
     values = [list(row) for row in grid]
     mappings: list[tuple[int, int]] = []
     row = 0
@@ -19,7 +24,6 @@ def parse_top_left_legend(grid: Grid) -> tuple[list[tuple[int, int]], Grid]:
         and len(values[row]) >= 2
         and values[row][0] != 0
         and values[row][1] != 0
-        and all(value == 0 for value in values[row][2:])
     ):
         mappings.append((values[row][0], values[row][1]))
         values[row][0] = 0
