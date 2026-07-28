@@ -46,13 +46,16 @@ jobs:
           run-id: 30376286181
           pattern: lexigen-v4-task1-communicability-blind-r1-shard-*
           path: lexigen-v4/tasks/01-communicability/blind-downloaded-original
-      - name: Aggregate original immutable blind records only
+      - name: Aggregate original immutable blind records with traceback preservation
         working-directory: lexigen-v4/tasks/01-communicability
-        run: python -u aggregate_blind.py --input blind-downloaded-original --output blind-evidence-recovered
-      - name: Upload recovered complete blind evidence
+        run: python -u run_aggregate_diagnostic.py --input blind-downloaded-original --output blind-evidence-recovered --diagnostic blind-aggregation-diagnostic
+      - name: Upload recovered evidence and diagnostic
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lexigen-v4-task1-communicability-blind-r1-recovered
-          path: lexigen-v4/tasks/01-communicability/blind-evidence-recovered/
+          name: lexigen-v4-task1-communicability-blind-r1-recovered-diagnostic
+          path: |
+            lexigen-v4/tasks/01-communicability/blind-evidence-recovered/
+            lexigen-v4/tasks/01-communicability/blind-aggregation-diagnostic/
           if-no-files-found: error
           retention-days: 90
