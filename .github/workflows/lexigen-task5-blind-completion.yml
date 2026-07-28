@@ -1,0 +1,106 @@
+name: LEXIGEN Task 5 Blind Infrastructure Completion
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-task5-completion/TRIGGER_COMPLETION_ONCE"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  completion-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        shard: [2, 7]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install exact numerical dependency
+        run: python -m pip install numpy==2.5.1
+      - name: Verify completion lock before any manifest request
+        working-directory: lexigen-task5-completion
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          lock = json.loads(Path("COMPLETION_LOCK.json").read_text(encoding="utf-8"))
+          expected = lock["git_blob_sha1"]
+          for name in ("candidate.py", "native_outer.c", "blind_completion_shard.py", "aggregate_completion.py"):
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != expected[name]:
+                  raise SystemExit(f"frozen hash mismatch for {name}: {actual} != {expected[name]}")
+          if lock["selected_candidate"] != "native_parallel8":
+              raise SystemExit("selected candidate changed")
+          if lock["completion_shards"] != [2, 7]:
+              raise SystemExit("completion shard set changed")
+          if lock["original_failure"] != "HTTP 429 before manifest bytes and before candidate execution":
+              raise SystemExit("failure classification changed")
+          print("LEXIGEN_TASK5_COMPLETION_LOCK_VERIFIED")
+          PY
+      - name: Build byte-identical frozen native candidate
+        working-directory: lexigen-task5-completion
+        run: |
+          gcc -O3 -shared -fPIC -fopenmp \
+            $(python3-config --includes) \
+            -I$(python -c 'import numpy; print(numpy.get_include())') \
+            native_outer.c \
+            -o lexigen_outer_native$(python3-config --extension-suffix) \
+            -fopenmp
+      - name: Execute first data-accessing run for missing shard
+        working-directory: lexigen-task5-completion
+        run: python -u blind_completion_shard.py --shard ${{ matrix.shard }} --output completion-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+      - name: Upload completion shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task5-completion-shard-${{ matrix.shard }}
+          path: lexigen-task5-completion/completion-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-completed-blind:
+    needs: completion-shards
+    if: always() && needs.completion-shards.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download 80 immutable rows from original one-shot run
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 30355933562
+          pattern: lexigen-task5-r1-blind-shard-*
+          path: lexigen-task5-completion/original-artifacts
+      - name: Download 20 infrastructure-completion rows
+        uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-task5-completion-shard-*
+          path: lexigen-task5-completion/completion-downloaded
+      - name: Aggregate the fixed 100-record blind gate
+        working-directory: lexigen-task5-completion
+        run: python -u aggregate_completion.py --original original-artifacts --completion completion-downloaded --output completed-blind-evidence
+      - name: Upload completed blind evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task5-completed-blind-evidence
+          path: lexigen-task5-completion/completed-blind-evidence/
+          if-no-files-found: error
+          retention-days: 90
