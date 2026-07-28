@@ -40,7 +40,7 @@ jobs:
                   raise SystemExit(f"frozen hash mismatch for {name}: {actual} != {expected[name]}")
           if lock["expected_test_manifest_git_oid"] != "b6903231c88291a8eff777a519a9af0736148a0f":
               raise SystemExit("unexpected committed test object identifier")
-          if lock["candidate_retries_after_invalid_output"] != 0:
+          if lock["execution_contract"]["candidate_retries_after_invalid_output"] != 0:
               raise SystemExit("candidate retry policy changed")
           print("LEXIGEN_BLIND_LOCK_VERIFIED")
           PY
