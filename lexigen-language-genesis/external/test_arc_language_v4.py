@@ -6,7 +6,7 @@ from arc_language_v4 import synthesize, trace_reflected_diagonal
 
 def test_reflected_diagonal_narrow_grid() -> None:
     source = as_grid([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [1, 0, 0]])
-    expected = as_grid([[0, 1, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 0, 0]])
+    expected = as_grid([[1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0]])
     assert trace_reflected_diagonal(
         source,
         source=1,
@@ -37,7 +37,7 @@ def test_reflected_diagonal_wide_grid() -> None:
 
 def test_trajectory_operator_is_synthesizable() -> None:
     first = as_grid([[0, 0, 0], [0, 0, 0], [1, 0, 0]])
-    first_target = as_grid([[0, 1, 0], [0, 0, 1], [1, 0, 0]])
+    first_target = as_grid([[0, 0, 1], [0, 1, 0], [1, 0, 0]])
     second = as_grid([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0]])
     second_target = as_grid([[0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0]])
     result = synthesize([(first, first_target), (second, second_target)])
