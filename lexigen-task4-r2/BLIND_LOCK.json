@@ -1,0 +1,52 @@
+{
+  "protocol": "LEXIGEN Autonomous Unseen-Task Discovery v2",
+  "task": "chacha_encryption",
+  "candidate_revision": 2,
+  "status": "locked_before_blind_access",
+  "created_before_test_manifest_or_payload_download": true,
+  "test_data_opened": false,
+  "authoritative_private_repository": "sampathkumar-co/attendance-app",
+  "authoritative_private_branch": "lexigen/autonomous-discovery-v2",
+  "authoritative_private_prelock_commit": "4537b2d54e4713f369a8e2ad18fca8c9dac6bcc9",
+  "public_runner_repository": "sampathkumar-co/mine",
+  "public_runner_branch": "lexigen/task4-public-runner-r2",
+  "public_runner_prelock_commit": "e5500faaaab7069fcb0fd1e6acae5b9df09ea9f0",
+  "selected_candidate": "native_parallel4",
+  "selected_thread_count": 4,
+  "training_evidence": {
+    "workflow_run_id": 30348046369,
+    "artifact_id": 8683741610,
+    "artifact_digest": "sha256:657c9fbbe4ab44e3a8877ec07adb4c7791ba043797b306264d82311fd132b2b6",
+    "valid": 100,
+    "count": 100,
+    "harmonic_speedup": 2.188459109949147,
+    "minimum_speedup": 2.0331413225180563
+  },
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "expected_test_manifest": "chacha_encryption_T100ms_n197380_size100_test.jsonl",
+  "expected_test_manifest_git_oid": "b6903231c88291a8eff777a519a9af0736148a0f",
+  "git_blob_sha1": {
+    "candidate.py": "57edbbf37444d04d00e9387a4be569abc586757f",
+    "native_chacha.c": "655d5132443ffc929fb312ed352e680e6de1c207",
+    "blind_shard.py": "d48bbe52dceec04416e0a9ce4ea7904db0fea006",
+    "aggregate_blind.py": "decebc80f1e3a1c2f66071b1091e51f15a6ea7f3",
+    "transcript.jsonl": "822b7b6e48b62f19d3fad8442ac42e3ad5e463e0",
+    "blind_workflow.yml": "7b27939d0a5c92b8845f8159235b07edd04c0ba2"
+  },
+  "blind_gate": {
+    "required_valid": 100,
+    "required_count": 100,
+    "minimum_harmonic_speedup": 1.5,
+    "minimum_per_record_speedup": 1.05
+  },
+  "execution_contract": {
+    "workflow_runs_allowed": 1,
+    "shards": 10,
+    "candidate_executions_per_test_record": 1,
+    "reference_executions_per_test_record": 1,
+    "candidate_retries_after_invalid_output": 0,
+    "candidate_or_threshold_changes_after_lock": false,
+    "download_retries_are_infrastructure_only": true
+  },
+  "claim_boundary": "Passing this lock establishes one autonomous unseen-task blind benchmark win for the frozen four-thread implementation. It does not by itself prove mathematical novelty, universal algorithm discovery, independent peer review, or a world-level breakthrough."
+}
