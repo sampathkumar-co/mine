@@ -1,0 +1,61 @@
+name: Mini-ORIGIN PySTreeD Count Filter v0.54
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/pystreed_count_filtered_v54.py"
+      - "mini-origin/tests/test_pystreed_count_filtered_v54.py"
+      - ".github/workflows/mini-origin-v54-count-filtered-quotient.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/pystreed_count_filtered_v54.py"
+      - "mini-origin/tests/test_pystreed_count_filtered_v54.py"
+      - ".github/workflows/mini-origin-v54-count-filtered-quotient.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v54-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  count-filtered:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify count-filtered protocol
+        run: pytest -q tests/test_pystreed_count_filtered_v54.py
+      - name: Clone pinned PySTreeD source
+        run: |
+          rm -rf results/v54
+          mkdir -p results/v54
+          git clone --filter=blob:none https://github.com/AlgTUDelft/pystreed.git results/v54/pystreed-source
+          git -C results/v54/pystreed-source checkout 9ad41626a1f26c4b7481e8360c5c8b1871e10d96
+          test "$(git -C results/v54/pystreed-source rev-parse HEAD)" = "9ad41626a1f26c4b7481e8360c5c8b1871e10d96"
+      - name: Build and benchmark count-filtered exact quotient
+        run: >-
+          python -m mini_origin.pystreed_count_filtered_v54
+          --source results/v54/pystreed-source
+          --work results/v54/work
+          --output results/v54/pystreed-count-filtered.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v54-count-filtered
+          path: |
+            mini-origin/results/v54/pystreed-count-filtered.json
+            mini-origin/results/v54/work/datasets
+          if-no-files-found: warn
+          retention-days: 90

@@ -1,0 +1,29 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "pinned_repository": "AlgTUDelft/pystreed",
+  "pinned_commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+  "summary": {
+    "row_count": 24,
+    "optimum_match_count": 24,
+    "tasks_with_local_skips": 24,
+    "total_local_skips": 33781,
+    "original_subtree_calls": 1677688,
+    "patched_subtree_calls": 1620040,
+    "subtree_call_reduction_fraction": 0.034361573784875366,
+    "original_branch_expansions": 1474764,
+    "patched_branch_expansions": 1426181,
+    "branch_expansion_reduction_fraction": 0.032942897982321195,
+    "reported_speedup_median": 0.9673438306905073,
+    "patched_over_original_runtime_median": 1.0337589457900636,
+    "patched_over_original_runtime_max": 1.146432446964033,
+    "tasks_speedup_ge_1_03": 2
+  },
+  "best_native_results": [
+    {"path": "data/cost-sensitive/iris/iris-train-32.csv", "speedup": 1.2793086580792434, "branch_reduction": 0.31339285714285714},
+    {"path": "data/cost-sensitive/iris/iris-train-90.csv", "speedup": 1.2201883774657898, "branch_reduction": 0.2875816993464052}
+  ],
+  "workflow_run": 30390590083,
+  "artifact_digest": "sha256:02cd355b75e17443e4eeabc6165f2f14455f1e2d94fefb869c27e032f9919666",
+  "scientific_note": "Per-label count hashes reduced the local-equivalence overhead substantially while preserving all 24 exact optima and removing 3.3% of branches. Median runtime nevertheless remained 3.4% slower because native benefit is highly concentrated. Two Iris datasets with roughly 29-31% branch reduction sped up by 1.22x-1.28x. This supports state-local activation based on observed duplicate density rather than unconditional pruning or candidate count."
+}
