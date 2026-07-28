@@ -38,7 +38,7 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Verify frozen v0.57 parent
         run: >-
-          python -c "import json; p=json.load(open('../research-evidence/mini-origin-v57-rust-response-cost-pass.json')); assert p['development_gate']; assert p['exact_plan_match_count']==195"
+          python -c "import json; p=json.load(open('../research-evidence/mini-origin-v57-rust-response-cost-pass.json')); assert p['development_gate']; assert p['exact_match_count']==195; assert p['mismatch_count']==0; assert p['all_operation_counters_match']"
       - name: Run history-aware availability experiment
         run: >-
           mkdir -p results/v58 &&
