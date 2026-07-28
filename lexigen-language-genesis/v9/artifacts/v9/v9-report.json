@@ -1,0 +1,80 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "benchmark": "ARC-GEN 470c91de post-failure object-motion grammar growth",
+  "candidate_extensions_tested": 162,
+  "certificate": {
+    "extension_ablation_training_exact": false,
+    "extension_sha256": "0b9d29b775937af961d2284a30fafb400e762302504c0825265e6596327c1126",
+    "holdout_count": 10000,
+    "holdout_exact": 10000,
+    "portable_holdout_exact": 10000,
+    "portable_training_exact": true,
+    "schema": "lexigen-v9-object-motion-certificate-v1",
+    "task_source_sha256": "949613b737123a9518a117f456aed50de0ebdbc21a6831d137503fddcded9378",
+    "training_exact": true,
+    "v8_fixed_meta_grammar_found": false
+  },
+  "claim_boundary": "The object-motion extension is synthesized from generic object, marker, point-set, vector and rendering choices. The grammar was designed post-failure; a fresh sealed task is required before any external breakthrough claim.",
+  "exact_extension_count": 2,
+  "gate": {
+    "ablation_fails": true,
+    "holdout_exact": true,
+    "new_production_absent_from_v8": true,
+    "no_finished_task_operator": true,
+    "portable_holdout_exact": true,
+    "portable_training_exact": true,
+    "sealed_outputs_untouched": true,
+    "training_exact": true
+  },
+  "generated_extension": {
+    "association": {
+      "mode": "inside_bbox",
+      "op": "select_unique_marker_by_relation"
+    },
+    "displacement": {
+      "col": "outward",
+      "op": "derive_axis_vector_from_marker_extreme",
+      "row": "outward"
+    },
+    "name": "generated_motion_production_4d5f713ebb04",
+    "provenance": {
+      "candidates_tested": 162,
+      "exact_candidate_count": 2,
+      "human_supplied_finished_task_operator": false,
+      "human_supplied_generic_object_substrate": true,
+      "method": "typed object-marker-vector grammar synthesis"
+    },
+    "render": {
+      "erase_source": true,
+      "op": "translate_and_paint"
+    },
+    "scene": {
+      "background_colour": 7,
+      "marker_colour": 8
+    },
+    "schema": "lexigen-object-motion-extension-v1",
+    "shape": {
+      "mode": "bbox_fill",
+      "op": "construct_point_set"
+    },
+    "types": {
+      "completed_shape": "Set[Point]",
+      "displacement": "Vector[Int,Int]",
+      "input": "Grid",
+      "marker": "Point",
+      "object": "ConnectedRegion",
+      "output": "Grid"
+    }
+  },
+  "holdout_failures": [],
+  "holdout_seed_range": [
+    40000,
+    49999
+  ],
+  "portable_holdout_failures": [],
+  "source_sealed_outputs_accessed": false,
+  "source_task_id": "470c91de",
+  "status": "object-marker-vector grammar mechanism candidate; not a blind breakthrough claim",
+  "test_prediction_count": 20,
+  "version": "v9"
+}

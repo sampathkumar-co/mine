@@ -1,0 +1,40 @@
+{
+  "association": {
+    "mode": "inside_bbox",
+    "op": "select_unique_marker_by_relation"
+  },
+  "displacement": {
+    "col": "outward",
+    "op": "derive_axis_vector_from_marker_extreme",
+    "row": "outward"
+  },
+  "name": "generated_motion_production_4d5f713ebb04",
+  "provenance": {
+    "candidates_tested": 162,
+    "exact_candidate_count": 2,
+    "human_supplied_finished_task_operator": false,
+    "human_supplied_generic_object_substrate": true,
+    "method": "typed object-marker-vector grammar synthesis"
+  },
+  "render": {
+    "erase_source": true,
+    "op": "translate_and_paint"
+  },
+  "scene": {
+    "background_colour": 7,
+    "marker_colour": 8
+  },
+  "schema": "lexigen-object-motion-extension-v1",
+  "shape": {
+    "mode": "bbox_fill",
+    "op": "construct_point_set"
+  },
+  "types": {
+    "completed_shape": "Set[Point]",
+    "displacement": "Vector[Int,Int]",
+    "input": "Grid",
+    "marker": "Point",
+    "object": "ConnectedRegion",
+    "output": "Grid"
+  }
+}
