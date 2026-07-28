@@ -4,11 +4,13 @@ on:
   push:
     paths:
       - "mini-origin/src/mini_origin/real_exact_frontier_v43.py"
+      - "mini-origin/src/mini_origin/real_exact_frontier_runner_v43.py"
       - "mini-origin/tests/test_real_exact_frontier_v43.py"
       - ".github/workflows/mini-origin-v43-real-frontier.yml"
   pull_request:
     paths:
       - "mini-origin/src/mini_origin/real_exact_frontier_v43.py"
+      - "mini-origin/src/mini_origin/real_exact_frontier_runner_v43.py"
       - "mini-origin/tests/test_real_exact_frontier_v43.py"
       - ".github/workflows/mini-origin-v43-real-frontier.yml"
   workflow_dispatch:
@@ -49,7 +51,7 @@ jobs:
           retention-days: 30
       - name: Run real exact-search frontier
         run: >-
-          python -m mini_origin.real_exact_frontier_v43
+          python -m mini_origin.real_exact_frontier_runner_v43
           --output results/v43-frontier.json
       - uses: actions/upload-artifact@v4
         with:
