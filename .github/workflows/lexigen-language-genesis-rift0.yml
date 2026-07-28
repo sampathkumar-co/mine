@@ -13,7 +13,7 @@ permissions:
 jobs:
   rift:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out committed branch state
         uses: actions/checkout@v4
@@ -62,9 +62,13 @@ jobs:
         working-directory: lexigen-language-genesis/benchmark
         run: python rift5.py --output-dir artifacts/rift5
 
-      - name: Run independent tests
+      - name: Run independent RIFT tests
         working-directory: lexigen-language-genesis/benchmark
         run: python -m pytest -q
+
+      - name: Run external ARC language tests
+        working-directory: lexigen-language-genesis/external
+        run: python -m pytest -q test_arc_language.py test_arc_language_v3.py test_arc_language_v4.py test_arc_language_v5.py
 
       - name: Hash preserved evidence
         working-directory: lexigen-language-genesis/benchmark
