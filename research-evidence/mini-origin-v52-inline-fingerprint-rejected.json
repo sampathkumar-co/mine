@@ -1,0 +1,51 @@
+{
+  "status": "not_yet",
+  "inline_fingerprint_gate": false,
+  "development_gate": false,
+  "pinned_repository": "AlgTUDelft/pystreed",
+  "pinned_commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+  "development_summary": {
+    "row_count": 12,
+    "optimum_match_count": 12,
+    "tasks_with_local_skips": 12,
+    "total_local_skips": 14397,
+    "subtree_call_reduction_fraction": 0.03860794801955825,
+    "branch_expansion_reduction_fraction": 0.03747526157316128,
+    "reported_speedup_median": 0.9570278484138122,
+    "patched_over_original_runtime_median": 1.0450266403000827,
+    "patched_over_original_runtime_max": 1.169413525203452
+  },
+  "holdout_summary": {
+    "row_count": 12,
+    "optimum_match_count": 12,
+    "tasks_with_local_skips": 12,
+    "total_local_skips": 19384,
+    "original_subtree_calls": 1068228,
+    "patched_subtree_calls": 1034110,
+    "subtree_call_reduction_fraction": 0.031938874472490886,
+    "original_branch_expansions": 932086,
+    "patched_branch_expansions": 903840,
+    "branch_expansion_reduction_fraction": 0.030304070654424642,
+    "reported_speedup_median": 0.9327338636689095,
+    "patched_over_original_runtime_median": 1.0721172706667668,
+    "patched_over_original_runtime_max": 1.0971329491451502,
+    "tasks_speedup_ge_1_05": 1
+  },
+  "selected_holdout_paths": [
+    "data/cost-sensitive/breast/breast-train-98.csv",
+    "data/cost-sensitive/mushroom/mushroom-test-48.csv",
+    "data/cost-sensitive/iris/iris-train-90.csv",
+    "data/cost-sensitive/mushroom/mushroom-test-69.csv",
+    "data/cost-sensitive/nursery/nursery-test-72.csv",
+    "data/cost-sensitive/tictactoe/tictactoe-train-57.csv",
+    "data/cost-sensitive/tictactoe/tictactoe-train-45.csv",
+    "data/cost-sensitive/hepatitis/hepatitis-train-7.csv",
+    "data/cost-sensitive/flare/flare-test-6.csv",
+    "data/cost-sensitive/annealing/annealing-train-99.csv",
+    "data/classification/australian-credit.csv",
+    "data/cost-sensitive/mushroom/mushroom-train-3.csv"
+  ],
+  "workflow_run": 30388938274,
+  "artifact_digest": "sha256:ac86e6d65b6309d62812332f35f604682049b15968c672cb1f25a5aa9de6753f",
+  "scientific_note": "The allocation-free inline fingerprint implementation preserved all 12 development and 12 fresh native holdout optima and reduced holdout subtree calls and feature branch expansions by about 3.1%. It reduced the maximum native regression to 9.7%, and one high-redundancy Iris task sped up by 1.22x, but median holdout runtime remained 7.2% slower. The correct next architecture is state-selective activation based on descendant size, not unconditional quotienting."
+}
