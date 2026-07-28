@@ -1,0 +1,75 @@
+name: LEXIGEN Task 4 Revision 3 Blind
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-public-runner/task4-r3/TRIGGER_BLIND_R3"
+
+permissions:
+  contents: read
+
+jobs:
+  blind-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    defaults:
+      run:
+        working-directory: lexigen-public-runner/task4-r3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen dependency
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Execute one blind partition
+        run: |
+          mkdir -p artifacts/blind-shards
+          python -u blind_shard.py --shard ${{ matrix.shard }} --output artifacts/blind-shards/blind-shard-${{ matrix.shard }}.jsonl
+      - name: Upload blind shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task4-r3-blind-shard-${{ matrix.shard }}
+          path: lexigen-public-runner/task4-r3/artifacts/blind-shards/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: warn
+          retention-days: 90
+
+  aggregate-blind:
+    runs-on: ubuntu-24.04
+    needs: blind-shards
+    if: always()
+    defaults:
+      run:
+        working-directory: lexigen-public-runner/task4-r3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-task4-r3-blind-shard-*
+          path: lexigen-public-runner/task4-r3/artifacts/blind-downloaded
+          merge-multiple: true
+      - name: Aggregate immutable blind gate
+        shell: bash
+        run: |
+          mkdir -p artifacts/blind-aggregate
+          set +e
+          python -u aggregate_blind.py --input artifacts/blind-downloaded --output artifacts/blind-aggregate 2>&1 | tee artifacts/blind-aggregate/verification.log
+          code=${PIPESTATUS[0]}
+          echo "$code" > artifacts/blind-aggregate/exit-code.txt
+          exit "$code"
+      - name: Upload final blind evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task4-r3-blind-evidence
+          path: lexigen-public-runner/task4-r3/artifacts/blind-aggregate/
+          if-no-files-found: warn
+          retention-days: 90
