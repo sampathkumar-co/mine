@@ -30,7 +30,10 @@ def run(compiled: Path, output: Path) -> dict[str, object]:
         if expected is None:
             mismatches.append({"digest": row["digest"], "kind": "unknown-state"})
             continue
-        expected_plan = expected["pareto_plan"]
+        # JSON has no tuple type. Normalize the frozen Python plan to the same
+        # three-element list representation before comparing values. This is a
+        # validator-only representation fix; no solver or gate input changes.
+        expected_plan = list(expected["pareto_plan"])
         fields = {
             "plan": expected_plan,
             "query_expansions": expected["pareto_stats"]["query_expansions"],
