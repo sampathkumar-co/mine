@@ -1,0 +1,43 @@
+name: LEXIGEN v3 Task 3 Procrustes Metadata
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v3/task3-procrustes-r1/TRIGGER_METADATA"
+
+permissions:
+  contents: read
+
+jobs:
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen candidate before official metadata access
+        working-directory: lexigen-v3/task3-procrustes-r1
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = "7345104d91938546d4ab4a9174eaa8dc2993a8db"
+          data = Path("candidates.py").read_bytes()
+          actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+          if actual != expected:
+              raise SystemExit(f"candidate mismatch: {actual} != {expected}")
+          print("LEXIGEN_V3_PROCRUSTES_R1_FROZEN")
+          PY
+      - name: Inspect training metadata and test object identity
+        working-directory: lexigen-v3/task3-procrustes-r1
+        run: python -u metadata.py
+      - name: Upload immutable metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-procrustes-r1-metadata
+          path: lexigen-v3/task3-procrustes-r1/metadata.json
+          if-no-files-found: error
+          retention-days: 90
