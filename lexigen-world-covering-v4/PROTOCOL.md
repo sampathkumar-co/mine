@@ -1,0 +1,3 @@
+# LEXIGEN World Covering Record v4
+
+Clean successor after verified-null v1 and v3; exploratory v2 excluded from campaign evidence but its corrected deterministic lineage is excluded. The selector first reproduces exact v1, corrected-v2, and v3 lineages and aborts on any mismatch, then selects three fresh targets. Generic engine combines multi-start greedy construction, affine/cyclic orbit column generation, restricted exact set cover, and unrestricted exact fallback. One run only. Any smaller independently verified covering is only a world-record candidate pending current primary-record review.
