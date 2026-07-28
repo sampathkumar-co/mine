@@ -1,0 +1,55 @@
+name: Mini-ORIGIN History-Aware Availability v0.58
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v58-history-aware-availability
+    paths:
+      - "mini-origin/src/mini_origin/history_availability_v58.py"
+      - ".github/workflows/mini-origin-v58-history-availability.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/history_availability_v58.py"
+      - ".github/workflows/mini-origin-v58-history-availability.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v58-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  history-availability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen v0.57 parent
+        run: >-
+          python -c "import json; p=json.load(open('../research-evidence/mini-origin-v57-rust-response-cost-pass.json')); assert p['development_gate']; assert p['exact_plan_match_count']==195"
+      - name: Run history-aware availability experiment
+        run: >-
+          mkdir -p results/v58 &&
+          python -m mini_origin.history_availability_v58
+          --output results/v58/history-availability.json
+      - name: Enforce preregistered gate
+        run: >-
+          python -c "import json; p=json.load(open('results/v58/history-availability.json')); assert p['development_gate'], json.dumps({k:p.get(k) for k in ('status','quotient_solved_count','plain_solved_count','quotient_only_solved_count','dominated_queries_removed','expansion_ratio_lower_bound_median','expansion_ratio_lower_bound_p90')}, indent=2)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v58-history-availability
+          path: mini-origin/results/v58/history-availability.json
+          retention-days: 90
