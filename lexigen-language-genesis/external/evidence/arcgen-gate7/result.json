@@ -1,0 +1,9 @@
+﻿{
+    "protocol":  "arcgen-gate-v8-gate7",
+    "selected_task_id":  "470c91de",
+    "status":  "permanent pre-score failure",
+    "candidate_predictions_committed":  false,
+    "hidden_scoring_performed":  false,
+    "sealed_outputs_accessed":  false,
+    "next_action":  "post-failure language research only under a new version"
+}
