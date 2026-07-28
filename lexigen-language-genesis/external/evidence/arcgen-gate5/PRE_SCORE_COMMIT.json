@@ -1,0 +1,12 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "artifact_sha256": "d4b1acd746618bac8614a89eec6f796159b0c7818673addf6271da797c43e694",
+  "candidate_commit": "7144ec74c006b605eb44a3739f99264541254ee0",
+  "engine_commit": "6206d5b3ecf805fb926ee8ba3ebba683a8ffe5fd",
+  "predictions_sha256": "7fe1f51eb00b5b6eeb2aec38683b1a83e1d1278c4e969e12214c9fb74463f6ef",
+  "protocol": "arcgen-gate-v6",
+  "redacted_task_sha256": "52fd058479a30e2f8c3d13619bad82faa09b2b02897ac10eae492b844e8be67e",
+  "sealed_outputs_sha256": "5bd17693d449eb4e70e915b0fe7cb6263c42c6d873fd4f0e309161258400c420",
+  "selected_task_id": "9dfd6313",
+  "status": "artifact and all twenty predictions were remotely committed and hash-verified before scoring"
+}
