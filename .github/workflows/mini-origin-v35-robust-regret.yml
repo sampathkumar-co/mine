@@ -1,0 +1,47 @@
+name: Mini-ORIGIN Robust Regret v0.35
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/robust_regret_v35.py"
+      - "mini-origin/src/mini_origin/state_policy_v34.py"
+      - ".github/workflows/mini-origin-v35-robust-regret.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/robust_regret_v35.py"
+      - "mini-origin/src/mini_origin/state_policy_v34.py"
+      - ".github/workflows/mini-origin-v35-robust-regret.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v35-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  selector:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Run robust regret selector
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.robust_regret_v35
+          --output results/v35-development.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v35-development
+          path: mini-origin/results/v35-development.json
+          retention-days: 90
