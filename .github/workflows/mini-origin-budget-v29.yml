@@ -1,0 +1,104 @@
+name: Mini-ORIGIN Budget Compiler v0.29
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/budget_compiler_v29.py"
+      - "mini-origin/tests/test_budget_compiler_v29.py"
+      - ".github/workflows/mini-origin-budget-v29.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/budget_compiler_v29.py"
+      - "mini-origin/tests/test_budget_compiler_v29.py"
+      - ".github/workflows/mini-origin-budget-v29.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_budget_compiler_v29.py
+
+  budget-study:
+    name: budget-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1401, 1402, 1403, 1404, 1405]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: >-
+          mkdir -p results &&
+          python -m mini_origin.budget_compiler_v29
+          --seed ${{ matrix.seed }}
+          --output results/budget-v29-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-budget-v29-seed-${{ matrix.seed }}
+          path: mini-origin/results/budget-v29-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, budget-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-budget-v29-seed-*
+          path: evidence
+          merge-multiple: true
+      - run: |
+          python - <<'PY'
+          import glob,json,statistics
+          from pathlib import Path
+          rows=[]
+          for f in sorted(glob.glob('evidence/budget-v29-seed-*.json')):
+              d=json.loads(Path(f).read_text())
+              rows.append({'seed':d['seed'],'pass':d['candidate_gate'],
+                           'program':d['selected_program'],
+                           'accuracy':d['candidate']['accuracy'],
+                           'invalid':d['candidate']['invalid_rate'],
+                           'mean_ratio':d['mean_observation_ratio'],
+                           'p95_ratio':d['p95_observation_ratio'],
+                           'accuracy_gap':d['accuracy_gap']})
+          summary={'verdict':'replicated_adaptive_budget_candidate' if len(rows)==5 and sum(r['pass'] for r in rows)>=4 else 'not_yet',
+                   'run_count':len(rows),'passing_count':sum(r['pass'] for r in rows),
+                   'accuracy_min':min(r['accuracy'] for r in rows),
+                   'invalid_max':max(r['invalid'] for r in rows),
+                   'mean_observation_ratio_max':max(r['mean_ratio'] for r in rows),
+                   'mean_observation_ratio_median':statistics.median(r['mean_ratio'] for r in rows),
+                   'p95_observation_ratio_max':max(r['p95_ratio'] for r in rows),
+                   'accuracy_gap_min':min(r['accuracy_gap'] for r in rows),
+                   'rows':rows}
+          Path('budget-v29-summary.json').write_text(json.dumps(summary,indent=2))
+          print(json.dumps({k:v for k,v in summary.items() if k!='rows'},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-budget-v29-summary
+          path: budget-v29-summary.json
+          retention-days: 90
