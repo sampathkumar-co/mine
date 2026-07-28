@@ -1,0 +1,31 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 1,
+  "task": "communicability",
+  "selector_family": "miscellaneous",
+  "selection_score": "0108e091fb626c73b1c33448e74accf34f2d2c99e68683cab21b8d2c751eb8ed",
+  "source_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path": "AlgoTuneTasks/communicability/communicability.py",
+  "description_path": "AlgoTuneTasks/communicability/description.txt",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "revision": 1,
+  "maximum_training_revisions": 3,
+  "proposal_limit_per_arm": 6,
+  "arms": [
+    "v4_full",
+    "v4_no_transfer",
+    "random_search",
+    "template_synthesis",
+    "v3_compatible"
+  ],
+  "task_source_opened": false,
+  "description_opened": false,
+  "training_manifest_opened": false,
+  "training_payloads_opened": false,
+  "test_manifest_opened": false,
+  "test_payloads_opened": false,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "human_task_specific_solver_design": false,
+  "human_contribution": "Approved the v4 research direction only; no Task 1 mechanism, implementation, parameter or solver idea supplied."
+}
