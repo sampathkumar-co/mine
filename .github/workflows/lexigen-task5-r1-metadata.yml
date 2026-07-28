@@ -24,6 +24,7 @@ jobs:
         working-directory: lexigen-task5-r1
         run: python -u inspect_training.py
       - name: Upload metadata evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lexigen-task5-r1-training-metadata
