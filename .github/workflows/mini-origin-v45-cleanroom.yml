@@ -1,0 +1,64 @@
+name: Mini-ORIGIN Clean-Room Reproduction v0.45
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/cleanroom_odt_v45.py"
+      - "mini-origin/src/mini_origin/validate_cleanroom_v45.py"
+      - "mini-origin/tests/test_cleanroom_odt_v45.py"
+      - ".github/workflows/mini-origin-v45-cleanroom.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/cleanroom_odt_v45.py"
+      - "mini-origin/src/mini_origin/validate_cleanroom_v45.py"
+      - "mini-origin/tests/test_cleanroom_odt_v45.py"
+      - ".github/workflows/mini-origin-v45-cleanroom.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v45-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify clean-room independence and toy exactness
+        run: pytest -q tests/test_cleanroom_odt_v45.py
+      - name: Run independent clean-room solver
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.cleanroom_odt_v45
+          --output results/v45-cleanroom.json
+      - name: Recompute frozen v0.44 reference independently
+        run: >-
+          python -m mini_origin.average_odt_frontier_v44
+          --output results/v44-reference.json
+      - name: Compare all state-level plans and operation counts
+        run: >-
+          python -m mini_origin.validate_cleanroom_v45
+          --cleanroom results/v45-cleanroom.json
+          --reference results/v44-reference.json
+          --output results/v45-reproduction-certificate.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v45-cleanroom-reproduction
+          path: |
+            mini-origin/results/v45-cleanroom.json
+            mini-origin/results/v44-reference.json
+            mini-origin/results/v45-reproduction-certificate.json
+          retention-days: 90
