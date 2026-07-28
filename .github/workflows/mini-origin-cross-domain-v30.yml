@@ -1,0 +1,111 @@
+name: Mini-ORIGIN Cross-Domain Compiler v0.30
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/cross_domain_compiler_v30.py"
+      - "mini-origin/src/mini_origin/cross_domain_runner_v30.py"
+      - "mini-origin/tests/test_cross_domain_runner_v30.py"
+      - ".github/workflows/mini-origin-cross-domain-v30.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/cross_domain_compiler_v30.py"
+      - "mini-origin/src/mini_origin/cross_domain_runner_v30.py"
+      - "mini-origin/tests/test_cross_domain_runner_v30.py"
+      - ".github/workflows/mini-origin-cross-domain-v30.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_cross_domain_runner_v30.py
+
+  cross-domain-study:
+    name: cross-domain-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1501, 1502, 1503, 1504, 1505]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: >-
+          mkdir -p results &&
+          python -m mini_origin.cross_domain_runner_v30
+          --seed ${{ matrix.seed }}
+          --output results/cross-domain-v30-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-cross-domain-v30-seed-${{ matrix.seed }}
+          path: mini-origin/results/cross-domain-v30-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, cross-domain-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-cross-domain-v30-seed-*
+          path: evidence
+          merge-multiple: true
+      - run: |
+          python - <<'PY'
+          import glob,json,statistics
+          from pathlib import Path
+          rows=[]
+          for f in sorted(glob.glob('evidence/cross-domain-v30-seed-*.json')):
+              d=json.loads(Path(f).read_text())
+              rows.append({'seed':d['seed'],'pass':d['candidate_gate'],
+                           'policy':d['selected_policy'],
+                           'accuracy':d['candidate']['accuracy'],
+                           'queries':d['candidate']['mean_queries'],
+                           'ratio':d['candidate']['mean_log2_ratio'],
+                           'invalid':d['candidate']['invalid_rate'],
+                           'first_gap':d['first_accuracy_gap'],
+                           'random_gap':d['random_accuracy_gap'],
+                           'proof':d['exact_small_task_certificate']['passed']})
+          summary={'verdict':'replicated_cross_domain_partition_candidate' if len(rows)==5 and sum(r['pass'] for r in rows)>=4 else 'not_yet',
+                   'run_count':len(rows),'passing_count':sum(r['pass'] for r in rows),
+                   'accuracy_min':min(r['accuracy'] for r in rows),
+                   'accuracy_median':statistics.median(r['accuracy'] for r in rows),
+                   'mean_queries_median':statistics.median(r['queries'] for r in rows),
+                   'log2_ratio_max':max(r['ratio'] for r in rows),
+                   'invalid_max':max(r['invalid'] for r in rows),
+                   'first_gap_min':min(r['first_gap'] for r in rows),
+                   'random_gap_min':min(r['random_gap'] for r in rows),
+                   'all_proofs_passed':all(r['proof'] for r in rows),
+                   'policy_count':len({r['policy'] for r in rows}),
+                   'rows':rows}
+          Path('cross-domain-v30-summary.json').write_text(json.dumps(summary,indent=2))
+          print(json.dumps({k:v for k,v in summary.items() if k!='rows'},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-cross-domain-v30-summary
+          path: cross-domain-v30-summary.json
+          retention-days: 90
