@@ -38,7 +38,7 @@ jobs:
               {
                   "name": "Chess (King-Rook vs. King-Pawn)",
                   "archive": "chess-kr-vs-kp.zip",
-                  "url": "https://archive.ics.uci.edu/static/public/22/chess%2B%28king-rook%2Bvs.%2Bking-pawn%29.zip",
+                  "url": "https://cdn.uci-ics-mlr-prod.aws.uci.edu/22/chess%2Bking%2Brook%2Bvs%2Bking%2Bpawn.zip",
                   "doi": "10.24432/C5DK5C",
               },
               {
