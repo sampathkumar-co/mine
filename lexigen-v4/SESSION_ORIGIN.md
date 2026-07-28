@@ -1,0 +1,1 @@
+The user explicitly approved moving forward from Campaign v3 into a stronger architecture comparison after reviewing the limited scientific value of isolated speedups. This branch is that approved pivot.
