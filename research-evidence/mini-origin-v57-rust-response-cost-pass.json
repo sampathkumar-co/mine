@@ -1,0 +1,32 @@
+{
+  "status": "rust_response_cost_reproduction_pass",
+  "development_gate": true,
+  "workflow_run_id": 30402516851,
+  "workflow_artifact_id": 8705592297,
+  "workflow_artifact_digest": "sha256:84402375c1eb8324ee91578631116c9f8ca48dd93f432979d3d62e2fdac2fbdc",
+  "head_sha": "ba5ad6b318cd85f2296df1dc1ed1e09aacab79b1",
+  "state_count": 195,
+  "base_state_count": 65,
+  "profile_seeds": [5601, 5602, 5603],
+  "exact_match_count": 195,
+  "mismatch_count": 0,
+  "all_operation_counters_match": true,
+  "validated_counters": [
+    "query_expansions",
+    "calls",
+    "memo_entries",
+    "memo_hits",
+    "raw_queries_considered",
+    "representative_queries_considered",
+    "dominated_queries_removed"
+  ],
+  "rust_total_milliseconds": 2679.942506,
+  "frozen_parent_digest": "5d0c281c66200ae378af25e6e6214e6b8b49b9fd144d4060fe29afc0a795a1cc",
+  "frozen_input_sha256": "0b8f0b2077a042c13e210a524c9730398543e65d89add3fb83be50826807619a",
+  "archive_hashes_match": {
+    "v39": true,
+    "v41": true
+  },
+  "negative_evidence": "The preceding workflow run 30400575268 was preserved separately as a validator representation failure. It compared Python tuples with JSON lists even though logged numerical plans were identical. No solver, state, budget, threshold, or tie-break rule changed in the passing rerun.",
+  "claim_scope": "Independent Rust reproduction of the frozen v0.56 Pareto exact planner. This is strong internal independent-implementation evidence, not external peer validation and not a world-class or world-first claim."
+}
