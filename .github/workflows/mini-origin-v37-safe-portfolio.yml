@@ -1,0 +1,49 @@
+name: Mini-ORIGIN Safe Portfolio v0.37
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/safe_portfolio_v37.py"
+      - "mini-origin/tests/test_safe_portfolio_v37.py"
+      - ".github/workflows/mini-origin-v37-safe-portfolio.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/safe_portfolio_v37.py"
+      - "mini-origin/tests/test_safe_portfolio_v37.py"
+      - ".github/workflows/mini-origin-v37-safe-portfolio.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v37-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify safe dominance
+        run: pytest -q tests/test_safe_portfolio_v37.py
+      - name: Run safe portfolio compiler
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.safe_portfolio_v37
+          --output results/v37-development.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v37-development
+          path: mini-origin/results/v37-development.json
+          retention-days: 90

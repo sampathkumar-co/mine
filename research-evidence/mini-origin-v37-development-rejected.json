@@ -1,0 +1,48 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "domain_count": 14,
+  "configuration_count": 30,
+  "selected_configuration": {
+    "candidate_threshold": 12,
+    "feature_limit": 12
+  },
+  "profile": {
+    "diagnosed_regret_max": 0.0,
+    "worst_query_regret_max": 0,
+    "mean_query_regret_max": 0.6368960468521228,
+    "mean_query_regret_median": 0.0,
+    "strict_wins": 7,
+    "no_harm_tasks": 12,
+    "exact_query_uses": 509
+  },
+  "frozen_portfolio_digest": "fbaeec4b2869596a742e17a4595357cd3528ffcdbc5027e7c5ded984625aa964",
+  "workflow_run": 30377510941,
+  "artifact_digest": "sha256:7aab783581c6185add5b7c9aa78cc8c6f802004fabb70dd8072ba7028fbd8469",
+  "scientific_note": "Rejected without changing thresholds. Diagnosis and worst depth never regressed, and seven domains improved. The coordinatewise no-harm gate failed on two domains because the baseline independently combined the best worst-depth and best mean-query values from potentially different specialists, which need not be jointly attainable by one policy.",
+  "strict_wins": [
+    "breast-cancer",
+    "congressional-votes",
+    "monk-2-train",
+    "monk-3-train",
+    "nursery-subset-1024",
+    "primary-tumor",
+    "tic-tac-toe-subset-512"
+  ],
+  "task_regrets": {
+    "balance-scale": [0.0, 0, 0.0],
+    "breast-cancer": [0.0, 0, -0.024475524475524146],
+    "car-evaluation-subset-768": [0.0, 0, 0.0],
+    "congressional-votes": [0.0, 0, -0.0022988505747125743],
+    "lymphography": [0.0, 0, 0.0],
+    "monk-1-train": [0.0, 0, 0.0],
+    "monk-2-train": [0.0, 0, -0.011834319526627723],
+    "monk-3-train": [0.0, 0, -0.032786885245901676],
+    "mushroom-development-512": [0.0, 0, 0.0],
+    "nursery-subset-1024": [0.0, -1, 0.0009765625],
+    "primary-tumor": [0.0, -1, -0.053097345132743],
+    "soybean-large": [0.0, 0, 0.6368960468521228],
+    "tic-tac-toe-subset-512": [0.0, -1, -0.0078125],
+    "zoo": [0.0, 0, 0.0]
+  }
+}
