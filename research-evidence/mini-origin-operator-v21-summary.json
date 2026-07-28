@@ -1,0 +1,14 @@
+{
+  "verdict": "replicated_size_polymorphic_operator_candidate",
+  "claim_scope": "the system discovers small invariant coordinate matrices, induces a size-polymorphic index contraction, freezes it, and transfers to unseen dimensions; the discovered same-index contraction is the classical inner product, so the result is not a world breakthrough",
+  "run_count": 5,
+  "passing_count": 5,
+  "hidden_accuracy_min": 0.9916666666666667,
+  "hidden_accuracy_median": 0.9944444444444445,
+  "fixed_control_gap_min": 0.45833333333333337,
+  "random_control_gap_min": 0.4916666666666667,
+  "rule_frequency": {"same_index": 5},
+  "expression_frequency": {"(square(invented)-e1)": 5},
+  "workflow_run": 30295319409,
+  "external_breakthrough_certified": false
+}
