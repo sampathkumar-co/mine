@@ -1,0 +1,12 @@
+{
+  "breakthrough_candidate": false,
+  "protocol": "arcgen-gate-v8-gate7",
+  "redacted_task_sha256": "747192193974c767169db6e44e8548fffed70acf2ad90db272bd4f1c807805a7",
+  "selected_task_id": "470c91de",
+  "v6_candidate_budget": 75000,
+  "v6_candidates_tested": 75000,
+  "v6_fixed_language_found": false,
+  "v6_signatures_seen": 15995,
+  "v7_relational_language_found": false,
+  "v8_generated_extension_found": false
+}
