@@ -21,7 +21,8 @@ jobs:
       - name: Extract only the sealed KMeans frontier record
         working-directory: lexigen-frontier/kmeans
         run: python -u extract.py
-      - name: Upload task-scoped frontier evidence
+      - name: Upload task-scoped frontier evidence or redacted diagnostic
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lexigen-v3-kmeans-frontier
