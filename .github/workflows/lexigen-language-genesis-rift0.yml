@@ -58,6 +58,10 @@ jobs:
         working-directory: lexigen-language-genesis/benchmark
         run: python rift4_revision2.py --output-dir artifacts/rift4
 
+      - name: Run RIFT-5 verifier co-synthesis gate
+        working-directory: lexigen-language-genesis/benchmark
+        run: python rift5.py --output-dir artifacts/rift5
+
       - name: Run independent tests
         working-directory: lexigen-language-genesis/benchmark
         run: python -m pytest -q
@@ -65,7 +69,7 @@ jobs:
       - name: Hash preserved evidence
         working-directory: lexigen-language-genesis/benchmark
         run: |
-          for directory in artifacts/rift0 artifacts/rift1 artifacts/rift2 artifacts/rift3 artifacts/rift4; do
+          for directory in artifacts/rift0 artifacts/rift1 artifacts/rift2 artifacts/rift3 artifacts/rift4 artifacts/rift5; do
             sha256sum "$directory"/*.json | tee "$directory"/SHA256SUMS
           done
 
