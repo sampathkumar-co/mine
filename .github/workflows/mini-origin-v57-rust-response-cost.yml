@@ -1,0 +1,68 @@
+name: Mini-ORIGIN Rust Response-Cost Reproduction v0.57
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v57-rust-response-cost-reproduction
+    paths:
+      - "mini-origin/src/mini_origin/response_cost_export_v57.py"
+      - "mini-origin/src/mini_origin/response_cost_validate_v57.py"
+      - "mini-origin/compiled/response_cost_pareto_v57.rs"
+      - ".github/workflows/mini-origin-v57-rust-response-cost.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/response_cost_export_v57.py"
+      - "mini-origin/src/mini_origin/response_cost_validate_v57.py"
+      - "mini-origin/compiled/response_cost_pareto_v57.rs"
+      - ".github/workflows/mini-origin-v57-rust-response-cost.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v57-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  rust-reproduction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen parent evidence
+        run: >-
+          python -c "import json; p=json.load(open('../research-evidence/mini-origin-v56-response-cost-pareto-pass.json')); assert p['development_gate'] and p['frozen_response_cost_digest']=='5d0c281c66200ae378af25e6e6214e6b8b49b9fd144d4060fe29afc0a795a1cc'"
+      - name: Export frozen response-cost states
+        run: >-
+          mkdir -p results/v57 &&
+          python -m mini_origin.response_cost_export_v57
+          --output results/v57/states.txt
+          --manifest results/v57/input-manifest.json
+      - name: Compile independent Rust solver
+        run: rustc -C opt-level=3 -C debuginfo=0 compiled/response_cost_pareto_v57.rs -o results/v57/response_cost_pareto_v57
+      - name: Run Rust Pareto planner
+        run: results/v57/response_cost_pareto_v57 --input results/v57/states.txt --output results/v57/rust-results.json
+      - name: Validate all plans and counters
+        run: >-
+          python -m mini_origin.response_cost_validate_v57
+          --compiled results/v57/rust-results.json
+          --output results/v57/validation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v57-rust-response-cost
+          path: |
+            mini-origin/results/v57/input-manifest.json
+            mini-origin/results/v57/rust-results.json
+            mini-origin/results/v57/validation.json
+          retention-days: 90
