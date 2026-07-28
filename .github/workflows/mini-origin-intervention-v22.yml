@@ -1,0 +1,167 @@
+name: Mini-ORIGIN Intervention Genesis v0.22
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/intervention_genesis_v22.py"
+      - "mini-origin/tests/test_intervention_genesis_v22.py"
+      - ".github/workflows/mini-origin-intervention-v22.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/intervention_genesis_v22.py"
+      - "mini-origin/tests/test_intervention_genesis_v22.py"
+      - ".github/workflows/mini-origin-intervention-v22.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-intervention-v22-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test identifiability and optimality safeguards
+        run: pytest -q tests/test_intervention_genesis_v22.py
+
+  intervention-search:
+    name: intervention-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [701, 702, 703, 704, 705]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Synthesize, freeze and test adaptive intervention program
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.intervention_genesis_v22
+          --seed ${{ matrix.seed }}
+          --output results/intervention-genesis-v22-seed-${{ matrix.seed }}.json
+      - name: Upload v0.22 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-intervention-v22-seed-${{ matrix.seed }}
+          path: mini-origin/results/intervention-genesis-v22-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, intervention-search]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-intervention-v22-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.22 runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          rules = Counter()
+          digests = Counter()
+          for filename in sorted(glob.glob("evidence/intervention-genesis-v22-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rules[data["synthesis"]["selected_rule"]] += 1
+              digests[data["frozen_policy_digest"]] += 1
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "candidate_gate": data["candidate_gate"],
+                  "rule": data["synthesis"]["selected_rule"],
+                  "threshold_balanced_accuracy": data["activity_threshold"]["balanced_accuracy"],
+                  "candidate_accuracy": data["candidate"]["accuracy"],
+                  "candidate_mean_queries": data["candidate"]["mean_queries"],
+                  "candidate_maximum_queries": data["candidate"]["maximum_queries"],
+                  "random_accuracy": data["random_equal_budget_control"]["accuracy"],
+                  "left_scan_accuracy": data["left_scan_equal_budget_control"]["accuracy"],
+                  "right_scan_accuracy": data["right_scan_equal_budget_control"]["accuracy"],
+                  "passive_accuracy": data["passive_observation_control_accuracy"],
+                  "random_gap": data["candidate_random_gap"],
+                  "scan_gap": data["candidate_scan_gap"],
+                  "passive_gap": data["candidate_passive_gap"],
+                  "covariance_difference": data["observational_equivalence"]["maximum_covariance_difference"],
+                  "query_optimality": data["exact_hidden_query_optimality"],
+              })
+
+          candidate = [row["candidate_accuracy"] for row in rows]
+          random_gaps = [row["random_gap"] for row in rows]
+          scan_gaps = [row["scan_gap"] for row in rows]
+          passive_gaps = [row["passive_gap"] for row in rows]
+          thresholds = [row["threshold_balanced_accuracy"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_proof_carrying_intervention_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and min(candidate) >= 0.975
+                  and min(random_gaps) >= 0.18
+                  and min(scan_gaps) >= 0.45
+                  and min(passive_gaps) >= 0.85
+                  and min(thresholds) >= 0.99
+                  and max(row["covariance_difference"] for row in rows) <= 1e-10
+                  and all(row["query_optimality"] for row in rows)
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "the system proves passive observational equivalence, synthesizes optimal small "
+                  "intervention trees, induces and freezes a size-polymorphic midpoint program, and "
+                  "identifies unseen causal roots at the information-theoretic query bound; this is "
+                  "a classical binary-search rediscovery inside active causal identification, not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "candidate_accuracy_min": min(candidate) if candidate else None,
+              "candidate_accuracy_median": statistics.median(candidate) if candidate else None,
+              "random_gap_min": min(random_gaps) if random_gaps else None,
+              "scan_gap_min": min(scan_gaps) if scan_gaps else None,
+              "passive_gap_min": min(passive_gaps) if passive_gaps else None,
+              "threshold_accuracy_min": min(thresholds) if thresholds else None,
+              "rule_frequency": dict(sorted(rules.items())),
+              "policy_digest_count": len(digests),
+              "rows": rows,
+          }
+          Path("intervention-genesis-v22-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.22 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-intervention-v22-summary
+          path: intervention-genesis-v22-summary.json
+          retention-days: 90
