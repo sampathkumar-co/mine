@@ -1,0 +1,30 @@
+{
+  "verdict": "replicated_adaptive_measurement_efficiency_candidate",
+  "claim_scope": "terminal-reward synthesis repeatedly discovers confidence-triggered extra measurement that preserves hidden deep-chain accuracy while saving at least 20% of samples relative to a fixed 768-replicate specialist; the causal family and measurement grammar remain human supplied, so this is not a world breakthrough",
+  "workflow_run": 30365776274,
+  "artifact_id": 8690747323,
+  "run_count": 5,
+  "passing_count": 5,
+  "development_worst_min": 0.994,
+  "hidden_worst_min": 0.9865384615384616,
+  "hidden_worst_median": 0.9884615384615385,
+  "hidden_mean_min": 0.9952884615384614,
+  "mean_replicates_max": 388.20698795418775,
+  "maximum_stratum_mean_replicates": 456.9979140592407,
+  "invalid_transition_max": 0.0003846153846153846,
+  "fixed_256_gap_min": 0.135,
+  "fixed_512_gap_min": 0.02115384615384619,
+  "specialist_gap_min": 0.0026923076923076605,
+  "query_gap_min": 0.866153846153846,
+  "random_gap_min": 0.9682692307692308,
+  "sample_saving_min": 0.49452215110131803,
+  "policy_digest_count": 5,
+  "selected_family": {
+    "rule": "lower_midpoint",
+    "base_replicates": 256,
+    "extra_replicates": 512,
+    "right_threshold_range": [0.13918267580184165, 0.14249576941658662],
+    "difference_threshold_range": [0.13918267580184165, 0.14249576941658662],
+    "trigger_margin_range": [0.08626947765755007, 0.11083004287956738]
+  }
+}
