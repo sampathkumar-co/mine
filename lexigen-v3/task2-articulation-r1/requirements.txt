@@ -1,0 +1,3 @@
+rustworkx==0.18.0
+igraph==0.11.9
+networkx==3.6.1
