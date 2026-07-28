@@ -1,0 +1,97 @@
+name: Mini-ORIGIN Prior-Art Audit v0.46
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/prior_art_audit_v46.py"
+      - "mini-origin/tests/test_prior_art_audit_v46.py"
+      - "mini-origin/research/prior-art-v46/manifest.json"
+      - ".github/workflows/mini-origin-v46-prior-art-audit.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/prior_art_audit_v46.py"
+      - "mini-origin/tests/test_prior_art_audit_v46.py"
+      - "mini-origin/research/prior-art-v46/manifest.json"
+      - ".github/workflows/mini-origin-v46-prior-art-audit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v46-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify audit classifier
+        run: pytest -q tests/test_prior_art_audit_v46.py
+      - name: Clone frozen public solver snapshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p prior-art-sources
+          clone_pin() {
+            local url="$1"
+            local path="$2"
+            local sha="$3"
+            git clone --quiet --filter=blob:none "$url" "prior-art-sources/$path"
+            git -C "prior-art-sources/$path" fetch --quiet --depth=1 origin "$sha"
+            git -C "prior-art-sources/$path" checkout --quiet --detach "$sha"
+          }
+          clone_pin https://github.com/AlgTUDelft/pystreed.git pystreed 9ad41626a1f26c4b7481e8360c5c8b1871e10d96
+          clone_pin https://github.com/aia-uclouvain/pydl8.5.git pydl85 a7f0fee72b4c17bbcb727050ba102db7dda10119
+          clone_pin https://github.com/xiyanghu/OSDT.git osdt d28ff434d5a90a1e49ffcbcab170c9ce457a605f
+          clone_pin https://github.com/ubc-systopia/gosdt-guesses.git gosdt b9116d0557613dc42ff1fcefcf0bc0be91db1620
+          # MurTree is hosted on Bitbucket. Preserve failure as unavailable rather
+          # than silently substituting a different snapshot.
+          if git clone --quiet https://bitbucket.org/EmirD/murtree.git prior-art-sources/murtree; then
+            if ! git -C prior-art-sources/murtree checkout --quiet --detach 86e439ef537e40cb93afa641aafe2078; then
+              rm -rf prior-art-sources/murtree
+              echo "MurTree pinned revision unavailable" > prior-art-sources/MURTREE_UNAVAILABLE.txt
+            fi
+          else
+            rm -rf prior-art-sources/murtree
+            echo "MurTree repository unavailable" > prior-art-sources/MURTREE_UNAVAILABLE.txt
+          fi
+      - name: Scan and classify source evidence
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.prior_art_audit_v46
+          --manifest research/prior-art-v46/manifest.json
+          --source-root prior-art-sources
+          --output results/v46-prior-art-audit.json
+      - name: Preserve source revisions and audit report
+        run: |
+          {
+            for repo in pystreed pydl85 osdt gosdt murtree; do
+              if [ -d "prior-art-sources/$repo/.git" ]; then
+                printf '%s ' "$repo"
+                git -C "prior-art-sources/$repo" rev-parse HEAD
+              else
+                printf '%s unavailable\n' "$repo"
+              fi
+            done
+          } > results/v46-source-revisions.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v46-prior-art-audit
+          path: |
+            mini-origin/results/v46-prior-art-audit.json
+            mini-origin/results/v46-source-revisions.txt
+            mini-origin/prior-art-sources/MURTREE_UNAVAILABLE.txt
+          if-no-files-found: ignore
+          retention-days: 90
