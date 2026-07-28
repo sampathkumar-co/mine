@@ -1,4 +1,5 @@
 from mini_origin import exact_tail_v36 as v36
+from mini_origin import local_quotient_runner_v40 as runner
 from mini_origin import local_quotient_v40 as v40
 from mini_origin import state_policy_v34 as v34
 
@@ -86,3 +87,15 @@ def test_partition_quotient_is_monotone_on_subsets() -> None:
         planner.partition_signature(subset, 0)
         == planner.partition_signature(subset, 1)
     )
+
+
+def test_shared_exact_cache_preserves_candidate_metrics() -> None:
+    task = duplicate_task()
+    original = v40.candidate_rows(task, 8)
+    shared = runner.shared_candidate_rows(task, 8)
+    assert [row.metric() for row in shared] == [
+        row.metric() for row in original
+    ]
+    assert [row.exact_query_uses for row in shared] == [
+        row.exact_query_uses for row in original
+    ]
