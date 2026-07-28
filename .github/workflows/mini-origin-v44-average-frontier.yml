@@ -1,0 +1,49 @@
+name: Mini-ORIGIN Average-Cost ODT Frontier v0.44
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/average_odt_frontier_v44.py"
+      - "mini-origin/tests/test_average_odt_frontier_v44.py"
+      - ".github/workflows/mini-origin-v44-average-frontier.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/average_odt_frontier_v44.py"
+      - "mini-origin/tests/test_average_odt_frontier_v44.py"
+      - ".github/workflows/mini-origin-v44-average-frontier.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v44-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify average-cost protocol
+        run: pytest -q tests/test_average_odt_frontier_v44.py
+      - name: Run average-cost exact frontier
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.average_odt_frontier_v44
+          --output results/v44-frontier.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v44-frontier
+          path: mini-origin/results/v44-frontier.json
+          retention-days: 90
