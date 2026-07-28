@@ -1,0 +1,53 @@
+name: Mini-ORIGIN Local Quotient v0.40
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/local_quotient_v40.py"
+      - "mini-origin/src/mini_origin/local_quotient_runner_v40.py"
+      - "mini-origin/tests/test_local_quotient_v40.py"
+      - "mini-origin/external-data/uci-v39/manifest.json"
+      - ".github/workflows/mini-origin-v40-local-quotient.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/local_quotient_v40.py"
+      - "mini-origin/src/mini_origin/local_quotient_runner_v40.py"
+      - "mini-origin/tests/test_local_quotient_v40.py"
+      - "mini-origin/external-data/uci-v39/manifest.json"
+      - ".github/workflows/mini-origin-v40-local-quotient.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v40-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify local partition quotient
+        run: pytest -q tests/test_local_quotient_v40.py
+      - name: Run local quotient compiler
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.local_quotient_runner_v40
+          --output results/v40-development.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v40-development
+          path: mini-origin/results/v40-development.json
+          retention-days: 90
