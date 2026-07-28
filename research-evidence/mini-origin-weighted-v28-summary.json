@@ -1,0 +1,16 @@
+{
+  "verdict": "replicated_weighted_tree_transfer_candidate",
+  "workflow_run": 30363866295,
+  "run_count": 5,
+  "passing_count": 5,
+  "accuracy_min": 1.0,
+  "mass_ratio_max": 0.4203349015654791,
+  "violation_max": 0.0,
+  "invalid_max": 0.0,
+  "query_gain_min": 0.236328125,
+  "mass_gain_min": 0.08514785358194799,
+  "normalization_gap_min": 0.26171875,
+  "all_proofs_passed": true,
+  "selected_policy_family": "argmin(weighted_sum_distance) with normalized empirically calibrated minimum-response decoding",
+  "scientific_note": "All five fresh searches passed and transferred to weighted heterogeneous trees up to 255 nodes. This is a strong internal weighted-transfer milestone, but the mechanism is still weighted-median search."
+}
