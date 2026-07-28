@@ -1,0 +1,95 @@
+name: Mini-ORIGIN v0.39 Data Commitment
+
+on:
+  push:
+    paths:
+      - ".github/workflows/mini-origin-v39-data-commitment.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/mini-origin-v39-data-commitment.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v39-commitment-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  commit-archives:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download and hash without parsing records
+        run: |
+          mkdir -p commitment
+          python - <<'PY'
+          import hashlib
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          sources = [
+              {
+                  "name": "Hayes-Roth",
+                  "archive": "hayes-roth.zip",
+                  "url": "https://archive.ics.uci.edu/static/public/44/hayes%2Broth.zip",
+                  "doi": "10.24432/C5501T",
+              },
+              {
+                  "name": "SPECT Heart",
+                  "archive": "spect-heart.zip",
+                  "url": "https://archive.ics.uci.edu/static/public/95/spect%2Bheart.zip",
+                  "doi": "10.24432/C5P304",
+              },
+              {
+                  "name": "Audiology Standardized",
+                  "archive": "audiology-standardized.zip",
+                  "url": "https://archive.ics.uci.edu/static/public/8/audiology%2Bstandardized.zip",
+                  "doi": "10.24432/C5TP4R",
+              },
+              {
+                  "name": "Dermatology",
+                  "archive": "dermatology.zip",
+                  "url": "https://archive.ics.uci.edu/static/public/33/dermatology.zip",
+                  "doi": "10.24432/C5FK5P",
+              },
+          ]
+          rows = []
+          for source in sources:
+              path = Path("commitment") / source["archive"]
+              request = urllib.request.Request(
+                  source["url"],
+                  headers={"User-Agent": "Mini-ORIGIN-v0.39/1.0"},
+              )
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  payload = response.read()
+              path.write_bytes(payload)
+              rows.append({
+                  **source,
+                  "bytes": len(payload),
+                  "sha256": hashlib.sha256(payload).hexdigest(),
+              })
+          manifest = {
+              "protocol": "download_hash_only_no_record_parsing_v1",
+              "source": "UCI Machine Learning Repository",
+              "license": "CC BY 4.0",
+              "archive_count": len(rows),
+              "rows": rows,
+          }
+          Path("commitment/v39-commitment.json").write_text(
+              json.dumps(manifest, indent=2),
+              encoding="utf-8",
+          )
+          print(json.dumps(manifest, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v39-data-commitment
+          path: commitment
+          retention-days: 90

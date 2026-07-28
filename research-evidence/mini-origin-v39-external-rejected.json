@@ -1,0 +1,31 @@
+{
+  "status": "not_yet",
+  "external_gate": false,
+  "passing_count": 0,
+  "run_count": 5,
+  "permutation_digest_count": 1,
+  "frozen_configuration": {
+    "candidate_threshold": 12,
+    "feature_limit": 12,
+    "development_digest": "8117605201d4a4dba684757b2802e4426cacb0065e878b58708196606bfa28dc",
+    "seeds": [2201, 2202, 2203, 2204, 2205]
+  },
+  "frozen_compiler_digest": "04af46e1e27760e8887727088fb1a4e0bf9450644e6895dde7b915a78dfee4a7",
+  "workflow_run": 30378444052,
+  "artifact_digest": "sha256:e6995ed757d38d7b5a3f5857ed1684f7505c15fcc4f015704119607424201ddd",
+  "archive_hashes_matched": true,
+  "scientific_note": "Rejected without changing thresholds. All five row permutations were identical, but the frozen exact-tail compiler made zero exact replacements, produced zero strict wins, and saved zero queries on Hayes-Roth, SPECT Heart, Audiology Standardized, and Dermatology.",
+  "representative_seed": {
+    "seed": 2201,
+    "candidate_gate": false,
+    "strict_wins": 0,
+    "aggregate_total_query_saving": 0.0,
+    "exact_query_uses": 0,
+    "tasks": {
+      "hayes-roth": ["gini", "gini", 0.0, 0, 0.0],
+      "spect-heart": ["worst_impurity", "worst_impurity", 0.0, 0, 0.0],
+      "audiology-standardized": ["worst_impurity", "worst_impurity", 0.0, 0, 0.0],
+      "dermatology": ["worst_impurity", "worst_impurity", 0.0, 0, 0.0]
+    }
+  }
+}
