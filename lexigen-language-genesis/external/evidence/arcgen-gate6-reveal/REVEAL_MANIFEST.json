@@ -1,0 +1,6 @@
+﻿{
+    "source_gate":  "arcgen-gate6",
+    "selected_task_id":  "1d61978c",
+    "purpose":  "post-failure training and test-input reveal only",
+    "sealed_outputs_included":  false
+}
