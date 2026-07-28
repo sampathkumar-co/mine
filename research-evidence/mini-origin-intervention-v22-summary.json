@@ -1,0 +1,15 @@
+{
+  "verdict": "replicated_proof_carrying_intervention_candidate",
+  "claim_scope": "the system proves passive observational equivalence, synthesizes optimal small intervention trees, induces and freezes a size-polymorphic midpoint program, and identifies unseen causal roots at the information-theoretic query bound; this is a classical binary-search rediscovery inside active causal identification, not a world breakthrough",
+  "run_count": 5,
+  "passing_count": 5,
+  "candidate_accuracy_min": 0.9875,
+  "candidate_accuracy_median": 0.99,
+  "random_gap_min": 0.2533333333333333,
+  "scan_gap_min": 0.7012499999999999,
+  "passive_gap_min": 0.92625,
+  "threshold_accuracy_min": 0.9977043158861341,
+  "rule_frequency": {"lower_midpoint": 5},
+  "workflow_run": 30358310016,
+  "external_breakthrough_certified": false
+}
