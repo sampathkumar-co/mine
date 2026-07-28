@@ -1,0 +1,5 @@
+Gate 4 is closed and immutable.
+Frozen engine commit: 9f24d4e696ecea1e799d0c8b508e0ca3b88acb3f
+Candidate evidence commit: b4e6343ed090ba8b9a207e269762d1ae953980eb
+Failure record commit: c50f007407f6deef6d03768ee0c1a1f913db2074
+No later workflow run may overwrite this directory or reinterpret gate 4.
