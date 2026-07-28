@@ -1,0 +1,39 @@
+{
+  "source": "UCI Machine Learning Repository",
+  "retrieved_utc": "2026-07-28",
+  "license": "CC BY 4.0",
+  "datasets": [
+    {
+      "name": "MONK's Problems",
+      "uci_id": 70,
+      "doi": "10.24432/C5R30R",
+      "archive": "monks.zip",
+      "sha256": "7501acef87251b1d427726d7c381a2488c166fbbf70ac4096e09f05951c30a29",
+      "role": "training_and_development"
+    },
+    {
+      "name": "Tic-Tac-Toe Endgame",
+      "uci_id": 101,
+      "doi": "10.24432/C5688J",
+      "archive": "tic-tac-toe.zip",
+      "sha256": "c615fcd01bc23ab99daa36bbc30d897d53f7d3e151257880cada888c5451a586",
+      "role": "hidden"
+    },
+    {
+      "name": "Zoo",
+      "uci_id": 111,
+      "doi": "10.24432/C5R59V",
+      "archive": "zoo.zip",
+      "sha256": "d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a",
+      "role": "hidden"
+    },
+    {
+      "name": "Mushroom",
+      "uci_id": 73,
+      "doi": "10.24432/C5959T",
+      "archive": "mushroom.zip",
+      "sha256": "face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a",
+      "role": "hidden"
+    }
+  ]
+}

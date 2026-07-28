@@ -1,0 +1,696 @@
+{
+  "status": "not_yet",
+  "claim_scope": "a weighted partition objective is synthesized from a fixed five-statistic grammar, quotiented by behavior on external MONK tasks, frozen before hidden archives are opened, and evaluated by exact instance-identification trajectories on four UCI domains; this is an external-benchmark milestone, not a world breakthrough",
+  "seed": 1701,
+  "candidate_gate": false,
+  "manifest_verification": {
+    "source": "UCI Machine Learning Repository",
+    "license": "CC BY 4.0",
+    "all_hashes_match": true,
+    "rows": [
+      {
+        "name": "MONK's Problems",
+        "archive": "monks.zip",
+        "expected_sha256": "7501acef87251b1d427726d7c381a2488c166fbbf70ac4096e09f05951c30a29",
+        "actual_sha256": "7501acef87251b1d427726d7c381a2488c166fbbf70ac4096e09f05951c30a29",
+        "matched": true,
+        "role": "training_and_development"
+      },
+      {
+        "name": "Tic-Tac-Toe Endgame",
+        "archive": "tic-tac-toe.zip",
+        "expected_sha256": "c615fcd01bc23ab99daa36bbc30d897d53f7d3e151257880cada888c5451a586",
+        "actual_sha256": "c615fcd01bc23ab99daa36bbc30d897d53f7d3e151257880cada888c5451a586",
+        "matched": true,
+        "role": "hidden"
+      },
+      {
+        "name": "Zoo",
+        "archive": "zoo.zip",
+        "expected_sha256": "d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a",
+        "actual_sha256": "d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a",
+        "matched": true,
+        "role": "hidden"
+      },
+      {
+        "name": "Mushroom",
+        "archive": "mushroom.zip",
+        "expected_sha256": "face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a",
+        "actual_sha256": "face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a",
+        "matched": true,
+        "role": "hidden"
+      }
+    ]
+  },
+  "rotation": 0,
+  "training_tasks": [
+    "monk-2-train",
+    "monk-3-train"
+  ],
+  "development_tasks": [
+    "monk-1-train"
+  ],
+  "synthesis": {
+    "grammar_size": 70,
+    "quotient_class_count": 23,
+    "selected_class_size": 11,
+    "selected_weights": [
+      0,
+      0,
+      0,
+      4,
+      0
+    ],
+    "selected_expression": "4*inverse_outcomes",
+    "training": {
+      "tasks": {
+        "monk-2-train": {
+          "identified_fraction": 1.0,
+          "mean_queries": 4.928994082840236,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 169
+        },
+        "monk-3-train": {
+          "identified_fraction": 1.0,
+          "mean_queries": 4.631147540983607,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 122
+        }
+      },
+      "identified_min": 1.0,
+      "mean_queries": 4.780070811911921,
+      "mean_worst_queries": 6.0,
+      "maximum_worst_queries": 6
+    },
+    "development": {
+      "tasks": {
+        "monk-1-train": {
+          "identified_fraction": 1.0,
+          "mean_queries": 4.75,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 124
+        }
+      },
+      "identified_min": 1.0,
+      "mean_queries": 4.75,
+      "mean_worst_queries": 6.0,
+      "maximum_worst_queries": 6
+    },
+    "classes": [
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        "canonical_expression": "4*entropy_deficit",
+        "member_count": 1,
+        "digest": "eb30c5ecf161aaffdc193127a4b611aea104513086367462a171e7696d548e1c",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        "canonical_expression": "4*inverse_outcomes",
+        "member_count": 11,
+        "digest": "892f099bb6303304df7eebe09a26ccccee6d73bc94b2aef2cfde27fb93a22c70",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          4,
+          0,
+          0
+        ],
+        "canonical_expression": "4*cube_mass",
+        "member_count": 28,
+        "digest": "33ad3f424eec3bd72773c93ab7945052d35d9b600e6074f6b91ea460a1eccc0f",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          4,
+          0,
+          0,
+          0
+        ],
+        "canonical_expression": "4*collision_mass",
+        "member_count": 6,
+        "digest": "a2921301dc2081cc880c66b4ca3ad69665f5c3420a00935b71758a1cd0ac5364",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          1,
+          3
+        ],
+        "canonical_expression": "1*inverse_outcomes+3*entropy_deficit",
+        "member_count": 1,
+        "digest": "b0bbeeec3befed3159761ba775c10613bf18cf6008f96f5a8bb86aff708823c1",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          0,
+          3,
+          1
+        ],
+        "canonical_expression": "3*inverse_outcomes+1*entropy_deficit",
+        "member_count": 5,
+        "digest": "77a5187a7b898041386066ce1aead9f13ebf47fddedbd58bc76ca07eaf980b17",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          1,
+          0,
+          3
+        ],
+        "canonical_expression": "1*cube_mass+3*entropy_deficit",
+        "member_count": 1,
+        "digest": "e1fb1e07e33255df55eb5b197b7b338b4e369b9bf6ac20208d8bca366bc4e1e7",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          2,
+          0,
+          2
+        ],
+        "canonical_expression": "2*cube_mass+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "918f51980cf20541e892783f102c65c57044472a9220c25075b7c47ff90073e4",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          3,
+          0,
+          1
+        ],
+        "canonical_expression": "3*cube_mass+1*entropy_deficit",
+        "member_count": 2,
+        "digest": "5e73b320e95373ce7db920d72208e313ad1bbfd40c7679b5da9b271586c581a0",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          0,
+          0,
+          3
+        ],
+        "canonical_expression": "1*collision_mass+3*entropy_deficit",
+        "member_count": 1,
+        "digest": "ccdfcc0d8dca67461faafb1f693576e63fd68187591dfef9f9de69b220332632",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          2,
+          0,
+          0,
+          2
+        ],
+        "canonical_expression": "2*collision_mass+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "88246a089c0d2b61f3afe34eb2162f6fa290741437b3dec8f8485ab468094b12",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          0,
+          0,
+          3
+        ],
+        "canonical_expression": "1*max_fraction+3*entropy_deficit",
+        "member_count": 1,
+        "digest": "396964ac12ecc869e77326a5cecfd9f19b3dfcde28e39432ba26eca1b4b326fd",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          0,
+          0,
+          2
+        ],
+        "canonical_expression": "2*max_fraction+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "975991ab71ec5123e9970e44f7c9c43ca0df6fa70f64a5baf660426c1a44eec1",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          3,
+          0,
+          0,
+          0,
+          1
+        ],
+        "canonical_expression": "3*max_fraction+1*entropy_deficit",
+        "member_count": 1,
+        "digest": "d68a47d30cf49420aedfdbe93ce27a6a8c2f1aa21123621644b003210f91b6a4",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          0,
+          1,
+          1,
+          2
+        ],
+        "canonical_expression": "1*cube_mass+1*inverse_outcomes+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "14bd5641109a69291cd5012a5039f0e9a11d1d0abcc6906177ff3e94bbc405ce",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "canonical_expression": "1*collision_mass+1*inverse_outcomes+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "ce8d420786db74bb9df40c281fc48db82004e8333591d1e1c02b5878a48681b7",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          0,
+          1,
+          1,
+          0,
+          2
+        ],
+        "canonical_expression": "1*collision_mass+1*cube_mass+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "abcc16838c6b4a1984c17c6229b3b505c0fca1a84d8a5260d5ee73a97601a63c",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          0,
+          1,
+          2
+        ],
+        "canonical_expression": "1*max_fraction+1*inverse_outcomes+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "e1df2542391432a93e8c699dee39b894bc2a902d68dbab17e890a371756c88b3",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "canonical_expression": "1*max_fraction+1*cube_mass+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "fa1ba29648ba3e26a0f1989eee4f61a311f8b6dba6700cdcf28489750ed68148",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          1,
+          0,
+          2,
+          0,
+          1
+        ],
+        "canonical_expression": "1*max_fraction+2*cube_mass+1*entropy_deficit",
+        "member_count": 1,
+        "digest": "5cd1245cb1771c8c659c01829277283b7085be73f86b407a843c3f631a088669",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          1,
+          1,
+          0,
+          0,
+          2
+        ],
+        "canonical_expression": "1*max_fraction+1*collision_mass+2*entropy_deficit",
+        "member_count": 1,
+        "digest": "a900a8b1bd553737520312d75f6cf431e3e397de3b133157ab41b692f61f142c",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          2,
+          0,
+          1,
+          0,
+          1
+        ],
+        "canonical_expression": "2*max_fraction+1*cube_mass+1*entropy_deficit",
+        "member_count": 1,
+        "digest": "48af328a285c265c8fcd1be2d9707b3329dbe60ba29cb60d01efdd4bcca530a3",
+        "state_count": 661
+      },
+      {
+        "canonical_weights": [
+          2,
+          1,
+          0,
+          0,
+          1
+        ],
+        "canonical_expression": "2*max_fraction+1*collision_mass+1*entropy_deficit",
+        "member_count": 1,
+        "digest": "8300fdd31b56c02ee0852c055d688be701e98e2364d6ce71097a25446151859d",
+        "state_count": 661
+      }
+    ]
+  },
+  "selected_class": {
+    "weights": [
+      0,
+      0,
+      0,
+      4,
+      0
+    ],
+    "expression": "4*inverse_outcomes",
+    "member_count": 11,
+    "class_digest": "892f099bb6303304df7eebe09a26ccccee6d73bc94b2aef2cfde27fb93a22c70"
+  },
+  "frozen_objective_digest": "012112cbb2e615c2a6bc786445d6a169d33dd736d155b02121f5b698af45873e",
+  "hidden_tasks": [
+    {
+      "name": "monk-1-test",
+      "candidates": 432,
+      "queries": 6
+    },
+    {
+      "name": "tic-tac-toe",
+      "candidates": 958,
+      "queries": 9
+    },
+    {
+      "name": "zoo",
+      "candidates": 59,
+      "queries": 16
+    },
+    {
+      "name": "mushroom",
+      "candidates": 8124,
+      "queries": 22
+    }
+  ],
+  "candidate": {
+    "tasks": {
+      "monk-1-test": {
+        "identified_fraction": 1.0,
+        "mean_queries": 6.0,
+        "worst_queries": 6,
+        "unresolved": 0,
+        "candidates": 432
+      },
+      "tic-tac-toe": {
+        "identified_fraction": 1.0,
+        "mean_queries": 6.797494780793319,
+        "worst_queries": 8,
+        "unresolved": 0,
+        "candidates": 958
+      },
+      "zoo": {
+        "identified_fraction": 1.0,
+        "mean_queries": 4.88135593220339,
+        "worst_queries": 7,
+        "unresolved": 0,
+        "candidates": 59
+      },
+      "mushroom": {
+        "identified_fraction": 1.0,
+        "mean_queries": 8.233751846381093,
+        "worst_queries": 10,
+        "unresolved": 0,
+        "candidates": 8124
+      }
+    },
+    "identified_min": 1.0,
+    "mean_queries": 6.478150639844451,
+    "mean_worst_queries": 7.75,
+    "maximum_worst_queries": 10
+  },
+  "controls": {
+    "minimax": {
+      "tasks": {
+        "monk-1-test": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.0,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 432
+        },
+        "tic-tac-toe": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.81419624217119,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 958
+        },
+        "zoo": {
+          "identified_fraction": 1.0,
+          "mean_queries": 4.88135593220339,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 59
+        },
+        "mushroom": {
+          "identified_fraction": 1.0,
+          "mean_queries": 8.242122107336288,
+          "worst_queries": 10,
+          "unresolved": 0,
+          "candidates": 8124
+        }
+      },
+      "identified_min": 1.0,
+      "mean_queries": 6.484418570427717,
+      "mean_worst_queries": 7.75,
+      "maximum_worst_queries": 10
+    },
+    "collision": {
+      "tasks": {
+        "monk-1-test": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.0,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 432
+        },
+        "tic-tac-toe": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.838204592901879,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 958
+        },
+        "zoo": {
+          "identified_fraction": 1.0,
+          "mean_queries": 4.88135593220339,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 59
+        },
+        "mushroom": {
+          "identified_fraction": 1.0,
+          "mean_queries": 8.250615460364353,
+          "worst_queries": 10,
+          "unresolved": 0,
+          "candidates": 8124
+        }
+      },
+      "identified_min": 1.0,
+      "mean_queries": 6.492543996367406,
+      "mean_worst_queries": 7.75,
+      "maximum_worst_queries": 10
+    },
+    "cube": {
+      "tasks": {
+        "monk-1-test": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.0,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 432
+        },
+        "tic-tac-toe": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.838204592901879,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 958
+        },
+        "zoo": {
+          "identified_fraction": 1.0,
+          "mean_queries": 4.88135593220339,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 59
+        },
+        "mushroom": {
+          "identified_fraction": 1.0,
+          "mean_queries": 8.248892171344165,
+          "worst_queries": 10,
+          "unresolved": 0,
+          "candidates": 8124
+        }
+      },
+      "identified_min": 1.0,
+      "mean_queries": 6.492113174112358,
+      "mean_worst_queries": 7.75,
+      "maximum_worst_queries": 10
+    },
+    "max_outcomes": {
+      "tasks": {
+        "monk-1-test": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.0,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 432
+        },
+        "tic-tac-toe": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.797494780793319,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 958
+        },
+        "zoo": {
+          "identified_fraction": 1.0,
+          "mean_queries": 4.88135593220339,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 59
+        },
+        "mushroom": {
+          "identified_fraction": 1.0,
+          "mean_queries": 8.233751846381093,
+          "worst_queries": 10,
+          "unresolved": 0,
+          "candidates": 8124
+        }
+      },
+      "identified_min": 1.0,
+      "mean_queries": 6.478150639844451,
+      "mean_worst_queries": 7.75,
+      "maximum_worst_queries": 10
+    },
+    "entropy": {
+      "tasks": {
+        "monk-1-test": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.0,
+          "worst_queries": 6,
+          "unresolved": 0,
+          "candidates": 432
+        },
+        "tic-tac-toe": {
+          "identified_fraction": 1.0,
+          "mean_queries": 6.8997912317327765,
+          "worst_queries": 8,
+          "unresolved": 0,
+          "candidates": 958
+        },
+        "zoo": {
+          "identified_fraction": 1.0,
+          "mean_queries": 5.762711864406779,
+          "worst_queries": 7,
+          "unresolved": 0,
+          "candidates": 59
+        },
+        "mushroom": {
+          "identified_fraction": 1.0,
+          "mean_queries": 10.330871491875923,
+          "worst_queries": 12,
+          "unresolved": 0,
+          "candidates": 8124
+        }
+      },
+      "identified_min": 1.0,
+      "mean_queries": 7.248343647003869,
+      "mean_worst_queries": 8.25,
+      "maximum_worst_queries": 12
+    }
+  },
+  "comparisons": {
+    "monk-1-test": {
+      "candidate_worst": 6,
+      "best_control_worst": 6,
+      "worst_gap": 0,
+      "candidate_mean": 6.0,
+      "best_control_mean": 6.0,
+      "mean_gap": 0.0
+    },
+    "tic-tac-toe": {
+      "candidate_worst": 8,
+      "best_control_worst": 8,
+      "worst_gap": 0,
+      "candidate_mean": 6.797494780793319,
+      "best_control_mean": 6.797494780793319,
+      "mean_gap": 0.0
+    },
+    "zoo": {
+      "candidate_worst": 7,
+      "best_control_worst": 7,
+      "worst_gap": 0,
+      "candidate_mean": 4.88135593220339,
+      "best_control_mean": 4.88135593220339,
+      "mean_gap": 0.0
+    },
+    "mushroom": {
+      "candidate_worst": 10,
+      "best_control_worst": 10,
+      "worst_gap": 0,
+      "candidate_mean": 8.233751846381093,
+      "best_control_mean": 8.233751846381093,
+      "mean_gap": 0.0
+    }
+  },
+  "genuinely_composite": false,
+  "no_worse_worst_case": true,
+  "strict_hidden_wins": 0,
+  "median_mean_query_excess": 0.0,
+  "maximum_worst_query_excess": 0
+}
