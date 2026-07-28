@@ -1,0 +1,47 @@
+name: Mini-ORIGIN Response-Cost Pareto v0.56
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v56-response-cost-pareto
+    paths:
+      - 'mini-origin/**'
+      - '.github/workflows/mini-origin-v56-response-cost-pareto.yml'
+  pull_request:
+    branches:
+      - research/mini-origin-v55-probe-activated-quotient
+    paths:
+      - 'mini-origin/**'
+      - '.github/workflows/mini-origin-v56-response-cost-pareto.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  response-cost-pareto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e 'mini-origin[dev]'
+      - name: Verify frozen implementation and theorem tests
+        run: |
+          python -m pytest -q mini-origin/tests/test_response_cost_pareto_v56.py
+          python -m compileall -q mini-origin/src/mini_origin
+      - name: Run frozen response-cost Pareto gate
+        run: |
+          mkdir -p research-evidence
+          python -m mini_origin.response_cost_pareto_gate_v56 \
+            --output research-evidence/mini-origin-v56-response-cost-pareto.json
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v56-response-cost-pareto
+          path: research-evidence/mini-origin-v56-response-cost-pareto.json
+          if-no-files-found: error
