@@ -1,0 +1,39 @@
+{
+  "status": "not_yet",
+  "development_gate": false,
+  "domain_count": 14,
+  "selected_class": {
+    "program": "if(normalized_entropy_le:0.75:le)->entropy:else->worst_impurity",
+    "member_count": 1,
+    "class_digest": "a62fcb7de3bf5368c2f19c9183a283100c3ae424b3f8e73e271ae588802e68e0"
+  },
+  "profile": {
+    "diagnosed_regret_max": 0.0,
+    "worst_query_regret_max": 0,
+    "mean_query_regret_median": 0.3215694616336633,
+    "mean_query_regret_max": 1.1796875,
+    "strict_wins": 1,
+    "no_harm_tasks": 4,
+    "uses_both_branches": true
+  },
+  "frozen_selector_digest": "058ebbb4472b90cf98749f4f72cfa4335239926dd74c0facc116a8bf3715cae4",
+  "workflow_run": 30376551758,
+  "artifact_digest": "sha256:88759df229d47b67f8b572737169bf53889f4ef0e8a3e22cc87240b5a3242f",
+  "scientific_note": "Rejected without changing thresholds: zero diagnosis and worst-depth regret, but median mean-query regret was positive, maximum mean-query regret exceeded one query, and only one of fourteen domains improved.",
+  "task_mean_query_regret": {
+    "balance-scale": 0.016000000000000014,
+    "breast-cancer": 0.0,
+    "car-evaluation-subset-768": 0.484375,
+    "congressional-votes": 0.7701149425287355,
+    "lymphography": 0.3648648648648649,
+    "monk-1-train": 0.008064516129032029,
+    "monk-2-train": 0.16568047337278102,
+    "monk-3-train": 0.19672131147541005,
+    "mushroom-development-512": 0.31640625,
+    "nursery-subset-1024": 1.1796875,
+    "primary-tumor": -0.09734513274336276,
+    "soybean-large": 0.6310395314787702,
+    "tic-tac-toe-subset-512": 0.427734375,
+    "zoo": 0.3267326732673266
+  }
+}
