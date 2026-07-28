@@ -1,0 +1,184 @@
+name: Mini-ORIGIN Semantic Certificate v0.24
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/outcome_semantics_v24.py"
+      - "mini-origin/tests/test_outcome_semantics_v24.py"
+      - ".github/workflows/mini-origin-semantics-v24.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/outcome_semantics_v24.py"
+      - "mini-origin/tests/test_outcome_semantics_v24.py"
+      - ".github/workflows/mini-origin-semantics-v24.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-semantics-v24-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test semantic safeguards
+        run: pytest -q tests/test_outcome_semantics_v24.py
+
+  semantic-study:
+    name: semantic-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [901, 902, 903, 904, 905]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Synthesize, certify and freeze the response alphabet
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.outcome_semantics_v24
+          --seed ${{ matrix.seed }}
+          --output results/outcome-semantics-v24-seed-${{ matrix.seed }}.json
+      - name: Upload v0.24 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-semantics-v24-seed-${{ matrix.seed }}
+          path: mini-origin/results/outcome-semantics-v24-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, semantic-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-semantics-v24-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.24 runs
+        run: |
+          python - <<'PY'
+          import glob
+          import json
+          import statistics
+          from collections import Counter
+          from pathlib import Path
+
+          rows = []
+          feature_sets = Counter()
+          semantic_digests = set()
+          for filename in sorted(glob.glob("evidence/outcome-semantics-v24-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              features = "+".join(data["selected_program"]["features"])
+              feature_sets[features] += 1
+              semantic_digests.add(data["semantic_certificate"]["semantic_digest"])
+              rows.append({
+                  "seed": data["seed"],
+                  "status": data["status"],
+                  "candidate_gate": data["candidate_gate"],
+                  "features": data["selected_program"]["features"],
+                  "threshold": data["selected_program"]["threshold"],
+                  "minimum_feature_count": data["semantic_certificate"]["minimum_feature_count"],
+                  "unique_minimal_feature_set": data["semantic_certificate"]["unique_minimal_feature_set"],
+                  "all_smaller_subsets_refuted": data["semantic_certificate"]["all_smaller_subsets_refuted"],
+                  "semantic_macro_accuracy": data["candidate_semantic"]["macro_accuracy"],
+                  "minimum_state_accuracy": data["candidate_semantic"]["minimum_state_accuracy"],
+                  "reduced_semantic_accuracy": data["best_reduced_semantic"]["macro_accuracy"],
+                  "semantic_gap": data["semantic_gap"],
+                  "closed_loop_accuracy": data["candidate_closed_loop"]["accuracy"],
+                  "closed_loop_gap": data["closed_loop_gap"],
+                  "invalid_transition_rate": data["candidate_closed_loop"]["invalid_transition_rate"],
+                  "human_gap": data["human_gap"],
+                  "random_gap": data["random_gap"],
+                  "decoder_digest": data["frozen_decoder_digest"],
+              })
+
+          semantic = [row["semantic_macro_accuracy"] for row in rows]
+          minimum_state = [row["minimum_state_accuracy"] for row in rows]
+          semantic_gaps = [row["semantic_gap"] for row in rows]
+          loop = [row["closed_loop_accuracy"] for row in rows]
+          loop_gaps = [row["closed_loop_gap"] for row in rows]
+          invalid = [row["invalid_transition_rate"] for row in rows]
+          human = [row["human_gap"] for row in rows]
+          random_gaps = [row["random_gap"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_semantic_outcome_irreducibility_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and min(semantic) >= 0.985
+                  and min(minimum_state) >= 0.97
+                  and min(semantic_gaps) >= 0.15
+                  and min(loop) >= 0.985
+                  and min(loop_gaps) >= 0.02
+                  and max(invalid) <= 0.01
+                  and min(human) >= -0.01
+                  and min(random_gaps) >= 0.45
+                  and all(row["minimum_feature_count"] == 3 for row in rows)
+                  and all(row["unique_minimal_feature_set"] for row in rows)
+                  and all(row["all_smaller_subsets_refuted"] for row in rows)
+                  and len(semantic_digests) == 1
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "a machine-checked semantic lower bound refutes every one- and "
+                  "two-feature response alphabet with explicit reachable-state "
+                  "collision witnesses, while a unique three-feature alphabet "
+                  "transfers under boundary-balanced hidden causal chains; this "
+                  "is still classical ordered-search controller synthesis, not "
+                  "an external world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "feature_set_frequency": dict(sorted(feature_sets.items())),
+              "semantic_digest_count": len(semantic_digests),
+              "decoder_digest_count": len({row["decoder_digest"] for row in rows}),
+              "semantic_accuracy_min": min(semantic) if semantic else None,
+              "semantic_accuracy_median": statistics.median(semantic) if semantic else None,
+              "minimum_state_accuracy_min": min(minimum_state) if minimum_state else None,
+              "semantic_gap_min": min(semantic_gaps) if semantic_gaps else None,
+              "closed_loop_accuracy_min": min(loop) if loop else None,
+              "closed_loop_accuracy_median": statistics.median(loop) if loop else None,
+              "closed_loop_gap_min": min(loop_gaps) if loop_gaps else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "human_gap_min": min(human) if human else None,
+              "random_gap_min": min(random_gaps) if random_gaps else None,
+              "rows": rows,
+          }
+          Path("outcome-semantics-v24-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - name: Upload aggregate v0.24 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-semantics-v24-summary
+          path: outcome-semantics-v24-summary.json
+          retention-days: 90

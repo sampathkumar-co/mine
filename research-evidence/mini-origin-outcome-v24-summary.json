@@ -1,0 +1,29 @@
+{
+  "verdict": "replicated_semantic_outcome_irreducibility_candidate",
+  "claim_scope": "a machine-checked semantic lower bound refutes every one- and two-feature response alphabet with explicit reachable-state collision witnesses, while a unique three-feature alphabet transfers under boundary-balanced hidden causal chains; this is still classical ordered-search controller synthesis, not an external world breakthrough",
+  "workflow_run": 30360659060,
+  "run_count": 5,
+  "passing_count": 5,
+  "feature_set_frequency": {
+    "left_exists+left_active+right_active": 5
+  },
+  "semantic_digest_count": 1,
+  "decoder_digest_count": 1,
+  "semantic_accuracy_min": 0.9994,
+  "semantic_accuracy_median": 0.9998,
+  "minimum_state_accuracy_min": 0.999,
+  "semantic_gap_min": 0.1998,
+  "closed_loop_accuracy_min": 0.9973333333333333,
+  "closed_loop_accuracy_median": 0.9996666666666667,
+  "closed_loop_gap_min": 0.5243333333333333,
+  "invalid_transition_max": 0.0,
+  "human_gap_min": -0.0023333333333334094,
+  "random_gap_min": 0.938952380952381,
+  "rows": [
+    {"seed": 901, "candidate_gate": true, "semantic_macro_accuracy": 0.9998, "minimum_state_accuracy": 0.999, "semantic_gap": 0.1998, "closed_loop_accuracy": 0.9993333333333333, "closed_loop_gap": 0.552, "invalid_transition_rate": 0.0, "human_gap": -0.00033333333333340764, "random_gap": 0.9493333333333333},
+    {"seed": 902, "candidate_gate": true, "semantic_macro_accuracy": 0.9994, "minimum_state_accuracy": 0.999, "semantic_gap": 0.1998, "closed_loop_accuracy": 0.9996666666666667, "closed_loop_gap": 0.7656666666666667, "invalid_transition_rate": 0.0, "human_gap": 0.0013333333333334085, "random_gap": 0.938952380952381},
+    {"seed": 903, "candidate_gate": true, "semantic_macro_accuracy": 0.9998, "minimum_state_accuracy": 0.999, "semantic_gap": 0.1998, "closed_loop_accuracy": 0.9973333333333333, "closed_loop_gap": 0.5386666666666666, "invalid_transition_rate": 0.0, "human_gap": -0.0023333333333334094, "random_gap": 0.9473333333333332},
+    {"seed": 904, "candidate_gate": true, "semantic_macro_accuracy": 0.9996, "minimum_state_accuracy": 0.999, "semantic_gap": 0.1998, "closed_loop_accuracy": 0.9996666666666667, "closed_loop_gap": 0.7413333333333334, "invalid_transition_rate": 0.0, "human_gap": 0.00033333333333340764, "random_gap": 0.9449047619047619},
+    {"seed": 905, "candidate_gate": true, "semantic_macro_accuracy": 0.9998, "minimum_state_accuracy": 0.999, "semantic_gap": 0.2002, "closed_loop_accuracy": 0.9996666666666667, "closed_loop_gap": 0.5243333333333333, "invalid_transition_rate": 0.0, "human_gap": 0.0, "random_gap": 0.9508571428571428}
+  ]
+}
