@@ -1,0 +1,46 @@
+name: LEXIGEN World Covering v3 Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-world-covering-v3-validation/TRIGGER_ONCE"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-v3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out validation branch
+        uses: actions/checkout@v4
+
+      - name: Check out sealed v3 source read-only
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 7ca690ba471da0aadea2b34b8f7563da7fb59024
+          path: v3-source
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: v3-source/lexigen-world-covering-v3/requirements.txt
+
+      - name: Install frozen dependency
+        run: python -m pip install -r v3-source/lexigen-world-covering-v3/requirements.txt
+
+      - name: Run snapshot-free validation
+        run: python -u lexigen-world-covering-v3-validation/test_v3.py
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-world-covering-v3-validation
+          path: lexigen-world-covering-v3-validation/VALIDATION_REPORT.json
+          if-no-files-found: error
+          retention-days: 90
