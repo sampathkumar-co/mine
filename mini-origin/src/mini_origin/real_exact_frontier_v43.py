@@ -28,13 +28,14 @@ def expected_elimination_numerator(
 ) -> int:
     """Uniform-prior expected eliminations, scaled by |V|."""
     size = allowed.bit_count()
+    children = (
+        allowed & mask
+        for mask in task.masks_for(query).values()
+    )
     return sum(
-        bucket_size * (size - bucket_size)
-        for bucket_size in (
-            child.bit_count()
-            for mask in task.masks_for(query).values()
-            if (child := allowed & mask)
-        )
+        child.bit_count() * (size - child.bit_count())
+        for child in children
+        if child
     )
 
 
