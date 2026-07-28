@@ -13,7 +13,7 @@ permissions:
 jobs:
   rift:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Check out committed branch state
         uses: actions/checkout@v4
@@ -42,6 +42,22 @@ jobs:
         working-directory: lexigen-language-genesis/benchmark
         run: python rift1.py --output-dir artifacts/rift1
 
+      - name: Run RIFT-1 unlabeled MDL selection
+        working-directory: lexigen-language-genesis/benchmark
+        run: python rift1_selector.py --output-dir artifacts/rift1
+
+      - name: Run RIFT-2 operator-family induction
+        working-directory: lexigen-language-genesis/benchmark
+        run: python rift2.py --output-dir artifacts/rift2
+
+      - name: Run RIFT-3 compositional adaptation
+        working-directory: lexigen-language-genesis/benchmark
+        run: python rift3.py --output-dir artifacts/rift3
+
+      - name: Run corrected RIFT-4 semantic-extension gate
+        working-directory: lexigen-language-genesis/benchmark
+        run: python rift4_revision2.py --output-dir artifacts/rift4
+
       - name: Run independent tests
         working-directory: lexigen-language-genesis/benchmark
         run: python -m pytest -q
@@ -49,15 +65,14 @@ jobs:
       - name: Hash preserved evidence
         working-directory: lexigen-language-genesis/benchmark
         run: |
-          sha256sum artifacts/rift0/*.json | tee artifacts/rift0/SHA256SUMS
-          sha256sum artifacts/rift1/*.json | tee artifacts/rift1/SHA256SUMS
+          for directory in artifacts/rift0 artifacts/rift1 artifacts/rift2 artifacts/rift3 artifacts/rift4; do
+            sha256sum "$directory"/*.json | tee "$directory"/SHA256SUMS
+          done
 
       - name: Upload immutable synthetic evidence
         uses: actions/upload-artifact@v4
         with:
           name: lexigen-language-genesis-rift-${{ github.sha }}
-          path: |
-            lexigen-language-genesis/benchmark/artifacts/rift0/
-            lexigen-language-genesis/benchmark/artifacts/rift1/
+          path: lexigen-language-genesis/benchmark/artifacts/
           if-no-files-found: error
           retention-days: 90
