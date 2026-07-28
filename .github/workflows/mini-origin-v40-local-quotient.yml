@@ -4,12 +4,14 @@ on:
   push:
     paths:
       - "mini-origin/src/mini_origin/local_quotient_v40.py"
+      - "mini-origin/src/mini_origin/local_quotient_runner_v40.py"
       - "mini-origin/tests/test_local_quotient_v40.py"
       - "mini-origin/external-data/uci-v39/manifest.json"
       - ".github/workflows/mini-origin-v40-local-quotient.yml"
   pull_request:
     paths:
       - "mini-origin/src/mini_origin/local_quotient_v40.py"
+      - "mini-origin/src/mini_origin/local_quotient_runner_v40.py"
       - "mini-origin/tests/test_local_quotient_v40.py"
       - "mini-origin/external-data/uci-v39/manifest.json"
       - ".github/workflows/mini-origin-v40-local-quotient.yml"
@@ -42,7 +44,7 @@ jobs:
       - name: Run local quotient compiler
         run: >-
           mkdir -p results &&
-          python -m mini_origin.local_quotient_v40
+          python -m mini_origin.local_quotient_runner_v40
           --output results/v40-development.json
       - uses: actions/upload-artifact@v4
         with:
