@@ -17,24 +17,34 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - name: Verify sealed bytes without snapshot access
-        working-directory: sealed/lexigen-world-covering-v4
+        shell: bash
         run: |
+          set -euo pipefail
+          cd sealed/lexigen-world-covering-v4
           python - <<'PY'
-          import hashlib,json,py_compile
+          import hashlib, json, py_compile
           from pathlib import Path
-          lock=json.loads(Path('LOCK.json').read_text())
-          for name,expected in lock['git_blob_sha1'].items():
-            data=Path(name).read_bytes()
-            actual=hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
-            assert actual==expected,(name,actual,expected)
+          lock = json.loads(Path('LOCK.json').read_text(encoding='utf-8'))
+          for name, expected in lock['git_blob_sha1'].items():
+              path = Path(name)
+              data = path.read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              print(name, actual)
+              if actual != expected:
+                  raise SystemExit(f"LOCK_MISMATCH {name} {actual} {expected}")
           for name in ('common.py','solver.py','selector_solver.py','verify_results.py'):
-            py_compile.compile(name,doraise=True)
+              py_compile.compile(name, doraise=True)
           import common
-          assert common.EXPECTED['v1']==['C(15,8,5)','C(11,6,5)','C(14,5,3)']
-          assert common.EXPECTED['v2']==['C(12,7,5)','C(14,8,5)','C(16,7,4)']
-          assert common.EXPECTED['v3']==['C(15,6,4)','C(17,9,5)','C(16,8,5)']
-          t=common.Target('synthetic',6,3,2,20,1,'',19,20,15,60,0.0,'')
-          inc=common.incidence(t)
-          assert len(inc.blocks)==20 and len(inc.tsets)==15
+          expected = {
+              'v1':['C(15,8,5)','C(11,6,5)','C(14,5,3)'],
+              'v2':['C(12,7,5)','C(14,8,5)','C(16,7,4)'],
+              'v3':['C(15,6,4)','C(17,9,5)','C(16,8,5)'],
+          }
+          if common.EXPECTED != expected:
+              raise SystemExit(f"LINEAGE_CONSTANT_MISMATCH {common.EXPECTED}")
+          t = common.Target('synthetic',6,3,2,20,1,'',19,20,15,60,0.0,'')
+          inc = common.incidence(t)
+          if len(inc.blocks) != 20 or len(inc.tsets) != 15:
+              raise SystemExit('SYNTHETIC_INCIDENCE_MISMATCH')
           print('SEALED_V4_SNAPSHOT_FREE_VALIDATION_OK')
           PY
