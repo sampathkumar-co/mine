@@ -1,0 +1,49 @@
+name: Mini-ORIGIN Attainable Envelope v0.38
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/attainable_envelope_v38.py"
+      - "mini-origin/tests/test_attainable_envelope_v38.py"
+      - ".github/workflows/mini-origin-v38-attainable-envelope.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/attainable_envelope_v38.py"
+      - "mini-origin/tests/test_attainable_envelope_v38.py"
+      - ".github/workflows/mini-origin-v38-attainable-envelope.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v38-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify attainable envelope
+        run: pytest -q tests/test_attainable_envelope_v38.py
+      - name: Run attainable envelope compiler
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.attainable_envelope_v38
+          --output results/v38-development.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v38-development
+          path: mini-origin/results/v38-development.json
+          retention-days: 90
