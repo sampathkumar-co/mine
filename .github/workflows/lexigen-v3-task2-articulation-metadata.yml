@@ -1,0 +1,35 @@
+name: LEXIGEN v3 Task 2 Articulation Metadata
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/lexigen-v3-task2-articulation-metadata.yml"
+      - "lexigen-v3/task2-articulation-r1/**"
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-and-metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: lexigen-v3/task2-articulation-r1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Verify synthetic exactness
+        run: python -u synthetic_test.py
+      - name: Inspect official metadata and training manifest structure only
+        run: python -u metadata.py
+      - name: Upload metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-task2-articulation-metadata
+          path: lexigen-v3/task2-articulation-r1/metadata.json
+          retention-days: 90
