@@ -1,0 +1,118 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "benchmark": "ARC-GEN 1d61978c post-failure meta-grammar growth",
+  "candidate_extensions_tested": 2016,
+  "certificate": {
+    "extension_ablation_training_exact": false,
+    "extension_sha256": "adab27222d0157fe3ecf4c15ad55d21ebe76623d2e6cc5f536774a813f5b98bf",
+    "holdout_count": 10000,
+    "holdout_exact": 10000,
+    "holdout_generation": "constructive parameters rendered by pinned official ARC-GEN task",
+    "portable_holdout_exact": 10000,
+    "portable_training_exact": true,
+    "schema": "lexigen-v8-meta-extension-certificate-v1",
+    "simple_fixed_baseline_found": false,
+    "task_source_sha256": "a2a2e9c8c5ddf060ea03e6a070cfa169f6dbf89dea57de5c22aa18d6805302d7",
+    "training_exact": true,
+    "training_sha256": "8e8ea23ca26676fc3bfe7b2c84d582975e7d5d011a8121993bdcae078050b367",
+    "v7_fixed_grammar_found": false
+  },
+  "claim_boundary": "The extension is synthesized as an arithmetic/graph/fold AST and was absent from v7. The generic substrate and post-failure task family remain human selected; a fresh sealed gate is required.",
+  "exact_extension_count": 80,
+  "gate": {
+    "ablation_fails": true,
+    "exact_training": true,
+    "holdout_exact": true,
+    "new_production_absent_from_v7": true,
+    "no_finished_task_operator_in_substrate": true,
+    "portable_holdout_exact": true,
+    "portable_training": true,
+    "sealed_outputs_untouched": true
+  },
+  "generated_extension": {
+    "component_class": {
+      "arg": {
+        "body": {
+          "name": "dc",
+          "op": "var"
+        },
+        "collection": "edges",
+        "op": "fold_sum"
+      },
+      "op": "sign"
+    },
+    "group_score": {
+      "body": {
+        "op": "cardinality",
+        "target": "points"
+      },
+      "collection": "components",
+      "op": "fold_sum"
+    },
+    "name": "generated_production_754a19e6bb8a",
+    "provenance": {
+      "candidate_extensions_tested": 2016,
+      "exact_candidate_count": 80,
+      "human_supplied_finished_task_operator": false,
+      "human_supplied_generic_substrate": true,
+      "method": "typed enumerative meta-grammar synthesis"
+    },
+    "relation": {
+      "left": {
+        "left": {
+          "arg": {
+            "name": "dr",
+            "op": "var"
+          },
+          "op": "abs"
+        },
+        "op": "add",
+        "right": {
+          "arg": {
+            "name": "dc",
+            "op": "var"
+          },
+          "op": "abs"
+        }
+      },
+      "op": "eq",
+      "right": {
+        "op": "const",
+        "value": 2
+      }
+    },
+    "render": {
+      "op": "paint_component_class",
+      "other_colour": 8,
+      "winner_colour": 2
+    },
+    "schema": "lexigen-meta-grammar-extension-v1",
+    "source": {
+      "colour": 5,
+      "op": "select_cells_equal"
+    },
+    "types": {
+      "component_class": "Component\u2192Int",
+      "group_score": "List[Component]\u2192Int",
+      "input": "Grid",
+      "output": "Grid",
+      "relation": "Point\u00d7Point\u2192Bool",
+      "source": "Set[Point]"
+    },
+    "winner": {
+      "mode": "min",
+      "op": "select_extreme_group"
+    }
+  },
+  "holdout_failures": [],
+  "holdout_seed_range": [
+    30000,
+    39999
+  ],
+  "portable_holdout_failures": [],
+  "source_sealed_outputs_accessed": false,
+  "source_task_id": "1d61978c",
+  "status": "autonomous meta-grammar mechanism candidate; not a blind breakthrough claim",
+  "test_prediction_count": 20,
+  "version": "v8"
+}
