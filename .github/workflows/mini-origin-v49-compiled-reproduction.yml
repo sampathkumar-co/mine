@@ -1,0 +1,90 @@
+name: Mini-ORIGIN Compiled Reproduction v0.49
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/compiled_export_v49.py"
+      - "mini-origin/src/mini_origin/compiled_validate_v49.py"
+      - "mini-origin/compiled/weighted_quotient_v49.cpp"
+      - "mini-origin/tests/test_compiled_reproduction_v49.py"
+      - ".github/workflows/mini-origin-v49-compiled-reproduction.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/compiled_export_v49.py"
+      - "mini-origin/src/mini_origin/compiled_validate_v49.py"
+      - "mini-origin/compiled/weighted_quotient_v49.cpp"
+      - "mini-origin/tests/test_compiled_reproduction_v49.py"
+      - ".github/workflows/mini-origin-v49-compiled-reproduction.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v49-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  compiled-reproduction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify export and independence protocol
+        run: pytest -q tests/test_compiled_reproduction_v49.py
+      - name: Export frozen weighted states
+        run: >-
+          mkdir -p results/v49 &&
+          python -m mini_origin.compiled_export_v49
+          --output results/v49/states.txt
+          --manifest results/v49/input-manifest.json
+      - name: Recompute frozen Python reference
+        run: >-
+          python -m mini_origin.cost_prior_quotient_v48
+          --output results/v49/python-reference.json
+      - name: Compile standalone C++20 solver
+        run: >-
+          g++ -O3 -DNDEBUG -std=c++20 -Wall -Wextra -pedantic
+          compiled/weighted_quotient_v49.cpp
+          -o results/v49/weighted_quotient_v49
+      - name: Run compiled self-test
+        run: results/v49/weighted_quotient_v49 --self-test
+      - name: Run compiled local quotient
+        run: >-
+          results/v49/weighted_quotient_v49
+          --input results/v49/states.txt
+          --mode local
+          --output results/v49/cpp-local.json
+      - name: Run compiled plain exact solver
+        run: >-
+          results/v49/weighted_quotient_v49
+          --input results/v49/states.txt
+          --mode plain
+          --output results/v49/cpp-plain.json
+      - name: Validate state-level reproduction and performance
+        run: >-
+          python -m mini_origin.compiled_validate_v49
+          --reference results/v49/python-reference.json
+          --manifest results/v49/input-manifest.json
+          --local results/v49/cpp-local.json
+          --plain results/v49/cpp-plain.json
+          --output results/v49/validation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v49-compiled-reproduction
+          path: |
+            mini-origin/results/v49/input-manifest.json
+            mini-origin/results/v49/python-reference.json
+            mini-origin/results/v49/cpp-local.json
+            mini-origin/results/v49/cpp-plain.json
+            mini-origin/results/v49/validation.json
+          retention-days: 90
