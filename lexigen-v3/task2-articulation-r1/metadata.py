@@ -45,9 +45,18 @@ def describe(value: Any) -> dict[str, Any]:
     if isinstance(value, dict):
         if "__type__" in value:
             result: dict[str, Any] = {"descriptor_type": value.get("__type__")}
-            for key in ("size", "shape", "dtype", "bin_path", "npy_path"):
+            for key in (
+                "size",
+                "shape",
+                "dtype",
+                "bin_path",
+                "npy_path",
+                "length",
+                "item_type",
+            ):
                 if key in value:
                     result[key] = value[key]
+            result["keys"] = sorted(key for key in value if key != "data_b64")
             return result
         return {"python_type": "dict", "keys": sorted(value)}
     if isinstance(value, list):
@@ -58,19 +67,30 @@ def describe(value: Any) -> dict[str, Any]:
             "first_item_type": type(first).__name__ if first is not None else None,
             "first_item_length": len(first) if isinstance(first, list) else None,
         }
-    return {"python_type": type(value).__name__, "value": value if isinstance(value, (int, float, str, bool)) else None}
+    return {
+        "python_type": type(value).__name__,
+        "value": value if isinstance(value, (int, float, str, bool)) else None,
+    }
 
 
-def decode_problem(problem: dict[str, Any]) -> tuple[int, int]:
-    num_nodes = problem.get("num_nodes")
-    edges = problem.get("edges")
-    if not isinstance(num_nodes, int):
-        raise RuntimeError(f"expected inline integer num_nodes, received {type(num_nodes).__name__}")
-    if not isinstance(edges, list):
-        raise RuntimeError(f"expected inline edge list, received {type(edges).__name__}")
-    if any(not isinstance(edge, list) or len(edge) != 2 for edge in edges):
-        raise RuntimeError("edge list contains a non-pair")
-    return num_nodes, len(edges)
+def inline_int(value: Any) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def sequence_length(value: Any) -> int | None:
+    if isinstance(value, list):
+        return len(value)
+    if isinstance(value, dict):
+        shape = value.get("shape")
+        if isinstance(shape, list) and shape and isinstance(shape[0], int):
+            return shape[0]
+        size = value.get("size")
+        if isinstance(size, int):
+            return size
+        length = value.get("length")
+        if isinstance(length, int):
+            return length
+    return None
 
 
 def main() -> None:
@@ -89,18 +109,23 @@ def main() -> None:
     rows = [json.loads(line) for line in train_raw.decode().splitlines() if line.strip()]
     if len(rows) != 100:
         raise RuntimeError(f"expected 100 training rows, received {len(rows)}")
+    if not all(isinstance(row.get("problem"), dict) for row in rows):
+        raise RuntimeError("expected every training problem to be a mapping")
 
-    sizes: list[int] = []
-    edge_counts: list[int] = []
-    for row in rows:
-        problem = row.get("problem")
-        if not isinstance(problem, dict):
-            raise RuntimeError("expected mapping problem")
-        nodes, edges = decode_problem(problem)
-        sizes.append(nodes)
-        edge_counts.append(edges)
+    problems = [row["problem"] for row in rows]
+    first_problem = problems[0]
+    node_values = [inline_int(problem.get("num_nodes")) for problem in problems]
+    edge_counts = [sequence_length(problem.get("edges")) for problem in problems]
+    descriptor_sets = {
+        key: sorted(
+            {
+                json.dumps(describe(problem.get(key)), sort_keys=True)
+                for problem in problems
+            }
+        )
+        for key in sorted(first_problem)
+    }
 
-    first_problem = rows[0]["problem"]
     report = {
         "task": TASK,
         "dataset_revision": REVISION,
@@ -115,18 +140,21 @@ def main() -> None:
         "training_records": len(rows),
         "row_keys": sorted(rows[0]),
         "problem_keys": sorted(first_problem),
-        "problem_descriptors": {
+        "first_problem_descriptors": {
             key: describe(value) for key, value in first_problem.items()
         },
-        "num_nodes": {
-            "minimum": min(sizes),
-            "maximum": max(sizes),
-            "unique": sorted(set(sizes)),
+        "all_descriptor_forms": descriptor_sets,
+        "inline_num_nodes": {
+            "available_for_all_records": all(value is not None for value in node_values),
+            "minimum": min(value for value in node_values if value is not None) if any(value is not None for value in node_values) else None,
+            "maximum": max(value for value in node_values if value is not None) if any(value is not None for value in node_values) else None,
+            "unique": sorted({value for value in node_values if value is not None}),
         },
-        "edge_count": {
-            "minimum": min(edge_counts),
-            "maximum": max(edge_counts),
-            "mean": sum(edge_counts) / len(edge_counts),
+        "edge_count_from_inline_or_shape_metadata": {
+            "available_for_all_records": all(value is not None for value in edge_counts),
+            "minimum": min(value for value in edge_counts if value is not None) if any(value is not None for value in edge_counts) else None,
+            "maximum": max(value for value in edge_counts if value is not None) if any(value is not None for value in edge_counts) else None,
+            "mean": (sum(value for value in edge_counts if value is not None) / sum(value is not None for value in edge_counts)) if any(value is not None for value in edge_counts) else None,
         },
         "test_manifest_downloaded": False,
         "test_payloads_downloaded": 0,
