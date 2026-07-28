@@ -1,0 +1,14 @@
+{
+  "demonstration_evidence_sha256": "346c2379cd0a46fc97cc901c0281ae76b5db87559169e1e0e00aec38264e2adb",
+  "name": "arc_macro_408bf9ca05d4",
+  "operational_semantics": [
+    {
+      "factor": 2,
+      "op": "upscale"
+    }
+  ],
+  "portable": true,
+  "schema": "lexigen-arc-language-artifact-v1",
+  "semantics_sha256": "408bf9ca05d44e8c05db96a99d396d177a079bc35f9e86b9194e8e9ebdbaba2e",
+  "signature": "Grid -> Grid"
+}

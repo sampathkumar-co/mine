@@ -3,11 +3,11 @@
   "demonstration_count": 6,
   "eligible_task_count": 900,
   "hidden_test_count": 20,
-  "lexigen_commit": "9f24d4e696ecea1e799d0c8b508e0ca3b88acb3f",
+  "lexigen_commit": "c50f007407f6deef6d03768ee0c1a1f913db2074",
   "protocol": "arcgen-gate-v5",
-  "redacted_task_sha256": "3f642ccb79b55f5430b3675f7e6fbfbe354f5888a23a1880a8407d1ed02a1a2e",
-  "sealed_outputs_sha256": "2e2734865ab532e861195d38f70846137bfbb2e52f8884c918ba71728c74f8b0",
-  "selected_task_id": "228f6490",
-  "selection_digest": "c8412c937748b0be8a9f72f0b45a8e4612ea3eb3c6c6b7a4586c2db3ddd5cc6c",
-  "selection_index": 108
+  "redacted_task_sha256": "8a17b478b1cbb9f01d29a39a22ec5b57586da58e608e5838a6b3f102053cbc66",
+  "sealed_outputs_sha256": "77c3a82ac6c7f6eaef5107c48974ab4232a057fb1070a094585b8e4ad292ac3e",
+  "selected_task_id": "60c09cac",
+  "selection_digest": "75961867df28a0c14880b2b79cc7ffbcaf7322b61beb9aef37ee5e6deee1bb92",
+  "selection_index": 322
 }

@@ -1,12 +1,22 @@
 {
+  "artifact_name": "arc_macro_408bf9ca05d4",
+  "artifact_sha256": "a35cbc247e7b4f90657c7089ff88cb942457c39086ae2f01067ef9b4ce55b636",
   "candidate_budget": 75000,
-  "candidates_tested": 75000,
-  "inventory_size": 386,
-  "language_program_found": false,
+  "candidates_tested": 252,
+  "inventory_size": 318,
+  "language_program_found": true,
   "max_depth": 3,
+  "operational_semantics": [
+    {
+      "factor": 2,
+      "op": "upscale"
+    }
+  ],
+  "predictions_sha256": "a168af66b2abea70a4cd1e5b9fccaeee095219992565ccc75d4319511dfdaa37",
+  "program_depth": 1,
   "protocol": "arcgen-gate-v5",
-  "redacted_task_sha256": "3f642ccb79b55f5430b3675f7e6fbfbe354f5888a23a1880a8407d1ed02a1a2e",
-  "selected_task_id": "228f6490",
-  "signatures_seen": 30469,
-  "single_primitive_baseline_found": false
+  "redacted_task_sha256": "8a17b478b1cbb9f01d29a39a22ec5b57586da58e608e5838a6b3f102053cbc66",
+  "selected_task_id": "60c09cac",
+  "signatures_seen": 140,
+  "single_primitive_baseline_found": true
 }
