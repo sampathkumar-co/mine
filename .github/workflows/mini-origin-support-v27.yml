@@ -1,0 +1,167 @@
+name: Mini-ORIGIN Support Robust v0.27
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/support_robust_v27.py"
+      - "mini-origin/tests/test_support_robust_v27.py"
+      - ".github/workflows/mini-origin-support-v27.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/support_robust_v27.py"
+      - "mini-origin/tests/test_support_robust_v27.py"
+      - ".github/workflows/mini-origin-support-v27.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-support-v27-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_support_robust_v27.py
+
+  robust-study:
+    name: robust-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1201, 1202, 1203, 1204, 1205]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Search worst-case support controller
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.support_robust_v27
+          --seed ${{ matrix.seed }}
+          --output results/support-robust-v27-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-support-v27-seed-${{ matrix.seed }}
+          path: mini-origin/results/support-robust-v27-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, robust-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-support-v27-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.27 searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/support-robust-v27-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "rule": data["selected_program"]["rule"],
+                  "predicates": data["selected_program"]["predicates"],
+                  "step_action_labels_used": data["search"]["step_action_labels_used"],
+                  "selection_objective": data["search"]["selection_objective"],
+                  "training_accuracy": data["selected_program"]["training_accuracy"],
+                  "development_worst": data["search"]["development_worst_accuracy"],
+                  "hidden_worst": data["candidate"]["minimum_accuracy"],
+                  "hidden_mean": data["candidate"]["mean_accuracy"],
+                  "invalid_transition_max": data["candidate"]["maximum_invalid_transition_rate"],
+                  "single_gap": data["single_predicate_gap"],
+                  "query_gap": data["wrong_query_gap"],
+                  "specialist_gap": data["specialist_gap"],
+                  "random_gap": data["random_gap"],
+                  "digest": data["frozen_program_digest"],
+              })
+
+          development = [row["development_worst"] for row in rows]
+          hidden = [row["hidden_worst"] for row in rows]
+          hidden_mean = [row["hidden_mean"] for row in rows]
+          invalid = [row["invalid_transition_max"] for row in rows]
+          single = [row["single_gap"] for row in rows]
+          query = [row["query_gap"] for row in rows]
+          specialist = [row["specialist_gap"] for row in rows]
+          random_gap = [row["random_gap"] for row in rows]
+          family_ok = [
+              row["rule"] == "lower_midpoint"
+              and len(row["predicates"]) == 2
+              and any(text.startswith("value(right)>") for text in row["predicates"])
+              and any(text.startswith("value(right)-value(left)>") for text in row["predicates"])
+              for row in rows
+          ]
+          summary = {
+              "verdict": (
+                  "replicated_support_robust_terminal_genesis_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and all(family_ok)
+                  and all(not row["step_action_labels_used"] for row in rows)
+                  and all(row["selection_objective"] == "maximise_worst_support_stratum_then_mean" for row in rows)
+                  and all(row["training_accuracy"] == 1.0 for row in rows)
+                  and min(development) >= 0.985
+                  and min(hidden) >= 0.985
+                  and max(invalid) <= 0.01
+                  and min(single) >= 0.20
+                  and min(query) >= 0.20
+                  and min(specialist) >= -0.01
+                  and min(random_gap) >= 0.45
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "terminal-reward-only controller synthesis survives preregistered worst-case coupling and noise strata and transfers to hidden chains up to size 255; the grammar and causal family remain human supplied, so this is not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "development_worst_min": min(development) if development else None,
+              "hidden_worst_min": min(hidden) if hidden else None,
+              "hidden_worst_median": statistics.median(hidden) if hidden else None,
+              "hidden_mean_min": min(hidden_mean) if hidden_mean else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "single_gap_min": min(single) if single else None,
+              "query_gap_min": min(query) if query else None,
+              "specialist_gap_min": min(specialist) if specialist else None,
+              "random_gap_min": min(random_gap) if random_gap else None,
+              "program_digest_count": len({row["digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("support-robust-v27-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-support-v27-summary
+          path: support-robust-v27-summary.json
+          retention-days: 90
