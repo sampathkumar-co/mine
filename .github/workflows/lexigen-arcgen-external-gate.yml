@@ -1,0 +1,160 @@
+name: Lexigen ARC-GEN External Gate
+
+on:
+  push:
+    branches:
+      - "lexigen/external-arcgen-gate4"
+    paths:
+      - "lexigen-language-genesis/external/TRIGGER_GATE4"
+
+permissions:
+  contents: write
+
+jobs:
+  external-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      ARCGEN_COMMIT: a15cbdb44c776610aeeb9f487a06af875d3d0878
+      GATE_NAME: arcgen-gate4
+      GATE_DIR: ${{ github.workspace }}/.gate/arcgen-gate4
+      EVIDENCE_DIR: lexigen-language-genesis/external/evidence/arcgen-gate4
+    steps:
+      - name: Check out frozen engine branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Clone pinned independent ARC-GEN evaluator
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/google/ARC-GEN.git .arc-gen
+          git -C .arc-gen fetch --depth 1 origin "$ARCGEN_COMMIT"
+          git -C .arc-gen checkout "$ARCGEN_COMMIT"
+          git -C .arc-gen submodule update --init --recursive --depth 1
+          test "$(git -C .arc-gen rev-parse HEAD)" = "$ARCGEN_COMMIT"
+
+      - name: Select and seal untouched external task
+        working-directory: lexigen-language-genesis/external
+        run: |
+          set -euo pipefail
+          mkdir -p "$GATE_DIR"
+          python arcgen_gate_v5.py select \
+            --lexigen-root "$GITHUB_WORKSPACE" \
+            --arcgen-root "$GITHUB_WORKSPACE/.arc-gen" \
+            --output "$GATE_DIR/selection.json"
+          python arcgen_gate_v5.py seal \
+            --selection "$GATE_DIR/selection.json" \
+            --arcgen-root "$GITHUB_WORKSPACE/.arc-gen" \
+            --output-dir "$GATE_DIR"
+
+      - name: Run frozen language synthesizer once
+        working-directory: lexigen-language-genesis/external
+        run: |
+          set -euo pipefail
+          python arcgen_gate_v5.py solve \
+            --redacted "$GATE_DIR/redacted-task.json" \
+            --output-dir "$GATE_DIR/candidate"
+
+      - name: Commit candidate before hidden scoring
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR/candidate"
+          cp "$GATE_DIR/selection.json" "$EVIDENCE_DIR/selection.json"
+          cp "$GATE_DIR/seal-manifest.json" "$EVIDENCE_DIR/seal-manifest.json"
+          cp "$GATE_DIR/candidate/candidate-report.json" "$EVIDENCE_DIR/candidate-report.json"
+          if test -f "$GATE_DIR/candidate/candidate-language-artifact.json"; then
+            cp "$GATE_DIR/candidate/candidate-language-artifact.json" "$EVIDENCE_DIR/candidate/"
+            cp "$GATE_DIR/candidate/candidate-predictions.json" "$EVIDENCE_DIR/candidate/"
+          fi
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["EVIDENCE_DIR"])
+          selection = json.loads((root / "selection.json").read_text())
+          manifest = json.loads((root / "seal-manifest.json").read_text())
+          report = json.loads((root / "candidate-report.json").read_text())
+          record = {
+              "status": "candidate committed before any hidden scoring",
+              "engine_commit": selection["lexigen_commit"],
+              "arcgen_commit": selection["arcgen_commit"],
+              "protocol": selection["protocol"],
+              "selected_task_id": selection["selected_task_id"],
+              "selection_digest": selection["selection_digest"],
+              "redacted_task_sha256": manifest["redacted_task_sha256"],
+              "sealed_outputs_sha256": manifest["sealed_outputs_sha256"],
+              "language_program_found": report["language_program_found"],
+              "single_primitive_baseline_found": report["single_primitive_baseline_found"],
+              "candidate_report_sha256": hashlib.sha256((root / "candidate-report.json").read_bytes()).hexdigest(),
+          }
+          (root / "PRE_SCORE_COMMIT.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
+          PY
+          git config user.name "Lexigen Evidence Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$EVIDENCE_DIR"
+          git commit -m "Freeze ARC-GEN gate 4 candidate before scoring"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+          echo "CANDIDATE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Verify candidate is remotely committed
+        run: |
+          set -euo pipefail
+          test -n "$CANDIDATE_COMMIT"
+          test "$(git ls-remote origin "refs/heads/$GITHUB_REF_NAME" | cut -f1)" = "$CANDIDATE_COMMIT"
+
+      - name: Score sealed outputs once
+        if: ${{ hashFiles('.gate/arcgen-gate4/candidate/candidate-predictions.json') != '' }}
+        working-directory: lexigen-language-genesis/external
+        run: |
+          set -euo pipefail
+          python arcgen_gate_v5.py score \
+            --manifest "$GATE_DIR/seal-manifest.json" \
+            --sealed "$GATE_DIR/sealed-outputs.json" \
+            --predictions "$GATE_DIR/candidate/candidate-predictions.json" \
+            --output "$GATE_DIR/score-result.json"
+
+      - name: Preserve aggregate score or permanent failure
+        run: |
+          set -euo pipefail
+          if test -f "$GATE_DIR/score-result.json"; then
+            cp "$GATE_DIR/score-result.json" "$EVIDENCE_DIR/score-result.json"
+          else
+            python - <<'PY'
+            import json
+            import os
+            from pathlib import Path
+
+            root = Path(os.environ["EVIDENCE_DIR"])
+            selection = json.loads((root / "selection.json").read_text())
+            report = json.loads((root / "candidate-report.json").read_text())
+            failure = {
+                "status": "failed before hidden scoring; sealed outputs never opened by scorer",
+                "selected_task_id": selection["selected_task_id"],
+                "candidate_budget": report["candidate_budget"],
+                "candidates_tested": report["candidates_tested"],
+                "signatures_seen": report["signatures_seen"],
+                "inventory_size": report["inventory_size"],
+                "language_program_found": False,
+            }
+            (root / "failure-result.json").write_text(json.dumps(failure, indent=2, sort_keys=True) + "\n")
+            PY
+          fi
+          git add "$EVIDENCE_DIR"
+          git commit -m "Preserve ARC-GEN gate 4 one-shot result"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Assert hidden outputs were never committed
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -E 'sealed-outputs|hidden-output'; then
+            echo "Hidden output material entered Git history" >&2
+            exit 1
+          fi
