@@ -1,0 +1,49 @@
+name: Mini-ORIGIN Cost-Prior Quotient v0.48
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/cost_prior_quotient_v48.py"
+      - "mini-origin/tests/test_cost_prior_quotient_v48.py"
+      - ".github/workflows/mini-origin-v48-cost-prior-quotient.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/cost_prior_quotient_v48.py"
+      - "mini-origin/tests/test_cost_prior_quotient_v48.py"
+      - ".github/workflows/mini-origin-v48-cost-prior-quotient.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v48-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  weighted-certificate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify weighted theorem protocol
+        run: pytest -q tests/test_cost_prior_quotient_v48.py
+      - name: Run weighted exact-search certificate
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.cost_prior_quotient_v48
+          --output results/v48-cost-prior.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v48-cost-prior
+          path: mini-origin/results/v48-cost-prior.json
+          retention-days: 90
