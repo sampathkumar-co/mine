@@ -1,0 +1,95 @@
+name: LEXIGEN v3 CVaR Revision 3 Blind
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v3-task1-r3/TRIGGER_BLIND_ONCE"
+
+permissions:
+  contents: read
+
+jobs:
+  blind-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v3-task1-r3/requirements.txt
+      - name: Verify immutable blind lock before test access
+        working-directory: lexigen-v3-task1-r3
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          lock = json.loads(Path("BLIND_LOCK.json").read_text(encoding="utf-8"))
+          for name, expected in lock["git_blob_sha1"].items():
+              path = Path(name)
+              data = path.read_bytes() if not name.startswith(".github/") else (Path("../") / name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != expected:
+                  raise SystemExit(f"frozen hash mismatch for {name}: {actual} != {expected}")
+          if lock["selected_candidate"] != "pruned_hybrid6":
+              raise SystemExit("selected candidate changed")
+          if lock["expected_test_manifest_tree_oid"] != "194db2639d41ee0c91b2f171932e7984ad4aed3a":
+              raise SystemExit("test object identity changed")
+          if lock["blind_gate"] != {"valid": 100, "count": 100, "harmonic_speedup_minimum": 1.5, "minimum_speedup": 1.05}:
+              raise SystemExit("blind gate changed")
+          print("LEXIGEN_V3_CVAR_R3_BLIND_LOCK_VERIFIED")
+          PY
+      - name: Install frozen dependencies
+        working-directory: lexigen-v3-task1-r3
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Execute one-shot blind shard
+        working-directory: lexigen-v3-task1-r3
+        env:
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+          NUMEXPR_NUM_THREADS: "1"
+        run: python -u blind_shard.py --shard ${{ matrix.shard }} --output blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+      - name: Upload immutable shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-cvar-r3-blind-shard-${{ matrix.shard }}
+          path: lexigen-v3-task1-r3/blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-blind:
+    needs: blind-shards
+    if: always() && needs.blind-shards.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v3-cvar-r3-blind-shard-*
+          path: lexigen-v3-task1-r3/blind-downloaded
+      - name: Aggregate unchanged blind gate
+        working-directory: lexigen-v3-task1-r3
+        run: python -u aggregate_blind.py --input blind-downloaded --output blind-evidence
+      - name: Upload complete blind evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-cvar-r3-blind-evidence
+          path: lexigen-v3-task1-r3/blind-evidence/
+          if-no-files-found: error
+          retention-days: 90
