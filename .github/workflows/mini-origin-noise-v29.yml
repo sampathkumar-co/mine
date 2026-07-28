@@ -1,0 +1,174 @@
+name: Mini-ORIGIN Noise Transfer v0.29
+
+on:
+  push:
+    paths:
+      - "mini-origin/src/mini_origin/noise_transfer_v29.py"
+      - "mini-origin/tests/test_noise_transfer_v29.py"
+      - ".github/workflows/mini-origin-noise-v29.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/noise_transfer_v29.py"
+      - "mini-origin/tests/test_noise_transfer_v29.py"
+      - ".github/workflows/mini-origin-noise-v29.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-noise-v29-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q tests/test_noise_transfer_v29.py
+
+  noise-study:
+    name: noise-seed-${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        seed: [1401, 1402, 1403, 1404, 1405]
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - run: python -m pip install -e ".[dev]"
+      - name: Synthesize robust estimator and measurement policy
+        run: >-
+          mkdir -p results &&
+          python -m mini_origin.noise_transfer_v29
+          --seed ${{ matrix.seed }}
+          --output results/noise-transfer-v29-seed-${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-noise-v29-seed-${{ matrix.seed }}
+          path: mini-origin/results/noise-transfer-v29-seed-${{ matrix.seed }}.json
+          retention-days: 90
+
+  aggregate:
+    needs: [tests, noise-study]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mini-origin-noise-v29-seed-*
+          path: evidence
+          merge-multiple: true
+      - name: Aggregate independent v0.29 searches
+        run: |
+          python - <<'PY'
+          import glob, json, statistics
+          from pathlib import Path
+
+          rows = []
+          for filename in sorted(glob.glob("evidence/noise-transfer-v29-seed-*.json")):
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              policy = data["selected_policy"]
+              rows.append({
+                  "seed": data["seed"],
+                  "candidate_gate": data["candidate_gate"],
+                  "rule": policy["rule"],
+                  "aggregator": policy["aggregator"],
+                  "step_action_labels_used": data["search"]["step_action_labels_used"],
+                  "development_worst": data["search"]["development_worst_accuracy"],
+                  "hidden_worst": data["candidate"]["minimum_accuracy"],
+                  "hidden_mean": data["candidate"]["mean_accuracy"],
+                  "mean_replicates": data["candidate"]["mean_replicates_per_query"],
+                  "maximum_mean_replicates": data["candidate"]["maximum_mean_replicates_per_query"],
+                  "invalid_transition_max": data["candidate"]["maximum_invalid_transition_rate"],
+                  "mean_adaptive_gap": data["mean_adaptive_gap"],
+                  "robust_fixed_gap": data["robust_fixed_gap"],
+                  "mean_fixed_gap": data["mean_fixed_gap"],
+                  "query_gap": data["wrong_query_gap"],
+                  "random_gap": data["random_gap"],
+                  "sample_saving": data["sample_saving_vs_1024"],
+                  "digest": data["frozen_policy_digest"],
+              })
+
+          development = [row["development_worst"] for row in rows]
+          hidden = [row["hidden_worst"] for row in rows]
+          hidden_mean = [row["hidden_mean"] for row in rows]
+          mean_samples = [row["mean_replicates"] for row in rows]
+          max_samples = [row["maximum_mean_replicates"] for row in rows]
+          invalid = [row["invalid_transition_max"] for row in rows]
+          mean_gap = [row["mean_adaptive_gap"] for row in rows]
+          robust_fixed = [row["robust_fixed_gap"] for row in rows]
+          mean_fixed = [row["mean_fixed_gap"] for row in rows]
+          query = [row["query_gap"] for row in rows]
+          random_gap = [row["random_gap"] for row in rows]
+          saving = [row["sample_saving"] for row in rows]
+          summary = {
+              "verdict": (
+                  "replicated_noise_law_transfer_candidate"
+                  if len(rows) == 5
+                  and sum(row["candidate_gate"] for row in rows) >= 4
+                  and all(row["rule"] == "lower_midpoint" for row in rows)
+                  and all(row["aggregator"] != "mean" for row in rows)
+                  and all(not row["step_action_labels_used"] for row in rows)
+                  and min(development) >= 0.985
+                  and min(hidden) >= 0.98
+                  and max(max_samples) <= 720.0
+                  and max(invalid) <= 0.01
+                  and min(mean_gap) >= 0.02
+                  and min(robust_fixed) >= -0.01
+                  and min(mean_fixed) >= 0.0
+                  and min(query) >= 0.20
+                  and min(random_gap) >= 0.45
+                  and min(saving) >= 0.25
+                  else "not_yet"
+              ),
+              "claim_scope": (
+                  "terminal-reward synthesis repeatedly selects a robust estimator and adaptive measurement rule on seen noise laws and transfers to unseen heavy-tailed, contaminated, skewed and heteroscedastic noise while saving samples; the estimator grammar and causal family remain human supplied, so this is not a world breakthrough"
+              ),
+              "run_count": len(rows),
+              "passing_count": sum(row["candidate_gate"] for row in rows),
+              "aggregators": sorted({row["aggregator"] for row in rows}),
+              "development_worst_min": min(development) if development else None,
+              "hidden_worst_min": min(hidden) if hidden else None,
+              "hidden_worst_median": statistics.median(hidden) if hidden else None,
+              "hidden_mean_min": min(hidden_mean) if hidden_mean else None,
+              "mean_replicates_max": max(mean_samples) if mean_samples else None,
+              "maximum_stratum_mean_replicates": max(max_samples) if max_samples else None,
+              "invalid_transition_max": max(invalid) if invalid else None,
+              "mean_adaptive_gap_min": min(mean_gap) if mean_gap else None,
+              "robust_fixed_gap_min": min(robust_fixed) if robust_fixed else None,
+              "mean_fixed_gap_min": min(mean_fixed) if mean_fixed else None,
+              "query_gap_min": min(query) if query else None,
+              "random_gap_min": min(random_gap) if random_gap else None,
+              "sample_saving_min": min(saving) if saving else None,
+              "policy_digest_count": len({row["digest"] for row in rows}),
+              "rows": rows,
+          }
+          Path("noise-transfer-v29-summary.json").write_text(
+              json.dumps(summary, indent=2), encoding="utf-8"
+          )
+          print(json.dumps({key: value for key, value in summary.items() if key != "rows"}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-noise-v29-summary
+          path: noise-transfer-v29-summary.json
+          retention-days: 90

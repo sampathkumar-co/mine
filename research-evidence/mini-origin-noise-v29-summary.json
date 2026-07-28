@@ -1,0 +1,22 @@
+{
+  "verdict": "not_yet",
+  "workflow_run": 30366430535,
+  "artifact_id": 8690989953,
+  "run_count": 5,
+  "passing_count": 0,
+  "selected_aggregators": ["trimmed_mean_10"],
+  "development_worst_min": 0.9975,
+  "hidden_worst_min": 0.852,
+  "hidden_worst_median": 0.892,
+  "hidden_mean_min": 0.96225,
+  "mean_replicates_max": 280.77271935121564,
+  "maximum_stratum_mean_replicates": 323.8949391415759,
+  "invalid_transition_max": 0.006,
+  "mean_adaptive_gap_min": -0.138,
+  "robust_fixed_gap_min": -0.015000000000000013,
+  "mean_fixed_gap_min": -0.14400000000000002,
+  "query_gap_min": 0.732,
+  "random_gap_min": 0.8347777777777777,
+  "sample_saving_min": 0.7258078912585785,
+  "scientific_lesson": "a fixed trimmed estimator can be strongly biased under unseen asymmetric noise; robustness to symmetric outliers does not imply transfer across noise-law symmetry"
+}
