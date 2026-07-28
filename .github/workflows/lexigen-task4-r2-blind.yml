@@ -1,0 +1,91 @@
+name: LEXIGEN Task 4 Revision 2 Blind Once
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-task4-r2/TRIGGER_BLIND_ONCE"
+
+permissions:
+  contents: read
+
+jobs:
+  blind-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen lock before test access
+        working-directory: lexigen-task4-r2
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          lock = json.loads(Path("BLIND_LOCK.json").read_text(encoding="utf-8"))
+          expected = lock["git_blob_sha1"]
+          for name in ("candidate.py", "native_chacha.c", "blind_shard.py", "aggregate_blind.py"):
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != expected[name]:
+                  raise SystemExit(f"frozen hash mismatch for {name}: {actual} != {expected[name]}")
+          if lock["expected_test_manifest_git_oid"] != "b6903231c88291a8eff777a519a9af0736148a0f":
+              raise SystemExit("unexpected committed test object identifier")
+          if lock["candidate_retries_after_invalid_output"] != 0:
+              raise SystemExit("candidate retry policy changed")
+          print("LEXIGEN_BLIND_LOCK_VERIFIED")
+          PY
+      - name: Install exact reference dependency
+        run: python -m pip install cryptography==46.0.3
+      - name: Build frozen native candidate
+        working-directory: lexigen-task4-r2
+        run: |
+          gcc -O3 -shared -fPIC $(python3-config --includes) native_chacha.c \
+            -o lexigen_chacha_native$(python3-config --extension-suffix) \
+            -lcrypto -pthread
+      - name: Execute one blind shard
+        working-directory: lexigen-task4-r2
+        run: python -u blind_shard.py --shard ${{ matrix.shard }} --output blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+      - name: Upload blind shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task4-r2-blind-shard-${{ matrix.shard }}
+          path: lexigen-task4-r2/blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: blind-shards
+    if: always() && needs.blind-shards.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-task4-r2-blind-shard-*
+          path: lexigen-task4-r2/blind-downloaded
+      - name: Aggregate immutable blind gate
+        working-directory: lexigen-task4-r2
+        run: python -u aggregate_blind.py --input blind-downloaded --output blind-evidence
+      - name: Upload complete blind evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-task4-r2-blind-evidence
+          path: lexigen-task4-r2/blind-evidence/
+          if-no-files-found: error
+          retention-days: 90
