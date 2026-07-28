@@ -1,6 +1,12 @@
 name: Mini-ORIGIN Response-Cost Pareto v0.56
 
 on:
+  push:
+    branches:
+      - research/mini-origin-v56-response-cost-pareto
+    paths:
+      - 'mini-origin/**'
+      - '.github/workflows/mini-origin-v56-response-cost-pareto.yml'
   pull_request:
     branches:
       - research/mini-origin-v55-probe-activated-quotient
