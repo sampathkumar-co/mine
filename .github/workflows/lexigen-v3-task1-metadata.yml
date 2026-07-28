@@ -1,0 +1,43 @@
+name: LEXIGEN v3 Task 1 Metadata
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v3-task1/TRIGGER_METADATA"
+
+permissions:
+  contents: read
+
+jobs:
+  metadata-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify candidate was committed before training access
+        working-directory: lexigen-v3-task1
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = "cfb9575028bcaedfd2b696f0fd884d65bda14d35"
+          data = Path("candidates.py").read_bytes()
+          actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+          if actual != expected:
+              raise SystemExit(f"candidate blob mismatch: {actual} != {expected}")
+          print("LEXIGEN_V3_TASK1_CANDIDATE_PRECOMMITTED")
+          PY
+      - name: Read directory metadata and official training manifest only
+        working-directory: lexigen-v3-task1
+        run: python -u metadata.py
+      - name: Upload metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v3-task1-metadata-evidence
+          path: lexigen-v3-task1/metadata-evidence/
+          if-no-files-found: error
+          retention-days: 90
