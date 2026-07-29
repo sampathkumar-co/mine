@@ -1,4 +1,4 @@
-# Lexigen Language Genesis v17 — constructive primitive substrate
+# Lexigen Language Genesis v17 â€” constructive primitive substrate
 
 v17 begins from frozen v16 commit `851e6117b64ea74f5eaaa631f1611ed6205464a8`.
 
