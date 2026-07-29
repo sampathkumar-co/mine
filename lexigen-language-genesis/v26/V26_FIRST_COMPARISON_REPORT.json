@@ -1,0 +1,278 @@
+{
+  "accepted_examples": 6,
+  "demonstration_sha256": "f3ca70b377967d963f2f9b290b7d45698c07e44735ebcb4c4347ff9b3bc82f89",
+  "enumeration": {
+    "ast_duplicates": 0,
+    "beam_dropped_grid_expressions": 105000,
+    "enumeration_complete": true,
+    "exact_abstract_structures": 0,
+    "exact_concrete_programs": 0,
+    "exact_structures": [],
+    "exhausted_reason": null,
+    "maximum_depth": 5,
+    "nontrivial_task": true,
+    "raw_candidate_evaluations": 1001444,
+    "retained_by_type": {
+      "Color": 10,
+      "Grid": 47175,
+      "ObjectSet": 78576,
+      "PointSet": 128414
+    },
+    "runtime_invalid_candidates": 48498,
+    "schema": "lexigen-v26-guided-semantic-enumeration-result-v1",
+    "semantic_duplicates": 593786,
+    "statistics": [
+      {
+        "beam_dropped": 0,
+        "depth": 0,
+        "raw_candidates": 0,
+        "retained_expressions": 10,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "Color",
+        "unique_considered": 10
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 0,
+        "raw_candidates": 0,
+        "retained_expressions": 0,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "ObjectSet",
+        "unique_considered": 0
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 0,
+        "raw_candidates": 0,
+        "retained_expressions": 1,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "PointSet",
+        "unique_considered": 1
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 0,
+        "raw_candidates": 0,
+        "retained_expressions": 1,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "Grid",
+        "unique_considered": 1
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 1,
+        "raw_candidates": 0,
+        "retained_expressions": 0,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "Color",
+        "unique_considered": 0
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 1,
+        "raw_candidates": 1,
+        "retained_expressions": 1,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "ObjectSet",
+        "unique_considered": 1
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 1,
+        "raw_candidates": 29,
+        "retained_expressions": 12,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 17,
+        "type": "PointSet",
+        "unique_considered": 12
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 1,
+        "raw_candidates": 24,
+        "retained_expressions": 23,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 1,
+        "type": "Grid",
+        "unique_considered": 23
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 2,
+        "raw_candidates": 0,
+        "retained_expressions": 0,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "Color",
+        "unique_considered": 0
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 2,
+        "raw_candidates": 28,
+        "retained_expressions": 12,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 16,
+        "type": "ObjectSet",
+        "unique_considered": 12
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 2,
+        "raw_candidates": 697,
+        "retained_expressions": 213,
+        "runtime_invalid": 10,
+        "semantic_duplicates": 474,
+        "type": "PointSet",
+        "unique_considered": 213
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 2,
+        "raw_candidates": 3490,
+        "retained_expressions": 2151,
+        "runtime_invalid": 104,
+        "semantic_duplicates": 1235,
+        "type": "Grid",
+        "unique_considered": 2151
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 3,
+        "raw_candidates": 0,
+        "retained_expressions": 0,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "Color",
+        "unique_considered": 0
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 3,
+        "raw_candidates": 405,
+        "retained_expressions": 213,
+        "runtime_invalid": 16,
+        "semantic_duplicates": 176,
+        "type": "ObjectSet",
+        "unique_considered": 213
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 3,
+        "raw_candidates": 156141,
+        "retained_expressions": 28188,
+        "runtime_invalid": 450,
+        "semantic_duplicates": 127503,
+        "type": "PointSet",
+        "unique_considered": 28188
+      },
+      {
+        "beam_dropped": 35000,
+        "depth": 3,
+        "raw_candidates": 116836,
+        "retained_expressions": 15000,
+        "runtime_invalid": 4577,
+        "semantic_duplicates": 62259,
+        "type": "Grid",
+        "unique_considered": 50000
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 4,
+        "raw_candidates": 0,
+        "retained_expressions": 0,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "Color",
+        "unique_considered": 0
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 4,
+        "raw_candidates": 31596,
+        "retained_expressions": 28350,
+        "runtime_invalid": 720,
+        "semantic_duplicates": 2526,
+        "type": "ObjectSet",
+        "unique_considered": 28350
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 4,
+        "raw_candidates": 170086,
+        "retained_expressions": 50000,
+        "runtime_invalid": 4120,
+        "semantic_duplicates": 115966,
+        "type": "PointSet",
+        "unique_considered": 50000
+      },
+      {
+        "beam_dropped": 35000,
+        "depth": 4,
+        "raw_candidates": 82411,
+        "retained_expressions": 15000,
+        "runtime_invalid": 4807,
+        "semantic_duplicates": 27604,
+        "type": "Grid",
+        "unique_considered": 50000
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 5,
+        "raw_candidates": 0,
+        "retained_expressions": 0,
+        "runtime_invalid": 0,
+        "semantic_duplicates": 0,
+        "type": "Color",
+        "unique_considered": 0
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 5,
+        "raw_candidates": 147798,
+        "retained_expressions": 50000,
+        "runtime_invalid": 17568,
+        "semantic_duplicates": 80230,
+        "type": "ObjectSet",
+        "unique_considered": 50000
+      },
+      {
+        "beam_dropped": 0,
+        "depth": 5,
+        "raw_candidates": 190367,
+        "retained_expressions": 50000,
+        "runtime_invalid": 3129,
+        "semantic_duplicates": 137238,
+        "type": "PointSet",
+        "unique_considered": 50000
+      },
+      {
+        "beam_dropped": 35000,
+        "depth": 5,
+        "raw_candidates": 101535,
+        "retained_expressions": 15000,
+        "runtime_invalid": 12997,
+        "semantic_duplicates": 38538,
+        "type": "Grid",
+        "unique_considered": 50000
+      }
+    ],
+    "total_retained_expressions": 254175
+  },
+  "generation": {
+    "attempts": 6,
+    "failure_examples": [],
+    "failures": 0,
+    "timeouts": 0
+  },
+  "schema": "lexigen-v26-task-scan-v1",
+  "split": "discovery",
+  "status": "completed",
+  "task_id": "c074846d"
+}
