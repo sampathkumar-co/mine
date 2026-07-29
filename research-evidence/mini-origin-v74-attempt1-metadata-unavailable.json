@@ -1,0 +1,16 @@
+{
+  "status": "fresh_external_hash_lock_v74_infrastructure_rejected",
+  "workflow_run": 30447511341,
+  "failed_step": "Select and hash-lock fresh external datasets",
+  "failure_kind": "official_metadata_list_entry_unavailable",
+  "failing_uci_id": 462,
+  "failing_metadata_url": "https://archive.ics.uci.edu/api/dataset?id=462",
+  "protocol_tests_passed": true,
+  "frozen_parent_verification_passed": true,
+  "manifest_produced": false,
+  "dataset_records_or_labels_parsed": false,
+  "solver_executed": false,
+  "scientific_result_produced": false,
+  "repair_boundary": "Treat a list entry whose official per-dataset endpoint returns non-200 as metadata_unavailable and continue deterministic filtering. Do not alter the exclusion registry, eligibility criteria, dataset count, ranking seed, raw-byte-only lock boundary, or frozen Mini-ORIGIN implementation.",
+  "scientific_note": "This attempt produced no dataset lock and no algorithmic result. The failure was preserved before the metadata-availability repair."
+}
