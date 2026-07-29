@@ -1,0 +1,31 @@
+{
+  "status": "preregistered_before_openml_suite_access",
+  "parent_v76_commit": "529d9814a91f46db71a98414923352320bca19f2",
+  "parent_v76_registry_digest": "d312c4f0b853237479d6be8a74b6bf47776722d7aea1ce00c7b9745be90d57d2",
+  "frozen_v75_commit": "d8aa4153b69b82ccb714cfbb50d12c5137186047",
+  "parent_v75_evidence_digest": "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47",
+  "benchmark_suite_alias": "OpenML-CC18",
+  "benchmark_suite_id": 99,
+  "selection_seed": "mini-origin-v77|db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47|d312c4f0b853237479d6be8a74b6bf47776722d7aea1ce00c7b9745be90d57d2|OpenML-CC18",
+  "selection": {
+    "dataset_count": 7,
+    "minimum_instances": 500,
+    "maximum_instances": 20000,
+    "minimum_features": 4,
+    "maximum_features": 120,
+    "required_task_type_id": 1,
+    "required_target_columns": 1,
+    "maximum_dataset_bytes": 20000000,
+    "reject_sparse_datasets": true,
+    "reject_any_frozen_openml_id": true,
+    "reject_any_frozen_dataset_name": true,
+    "reject_uci_origin_sources": true
+  },
+  "protocol": "Fetch the official OpenML-CC18 suite and official task/dataset metadata; exclude every frozen OpenML ID and normalized dataset name; reject UCI-origin sources and metadata-ineligible datasets; rank eligible datasets by SHA-256 of the frozen seed, task ID, dataset ID, normalized name and canonical metadata digest; download raw dataset bytes only to record byte length and SHA-256; never parse records, targets or feature values and never execute Mini-ORIGIN.",
+  "candidate_task_or_dataset_ids_names_urls_committed_before_execution": false,
+  "openml_suite_or_candidate_metadata_access_before_preregistration": false,
+  "dataset_bytes_access_before_preregistration": false,
+  "record_target_or_feature_parsing_during_lock": false,
+  "solver_execution_during_lock": false,
+  "claim_boundary": "Cross-source hash-lock provenance only. No records, targets or feature values are parsed and no solver is executed. This stage is not external algorithmic evidence, novelty, publication, acceptance or a world-level claim."
+}

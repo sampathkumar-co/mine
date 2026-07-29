@@ -1,0 +1,97 @@
+name: Mini-ORIGIN OpenML Cross-Source Hash Lock v0.77
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v77-openml-hash-lock
+    paths:
+      - "mini-origin/campaigns/v77-openml-hash-lock.json"
+      - "mini-origin/src/mini_origin/openml_hash_lock_v77.py"
+      - "mini-origin/src/mini_origin/openml_hash_lock_v77_compat.py"
+      - "mini-origin/tests/test_openml_hash_lock_v77.py"
+      - "mini-origin/tests/test_openml_hash_lock_v77_compat.py"
+      - "research-evidence/mini-origin-v77-first-attempt-failure.json"
+      - ".github/workflows/mini-origin-v77-openml-hash-lock.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v77-openml-hash-lock
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  openml-hash-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN and frozen OpenML client
+        working-directory: mini-origin
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m pip install openml==0.15.1
+      - name: Verify preregistration and frozen parents
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          row = json.loads(Path("mini-origin/campaigns/v77-openml-hash-lock.json").read_text(encoding="utf-8-sig"))
+          assert row["status"] == "preregistered_before_openml_suite_access"
+          assert row["parent_v76_commit"] == "529d9814a91f46db71a98414923352320bca19f2"
+          assert row["parent_v76_registry_digest"] == "d312c4f0b853237479d6be8a74b6bf47776722d7aea1ce00c7b9745be90d57d2"
+          assert row["frozen_v75_commit"] == "d8aa4153b69b82ccb714cfbb50d12c5137186047"
+          assert row["parent_v75_evidence_digest"] == "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47"
+          assert row["benchmark_suite_id"] == 99
+          assert row["candidate_task_or_dataset_ids_names_urls_committed_before_execution"] is False
+          assert row["openml_suite_or_candidate_metadata_access_before_preregistration"] is False
+          assert row["dataset_bytes_access_before_preregistration"] is False
+          assert row["record_target_or_feature_parsing_during_lock"] is False
+          assert row["solver_execution_during_lock"] is False
+          failure = json.loads(Path("research-evidence/mini-origin-v77-first-attempt-failure.json").read_text(encoding="utf-8"))
+          assert failure["workflow_run"] == 30454183909
+          assert failure["selection_protocol_changed"] is False
+          assert failure["record_target_or_feature_parsing"] is False
+          assert failure["solver_execution"] is False
+          PY
+          git diff --exit-code 529d9814a91f46db71a98414923352320bca19f2 -- \
+            research-evidence/mini-origin-v76-openml-preblind-registry.json \
+            research-evidence/mini-origin-v75-fresh-external-blind-pass.json \
+            mini-origin/campaigns/v75-fresh-external-blind.json \
+            mini-origin/src/mini_origin/fresh_external_blind_v75.py \
+            mini-origin/src/mini_origin/label_free_frontier_v72.py \
+            mini-origin/src/mini_origin/numeric_threshold_frontier_v70.py \
+            mini-origin/src/mini_origin/numeric_threshold_repaired_v70.py \
+            mini-origin/src/mini_origin/label_free_selector_certificate_v71.py \
+            mini-origin/src/mini_origin/conditioned_cell_frontier_v60.py \
+            mini-origin/src/mini_origin/response_cost_pareto_v56.py \
+            mini-origin/src/mini_origin/response_cost_lower_bound_v65.py \
+            mini-origin/compiled/response_cost_lower_bound_v66.rs
+      - name: Test deterministic OpenML hash-lock boundary
+        working-directory: mini-origin
+        run: >-
+          pytest -q
+          tests/test_openml_hash_lock_v77.py
+          tests/test_openml_hash_lock_v77_compat.py
+      - name: Select and hash-lock cross-source OpenML datasets
+        run: >-
+          mkdir -p mini-origin/results/v77 &&
+          python -m mini_origin.openml_hash_lock_v77_compat
+          --output mini-origin/results/v77/manifest.json
+        env:
+          PYTHONPATH: mini-origin/src
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v77-openml-hash-lock
+          path: mini-origin/results/v77/manifest.json
+          if-no-files-found: warn
+          retention-days: 90
