@@ -63,7 +63,17 @@
     "minimum_p90_plain_bounded_ratio": 30.0,
     "minimum_50k_solve_advantage": 20,
     "rust_mismatches": 0,
-    "label_independence_mismatches": 0
+    "label_independence_mismatches": 0,
+    "minimum_states_from_each_previously_zero_dataset": 6,
+    "previously_zero_datasets": [
+      "vowel",
+      "_deprecated_breast_w",
+      "dis",
+      "_deprecated_cleveland",
+      "_deprecated_diabetes",
+      "_deprecated_solar_flare_1",
+      "_deprecated_house_votes_84"
+    ]
   },
   "failure_policy": {
     "hash_or_length_mismatch": "reject the campaign",
