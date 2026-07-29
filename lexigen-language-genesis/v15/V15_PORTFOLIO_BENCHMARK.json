@@ -1,0 +1,97 @@
+{
+  "aggregate_speedup": 1.5185185185185186,
+  "baseline_total": 328,
+  "claim_boundary": "in-sample safe portfolio; not blind transfer",
+  "families": 9,
+  "families_equal": 4,
+  "families_faster": 2,
+  "families_slower": 3,
+  "induced_macro_count": 3,
+  "macro_training_includes_benchmark_programs": true,
+  "portfolio_total": 216,
+  "reports": [
+    {
+      "baseline_tested": 28,
+      "baseline_to_portfolio": 1.0,
+      "gate": 1,
+      "induced_tested": 28,
+      "portfolio_slowdown_vs_baseline": 1.0,
+      "portfolio_tested": 28,
+      "task": "dc433765"
+    },
+    {
+      "baseline_tested": 1,
+      "baseline_to_portfolio": 1.0,
+      "gate": 2,
+      "induced_tested": 1,
+      "portfolio_slowdown_vs_baseline": 1.0,
+      "portfolio_tested": 1,
+      "task": "49d1d64f"
+    },
+    {
+      "baseline_tested": 1,
+      "baseline_to_portfolio": 1.0,
+      "gate": 3,
+      "induced_tested": 1,
+      "portfolio_slowdown_vs_baseline": 1.0,
+      "portfolio_tested": 1,
+      "task": "c8f0f002"
+    },
+    {
+      "baseline_tested": 58,
+      "baseline_to_portfolio": 0.9666666666666667,
+      "gate": 4,
+      "induced_tested": 60,
+      "portfolio_slowdown_vs_baseline": 1.0344827586206897,
+      "portfolio_tested": 60,
+      "task": "9f236235"
+    },
+    {
+      "baseline_tested": 51,
+      "baseline_to_portfolio": 1.0,
+      "gate": 5,
+      "induced_tested": 51,
+      "portfolio_slowdown_vs_baseline": 1.0,
+      "portfolio_tested": 51,
+      "task": "ea9794b1"
+    },
+    {
+      "baseline_tested": 67,
+      "baseline_to_portfolio": 22.333333333333332,
+      "gate": 6,
+      "induced_tested": 2,
+      "portfolio_slowdown_vs_baseline": 0.04477611940298507,
+      "portfolio_tested": 3,
+      "task": "c920a713"
+    },
+    {
+      "baseline_tested": 55,
+      "baseline_to_portfolio": 55.0,
+      "gate": 8,
+      "induced_tested": 1,
+      "portfolio_slowdown_vs_baseline": 0.01818181818181818,
+      "portfolio_tested": 1,
+      "task": "eb5a1d5d"
+    },
+    {
+      "baseline_tested": 31,
+      "baseline_to_portfolio": 0.9393939393939394,
+      "gate": 9,
+      "induced_tested": 33,
+      "portfolio_slowdown_vs_baseline": 1.064516129032258,
+      "portfolio_tested": 33,
+      "task": "da2b0fe3"
+    },
+    {
+      "baseline_tested": 36,
+      "baseline_to_portfolio": 0.9473684210526315,
+      "gate": 12,
+      "induced_tested": 38,
+      "portfolio_slowdown_vs_baseline": 1.0555555555555556,
+      "portfolio_tested": 38,
+      "task": "6e19193c"
+    }
+  ],
+  "schema": "lexigen-v15-portfolio-benchmark-v1",
+  "worst_slowdown": 1.064516129032258
+}
