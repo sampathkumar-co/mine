@@ -1,0 +1,82 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "claim_boundary": "v12 uses one generic hierarchical scene grammar across three already-preserved v11 failures. The substrate was designed after those failures and therefore requires a fresh sealed campaign.",
+  "gate": {
+    "all_ablations_fail": true,
+    "all_holdouts_exact": true,
+    "all_portable_holdouts_exact": true,
+    "all_portable_training_exact": true,
+    "all_prior_versions_failed": true,
+    "all_training_exact": true,
+    "sealed_outputs_untouched": true,
+    "three_unrelated_task_families": true
+  },
+  "holdout_seed_range": [
+    180000,
+    189999
+  ],
+  "rows": [
+    {
+      "candidates_tested": 16,
+      "exact_candidate_count": 2,
+      "gate_id": "v11-campaign-01",
+      "holdout_count": 10000,
+      "no_op_ablation_exact": false,
+      "portable_failures": [],
+      "portable_holdout_exact": 10000,
+      "portable_training_exact": true,
+      "primary_failures": [],
+      "primary_holdout_exact": 10000,
+      "prior_v6_v11_all_failed": true,
+      "program_name": "generated_hierarchical_program_557ca14adff6",
+      "program_sha256": "02fb3da0f8337bae4183bef87919bd362ecbb450d7ba99579ae06f84c84e0ec4",
+      "redacted_sha256": "78bdc68ae2944b3267284cb68a0824cc47f07dc8fe8b1ef7ce57666329fb6f43",
+      "task_id": "cbded52d",
+      "training_exact": true
+    },
+    {
+      "candidates_tested": 60,
+      "exact_candidate_count": 1,
+      "gate_id": "v11-campaign-05",
+      "holdout_count": 10000,
+      "no_op_ablation_exact": false,
+      "portable_failures": [],
+      "portable_holdout_exact": 10000,
+      "portable_training_exact": true,
+      "primary_failures": [],
+      "primary_holdout_exact": 10000,
+      "prior_v6_v11_all_failed": true,
+      "program_name": "generated_hierarchical_program_f84a5ca28481",
+      "program_sha256": "3d6ecbda99ed9a51b6cf47ab9dd947b7bb4a82ed37d0871e2cbe244d759d75b2",
+      "redacted_sha256": "6eaa048e63e35b7101cbf3eb6143c70772097e55a235858f5c0c4eded1e654bd",
+      "task_id": "af24b4cc",
+      "training_exact": true
+    },
+    {
+      "candidates_tested": 78,
+      "exact_candidate_count": 2,
+      "gate_id": "v11-campaign-07",
+      "holdout_count": 10000,
+      "no_op_ablation_exact": false,
+      "portable_failures": [],
+      "portable_holdout_exact": 10000,
+      "portable_training_exact": true,
+      "primary_failures": [],
+      "primary_holdout_exact": 10000,
+      "prior_v6_v11_all_failed": true,
+      "program_name": "generated_hierarchical_program_281a3a7f5dd4",
+      "program_sha256": "4a18e06a731aeaa10bbfda85c08d7661b52c0ac6e694e9496117935922050417",
+      "redacted_sha256": "1d7c9bd5076807cab36be4e89470d455a557a626d6dbfadddc0ea3b2ab45380d",
+      "task_id": "234bbc79",
+      "training_exact": true
+    }
+  ],
+  "source_gates": [
+    "v11-campaign-01",
+    "v11-campaign-05",
+    "v11-campaign-07"
+  ],
+  "source_sealed_outputs_accessed": false,
+  "status": "post-failure hierarchical multi-family mechanism candidate; not a blind breakthrough",
+  "version": "v12"
+}
