@@ -7,7 +7,10 @@ on:
     paths:
       - "mini-origin/campaigns/v77-openml-hash-lock.json"
       - "mini-origin/src/mini_origin/openml_hash_lock_v77.py"
+      - "mini-origin/src/mini_origin/openml_hash_lock_v77_compat.py"
       - "mini-origin/tests/test_openml_hash_lock_v77.py"
+      - "mini-origin/tests/test_openml_hash_lock_v77_compat.py"
+      - "research-evidence/mini-origin-v77-first-attempt-failure.json"
       - ".github/workflows/mini-origin-v77-openml-hash-lock.yml"
   workflow_dispatch:
 
@@ -53,6 +56,11 @@ jobs:
           assert row["dataset_bytes_access_before_preregistration"] is False
           assert row["record_target_or_feature_parsing_during_lock"] is False
           assert row["solver_execution_during_lock"] is False
+          failure = json.loads(Path("research-evidence/mini-origin-v77-first-attempt-failure.json").read_text(encoding="utf-8"))
+          assert failure["workflow_run"] == 30454183909
+          assert failure["selection_protocol_changed"] is False
+          assert failure["record_target_or_feature_parsing"] is False
+          assert failure["solver_execution"] is False
           PY
           git diff --exit-code 529d9814a91f46db71a98414923352320bca19f2 -- \
             research-evidence/mini-origin-v76-openml-preblind-registry.json \
@@ -69,11 +77,14 @@ jobs:
             mini-origin/compiled/response_cost_lower_bound_v66.rs
       - name: Test deterministic OpenML hash-lock boundary
         working-directory: mini-origin
-        run: pytest -q tests/test_openml_hash_lock_v77.py
+        run: >-
+          pytest -q
+          tests/test_openml_hash_lock_v77.py
+          tests/test_openml_hash_lock_v77_compat.py
       - name: Select and hash-lock cross-source OpenML datasets
         run: >-
           mkdir -p mini-origin/results/v77 &&
-          python -m mini_origin.openml_hash_lock_v77
+          python -m mini_origin.openml_hash_lock_v77_compat
           --output mini-origin/results/v77/manifest.json
         env:
           PYTHONPATH: mini-origin/src
