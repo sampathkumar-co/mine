@@ -43,6 +43,9 @@ jobs:
       - name: Verify preserved clean v0.64 rejection
         run: >-
           python -c "import json; r=json.load(open('../research-evidence/mini-origin-v64-clean-external-rejected.json')); assert not r['development_gate']; assert r['expansion_ratio_median']==8.971719457013574; assert r['rust_mismatch_count']==0"
+      - name: Verify preserved v0.65 certificate when present
+        run: >-
+          python -c "from pathlib import Path; import json; p=Path('../research-evidence/mini-origin-v65-refinement-dominance-pass.json'); r=json.load(open(p)) if p.exists() else None; assert r is None or (r['development_gate'] and r['frontier_match_count']==16100 and r['mismatch_count']==0)"
       - name: Run focused tests
         run: pytest -q tests/test_refinement_dominance_v65.py
       - name: Run frozen exhaustive complete-tree gate
