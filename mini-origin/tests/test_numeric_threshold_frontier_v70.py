@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from mini_origin import numeric_threshold_frontier_v70 as numeric
+from mini_origin import numeric_threshold_repaired_v70 as numeric
 
 
 def test_quantile_thresholds_follow_frozen_rank_rule():
