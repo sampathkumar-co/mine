@@ -1,0 +1,98 @@
+{
+  "autonomous_semantic_substrate_invention": false,
+  "cases_per_family": 10,
+  "families": 3,
+  "fresh_cases": 30,
+  "fresh_failures": 0,
+  "grammar_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+  "human_supplied_low_level_grammar": true,
+  "human_supplied_search_schemas": true,
+  "named_scene_opcodes_allowed": false,
+  "portable_runtime_sha256": "d8ec69724d5d23e708b5fe6ae7068e09315131dcfa8d6957867e7c627338f648",
+  "reports": [
+    {
+      "accepted_cases": 10,
+      "contract_sha256": "1091f46158ef24630d603887e7b892f64f02753824c48cfb4e70cd9837821844",
+      "demonstration_portable_exact": 6,
+      "demonstration_primary_exact": 6,
+      "demonstrations": 6,
+      "gate": 1,
+      "generator_attempts": 10,
+      "generator_rejections": 0,
+      "portable_exact": 10,
+      "primary_exact": 10,
+      "program_sha256": "e0aeb597c5fab61345f077efebf977d8eccc178387fccd7b68fa242e7628eb9e",
+      "runtime_agreement": 10,
+      "search": {
+        "candidate_programs_evaluated": 20,
+        "exact_survivors": 1,
+        "forbidden_opcode_hits": [],
+        "grammar_schema": "lexigen-v17-constructive-grid-v1",
+        "program_sha256": "e0aeb597c5fab61345f077efebf977d8eccc178387fccd7b68fa242e7628eb9e",
+        "runtime_rejections": 4,
+        "selected_node_count": 61,
+        "selected_search_family": "directed_point"
+      },
+      "task": "dc433765"
+    },
+    {
+      "accepted_cases": 10,
+      "contract_sha256": "3107b1495da6e08c34a5b3eb8a425eac0d8293334d43208a9354247d35f51671",
+      "demonstration_portable_exact": 6,
+      "demonstration_primary_exact": 6,
+      "demonstrations": 6,
+      "gate": 2,
+      "generator_attempts": 10,
+      "generator_rejections": 0,
+      "portable_exact": 10,
+      "primary_exact": 10,
+      "program_sha256": "cdfa961c096f47aabd05b7de4bb8384d31c45ef515fdfc7c479b2a888acef118",
+      "runtime_agreement": 10,
+      "search": {
+        "candidate_programs_evaluated": 74,
+        "exact_survivors": 1,
+        "forbidden_opcode_hits": [],
+        "grammar_schema": "lexigen-v17-constructive-grid-v1",
+        "program_sha256": "cdfa961c096f47aabd05b7de4bb8384d31c45ef515fdfc7c479b2a888acef118",
+        "runtime_rejections": 18,
+        "selected_node_count": 88,
+        "selected_search_family": "coordinate_border"
+      },
+      "task": "49d1d64f"
+    },
+    {
+      "accepted_cases": 10,
+      "contract_sha256": "7c7000d736e0dfe575b8c65f5ef5526ee24704833559653492216878dfdacaf4",
+      "demonstration_portable_exact": 6,
+      "demonstration_primary_exact": 6,
+      "demonstrations": 6,
+      "gate": 3,
+      "generator_attempts": 10,
+      "generator_rejections": 0,
+      "portable_exact": 10,
+      "primary_exact": 10,
+      "program_sha256": "14c89819adfe568c543fbdf6cd10a416608a2aeca03ee7fa13d2b85c30e82d9b",
+      "runtime_agreement": 10,
+      "search": {
+        "candidate_programs_evaluated": 34,
+        "exact_survivors": 1,
+        "forbidden_opcode_hits": [],
+        "grammar_schema": "lexigen-v17-constructive-grid-v1",
+        "program_sha256": "14c89819adfe568c543fbdf6cd10a416608a2aeca03ee7fa13d2b85c30e82d9b",
+        "runtime_rejections": 12,
+        "selected_node_count": 31,
+        "selected_search_family": "cell_local"
+      },
+      "task": "c8f0f002"
+    }
+  ],
+  "runtime_disagreements": 0,
+  "schema": "lexigen-v17-constructive-primitive-report-v1",
+  "target_gates": [
+    1,
+    2,
+    3
+  ],
+  "task_ids_available_to_synthesizer": false,
+  "world_level_breakthrough": false
+}

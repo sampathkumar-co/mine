@@ -1,0 +1,86 @@
+{
+  "cell": {
+    "condition": {
+      "left": {
+        "col": {
+          "name": "col",
+          "op": "var"
+        },
+        "op": "pair",
+        "row": {
+          "name": "row",
+          "op": "var"
+        }
+      },
+      "op": "eq",
+      "right": {
+        "left": {
+          "colour": 3,
+          "op": "unique_point"
+        },
+        "op": "pair_add",
+        "right": {
+          "op": "pair_sign",
+          "value": {
+            "left": {
+              "colour": 4,
+              "op": "unique_point"
+            },
+            "op": "pair_sub",
+            "right": {
+              "colour": 3,
+              "op": "unique_point"
+            }
+          }
+        }
+      }
+    },
+    "else": {
+      "condition": {
+        "left": {
+          "col": {
+            "name": "col",
+            "op": "var"
+          },
+          "op": "pair",
+          "row": {
+            "name": "row",
+            "op": "var"
+          }
+        },
+        "op": "eq",
+        "right": {
+          "colour": 3,
+          "op": "unique_point"
+        }
+      },
+      "else": {
+        "col": {
+          "name": "col",
+          "op": "var"
+        },
+        "default": 0,
+        "op": "sample",
+        "row": {
+          "name": "row",
+          "op": "var"
+        }
+      },
+      "op": "if",
+      "then": {
+        "op": "mode"
+      }
+    },
+    "op": "if",
+    "then": 3
+  },
+  "schema": "lexigen-v17-constructive-grid-v1",
+  "shape": {
+    "cols": {
+      "op": "width"
+    },
+    "rows": {
+      "op": "height"
+    }
+  }
+}
