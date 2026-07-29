@@ -105,7 +105,7 @@ def main() -> None:
         "files": {name: sha256(HERE / name) for name in all_files},
     }
     evidence_path = HERE / "V15_EVIDENCE.json"
-    evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    evidence_path.write_bytes((json.dumps(evidence, indent=2, sort_keys=True) + "\n").encode("utf-8"))
     evidence_hash = sha256(evidence_path)
     markdown = f"""# v15 frozen evidence
 
@@ -124,7 +124,7 @@ This is automatic macro induction over human-authored v14 scene atoms. It is not
 
 Evidence JSON SHA-256: `{evidence_hash}`
 """
-    (HERE / "EVIDENCE.md").write_text(markdown, encoding="utf-8")
+    (HERE / "EVIDENCE.md").write_bytes(markdown.encode("utf-8"))
     print(json.dumps({"evidence_sha256": evidence_hash}, sort_keys=True))
 
 

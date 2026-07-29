@@ -103,7 +103,7 @@ def main() -> None:
         "generator_rejections": totals["rejections"],
         "reports": reports,
     }
-    args.output.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    args.output.write_bytes((json.dumps(summary, indent=2, sort_keys=True) + "\n").encode("utf-8"))
     print("SUMMARY", json.dumps({key: summary[key] for key in (
         "families",
         "total_cases",

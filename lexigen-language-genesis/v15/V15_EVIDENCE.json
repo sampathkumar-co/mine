@@ -9,8 +9,8 @@
   },
   "dynamic_compression_ratio_at_10000_replays": 1.1428190488888466,
   "files": {
-    "V15_HELDOUT_MACRO_SCAN.json": "9f249c28833886be96096006391d041ea26ea85371f5002b3e98c2b49af478e8",
-    "V15_INDEPENDENT_REPORT.json": "806e35b80947929a74ab137964ec9a8045dfc022cca9cbfe4cab8f0a0d228a4d",
+    "V15_HELDOUT_MACRO_SCAN.json": "7b04f975aba3d333f1e6328af95cba43ee8ac37d90fe8de10f3a31f71ab47c55",
+    "V15_INDEPENDENT_REPORT.json": "36ad9fe553c5fb388759ee0d7f307280b8011facaa08843271a83770c2f85ac6",
     "V15_INDUCTION_REPORT.json": "1cc8d2a86e12ccf260db74056628ebe95a7b2be9f22adc33e88b0623198690ce",
     "V15_PORTFOLIO_BENCHMARK.json": "2772e0b1c322dc7a33d6843fdb959e42223a0249a76ac21a0d6aae068f95ca10",
     "V15_SEARCH_BENCHMARK.json": "130a20d0495f08bf17f5e85e6f219c15f3941c31b412b5636f13a853833608b6",
@@ -22,9 +22,9 @@
     "ir_runtime_v15.py": "b6abff980db33566b4e9775dc1f9e3a365f1b8a34e382c937673da81b6f61209",
     "macro_miner_v15.py": "0b3572222b0c9902409f8e004e62fcc9db6f4606e4588e5f391af59763c1274f",
     "portable_ir_runtime_v15.py": "b5c4be3129221d9aa76dc7688a5e037a28d74bde63eb62ea8b0a132c7d5c4280",
-    "scan_macro_transfer_v15.py": "443428b9e6347e8079766ccadd9c555f06a3bc8bbb65ac3a375d75d20e47ec7e",
+    "scan_macro_transfer_v15.py": "f971282aeae4d5021acdbb9565414c47e732442f6b8e1613d6cfe1d0842ca244",
     "test_v15.py": "b312e6fb25b3a64d7f56aa7237904a7a0af59b39d60782ed50a1be1d50cbe617",
-    "validate_v15_independent.py": "c4c9db90aecd50d9961aa306fffd967b697b14211ca246150c8913779ba50cab",
+    "validate_v15_independent.py": "f7b4208a8377c13a8f1559b79b384ea982832617c2fad2bd071521dc52ce59ed",
     "validate_v15_transfer.py": "f44abc1a73dabd58eacb50e6df076762a1163fa04b726b54c222fc99f4105431"
   },
   "heldout_macro_matches": 0,

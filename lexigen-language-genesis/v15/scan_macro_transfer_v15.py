@@ -84,7 +84,7 @@ def main() -> None:
         "match_count": len(matches),
         "errors": failures,
     }
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    args.output.write_bytes((json.dumps(report, indent=2, sort_keys=True) + "\n").encode("utf-8"))
     print("SUMMARY", json.dumps({key: report[key] for key in (
         "checked_families",
         "imported_families",
