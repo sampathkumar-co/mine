@@ -1,0 +1,46 @@
+{
+  "comparison": {
+    "precommitted_gate_passed": false,
+    "raw_change_fraction": 0.00221180615191674,
+    "raw_overage": 2215,
+    "retained_reduction_fraction": 0.556852562211075,
+    "verdict": "near-pass: large state and runtime reduction, but raw count exceeded v26 by 2215; no exact program"
+  },
+  "dead_frontier_observation": {
+    "objectset_depth5_raw": 180000,
+    "pointset_depth5_raw": 177235,
+    "reason": "Neither type can reach Grid output within maximum depth 5 after being created at depth 5."
+  },
+  "same_demonstrations": true,
+  "schema": "lexigen-v27-first-comparison-summary-v1",
+  "task_id": "c074846d",
+  "v26": {
+    "raw": 1001444,
+    "retained": 254175,
+    "retained_by_type": {
+      "Color": 10,
+      "Grid": 47175,
+      "ObjectSet": 78576,
+      "PointSet": 128414
+    },
+    "wall_seconds_observed": 134.22
+  },
+  "v27": {
+    "beam_dropped_by_type": {
+      "Color": 0,
+      "Grid": 120000,
+      "ObjectSet": 35508,
+      "PointSet": 68188
+    },
+    "raw": 1003659,
+    "retained": 112637,
+    "retained_by_type": {
+      "Color": 10,
+      "Grid": 32175,
+      "ObjectSet": 20226,
+      "PointSet": 60226
+    },
+    "wall_seconds_observed": 121.92
+  },
+  "world_level_breakthrough": false
+}
