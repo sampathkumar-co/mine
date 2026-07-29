@@ -81,3 +81,19 @@ def test_occurrence_rows_are_deterministic():
     }
     rows = audit.occurrence_rows(mapping, "dataset_id", numeric=True)
     assert [row["dataset_id"] for row in rows] == [2, 9]
+
+
+def test_json_context_recovers_generic_openml_dataset_ids():
+    text = json.dumps({
+        "datasets": [
+            {"dataset_id": 1067, "task_id": 3917, "name": "kc1"},
+            {"dataset_id": 1063, "raw_sha256": "abc", "name": "kc2"},
+            {"dataset_id": 1049, "raw_md5": "def", "name": "pc4"},
+        ]
+    })
+    assert audit.extract_openml_ids(text, ".json") == {1067, 1063, 1049}
+
+
+def test_plain_generic_dataset_id_is_not_assumed_openml():
+    text = json.dumps({"dataset_id": 999999, "name": "unrelated"})
+    assert audit.extract_openml_ids(text, ".json") == set()

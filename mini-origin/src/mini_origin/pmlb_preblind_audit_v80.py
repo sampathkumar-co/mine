@@ -60,10 +60,37 @@ def canonical_digest(value: object) -> str:
     ).hexdigest()
 
 
-def extract_openml_ids(text: str) -> set[int]:
+def collect_json_openml_ids(value: object, output: set[int]) -> None:
+    if isinstance(value, dict):
+        keys = {str(key).lower() for key in value}
+        for key in ("openml_id", "openml_dataset_id"):
+            candidate = value.get(key)
+            if isinstance(candidate, int) or str(candidate).isdigit():
+                output.add(int(candidate))
+        openml_markers = {
+            "task_id", "raw_md5", "raw_sha256", "default_target_attribute"
+        }
+        candidate = value.get("dataset_id")
+        if keys & openml_markers and (
+            isinstance(candidate, int) or str(candidate).isdigit()
+        ):
+            output.add(int(candidate))
+        for child in value.values():
+            collect_json_openml_ids(child, output)
+    elif isinstance(value, list):
+        for child in value:
+            collect_json_openml_ids(child, output)
+
+
+def extract_openml_ids(text: str, suffix: str = "") -> set[int]:
     result: set[int] = set()
     for pattern in OPENML_ID_PATTERNS:
         result.update(int(value) for value in pattern.findall(text))
+    if suffix == ".json":
+        try:
+            collect_json_openml_ids(json.loads(text), result)
+        except json.JSONDecodeError:
+            pass
     return result
 
 
@@ -195,6 +222,7 @@ def audit() -> dict[str, object]:
             files_scanned += 1
             bytes_scanned += size
             occurrence = {"ref": ref, "path": path}
+            suffix = Path(path).suffix.lower()
 
             uci_ids: set[str] = set()
             for pattern in base.UCI_PATTERNS:
@@ -213,7 +241,7 @@ def audit() -> dict[str, object]:
                 canonical = normalize_name(token)
                 base.append_occurrence(pystreed_occurrences, canonical, occurrence)
 
-            for openml_id in sorted(extract_openml_ids(text)):
+            for openml_id in sorted(extract_openml_ids(text, suffix)):
                 base.append_occurrence(
                     openml_occurrences, str(openml_id), occurrence
                 )
@@ -224,7 +252,7 @@ def audit() -> dict[str, object]:
                 names.add(normalize_name(name))
                 base.append_occurrence(openml_occurrences, openml_id, occurrence)
 
-            names.update(extract_dataset_names(text, Path(path).suffix.lower()))
+            names.update(extract_dataset_names(text, suffix))
             for pmlb_name in sorted(extract_pmlb_names(text)):
                 names.add(pmlb_name)
                 base.append_occurrence(
