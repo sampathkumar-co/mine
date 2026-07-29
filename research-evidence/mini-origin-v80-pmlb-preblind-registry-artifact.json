@@ -1,0 +1,9 @@
+{
+    "status":  "pmlb_preblind_registry_v80_preserved",
+    "workflow_run_id":  30480057378,
+    "artifact_id":  8735273217,
+    "artifact_sha256":  "2e15b55fa1ca32b5edb216fa190dd38c141e0bd436eb9c021ac3d18109d4406e",
+    "registry_file_sha256":  "242a3b4173786ab52435658c959ce6195c3f831c25cf3dff4bba2d784796a3f9",
+    "registry_digest":  "aa6bab47d8d2453b669eee2f7a36720e0eb798a79355b0d2c9a509d81959038c",
+    "source_commit":  "3c7086a007cd71c8cf8e00e10f82476a08495d49"
+}
