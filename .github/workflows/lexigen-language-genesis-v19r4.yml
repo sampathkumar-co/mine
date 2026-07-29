@@ -1,0 +1,110 @@
+name: Lexigen Language Genesis v19r4
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v19r4/**"
+      - "lexigen-language-genesis/v19r3/**"
+      - "lexigen-language-genesis/v19r2/**"
+      - ".github/workflows/lexigen-language-genesis-v19r4.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v19r4:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out v19r4
+        uses: actions/checkout@v4
+
+      - name: Check out frozen v13 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile v19r4 and frozen dependencies
+        run: |
+          python -m py_compile lexigen-language-genesis/v19r2/*.py
+          python -m py_compile lexigen-language-genesis/v19r3/*.py
+          python -m py_compile lexigen-language-genesis/v19r4/*.py
+
+      - name: Run v19r4 integrity tests
+        run: python lexigen-language-genesis/v19r4/test_v19r4.py
+
+      - name: Reproduce preregistered compositional CEGIS
+        run: |
+          python lexigen-language-genesis/v19r4/run_cegis_v19r4.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --output lexigen-language-genesis/v19r4/V19R4_CEGIS_REPORT.json
+
+      - name: Reproduce disjoint 10000-case production gate
+        run: |
+          python lexigen-language-genesis/v19r4/validate_v19r4.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 10000 \
+            --output lexigen-language-genesis/v19r4/V19R4_REPORT.json
+
+      - name: Reproduce verifier co-synthesis
+        run: |
+          python lexigen-language-genesis/v19r4/validate_verifier_v19r4.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 1000 \
+            --mutations-per-case 8 \
+            --output lexigen-language-genesis/v19r4/V19R4_VERIFIER_REPORT.json
+
+      - name: Verify byte-identical scientific artifacts
+        run: |
+          git diff --exit-code -- \
+            lexigen-language-genesis/v19r4/V19R4_CEGIS_REPORT.json \
+            lexigen-language-genesis/v19r4/V19R4_REPORT.json \
+            lexigen-language-genesis/v19r4/V19R4_VERIFIER_REPORT.json \
+            lexigen-language-genesis/v19r4/production \
+            lexigen-language-genesis/v19r4/contracts
+
+      - name: Generate frozen evidence twice
+        run: |
+          python lexigen-language-genesis/v19r4/freeze_v19r4_evidence.py
+          first=$(sha256sum lexigen-language-genesis/v19r4/V19R4_EVIDENCE.json | cut -d' ' -f1)
+          python lexigen-language-genesis/v19r4/freeze_v19r4_evidence.py
+          second=$(sha256sum lexigen-language-genesis/v19r4/V19R4_EVIDENCE.json | cut -d' ' -f1)
+          test "$first" = "$second"
+          printf '%s\n' "$first" > lexigen-language-genesis/v19r4/EVIDENCE_SHA256.txt
+
+      - name: Upload v19r4 bootstrap evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v19r4-bootstrap-evidence
+          path: |
+            lexigen-language-genesis/v19r4/V19R4_EVIDENCE.json
+            lexigen-language-genesis/v19r4/EVIDENCE.md
+            lexigen-language-genesis/v19r4/EVIDENCE_SHA256.txt
+            lexigen-language-genesis/v19r4/V19R4_INTEGRITY_AUDIT.json
+            lexigen-language-genesis/v19r4/V19R4_CEGIS_REPORT.json
+            lexigen-language-genesis/v19r4/V19R4_REPORT.json
+            lexigen-language-genesis/v19r4/V19R4_VERIFIER_REPORT.json
+            lexigen-language-genesis/v19r4/production
+            lexigen-language-genesis/v19r4/contracts
+          if-no-files-found: error
+          retention-days: 90
