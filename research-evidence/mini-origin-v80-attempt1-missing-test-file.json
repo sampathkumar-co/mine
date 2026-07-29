@@ -1,0 +1,15 @@
+{
+  "status": "pmlb_preblind_audit_v80_attempt1_infrastructure_failure",
+  "workflow_run_id": 30478017382,
+  "job_id": 90664518046,
+  "head_commit": "dbea5786ae53ed31fd406eb5bb3b268cd273c028",
+  "failure_stage": "focused test invocation before repository audit",
+  "failure_reason": "CI runner referenced nonexistent tests/test_repository_dataset_audit_v63.py; the existing inherited test file is tests/test_repository_dataset_audit_v73.py",
+  "pmlb_catalogue_accessed": false,
+  "pmlb_repository_tree_accessed": false,
+  "pmlb_candidate_names_or_metadata_accessed": false,
+  "pmlb_dataset_bytes_accessed": false,
+  "solver_executed": false,
+  "registry_produced": false,
+  "allowed_repair": "replace only the nonexistent inherited test filename in run_v80_ci.sh"
+}
