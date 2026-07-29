@@ -65,7 +65,9 @@ jobs:
             src/mini_origin/response_cost_lower_bound_v65.py
           git diff --exit-code 2d001d3d4dcec4c315327f318a4918acc552aa7c -- \
             compiled/response_cost_lower_bound_v66.rs
-      - name: Run focused label-free tests
+      - name: Run v0.72 isolation tests first
+        run: pytest -q tests/test_label_free_frontier_v72.py
+      - name: Run complete focused label-free tests
         run: >-
           pytest -q
           tests/test_numeric_threshold_frontier_v70.py
