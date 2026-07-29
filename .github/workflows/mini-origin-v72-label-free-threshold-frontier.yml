@@ -7,6 +7,7 @@ on:
     paths:
       - "mini-origin/campaigns/v72-label-free-threshold-frontier-preregistration.json"
       - "mini-origin/src/mini_origin/label_free_numeric_frontier_v72.py"
+      - "mini-origin/src/mini_origin/label_free_selector_certificate_v71.py"
       - "mini-origin/tests/test_label_free_numeric_frontier_v72.py"
       - ".github/workflows/mini-origin-v72-label-free-threshold-frontier.yml"
       - "research-evidence/mini-origin-v71-label-free-selector-pass.json"
@@ -14,6 +15,7 @@ on:
     paths:
       - "mini-origin/campaigns/v72-label-free-threshold-frontier-preregistration.json"
       - "mini-origin/src/mini_origin/label_free_numeric_frontier_v72.py"
+      - "mini-origin/src/mini_origin/label_free_selector_certificate_v71.py"
       - "mini-origin/tests/test_label_free_numeric_frontier_v72.py"
       - ".github/workflows/mini-origin-v72-label-free-threshold-frontier.yml"
       - "research-evidence/mini-origin-v71-label-free-selector-pass.json"
@@ -64,6 +66,8 @@ jobs:
           git diff --exit-code c35bcd68d91b988d69b5f8192473f6aadb02a22b -- \
             src/mini_origin/numeric_threshold_frontier_v70.py \
             src/mini_origin/numeric_threshold_repaired_v70.py
+          git diff --exit-code 4ebdb73d6f30c261c4830934e1d3908335e1f7f2 -- \
+            src/mini_origin/label_free_selector_certificate_v71.py
           git diff --exit-code f73ad897377ae1189844ea9ab49aa429c6b1c1c3 -- \
             src/mini_origin/conditioned_cell_frontier_v60.py \
             src/mini_origin/response_cost_pareto_v56.py
