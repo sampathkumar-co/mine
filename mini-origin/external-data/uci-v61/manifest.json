@@ -1,0 +1,18 @@
+{
+  "status": "external_conditioned_archive_hash_lock_v1",
+  "protocol": "download_archive_bytes_and_hash_only_no_archive_open_no_record_parse",
+  "license": "CC BY 4.0",
+  "workflow_run": 30411539265,
+  "workflow_artifact_digest": "sha256:ae8fd71a7e31077dfefdcdaa4b059777122c89e74908b1cbea829644e686d075",
+  "lock_digest": "83990b00da28967c74dced5043c548b5ede0d11bcdbefeb4d7b609e6f872de62",
+  "dataset_count": 7,
+  "datasets": [
+    {"name":"Soybean (Large)","uci_id":90,"url":"https://archive.ics.uci.edu/static/public/90/soybean+large.zip","doi":"10.24432/C5JG6Z","sha256":"c5701e50dd74b3c261d8ec1fd768d3392174a516edab6c661b0ce5dd2e133845","bytes":23316},
+    {"name":"Annealing","uci_id":3,"url":"https://archive.ics.uci.edu/static/public/3/annealing.zip","doi":"10.24432/C5RW2F","sha256":"75bcc8f872dda28a0fb2954235eb53fc9d6e34f0115577199fddd5a1583251a7","bytes":8561},
+    {"name":"Primary Tumor","uci_id":83,"url":"https://archive.ics.uci.edu/static/public/83/primary+tumor.zip","doi":"10.24432/C5WK5Q","sha256":"d866e8d1f358cdd51233982d4ab0680a19a6fd46be0517b5686196e5fa3c33f3","bytes":3531},
+    {"name":"Optical Recognition of Handwritten Digits","uci_id":80,"url":"https://archive.ics.uci.edu/static/public/80/optical+recognition+of+handwritten+digits.zip","doi":"10.24432/C50P49","sha256":"0d7b054fea010270e9b3f06411c654c5e59547732ad626381980baffe0a23fb0","bytes":591292},
+    {"name":"Statlog (Landsat Satellite)","uci_id":146,"url":"https://archive.ics.uci.edu/static/public/146/statlog+landsat+satellite.zip","doi":"10.24432/C55887","sha256":"7c54e0e11c872a1b0b647da370d596dcb06746159cce4121d92ccd70b7d7ce3c","bytes":103388},
+    {"name":"Madelon","uci_id":171,"url":"https://archive.ics.uci.edu/static/public/171/madelon.zip","doi":"10.24432/C5602H","sha256":"eb99a0153ebe7d9f4e74551b4b10c54a958b2990b156ce7d76b4e8d71a6f6e82","bytes":3040503},
+    {"name":"Glioma Grading Clinical and Mutation Features","uci_id":759,"url":"https://archive.ics.uci.edu/static/public/759/glioma+grading+clinical+and+mutation+features+dataset.zip","doi":"10.24432/C5R62J","sha256":"175daebabb5e53695b573feb35b7ddf76c23638042124e1c51658a52f6bc6321","bytes":309032}
+  ]
+}
