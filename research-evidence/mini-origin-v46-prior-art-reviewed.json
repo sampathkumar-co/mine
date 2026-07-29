@@ -1,0 +1,54 @@
+{
+  "status": "pinned_prior_art_source_audit_reviewed",
+  "workflow_run": 30383609697,
+  "workflow_artifact_id": 8698032296,
+  "workflow_artifact_digest": "sha256:7e25b792a7e0f2bbc18429f0ed7a9fc1fe196868b65b7fec963b093944d5b56e",
+  "original_evidence_commit": "134e27a21d913e32b11e4f12d38e1379956fe6d2",
+  "accessible_snapshots": [
+    {
+      "solver": "PySTreeD",
+      "repository": "AlgTUDelft/pystreed",
+      "commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+      "files_scanned": 126,
+      "lines_scanned": 18771,
+      "closest_mechanism": "One-time global duplicate binary-feature preprocessing and task-specific feature eligibility in recursive search.",
+      "local_descendant_partition_quotient_found": false
+    },
+    {
+      "solver": "DL8.5",
+      "repository": "aia-uclouvain/pydl8.5",
+      "commit": "a7f0fee72b4c17bbcb727050ba102db7dda10119",
+      "files_scanned": 77,
+      "lines_scanned": 9445,
+      "closest_mechanism": "Lexical candidate matches were reviewed as false positives; no equality grouping of current-state response partitions was found.",
+      "local_descendant_partition_quotient_found": false
+    },
+    {
+      "solver": "OSDT",
+      "repository": "xiyanghu/OSDT",
+      "commit": "d28ff434d5a90a1e49ffcbcab170c9ce457a605f",
+      "files_scanned": 3,
+      "lines_scanned": 1442,
+      "closest_mechanism": "Equivalent-point and support bounds plus symmetry-aware leaf caching.",
+      "local_descendant_partition_quotient_found": false
+    },
+    {
+      "solver": "GOSDT",
+      "repository": "Jimmy-Lin/GeneralizedOptimalSparseDecisionTrees",
+      "commit": "b9116d0557613dc42ff1fcefcf0bc0be91db1620",
+      "files_scanned": 44,
+      "lines_scanned": 6998,
+      "closest_mechanism": "Support/subproblem bounds and similar-support logic.",
+      "local_descendant_partition_quotient_found": false
+    }
+  ],
+  "unavailable_snapshot": {
+    "solver": "MurTree",
+    "repository": "https://bitbucket.org/EmirD/murtree",
+    "requested_revision": "86e439ef537e40cb93afa641aafe2078",
+    "status": "not reproducibly obtained through the available Bitbucket transport",
+    "source_audited": false
+  },
+  "reviewed_conclusion": "No implementation equivalent to descendant-specific response-partition quotienting was found in the four accessible pinned snapshots. The closest accessible mechanism was PySTreeD's one-time global duplicate-feature preprocessing. This is evidence of implementation distinctness in the audited snapshots, not proof of universal novelty.",
+  "claim_boundary": "MurTree remains a disclosed source-level gap. Absence from the four accessible snapshots cannot establish a world-first or universal novelty claim."
+}
