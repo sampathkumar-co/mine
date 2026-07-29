@@ -1,0 +1,146 @@
+name: Lexigen Language Genesis v28
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v28/**"
+      - ".github/workflows/lexigen-language-genesis-v28.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-v28:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and test liveness-pruned search
+        run: |
+          python -m py_compile lexigen-language-genesis/v25/*.py lexigen-language-genesis/v26/*.py lexigen-language-genesis/v27/*.py lexigen-language-genesis/v28/*.py
+          python lexigen-language-genesis/v28/test_v28.py
+
+  scan-discovery:
+    needs: test-v28
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        task:
+          - "c074846d"
+          - "794b24be"
+          - "d017b73f"
+          - "42f83767"
+          - "54db823b"
+          - "776ffc46"
+          - "1f0c79e5"
+          - "1d398264"
+          - "b0c4d837"
+          - "8fbca751"
+          - "6d1d5c90"
+          - "ed74f2f2"
+          - "d4f3cd78"
+          - "4c5c2cf0"
+          - "0dfd9992"
+          - "32597951"
+          - "22eb0ac0"
+          - "538b439f"
+          - "6cf79266"
+          - "41e4d17e"
+          - "319f2597"
+          - "6d58a25d"
+          - "90f3ed37"
+          - "a3325580"
+          - "37d3e8b2"
+          - "256b0a75"
+          - "d2acf2cb"
+          - "8eb1be9a"
+          - "b9b7f026"
+          - "025d127b"
+          - "67a423a3"
+          - "973e499e"
+          - "b94a9452"
+          - "e1baa8a4"
+          - "150deff5"
+          - "f0afb749"
+          - "5207a7b5"
+          - "feca6190"
+          - "8abad3cf"
+          - "810b9b61"
+    steps:
+      - name: Check out v28
+        uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scan one frozen discovery identity
+        run: |
+          python lexigen-language-genesis/v28/scan_one_v28.py \
+            --arcgen-root arcgen \
+            --task-id "${{ matrix.task }}" \
+            --split discovery \
+            --output "task-${{ matrix.task }}.json"
+      - name: Reproduce first v28 comparison semantically
+        if: matrix.task == 'c074846d'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected = json.loads(Path('lexigen-language-genesis/v28/V28_FIRST_COMPARISON_REPORT.json').read_text())
+          actual = json.loads(Path('task-c074846d.json').read_text())
+          if actual != expected:
+              raise SystemExit('first v28 comparison changed')
+          print('FIRST_V28_COMPARISON_REPRODUCED')
+          PY
+      - name: Upload task report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v28-discovery-${{ matrix.task }}
+          path: task-${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-discovery:
+    needs: scan-discovery
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download all frozen reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v28-discovery-*
+          path: reports
+          merge-multiple: true
+      - name: Build frozen liveness-pruned library
+        run: |
+          python lexigen-language-genesis/v28/aggregate_discovery_v28.py \
+            --reports-root reports \
+            --output lexigen-language-genesis/v28/V28_DISCOVERY_REPORT.json \
+            --library-output lexigen-language-genesis/v28/V28_LIBRARY.json \
+            --library-dir lexigen-language-genesis/v28/library
+      - name: Upload v28 discovery evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v28-discovery-evidence
+          path: |
+            lexigen-language-genesis/v28/V28_DISCOVERY_REPORT.json
+            lexigen-language-genesis/v28/V28_LIBRARY.json
+            lexigen-language-genesis/v28/library
+            reports
+          if-no-files-found: error
+          retention-days: 90
