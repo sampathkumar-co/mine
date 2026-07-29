@@ -1,0 +1,71 @@
+{
+  "status": "clean_lower_bound_archive_hash_lock_v68",
+  "protocol": "updated_repository_registry_exclusion_then_hash_only_no_archive_open_no_record_parse",
+  "license": "CC BY 4.0",
+  "parent_v66_evidence_digest": "3b2bb026556ff9f6321ad6a8375854ae46931e64080329c76f86f31d12c0d643",
+  "repository_registry_digest": "b88fcb352c2f80af8bc89a3a7576b9cd384800b67d1b168534ad26df9985b6c1",
+  "excluded_uci_id_count": 48,
+  "candidate_overlap": [],
+  "dataset_count": 7,
+  "datasets": [
+    {
+      "name": "Ionosphere",
+      "uci_id": 52,
+      "url": "https://archive.ics.uci.edu/static/public/52/ionosphere.zip",
+      "doi": "10.24432/C5W01B",
+      "sha256": "4d218ece62756c99659011a13052d06464f13cb2b3d0410ce2aef16de1403860",
+      "bytes": 29983
+    },
+    {
+      "name": "Musk (Version 1)",
+      "uci_id": 74,
+      "url": "https://archive.ics.uci.edu/static/public/74/musk%2Bversion%2B1.zip",
+      "doi": "10.24432/C5ZK5B",
+      "sha256": "84fd967a312cfe1d48d6f5a2becdda68f122767c0d51a3246cf699ff92a66031",
+      "bytes": 115543
+    },
+    {
+      "name": "Spambase",
+      "uci_id": 94,
+      "url": "https://archive.ics.uci.edu/static/public/94/spambase.zip",
+      "doi": "10.24432/C53G6X",
+      "sha256": "813ac1df8effac70463c09c9c4b11e8803eefcab54771af66150852bcdcd1636",
+      "bytes": 125537
+    },
+    {
+      "name": "Connectionist Bench (Sonar, Mines vs. Rocks)",
+      "uci_id": 151,
+      "url": "https://archive.ics.uci.edu/static/public/151/connectionist%2Bbench%2Bsonar%2Bmines%2Bvs%2Brocks.zip",
+      "doi": "10.24432/C5T01Q",
+      "sha256": "088b0b6813fb5ab84736bc2a1e3d6bb886e317520d2f2c04152e2ed65af7a18d",
+      "bytes": 65413
+    },
+    {
+      "name": "Hill-Valley",
+      "uci_id": 166,
+      "url": "https://archive.ics.uci.edu/static/public/166/hill%2Bvalley.zip",
+      "doi": "10.24432/C5JC8P",
+      "sha256": "e1df479ec97604834f9438546ce513af946530166d701ab782b391cc913cea7a",
+      "bytes": 884321
+    },
+    {
+      "name": "Libras Movement",
+      "uci_id": 181,
+      "url": "https://archive.ics.uci.edu/static/public/181/libras%2Bmovement.zip",
+      "doi": "10.24432/C5GC82",
+      "sha256": "486f22f63919002a991be4042d7c7489a56cbd5f40f2930a24f80744c93e7105",
+      "bytes": 164761
+    },
+    {
+      "name": "Urban Land Cover",
+      "uci_id": 295,
+      "url": "https://archive.ics.uci.edu/static/public/295/urban%2Bland%2Bcover.zip",
+      "doi": "10.24432/C53S48",
+      "sha256": "277a27000a4a4b593f655595b92904ccb30ece48b8bb2a35cf5d3854d7204f79",
+      "bytes": 144090
+    }
+  ],
+  "lock_digest": "9abc52a7e83255498c84b802d432306b5ff15dece032469968b8db3501d0a385",
+  "workflow_run": 30423522779,
+  "workflow_artifact_digest": "sha256:a27946e174302849d49830c0ce3f828455819a6dadfe6ce0529524356c2fc394"
+}
