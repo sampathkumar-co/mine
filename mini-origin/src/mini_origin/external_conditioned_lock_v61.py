@@ -27,6 +27,7 @@ def download(url: str) -> bytes:
 def run(output: Path) -> dict[str, object]:
     rows=[]
     for dataset in DATASETS:
+        print(f"hashing {dataset['name']}: {dataset['url']}", flush=True)
         payload=download(str(dataset["url"]))
         rows.append({**dataset,"sha256":hashlib.sha256(payload).hexdigest(),"bytes":len(payload)})
     frozen={"status":"external_conditioned_archive_hash_lock_v1","protocol":"download_archive_bytes_and_hash_only_no_archive_open_no_record_parse","license":"CC BY 4.0","dataset_count":len(rows),"datasets":rows}
