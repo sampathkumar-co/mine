@@ -145,6 +145,21 @@ jobs:
             --output lexigen-language-genesis/v24/V24_DISCOVERY_REPORT.json \
             --library-output lexigen-language-genesis/v24/V24_LIBRARY.json \
             --library-dir lexigen-language-genesis/v24/library
+      - name: Reproduce exact frozen evidence twice
+        run: |
+          python lexigen-language-genesis/v24/freeze_v24_evidence.py
+          first=$(sha256sum lexigen-language-genesis/v24/V24_EVIDENCE.json | cut -d' ' -f1)
+          python lexigen-language-genesis/v24/freeze_v24_evidence.py
+          second=$(sha256sum lexigen-language-genesis/v24/V24_EVIDENCE.json | cut -d' ' -f1)
+          test "$first" = "$second"
+          test "$first" = "508685ead0f9da2195d0482048a7db2ec8a86867379ba796d9d4bd55d4e26a89"
+      - name: Verify byte-identical frozen artifacts
+        run: |
+          git diff --exit-code -- \
+            lexigen-language-genesis/v24/V24_DISCOVERY_REPORT.json \
+            lexigen-language-genesis/v24/V24_LIBRARY.json \
+            lexigen-language-genesis/v24/V24_EVIDENCE.json \
+            lexigen-language-genesis/v24/EVIDENCE.md
       - name: Upload v24 discovery evidence
         uses: actions/upload-artifact@v4
         with:
@@ -152,6 +167,9 @@ jobs:
           path: |
             lexigen-language-genesis/v24/V24_DISCOVERY_REPORT.json
             lexigen-language-genesis/v24/V24_LIBRARY.json
+            lexigen-language-genesis/v24/V24_EVIDENCE.json
+            lexigen-language-genesis/v24/V24_INTEGRITY_AUDIT.json
+            lexigen-language-genesis/v24/EVIDENCE.md
             lexigen-language-genesis/v24/library
             reports
           if-no-files-found: error
