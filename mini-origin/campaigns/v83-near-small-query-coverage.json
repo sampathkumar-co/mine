@@ -1,0 +1,42 @@
+{
+  "status": "opened_data_development_preregistered_after_v82_rejection",
+  "parent_v82_commit": "66a100bead80d486591ca9fa16f470ad595f1b2e",
+  "parent_v82_workflow_run": 30494082539,
+  "parent_v82_evidence_sha256": "f3b0b4367e8e5e7c8dfba92f914f6a78596d7294d20dcdc960b5d78ab45ae4a0",
+  "parent_v82_rejection_record": "research-evidence/mini-origin-v82-pmlb-blind-rejection.json",
+  "objective": "Test a generic extension of the v0.79 query-count-aware selector boundary from at most 10 compiled queries to at most 12, motivated by the sole v0.82 zero-contribution task having exactly 12 compiled queries.",
+  "development_data_status": "opened",
+  "fresh_external_evidence": false,
+  "selector_change": {
+    "old_adaptive_limit": 10,
+    "new_adaptive_limit": 12,
+    "effective_limit_formula": "unchanged v0.79 formula",
+    "sample_sizes": "unchanged v0.79 values",
+    "allowed_seed_count": "unchanged v0.79 value",
+    "remaining_seed_count": "unchanged v0.79 value",
+    "dataset_specific_conditions": false,
+    "labels_or_costs_used": false
+  },
+  "frozen_components": [
+    "numeric threshold compiler",
+    "task costs",
+    "Python plain exact planner",
+    "Python lower-bound exact planner",
+    "independent Rust solver",
+    "profile seeds",
+    "budget ladder",
+    "v0.82 scientific thresholds"
+  ],
+  "development_acceptance": {
+    "all_seven_v82_datasets_contribute": true,
+    "minimum_states_from_each_dataset": 6,
+    "normal_tasks_above_12_queries_preserve_exact_v82_state_set_digests": true,
+    "label_independence_mismatches": 0,
+    "objective_mismatches": 0,
+    "plan_mismatches": 0,
+    "rust_mismatches": 0,
+    "scientific_thresholds_may_be_weakened": false
+  },
+  "failure_policy": "Preserve all failures. A v0.83 pass is only an opened-data repair result and requires a separately frozen untouched campaign before counting as fresh evidence.",
+  "claim_boundary": "No world-class, external-breakthrough, or general-AI claim is permitted from this opened-data development campaign."
+}
