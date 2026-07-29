@@ -1,0 +1,66 @@
+name: Lexigen Language Genesis v23
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v23/**"
+      - ".github/workflows/lexigen-language-genesis-v23.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v23:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile both evaluation paths
+        run: |
+          python -m py_compile \
+            lexigen-language-genesis/v23/evaluate_v23.py \
+            lexigen-language-genesis/v23/independent_search_v23.py
+      - name: Reproduce primary held-out evaluation
+        run: |
+          python lexigen-language-genesis/v23/evaluate_v23.py \
+            --arcgen-root arcgen \
+            --output V23_REPORT_REPRODUCED.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          committed = json.loads(Path('lexigen-language-genesis/v23/V23_REPORT.json').read_text(encoding='utf-8-sig'))
+          reproduced = json.loads(Path('V23_REPORT_REPRODUCED.json').read_text(encoding='utf-8'))
+          assert committed == reproduced
+          PY
+      - name: Reproduce independent equal-budget search
+        run: |
+          python lexigen-language-genesis/v23/independent_search_v23.py \
+            --arcgen-root arcgen \
+            --output V23_INDEPENDENT_REPRODUCED.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          committed = json.loads(Path('lexigen-language-genesis/v23/V23_INDEPENDENT_REPORT.json').read_text(encoding='utf-8-sig'))
+          reproduced = json.loads(Path('V23_INDEPENDENT_REPRODUCED.json').read_text(encoding='utf-8'))
+          assert committed == reproduced
+          PY
+      - name: Verify frozen horizon evidence
+        run: |
+          test "$(sha256sum lexigen-language-genesis/v23/V23_EVIDENCE.json | cut -d' ' -f1)" = "6630b2d104f8595915cb69b8962a6dcc1c7c27da96a575d6923bee308c84f0bb"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v23-horizon-reproduction
+          path: |
+            V23_REPORT_REPRODUCED.json
+            V23_INDEPENDENT_REPRODUCED.json
+          if-no-files-found: error
+          retention-days: 90

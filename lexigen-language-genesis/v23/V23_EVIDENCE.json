@@ -1,0 +1,22 @@
+{
+  "equal_budget_reproduction": true,
+  "external_real_world_discovery_produced": false,
+  "files": {
+    "V23_INDEPENDENT_REPORT.json": "73e4f32c17dead058e17f78f05e85ebcb777c0e3f47ae672b315ebef16ee53d1",
+    "V23_PRECOMMIT.json": "c1f436270de1e76ffe42183f6eaf03ba3da28346de8febfa9823ae006d693cef",
+    "V23_REPORT.json": "6c7e654d5e9276a3fd351bfce697c31477135e2e8e0a4697c3b734d629d10b18",
+    "evaluate_v23.py": "7227471c083c0e10205d554f106e44db1e26c4a5c71dbdda9f498ee2c3db7fec",
+    "independent_search_v23.py": "822c243fe06de0203193e265a51a84f78bb472810242956ce719259e2099eedd"
+  },
+  "heldout_transfer_demonstrated": false,
+  "horizon_verdict": "The v15-v23 research horizon is complete with no rigorously verified external breakthrough. v19r4 produced a credible in-grammar invention candidate, but v20 transfer was 0/10; v21 factorized discovery was 0/24; v22 mechanism schemas were human-authored and rejected as autonomous invention; v23 held-out transfer was 0/20 in two equal-budget implementations.",
+  "independent_candidates_tested": 37820,
+  "independent_tasks_with_exact_program": 0,
+  "outside_human_reproduction": false,
+  "primary_candidates_tested": 37820,
+  "primary_tasks_with_exact_program": 0,
+  "schema": "lexigen-v23-horizon-evidence-v1",
+  "selected_task_count": 20,
+  "version_horizon": "v15-v23",
+  "world_level_breakthrough": false
+}

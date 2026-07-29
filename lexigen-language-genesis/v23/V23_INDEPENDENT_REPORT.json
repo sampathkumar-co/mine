@@ -1,0 +1,128 @@
+{
+  "reports": [
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "963e52fc"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 4,
+      "task": "6ffe8f07"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 2,
+      "task": "252143c9"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 2,
+      "task": "5614dbcf"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "695367ec"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 4,
+      "task": "22425bda"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "c3e719e8"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 2,
+      "task": "103eff5b"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "11852cab"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "f25fbde4"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 5,
+      "task": "3a301edc"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 2,
+      "task": "9356391f"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "e21a174a"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 2,
+      "task": "66e6c45b"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "98cf29f8"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 4,
+      "task": "662c240a"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 6,
+      "task": "44f52bb0"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 2,
+      "task": "b6afb2da"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 4,
+      "task": "09629e4f"
+    },
+    {
+      "candidates_tested": 1891,
+      "exact_program_count": 0,
+      "published_examples": 3,
+      "task": "e73095fd"
+    }
+  ],
+  "schema": "lexigen-v23-independent-search-report-v1",
+  "task_count": 20,
+  "tasks_with_exact_program": 0,
+  "total_candidates_tested": 37820
+}
