@@ -1,0 +1,100 @@
+name: Lexigen Language Genesis v19r2
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v19r2/**"
+      - ".github/workflows/lexigen-language-genesis-v19r2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v19r2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out v19r2
+        uses: actions/checkout@v4
+
+      - name: Check out frozen v13 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile v19r2
+        run: python -m py_compile lexigen-language-genesis/v19r2/*.py
+
+      - name: Run adversarial and verifier tests
+        run: |
+          python lexigen-language-genesis/v19r2/test_v19r2.py
+          python lexigen-language-genesis/v19r2/test_verifier_v19r2.py
+
+      - name: Reproduce fixed-pool production gate
+        run: |
+          python lexigen-language-genesis/v19r2/validate_v19r2.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 10000 \
+            --output lexigen-language-genesis/v19r2/V19R2_REPORT.json
+
+      - name: Reproduce verifier co-synthesis
+        run: |
+          python lexigen-language-genesis/v19r2/validate_verifier_v19r2.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 1000 \
+            --mutations-per-case 8 \
+            --output lexigen-language-genesis/v19r2/V19R2_VERIFIER_REPORT.json
+
+      - name: Regenerate frozen evidence twice
+        run: |
+          python lexigen-language-genesis/v19r2/freeze_v19r2_evidence.py
+          first=$(sha256sum lexigen-language-genesis/v19r2/V19R2_EVIDENCE.json | cut -d' ' -f1)
+          python lexigen-language-genesis/v19r2/freeze_v19r2_evidence.py
+          second=$(sha256sum lexigen-language-genesis/v19r2/V19R2_EVIDENCE.json | cut -d' ' -f1)
+          test "$first" = "$second"
+          test "$first" = "5cabe2242607b1c058bc713ad5742f488758a552f4e4e91e399a43e3c28291a2"
+
+      - name: Verify byte-identical frozen artifacts
+        run: |
+          git diff --exit-code -- \
+            lexigen-language-genesis/v19r2/V19R2_REPORT.json \
+            lexigen-language-genesis/v19r2/V19R2_VERIFIER_REPORT.json \
+            lexigen-language-genesis/v19r2/V19R2_EVIDENCE.json \
+            lexigen-language-genesis/v19r2/EVIDENCE.md \
+            lexigen-language-genesis/v19r2/productions \
+            lexigen-language-genesis/v19r2/contracts
+
+      - name: Upload v19r2 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v19r2-partial-mechanism-evidence
+          path: |
+            lexigen-language-genesis/v19r2/V19R2_PRECOMMIT.json
+            lexigen-language-genesis/v19r2/V19R2_REPORT.json
+            lexigen-language-genesis/v19r2/V19R2_VERIFIER_REPORT.json
+            lexigen-language-genesis/v19r2/V19R2_EVIDENCE.json
+            lexigen-language-genesis/v19r2/V19R2_INTEGRITY_AUDIT.json
+            lexigen-language-genesis/v19r2/EVIDENCE.md
+            lexigen-language-genesis/v19r2/productions
+            lexigen-language-genesis/v19r2/contracts
+          if-no-files-found: error
+          retention-days: 90
