@@ -1,0 +1,23 @@
+{
+  "all_source_programs_present": true,
+  "candidate_sha256": "50a604639fef3158bbd2821afdf2f6f2d5562ea5d6eecb7fd5f0e8563661cd25",
+  "grammar_file_sha256": "f1e4ab2f95f7bec0edd374c980c9cbcf48803e2c49fa7372a8128cdd2925c90b",
+  "precommit_sha256": "6969eebfb91c6609aaa076b7ea74d4bb93fb8931e11066f51c5c7f90e00c62a6",
+  "schema": "lexigen-v30-frozen-grammar-manifest-v1",
+  "source_program_ast_sha256": [
+    "2a8bc0338ab5aa09094438fb990efde9c3c138dc6549369b8d715febe984cecb",
+    "7c6cc28e4f7bb5f69cebea824d175ed8d873efc97df13a6566238ba32cf65cb9",
+    "9093e05ac7306f078a51fe10b58f3039aedd912447fbbb63cc758d615f1c1b53"
+  ],
+  "source_structures_sha256": "0d90539da866975b2e2521c91fa8612bc4bd7dc8b5ff8f60831b7890aae2b49c",
+  "structural_candidate_count": 23916,
+  "support_expression_counts": {
+    "Color": 3,
+    "Grid": 23917,
+    "PointSet": 2388
+  },
+  "validation_generators_imported": 0,
+  "validation_outputs_opened": false,
+  "validation_task_count": 20,
+  "world_level_breakthrough": false
+}
