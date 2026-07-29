@@ -1,0 +1,38 @@
+{
+  "body": {
+    "colour": 8,
+    "coords": {
+      "op": "union_all",
+      "sets": {
+        "items": {
+          "colour": 1,
+          "op": "components"
+        },
+        "op": "filter",
+        "predicate": {
+          "left": {
+            "component": {
+              "op": "item"
+            },
+            "name": "holes",
+            "op": "feature"
+          },
+          "op": "eq",
+          "right": 1
+        }
+      }
+    },
+    "grid": {
+      "op": "input"
+    },
+    "op": "paint"
+  },
+  "parameters": {
+    "comparator": "eq",
+    "feature": "holes",
+    "source_colour": 1,
+    "target_colour": 8,
+    "threshold": 1
+  },
+  "schema": "lexigen-v19-invented-production-v1"
+}

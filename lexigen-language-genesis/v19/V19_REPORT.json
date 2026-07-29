@@ -1,0 +1,98 @@
+{
+  "autonomous_semantic_substrate_invention": false,
+  "demonstration_portable_exact": 6,
+  "demonstration_primary_exact": 6,
+  "demonstrations": 6,
+  "development_source": "v18 permanently-unscored visible demonstrations only",
+  "development_task": "b2862040",
+  "fixed_v17_baseline_program_found": false,
+  "fresh_accepted_cases": 10000,
+  "fresh_portable_exact": 10000,
+  "fresh_primary_exact": 10000,
+  "fresh_runtime_agreement": 10000,
+  "generator_attempts": 10000,
+  "generator_rejections": 0,
+  "holes_feature_ablation_failed": true,
+  "human_supplied_substrate": {
+    "component_features": [
+      "bbox_area",
+      "bbox_height",
+      "bbox_width",
+      "holes",
+      "size"
+    ],
+    "graph_primitive": "4-neighbour connected components",
+    "higher_order_primitives": [
+      "filter",
+      "union_all",
+      "paint"
+    ]
+  },
+  "invented_production": {
+    "body": {
+      "colour": 8,
+      "coords": {
+        "op": "union_all",
+        "sets": {
+          "items": {
+            "colour": 1,
+            "op": "components"
+          },
+          "op": "filter",
+          "predicate": {
+            "left": {
+              "component": {
+                "op": "item"
+              },
+              "name": "holes",
+              "op": "feature"
+            },
+            "op": "eq",
+            "right": 1
+          }
+        }
+      },
+      "grid": {
+        "op": "input"
+      },
+      "op": "paint"
+    },
+    "parameters": {
+      "comparator": "eq",
+      "feature": "holes",
+      "source_colour": 1,
+      "target_colour": 8,
+      "threshold": 1
+    },
+    "schema": "lexigen-v19-invented-production-v1"
+  },
+  "invented_production_sha256": "92fb3d0aeea493813eb03ff0d5222ce0b008022520f439cd2f038b9fd1204814",
+  "invention": {
+    "ablated_features": [],
+    "available_features": [
+      "bbox_area",
+      "bbox_height",
+      "bbox_width",
+      "holes",
+      "size"
+    ],
+    "candidate_productions_evaluated": 700,
+    "exact_survivors": 3,
+    "invented_production_sha256": "92fb3d0aeea493813eb03ff0d5222ce0b008022520f439cd2f038b9fd1204814",
+    "runtime_invalid_candidates": 0,
+    "selected_node_count": 28,
+    "selected_parameters": {
+      "comparator": "eq",
+      "feature": "holes",
+      "source_colour": 1,
+      "target_colour": 8,
+      "threshold": 1
+    }
+  },
+  "named_task_operator_used": false,
+  "original_v18_hidden_outputs_opened": false,
+  "production_absent_from_v17_grammar": true,
+  "schema": "lexigen-v19-production-invention-report-v1",
+  "task_id_available_to_inventor": false,
+  "world_level_breakthrough": false
+}

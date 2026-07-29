@@ -1,0 +1,215 @@
+{
+  "body": {
+    "bindings": [
+      {
+        "expr": {
+          "items": {
+            "items": {
+              "op": "range",
+              "stop": {
+                "op": "width"
+              }
+            },
+            "op": "filter",
+            "predicate": {
+              "items": [
+                {
+                  "body": {
+                    "left": {
+                      "col": {
+                        "name": "axis",
+                        "op": "var"
+                      },
+                      "default": 0,
+                      "op": "sample",
+                      "row": {
+                        "name": "orth",
+                        "op": "var"
+                      }
+                    },
+                    "op": "eq",
+                    "right": {
+                      "op": "mode"
+                    }
+                  },
+                  "items": {
+                    "op": "range",
+                    "stop": {
+                      "op": "height"
+                    }
+                  },
+                  "op": "fold",
+                  "reducer": "all",
+                  "var": "orth"
+                },
+                {
+                  "body": {
+                    "items": [
+                      {
+                        "left": {
+                          "op": "coord_col",
+                          "value": {
+                            "name": "point",
+                            "op": "var"
+                          }
+                        },
+                        "op": "lt",
+                        "right": {
+                          "name": "axis",
+                          "op": "var"
+                        }
+                      },
+                      {
+                        "left": {
+                          "col": {
+                            "op": "coord_col",
+                            "value": {
+                              "name": "point",
+                              "op": "var"
+                            }
+                          },
+                          "default": 0,
+                          "op": "sample",
+                          "row": {
+                            "op": "coord_row",
+                            "value": {
+                              "name": "point",
+                              "op": "var"
+                            }
+                          }
+                        },
+                        "op": "ne",
+                        "right": {
+                          "op": "mode"
+                        }
+                      }
+                    ],
+                    "op": "and"
+                  },
+                  "items": {
+                    "op": "grid_coords"
+                  },
+                  "op": "fold",
+                  "reducer": "any",
+                  "var": "point"
+                },
+                {
+                  "body": {
+                    "items": [
+                      {
+                        "left": {
+                          "op": "coord_col",
+                          "value": {
+                            "name": "point",
+                            "op": "var"
+                          }
+                        },
+                        "op": "gt",
+                        "right": {
+                          "name": "axis",
+                          "op": "var"
+                        }
+                      },
+                      {
+                        "left": {
+                          "col": {
+                            "op": "coord_col",
+                            "value": {
+                              "name": "point",
+                              "op": "var"
+                            }
+                          },
+                          "default": 0,
+                          "op": "sample",
+                          "row": {
+                            "op": "coord_row",
+                            "value": {
+                              "name": "point",
+                              "op": "var"
+                            }
+                          }
+                        },
+                        "op": "ne",
+                        "right": {
+                          "op": "mode"
+                        }
+                      }
+                    ],
+                    "op": "and"
+                  },
+                  "items": {
+                    "op": "grid_coords"
+                  },
+                  "op": "fold",
+                  "reducer": "any",
+                  "var": "point"
+                }
+              ],
+              "op": "and"
+            },
+            "var": "axis"
+          },
+          "op": "unique"
+        },
+        "name": "selected_axis"
+      }
+    ],
+    "cell": {
+      "condition": {
+        "left": {
+          "name": "col",
+          "op": "var"
+        },
+        "op": "eq",
+        "right": {
+          "name": "selected_axis",
+          "op": "var"
+        }
+      },
+      "else": {
+        "col": {
+          "name": "col",
+          "op": "var"
+        },
+        "default": 0,
+        "op": "sample",
+        "row": {
+          "name": "row",
+          "op": "var"
+        }
+      },
+      "op": "if",
+      "then": {
+        "name": "fill_colour",
+        "op": "param"
+      }
+    },
+    "schema": "lexigen-v19-primitive-grid-v1",
+    "shape": {
+      "cols": {
+        "op": "width"
+      },
+      "rows": {
+        "op": "height"
+      }
+    }
+  },
+  "name": "generated_ebc9e935e3e78c88",
+  "origin": {
+    "axis_kind": "column",
+    "enabled_predicate_clauses": [
+      "axis_is_background",
+      "foreground_exists_before_axis",
+      "foreground_exists_after_axis"
+    ],
+    "method": "typed_enumeration_then_literal_abstraction",
+    "source_program_sha256": "1de656e68d21b4ab443d1077e5503ecc70bdffd5a46d54f716ce68e02e22979c"
+  },
+  "parameters": [
+    {
+      "name": "fill_colour",
+      "type": "colour"
+    }
+  ],
+  "schema": "lexigen-v19-invented-production-v1"
+}

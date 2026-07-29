@@ -1,0 +1,47 @@
+{
+  "accepted_fresh_cases": 0,
+  "arguments_sha256": "59af31eb9b343909207662ffe11bb749bb0ada9e83a8ebf835d5ed926d01523e",
+  "claim_boundary": {
+    "autonomous_grammar_production_candidate": true,
+    "remaining_human_bias": "typed primitive inventory and bounded clause enumeration",
+    "sealed_external_success": false,
+    "transfer_demonstrated": false,
+    "world_level_breakthrough": false
+  },
+  "demonstration_portable_exact": 6,
+  "demonstration_primary_exact": 6,
+  "demonstrations": 6,
+  "development_gate": 9,
+  "development_task_id": "da2b0fe3",
+  "forbidden_opcode_hits": [],
+  "frozen_v17_ablation_failed": true,
+  "frozen_v17_failure": "constructive grammar found no exact program",
+  "generator_attempts": 0,
+  "generator_rejection_examples": [],
+  "generator_rejections": 0,
+  "hidden_outputs_opened": false,
+  "invention": {
+    "candidate_programs_evaluated": 320,
+    "exact_survivors": 1,
+    "named_scene_operator_used": false,
+    "production_absent_from_v17": true,
+    "production_sha256": "9bb54f797a65174f0387c3a434e7ed659257ef40717736784e40684f05459448",
+    "runtime_invalid_candidates": 300,
+    "selected_axis_kind": "column",
+    "selected_fill_colour": 3,
+    "selected_node_count": 135,
+    "selected_predicate_clauses": [
+      "axis_is_background",
+      "foreground_exists_before_axis",
+      "foreground_exists_after_axis"
+    ],
+    "source_program_sha256": "1de656e68d21b4ab443d1077e5503ecc70bdffd5a46d54f716ce68e02e22979c"
+  },
+  "portable_exact": 0,
+  "primary_exact": 0,
+  "production_sha256": "9bb54f797a65174f0387c3a434e7ed659257ef40717736784e40684f05459448",
+  "runtime_agreement": 0,
+  "schema": "lexigen-v19-production-invention-report-v1",
+  "source_program_sha256": "1de656e68d21b4ab443d1077e5503ecc70bdffd5a46d54f716ce68e02e22979c",
+  "task_id_hits": []
+}
