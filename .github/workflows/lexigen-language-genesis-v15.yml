@@ -74,6 +74,14 @@ jobs:
       - name: Verify frozen evidence manifest
         run: python lexigen-language-genesis/v15/freeze_v15_evidence.py
 
+      - name: Verify committed evidence is byte-reproducible
+        run: |
+          git diff --exit-code -- \
+            lexigen-language-genesis/v15/V15_INDEPENDENT_REPORT.json \
+            lexigen-language-genesis/v15/V15_HELDOUT_MACRO_SCAN.json \
+            lexigen-language-genesis/v15/V15_EVIDENCE.json \
+            lexigen-language-genesis/v15/EVIDENCE.md
+
       - name: Upload v15 reproduction reports
         uses: actions/upload-artifact@v4
         with:
