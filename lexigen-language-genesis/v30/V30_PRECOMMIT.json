@@ -1,0 +1,143 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "claim_boundary": {
+    "one_exact_heldout_task": "public heldout synthesis event",
+    "two_exact_heldout_tasks": "repeated public heldout transfer",
+    "world_level_breakthrough": "forbidden without fresh-case success, independent runtime agreement, and verifier co-synthesis"
+  },
+  "enumeration": {
+    "candidate_order": [
+      "maximum_depth",
+      "total_nodes",
+      "canonical_ast",
+      "parameter_assignment"
+    ],
+    "literal_color_domain": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "maximum_concrete_candidates_per_task": 500000,
+    "maximum_depth": 5,
+    "maximum_nodes": 9,
+    "maximum_structural_candidates": 50000,
+    "no_semantic_pruning_before_exact_check": true,
+    "reject_input_identity": true,
+    "root_type": "Grid"
+  },
+  "examples_per_task": 6,
+  "fresh_validation_rule": {
+    "cases": 1000,
+    "independent_runtime_required": true,
+    "seed_namespace": "lexigen-v30-fresh",
+    "verifier_cosynthesis_required_for_breakthrough_claim": true
+  },
+  "generator_attempts_per_task": 16,
+  "grammar_rule": "Enumerate every well-typed AST using only productions observed in the three frozen v28 exact programs; permit novel recombination, but add no unseen operator or hand-authored task rule.",
+  "per_generation_timeout_seconds": 5,
+  "post_validation_edits_allowed": false,
+  "replacement_tasks_allowed": false,
+  "schema": "lexigen-v30-source-induced-motif-grammar-precommit-v1",
+  "source_operator_inventory": [
+    "bbox_border",
+    "canvas",
+    "crop_bbox",
+    "dilate4",
+    "erode4",
+    "holes",
+    "input_grid",
+    "least_non_background",
+    "most_non_background",
+    "non_background_points",
+    "paint",
+    "param_color",
+    "points_of_color"
+  ],
+  "source_structure_count": 3,
+  "source_structures_sha256": "0d90539da866975b2e2521c91fa8612bc4bd7dc8b5ff8f60831b7890aae2b49c",
+  "success_rule": "Retain every exact candidate on six demonstrations. If any exist, freeze the minimum candidate by the preregistered order before fresh testing.",
+  "typed_productions": {
+    "bbox_border": [
+      "PointSet",
+      "PointSet"
+    ],
+    "canvas": [
+      "Color",
+      "Grid"
+    ],
+    "crop_bbox": [
+      "Grid",
+      "PointSet",
+      "Grid"
+    ],
+    "dilate4": [
+      "PointSet",
+      "PointSet"
+    ],
+    "erode4": [
+      "PointSet",
+      "PointSet"
+    ],
+    "holes": [
+      "PointSet",
+      "PointSet"
+    ],
+    "input_grid": [
+      "Grid"
+    ],
+    "least_non_background": [
+      "Color"
+    ],
+    "most_non_background": [
+      "Color"
+    ],
+    "non_background_points": [
+      "PointSet"
+    ],
+    "paint": [
+      "Grid",
+      "PointSet",
+      "Color",
+      "Grid"
+    ],
+    "param_color": [
+      "Color"
+    ],
+    "points_of_color": [
+      "Color",
+      "PointSet"
+    ]
+  },
+  "validation_generators_imported": 0,
+  "validation_identity_selection": "Rank unused identities from the frozen v19r5 validation registry by sha256(lexigen-v30-fresh-validation:<task_id>); take first 20.",
+  "validation_outputs_opened": false,
+  "validation_task_ids": [
+    "469497ad",
+    "28bf18c6",
+    "46c35fc7",
+    "1bfc4729",
+    "9565186b",
+    "6ca952ad",
+    "681b3aeb",
+    "465b7d93",
+    "3ee1011a",
+    "1e81d6f9",
+    "b7256dcd",
+    "639f5a19",
+    "b60334d2",
+    "3b4c2228",
+    "e39e9282",
+    "d94c3b52",
+    "6d0160f0",
+    "2dee498d",
+    "e4075551",
+    "05f2a901"
+  ]
+}
