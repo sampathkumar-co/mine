@@ -1,0 +1,20 @@
+{
+  "status": "repository_dataset_registry_v73_complete",
+  "workflow_run": 30446716292,
+  "workflow_artifact_digest": "sha256:c9b2844b25ec999ef1343371c53766f3b483bc8340d64d2664799b696162929c",
+  "registry_artifact_payload_sha256": "e0f1b524f7b1e818c0d87fa9bf8b2712c6ce8d7323ed25166b812bcb344a0979",
+  "registry_digest": "3fde8f0138548928651937201cef66aa71ee41bbb792ade82b1a02337ae8b392",
+  "frozen_v72_commit": "dae02829efc4819935a4ec87c31ea5eee3305d83",
+  "parent_v72_evidence_digest": "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090",
+  "parent_v67_registry_digest": "b88fcb352c2f80af8bc89a3a7576b9cd384800b67d1b168534ad26df9985b6c1",
+  "ref_count": 192,
+  "files_scanned": 16337,
+  "bytes_scanned": 107949261,
+  "uci_id_count": 62,
+  "pystreed_token_count": 12,
+  "required_preblind_uci_check_count": 55,
+  "required_preblind_uci_checks_passed": true,
+  "failure_count": 0,
+  "excluded_uci_ids": [3,8,12,14,19,22,26,33,42,43,44,46,50,52,59,62,63,67,69,70,72,73,74,76,80,81,83,90,94,95,96,100,101,105,107,111,146,149,151,166,171,174,181,193,212,236,267,295,373,468,475,519,544,545,571,602,697,759,850,863,864,891],
+  "scientific_note": "The repository-wide preblind contamination registry completed without scan failures and includes every dataset required by the v0.67 boundary plus every archive opened by v0.68/v0.72. No new candidate dataset metadata, archive bytes, records, labels, or solver outputs were introduced before this registry was frozen. This is provenance infrastructure, not algorithmic evidence or a world-level claim."
+}
