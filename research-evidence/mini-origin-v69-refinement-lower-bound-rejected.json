@@ -1,0 +1,40 @@
+{
+  "status": "refinement_lower_bound_development_rejected",
+  "development_gate": false,
+  "workflow_run": 30425019295,
+  "workflow_artifact_digest": "sha256:0f49bcab86c934eb1064b68e7bf5b9d9ce352a19938d5873b9d21d38e09541fb",
+  "evidence_digest": "dea2f5391b69841555f79053e95b6939805ad03c0a3587bb0eebb2664c3506b3",
+  "parent_v65_lower_bound_evidence_digest": "3a1ef2c86c07600a591a900caf920456acecacb158b8faeb8bdb4c6d97d0550a",
+  "parent_refinement_certificate_protocol_digest": "bffae9dc7cf32079c28f86539da31233e32e08c8ab6e627f93ed5ef91491edf7",
+  "random_certificate": {
+    "task_count": 96,
+    "exact_match_count": 96,
+    "mismatch_count": 0,
+    "expansion_regression_count": 0,
+    "tasks_with_refinement_removal": 22,
+    "refinement_queries_removed": 34,
+    "passed": true
+  },
+  "opened_v64_evaluation": {
+    "base_state_count": 60,
+    "profiled_state_count": 180,
+    "current_solved_count": 180,
+    "refined_solved_count": 180,
+    "exact_plan_match_count": 180,
+    "mismatch_count": 0,
+    "expansion_regression_count": 0,
+    "states_with_refinement_removal": 180,
+    "refinement_queries_removed": 59244,
+    "states_with_1_05x_reduction": 7,
+    "current_query_expansions": 141763,
+    "refined_query_expansions": 129446,
+    "aggregate_expansion_reduction_fraction": 0.08688444798713346,
+    "median_current_over_refined_ratio": 1.0,
+    "p90_current_over_refined_ratio": 1.0096218671545778
+  },
+  "failed_locked_thresholds": {
+    "minimum_states_with_1_05x_expansion_reduction": 10,
+    "observed_states_with_1_05x_expansion_reduction": 7
+  },
+  "scientific_note": "Strict descendant-local refinement dominance preserved every tested exact plan and never increased query expansions. It removed many candidates and reduced aggregate expansions by 8.69%, but the gain was concentrated: only seven opened states achieved the preregistered 1.05x improvement versus ten required. The development mechanism is therefore rejected without changing thresholds."
+}

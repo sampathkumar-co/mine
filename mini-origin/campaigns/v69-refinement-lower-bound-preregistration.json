@@ -1,0 +1,26 @@
+{
+  "status": "preregistered_before_execution",
+  "parent_v65_lower_bound_evidence_digest": "3a1ef2c86c07600a591a900caf920456acecacb158b8faeb8bdb4c6d97d0550a",
+  "parent_refinement_certificate_protocol_digest": "bffae9dc7cf32079c28f86539da31233e32e08c8ab6e627f93ed5ef91491edf7",
+  "development_data": "opened v0.64 clean external rejection states only",
+  "random_certificate_tasks": 96,
+  "random_seed_start": 69001,
+  "exact_budget": 500000,
+  "locked_gate": {
+    "random_exact_plan_matches": 96,
+    "random_expansion_regressions": 0,
+    "base_states": 60,
+    "profiled_states": 180,
+    "current_lower_bound_solves": 180,
+    "refinement_lower_bound_solves": 180,
+    "exact_plan_matches": 180,
+    "plan_mismatches": 0,
+    "expansion_regressions": 0,
+    "minimum_states_with_refinement_removal": 15,
+    "minimum_refinement_queries_removed": 100,
+    "minimum_aggregate_expansion_reduction_fraction": 0.02,
+    "minimum_states_with_1_05x_expansion_reduction": 10,
+    "minimum_median_current_over_refinement_ratio": 1.0
+  },
+  "claim_boundary": "Opened-data development test of a theorem-backed canonicalisation extension. A pass is not fresh external validation, independent outside-human reproduction, publication novelty, peer review, or a world-level claim."
+}
