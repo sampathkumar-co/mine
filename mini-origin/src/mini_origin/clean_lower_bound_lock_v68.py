@@ -11,6 +11,12 @@ REGISTRY = Path(__file__).resolve().parents[3] / "research-evidence" / "mini-ori
 REGISTRY_DIGEST = "b88fcb352c2f80af8bc89a3a7576b9cd384800b67d1b168534ad26df9985b6c1"
 V66_EVIDENCE = Path(__file__).resolve().parents[3] / "research-evidence" / "mini-origin-v66-rust-lower-bound-pass.json"
 V66_DIGEST = "3b2bb026556ff9f6321ad6a8375854ae46931e64080329c76f86f31d12c0d643"
+EXPECTED_EXCLUDED_UCI_IDS = (
+    3, 8, 12, 14, 19, 22, 26, 33, 44, 46, 50, 59, 62, 63, 67, 69,
+    70, 72, 73, 76, 80, 81, 83, 90, 95, 96, 100, 101, 105, 107, 111,
+    146, 149, 171, 373, 468, 475, 519, 544, 545, 571, 602, 697, 759,
+    850, 863, 864, 891,
+)
 
 DATASETS = (
     {
@@ -70,11 +76,14 @@ def run(output: Path) -> dict[str, object]:
         raise RuntimeError("updated registry is not complete")
     if registry["registry_digest"] != REGISTRY_DIGEST:
         raise RuntimeError("updated registry digest changed")
+    excluded_values = tuple(sorted(int(value) for value in registry["excluded_uci_ids"]))
+    if excluded_values != EXPECTED_EXCLUDED_UCI_IDS:
+        raise RuntimeError("audited exclusion list changed")
     evidence = json.loads(V66_EVIDENCE.read_text(encoding="utf-8"))
     if not evidence["development_gate"] or evidence["evidence_digest"] != V66_DIGEST:
         raise RuntimeError("unexpected v0.66 evidence")
 
-    excluded = {int(value) for value in registry["excluded_uci_ids"]}
+    excluded = set(excluded_values)
     candidate_ids = [int(row["uci_id"]) for row in DATASETS]
     overlap = sorted(set(candidate_ids) & excluded)
     if overlap:
@@ -93,10 +102,11 @@ def run(output: Path) -> dict[str, object]:
         })
     result = {
         "status": "clean_lower_bound_archive_hash_lock_v68",
-        "protocol": "updated_repository_registry_exclusion_then_hash_only_no_archive_open_no_record_parse",
+        "protocol": "exact_audited_exclusion_list_then_hash_only_no_archive_open_no_record_parse",
         "license": "CC BY 4.0",
         "parent_v66_evidence_digest": V66_DIGEST,
         "repository_registry_digest": REGISTRY_DIGEST,
+        "excluded_uci_ids": list(excluded_values),
         "excluded_uci_id_count": len(excluded),
         "candidate_overlap": overlap,
         "dataset_count": len(rows),
