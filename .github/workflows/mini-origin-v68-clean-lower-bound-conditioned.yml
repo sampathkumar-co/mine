@@ -8,6 +8,7 @@ on:
       - "mini-origin/external-data/uci-v68/manifest.json"
       - "mini-origin/src/mini_origin/clean_lower_bound_conditioned_v68.py"
       - "mini-origin/src/mini_origin/clean_lower_bound_validate_v68.py"
+      - "mini-origin/src/mini_origin/clean_lower_bound_repaired_v68.py"
       - ".github/workflows/mini-origin-v68-clean-lower-bound-conditioned.yml"
       - "mini-origin/compiled/response_cost_lower_bound_v66.rs"
   pull_request:
@@ -15,6 +16,7 @@ on:
       - "mini-origin/external-data/uci-v68/manifest.json"
       - "mini-origin/src/mini_origin/clean_lower_bound_conditioned_v68.py"
       - "mini-origin/src/mini_origin/clean_lower_bound_validate_v68.py"
+      - "mini-origin/src/mini_origin/clean_lower_bound_repaired_v68.py"
       - ".github/workflows/mini-origin-v68-clean-lower-bound-conditioned.yml"
       - "mini-origin/compiled/response_cost_lower_bound_v66.rs"
   workflow_dispatch:
@@ -46,7 +48,7 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Verify frozen provenance and solver files
         run: >-
-          python -c "import json; m=json.load(open('external-data/uci-v68/manifest.json')); r=json.load(open('../research-evidence/mini-origin-v67-updated-dataset-registry.json')); e=json.load(open('../research-evidence/mini-origin-v66-rust-lower-bound-pass.json')); assert m['lock_digest']=='9abc52a7e83255498c84b802d432306b5ff15dece032469968b8db3501d0a385'; assert m['repository_registry_digest']==r['registry_digest']=='b88fcb352c2f80af8bc89a3a7576b9cd384800b67d1b168534ad26df9985b6c1'; assert m['parent_v66_evidence_digest']==e['evidence_digest']=='3b2bb026556ff9f6321ad6a8375854ae46931e64080329c76f86f31d12c0d643'; assert m['dataset_count']==7 and not m['candidate_overlap']" &&
+          python -c "import json; m=json.load(open('external-data/uci-v68/manifest.json')); r=json.load(open('../research-evidence/mini-origin-v67-updated-dataset-registry.json')); e=json.load(open('../research-evidence/mini-origin-v66-rust-lower-bound-pass.json')); expected=[3,8,12,14,19,22,26,33,44,46,50,59,62,63,67,69,70,72,73,76,80,81,83,90,95,96,100,101,105,107,111,146,149,171,373,468,475,519,544,545,571,602,697,759,850,863,864,891]; assert m['lock_digest']=='c599849c7ba26fdb3e241221dcae3d3feb26d47ad217da53f0d06b97ebc1e02b'; assert m['excluded_uci_ids']==expected==r['excluded_uci_ids']; assert m['repository_registry_digest']==r['registry_digest']=='b88fcb352c2f80af8bc89a3a7576b9cd384800b67d1b168534ad26df9985b6c1'; assert m['parent_v66_evidence_digest']==e['evidence_digest']=='3b2bb026556ff9f6321ad6a8375854ae46931e64080329c76f86f31d12c0d643'; assert m['dataset_count']==7 and not m['candidate_overlap']" &&
           git diff --exit-code f73ad897377ae1189844ea9ab49aa429c6b1c1c3 --
           src/mini_origin/conditioned_cell_frontier_v60.py
           src/mini_origin/response_cost_pareto_v56.py &&
@@ -60,7 +62,7 @@ jobs:
       - name: Compute matched Python exact reference
         run: >-
           mkdir -p results/v68 &&
-          python -m mini_origin.clean_lower_bound_conditioned_v68
+          python -m mini_origin.clean_lower_bound_repaired_v68 reference
           --states results/v68/states.txt
           --reference results/v68/python-reference.json
       - name: Compile independent Rust lower-bound solver
@@ -69,7 +71,7 @@ jobs:
         run: results/v68/response_cost_lower_bound_v68 --input results/v68/states.txt --output results/v68/rust-results.json
       - name: Apply locked clean external gate
         run: >-
-          python -m mini_origin.clean_lower_bound_validate_v68
+          python -m mini_origin.clean_lower_bound_repaired_v68 validate
           --reference results/v68/python-reference.json
           --rust results/v68/rust-results.json
           --output results/v68/evidence.json
