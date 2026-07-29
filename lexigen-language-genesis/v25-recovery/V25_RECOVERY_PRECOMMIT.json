@@ -1,0 +1,27 @@
+{
+  "allowed_implementation_changes": [
+    "slots-based immutable expression records",
+    "AST dictionaries removed from retained expressions and reconstructed from canonical text",
+    "semantic signatures stored exactly in SQLite rather than duplicated in RAM"
+  ],
+  "base_commit": "2e9cd01",
+  "equivalence_gate": {
+    "require_byte_identical_task_report": true,
+    "required_report_sha256": "4d6b326e3f8334aa5d5542cae59344a76a1baa55b1734ddacd3a70c783440091",
+    "task_id": "c074846d"
+  },
+  "frozen_v25_precommit_sha256": "8eeb6bb9e878d4849cf49cc741e3341fdc246015e3fb0569d7243557e0ec098b",
+  "hash_only_deduplication_allowed": false,
+  "recovery_success": "all three target reports complete under the original v25 protocol and aggregate with the 37 original immutable reports",
+  "same_arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "same_task_ids_seeds_examples_depth_candidate_order_budgets": true,
+  "schema": "lexigen-v25-disk-backed-recovery-precommit-v1",
+  "target_task_ids": [
+    "6cf79266",
+    "0dfd9992",
+    "319f2597"
+  ],
+  "task_count": 3,
+  "validation_outputs_opened": false,
+  "world_level_breakthrough": false
+}
