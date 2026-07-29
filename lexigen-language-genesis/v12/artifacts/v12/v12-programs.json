@@ -1,0 +1,104 @@
+{
+  "v11-campaign-01": {
+    "name": "generated_hierarchical_program_557ca14adff6",
+    "provenance": {
+      "candidates_tested": 16,
+      "exact_candidate_count": 2,
+      "human_supplied_finished_task_operator": false,
+      "human_supplied_generic_hierarchical_substrate": true,
+      "method": "typed hierarchical scene grammar synthesis"
+    },
+    "schema": "lexigen-hierarchical-scene-v1",
+    "stages": [
+      {
+        "kind": "partition",
+        "mode": "separator_lines",
+        "separator_colour": 0
+      },
+      {
+        "cell_background": 1,
+        "kind": "transform",
+        "mode": "complete_local_midpoints",
+        "require_same_colour": false
+      },
+      {
+        "kind": "assemble",
+        "mode": "preserve_canvas"
+      }
+    ],
+    "types": [
+      "Grid",
+      "Containers",
+      "LocalRelations",
+      "Grid"
+    ]
+  },
+  "v11-campaign-05": {
+    "name": "generated_hierarchical_program_f84a5ca28481",
+    "provenance": {
+      "candidates_tested": 60,
+      "exact_candidate_count": 1,
+      "human_supplied_finished_task_operator": false,
+      "human_supplied_generic_hierarchical_substrate": true,
+      "method": "typed hierarchical scene grammar synthesis"
+    },
+    "schema": "lexigen-hierarchical-scene-v1",
+    "stages": [
+      {
+        "kind": "partition",
+        "mode": "separator_lines",
+        "separator_colour": 0
+      },
+      {
+        "kind": "transform",
+        "mode": "reduce_mode"
+      },
+      {
+        "border": 1,
+        "canvas_colour": 0,
+        "kind": "assemble",
+        "mode": "summary_grid"
+      }
+    ],
+    "types": [
+      "Grid",
+      "Containers",
+      "Statistics",
+      "Grid"
+    ]
+  },
+  "v11-campaign-07": {
+    "name": "generated_hierarchical_program_281a3a7f5dd4",
+    "provenance": {
+      "candidates_tested": 78,
+      "exact_candidate_count": 2,
+      "human_supplied_finished_task_operator": false,
+      "human_supplied_generic_hierarchical_substrate": true,
+      "method": "typed hierarchical scene grammar synthesis"
+    },
+    "schema": "lexigen-hierarchical-scene-v1",
+    "stages": [
+      {
+        "background": 0,
+        "kind": "partition",
+        "marker": 5,
+        "mode": "marker_gap_chain"
+      },
+      {
+        "kind": "transform",
+        "mode": "align_local_frames",
+        "rank_mode": "min_shift"
+      },
+      {
+        "kind": "assemble",
+        "mode": "concatenate_segments"
+      }
+    ],
+    "types": [
+      "Grid",
+      "Segments",
+      "LocalFrames",
+      "Grid"
+    ]
+  }
+}
