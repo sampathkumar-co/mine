@@ -1,0 +1,108 @@
+name: Mini-ORIGIN External Replication Kit v0.76
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v76-external-replication-kit
+    paths:
+      - "mini-origin/EXTERNAL_REPLICATION_CHALLENGE_v76.md"
+      - "mini-origin/src/mini_origin/external_replication_kit_v76.py"
+      - "mini-origin/src/mini_origin/validate_external_replication_v76.py"
+      - "mini-origin/tests/test_external_replication_v76.py"
+      - ".github/workflows/mini-origin-v76-external-replication-kit.yml"
+  pull_request:
+    paths:
+      - "mini-origin/EXTERNAL_REPLICATION_CHALLENGE_v76.md"
+      - "mini-origin/src/mini_origin/external_replication_kit_v76.py"
+      - "mini-origin/src/mini_origin/validate_external_replication_v76.py"
+      - "mini-origin/tests/test_external_replication_v76.py"
+      - ".github/workflows/mini-origin-v76-external-replication-kit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v76-replication-kit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  external-replication-kit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen theorem and solver inputs
+        run: |
+          test -s THEOREMS_v75.md
+          test -s EXTERNAL_REPLICATION_CHALLENGE_v76.md
+          git diff --exit-code d1117a37fe2bca031960c4ace3f6d8049878e2e6 -- \
+            THEOREMS_v75.md \
+            src/mini_origin/response_cost_pareto_v56.py \
+            src/mini_origin/response_cost_export_v57.py \
+            src/mini_origin/average_odt_frontier_v44.py \
+            src/mini_origin/exact_quotient_certificate_v42.py
+      - name: Run challenge and validator tests
+        run: pytest -q tests/test_external_replication_v76.py
+      - name: Build public challenge and private commitment
+        run: >-
+          mkdir -p results/v76 &&
+          python -m mini_origin.external_replication_kit_v76
+          --states results/v76/states.txt
+          --input-manifest results/v76/input-manifest.json
+          --challenge results/v76/challenge.json
+      - name: Self-check committed preimage without publishing rows
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from mini_origin.external_replication_kit_v76 import SCHEMA, expected_rows
+          rows, _ = expected_rows()
+          Path('results/v76/internal-reference.json').write_text(
+              json.dumps({'schema': SCHEMA, 'rows': rows}), encoding='utf-8'
+          )
+          PY
+          python -m mini_origin.validate_external_replication_v76 \
+            --challenge results/v76/challenge.json \
+            --submission results/v76/internal-reference.json \
+            --output results/v76/self-validation.json
+          rm results/v76/internal-reference.json
+      - name: Verify public kit excludes expected rows
+        run: |
+          test ! -e results/v76/internal-reference.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          challenge = json.loads(Path('results/v76/challenge.json').read_text())
+          manifest = json.loads(Path('results/v76/input-manifest.json').read_text())
+          validation = json.loads(Path('results/v76/self-validation.json').read_text())
+          assert challenge['state_count'] == manifest['state_count'] == 195
+          assert challenge['input_sha256'] == manifest['input_sha256']
+          assert len(challenge['expected_canonical_output_sha256']) == 64
+          assert validation['passed'] is True
+          assert validation['actual_commitment'] == challenge['expected_canonical_output_sha256']
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v76-external-replication-kit
+          path: |
+            mini-origin/results/v76/states.txt
+            mini-origin/results/v76/input-manifest.json
+            mini-origin/results/v76/challenge.json
+            mini-origin/results/v76/self-validation.json
+            mini-origin/EXTERNAL_REPLICATION_CHALLENGE_v76.md
+            mini-origin/THEOREMS_v75.md
+          if-no-files-found: error
+          retention-days: 90
