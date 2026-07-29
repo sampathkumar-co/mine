@@ -9,10 +9,16 @@ on:
       - "mini-origin/src/mini_origin/fresh_external_lock_v74.py"
       - "mini-origin/tests/test_fresh_external_lock_v74.py"
       - ".github/workflows/mini-origin-v74-fresh-external-hash-lock.yml"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v74-fresh-external-hash-lock.json"
+      - "mini-origin/src/mini_origin/fresh_external_lock_v74.py"
+      - "mini-origin/tests/test_fresh_external_lock_v74.py"
+      - ".github/workflows/mini-origin-v74-fresh-external-hash-lock.yml"
   workflow_dispatch:
 
 concurrency:
-  group: mini-origin-v74-fresh-external-hash-lock-${{ github.ref }}
+  group: mini-origin-v74-fresh-external-hash-lock
   cancel-in-progress: true
 
 permissions:
