@@ -18,7 +18,7 @@ cd mini-origin
 python -m pytest -q \
   tests/test_pmlb_preblind_audit_v80.py \
   tests/test_openml_preblind_audit_v76.py \
-  tests/test_repository_dataset_audit_v63.py
+  tests/test_repository_dataset_audit_v73.py
 
 rm -rf results/v80
 mkdir -p results/v80
