@@ -1,7 +1,7 @@
 {
   "status": "novelty_boundary_audit_in_progress",
   "audit_date": "2026-07-29",
-  "scope": "Primary literature and previously pinned solver-source evidence relevant to exact adaptive identification trees, response-dependent testing cost, experiment informativeness, and descendant-local pruning.",
+  "scope": "Primary literature and preserved pinned solver-source evidence relevant to exact adaptive identification trees, response-dependent testing cost, experiment informativeness, and descendant-local pruning.",
   "primary_sources": [
     {
       "key": "blackwell-1953",
@@ -48,12 +48,49 @@
       "authors": ["Rahul Deb", "Colin Stewart"],
       "venue": "Theoretical Economics 13(3):1233-1274",
       "doi": "10.3982/TE2914",
-      "relevance": "Applies statistical informativeness ordering to adaptive test choice in a strategic model. It is not the same optimization problem, but reinforces that 'choose a more informative test' is established theory rather than a broad novelty claim."
+      "relevance": "Applies statistical informativeness ordering to adaptive test choice in a strategic model. It is not the same optimization problem, but reinforces that choosing a more informative test is established theory rather than a broad novelty claim."
     }
   ],
   "previous_pinned_source_audit": {
-    "branch": "research/mini-origin-v46-prior-art-audit",
-    "accessible_snapshots": ["PySTreeD", "DL8.5", "OSDT", "GOSDT"],
+    "preserved_evidence_file": "research-evidence/mini-origin-v46-prior-art-reviewed.json",
+    "workflow_run": 30383609697,
+    "workflow_artifact_id": 8698032296,
+    "workflow_artifact_digest": "sha256:7e25b792a7e0f2bbc18429f0ed7a9fc1fe196868b65b7fec963b093944d5b56e",
+    "original_evidence_commit": "134e27a21d913e32b11e4f12d38e1379956fe6d2",
+    "accessible_snapshots": [
+      {
+        "solver": "PySTreeD",
+        "repository": "AlgTUDelft/pystreed",
+        "commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+        "commit_url": "https://github.com/AlgTUDelft/pystreed/commit/9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+        "files_scanned": 126,
+        "lines_scanned": 18771
+      },
+      {
+        "solver": "DL8.5",
+        "repository": "aia-uclouvain/pydl8.5",
+        "commit": "a7f0fee72b4c17bbcb727050ba102db7dda10119",
+        "commit_url": "https://github.com/aia-uclouvain/pydl8.5/commit/a7f0fee72b4c17bbcb727050ba102db7dda10119",
+        "files_scanned": 77,
+        "lines_scanned": 9445
+      },
+      {
+        "solver": "OSDT",
+        "repository": "xiyanghu/OSDT",
+        "commit": "d28ff434d5a90a1e49ffcbcab170c9ce457a605f",
+        "commit_url": "https://github.com/xiyanghu/OSDT/commit/d28ff434d5a90a1e49ffcbcab170c9ce457a605f",
+        "files_scanned": 3,
+        "lines_scanned": 1442
+      },
+      {
+        "solver": "GOSDT",
+        "repository": "Jimmy-Lin/GeneralizedOptimalSparseDecisionTrees",
+        "commit": "b9116d0557613dc42ff1fcefcf0bc0be91db1620",
+        "commit_url": "https://github.com/Jimmy-Lin/GeneralizedOptimalSparseDecisionTrees/commit/b9116d0557613dc42ff1fcefcf0bc0be91db1620",
+        "files_scanned": 44,
+        "lines_scanned": 6998
+      }
+    ],
     "closest_found": "PySTreeD one-time global duplicate-feature preprocessing",
     "not_found_in_accessible_snapshots": "Recomputation of exact response-partition equivalence classes at every descendant state",
     "unresolved_source_gap": "MurTree commit 86e439ef537e40cb93afa641aafe2078 could not be obtained reproducibly through the available Bitbucket transport. Its paper is reviewed, but its pinned implementation remains unaudited."
