@@ -1,0 +1,15 @@
+{
+  "status": "openml_hash_lock_v77_infrastructure_failure_preserved",
+  "workflow_run": 30454183909,
+  "job_id": 90583437160,
+  "failed_step": "Select and hash-lock cross-source OpenML datasets",
+  "failure_type": "manifest_serialization_compatibility",
+  "exception": "AttributeError: 'OpenMLBenchmarkSuite' object has no attribute 'suite_id'",
+  "metadata_and_raw_bytes_accessed": true,
+  "record_target_or_feature_parsing": false,
+  "solver_execution": false,
+  "manifest_written": false,
+  "selection_protocol_changed": false,
+  "repair_scope": "Supply the already-preregistered benchmark suite ID 99 through a compatibility shim; do not modify the selection seed, filters, ranking, dataset count, byte limit, parser boundary, or solver boundary.",
+  "original_head": "a9a9ebfdd92e5e83b322ebb4b6347b7631a20b57"
+}
