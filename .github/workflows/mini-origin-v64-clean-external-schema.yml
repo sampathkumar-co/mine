@@ -1,0 +1,53 @@
+name: Mini-ORIGIN Clean External Schema v0.64
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v64-clean-external-lock
+    paths:
+      - "mini-origin/external-data/uci-v64/manifest.json"
+      - "mini-origin/src/mini_origin/clean_external_schema_v64.py"
+      - ".github/workflows/mini-origin-v64-clean-external-schema.yml"
+  pull_request:
+    paths:
+      - "mini-origin/external-data/uci-v64/manifest.json"
+      - "mini-origin/src/mini_origin/clean_external_schema_v64.py"
+      - ".github/workflows/mini-origin-v64-clean-external-schema.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v64-schema-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  clean-external-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen lock and schema-only boundary
+        run: >-
+          python -c "import ast,json,pathlib; m=json.load(open('external-data/uci-v64/manifest.json')); assert m['lock_digest']=='5f48634b5e4f020b7dec6ec23b98141b4221f4495e3c1cfc8eb8ff44ba51609b'; p=pathlib.Path('src/mini_origin/clean_external_schema_v64.py'); tree=ast.parse(p.read_text()); forbidden={'conditioned_cell_frontier_v60','response_cost_pareto_v56','response_cost_export_v57'}; imported={n.module for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)}; assert not (forbidden & imported)"
+      - name: Open hash-locked archives for schema inventory only
+        run: >-
+          mkdir -p results/v64-schema &&
+          python -m mini_origin.clean_external_schema_v64
+          --output results/v64-schema/schema.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v64-clean-external-schema
+          path: mini-origin/results/v64-schema/schema.json
+          retention-days: 90
