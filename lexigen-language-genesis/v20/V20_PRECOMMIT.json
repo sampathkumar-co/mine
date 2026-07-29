@@ -1,0 +1,88 @@
+{
+  "argument_search": "all ordered marker/background colour pairs from visible demonstration palettes, lexicographic order, maximum 100 pairs per gate",
+  "base_v19r4_commit": "cedab59bd85594ba265e11a7ea957bae1a142f32",
+  "claim_boundary": {
+    "sealed_external_success": false,
+    "transfer_demonstrated": false,
+    "world_level_breakthrough": false
+  },
+  "fixed_gates": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "hidden_outputs_opened": false,
+  "items": [
+    {
+      "gate": 14,
+      "package_sha256": "775b8176c6e2b44b58e2be0df3529e8a431008ca3d37f38f063fc5407a9be529",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 15,
+      "package_sha256": "e6b8565ad7be58f6d217488f45361e152b915ffaaf318b5d0a6e70fa6766e3ab",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 16,
+      "package_sha256": "28342b4e2418e45230d87e94d9beecf02c2d13fbd231f25d5a2aa3f271850076",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 17,
+      "package_sha256": "dd3997c9d663789a905fa467b5dcfa95d75a2a4b2be21a0f502d51effe0c395c",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 18,
+      "package_sha256": "5dbb3e8f7408faa24c6fbdadebcdcd3060419957d2524d6b44d564a897c855e3",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 19,
+      "package_sha256": "ac2d6a3fcb1fd4f7d5ab1b2b3f038e44045fef2d55e459d76e012cff605480a5",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 20,
+      "package_sha256": "d1677a3912427bc67804c5fcd09fa1536e9bc7746ef95dc618f470ca5a59eda2",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 21,
+      "package_sha256": "621bd819e128cc584973973753722c350be840c49df5a116b78e3e87a88ff515",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 22,
+      "package_sha256": "12c52013cfee7565dd3da969abe5fdcd0eca43ca77178a5ef02123e56d880e86",
+      "test_inputs": 20,
+      "train_examples": 6
+    },
+    {
+      "gate": 23,
+      "package_sha256": "d3ea942a71d64b8d417af01d1a6ddd9c38c0355775c930bf5470fed566b3be4e",
+      "test_inputs": 20,
+      "train_examples": 6
+    }
+  ],
+  "no_human_survivor_selection": true,
+  "production_sha256": "751e258d9dbdcdf2641503bacdc32f927fb2872fddaadbbbe348d668f5f25523",
+  "same_production_required": true,
+  "schema": "lexigen-v20-production-transfer-precommit-v1"
+}
