@@ -42,12 +42,21 @@ jobs:
           cache-dependency-path: mini-origin/pyproject.toml
       - name: Install Mini-ORIGIN
         run: python -m pip install -e ".[dev]"
-      - name: Verify frozen parents and archive lock
-        run: >-
-          python -c "import json; v56=json.load(open('../research-evidence/mini-origin-v56-response-cost-pareto-pass.json')); lock=json.load(open('external-data/uci-v58/manifest.json')); assert v56['development_gate']; assert v56['frozen_response_cost_digest']=='5d0c281c66200ae378af25e6e6214e6b8b49b9fd144d4060fe29afc0a795a1cc'; assert lock['lock_digest']=='9a1d386209b437081d33a15e3395ac60afbc3e368ecb7a37a5202b5f9aab5868'; assert lock['dataset_count']==7"
-      - name: Parse frozen archives and compute Python reference
+      - name: Fetch immutable v0.56 evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: >-
           mkdir -p results/v58 &&
+          curl --fail --silent --show-error --location
+          -H "Authorization: Bearer ${GH_TOKEN}"
+          -H "Accept: application/vnd.github.raw+json"
+          "https://api.github.com/repos/sampathkumar-co/mine/contents/research-evidence/mini-origin-v56-response-cost-pareto-pass.json?ref=ce28a0c195e156eab5f1ee1f5ec17d1888d6c0fb"
+          -o results/v58/v56-evidence.json
+      - name: Verify frozen parents and archive lock
+        run: >-
+          python -c "import json; v56=json.load(open('results/v58/v56-evidence.json')); lock=json.load(open('external-data/uci-v58/manifest.json')); assert v56['development_gate']; assert v56['frozen_response_cost_digest']=='5d0c281c66200ae378af25e6e6214e6b8b49b9fd144d4060fe29afc0a795a1cc'; assert lock['lock_digest']=='9a1d386209b437081d33a15e3395ac60afbc3e368ecb7a37a5202b5f9aab5868'; assert lock['dataset_count']==7"
+      - name: Parse frozen archives and compute Python reference
+        run: >-
           python -m mini_origin.external_response_cost_v58
           --states results/v58/states.txt
           --reference results/v58/python-reference.json
