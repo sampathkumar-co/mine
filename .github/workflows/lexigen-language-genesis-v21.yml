@@ -21,30 +21,30 @@ jobs:
       fail-fast: false
       matrix:
         task:
-          - dbc1a6ce
-          - e7b06bea
-          - 363442ee
-          - d6ad076f
-          - 25e02866
-          - bd14c3bf
-          - a8610ef7
-          - ad173014
-          - b7999b51
-          - d5c634a2
-          - 1e0a9b12
-          - 0e206a2e
-          - 1190e5a7
-          - 1e32b0e9
-          - 8dab14c2
-          - 68bc2e87
-          - 42a50994
-          - 1b2d62fb
-          - 34b99a2b
-          - 7ec998c9
-          - a48eeaf7
-          - 652646ff
-          - 69889d6e
-          - f9012d9b
+          - "dbc1a6ce"
+          - "e7b06bea"
+          - "363442ee"
+          - "d6ad076f"
+          - "25e02866"
+          - "bd14c3bf"
+          - "a8610ef7"
+          - "ad173014"
+          - "b7999b51"
+          - "d5c634a2"
+          - "1e0a9b12"
+          - "0e206a2e"
+          - "1190e5a7"
+          - "1e32b0e9"
+          - "8dab14c2"
+          - "68bc2e87"
+          - "42a50994"
+          - "1b2d62fb"
+          - "34b99a2b"
+          - "7ec998c9"
+          - "a48eeaf7"
+          - "652646ff"
+          - "69889d6e"
+          - "f9012d9b"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
@@ -65,8 +65,8 @@ jobs:
           mkdir -p result
           python lexigen-language-genesis/v21/scan_one_v21.py \
             --arcgen-root arcgen \
-            --task-id ${{ matrix.task }} \
-            --output result/${{ matrix.task }}.json
+            --task-id "${{ matrix.task }}" \
+            --output "result/${{ matrix.task }}.json"
       - uses: actions/upload-artifact@v4
         with:
           name: v21-task-${{ matrix.task }}
