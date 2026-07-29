@@ -1,0 +1,22 @@
+{
+  "contract_sha256": "dc10f7ec84aba8f8b5657bd09bc8f38ff51443b58f2f4a68e0047d489c717784",
+  "exact_digest_used": false,
+  "grammar_sha256": "d4bea2fb44a449759581c3cf5dbfa6661b333e9525aa24b9a98b52a328443093",
+  "mutation_manifest_sha256": "5ccbcd066e2c12c44014404d2f2d41bec0fa61355b0ebdebc1b7afef2031381e",
+  "predicate_cost": 3,
+  "predicates": [
+    {
+      "cost": 3,
+      "name": "histogram"
+    }
+  ],
+  "program_sha256": "4b750aebd93551feb4c59db847890c5cf94c26e7db083355107b63adf4ca77fe",
+  "revision": 0,
+  "schema": "lexigen-v16-verifier-contract-v1",
+  "shape_only_survivors": 18,
+  "soundness_anchor": {
+    "mandatory": true,
+    "name": "exact_digest"
+  },
+  "training_mutation_cases": 36
+}
