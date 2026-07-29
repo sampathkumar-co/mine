@@ -1,0 +1,10 @@
+{
+  "contract_sha256": "3107b1495da6e08c34a5b3eb8a425eac0d8293334d43208a9354247d35f51671",
+  "demonstration_sha256": "8f98cadb5d3c6d3fc00ac91238662852d39c58c9c5f1acc626eaca45a1422a4a",
+  "grammar_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+  "portable_runtime_sha256": "d8ec69724d5d23e708b5fe6ae7068e09315131dcfa8d6957867e7c627338f648",
+  "program_sha256": "cdfa961c096f47aabd05b7de4bb8384d31c45ef515fdfc7c479b2a888acef118",
+  "schema": "lexigen-v17-program-contract-v1",
+  "task_id_available_to_synthesizer": false,
+  "verification": "independent-dual-runtime-exact-output"
+}

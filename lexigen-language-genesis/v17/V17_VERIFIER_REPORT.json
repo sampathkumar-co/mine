@@ -1,0 +1,216 @@
+{
+  "cases_per_family": 1000,
+  "constructive_grammar_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+  "contracts_requiring_revision": 2,
+  "contracts_using_exact_digest": 0,
+  "correct_outputs_checked": 3000,
+  "families": 3,
+  "mutant_outputs_checked": 24000,
+  "mutations_per_case": 8,
+  "portable_runtime_sha256": "d8ec69724d5d23e708b5fe6ae7068e09315131dcfa8d6957867e7c627338f648",
+  "portable_screening_rejections": 24000,
+  "portable_soundness_rejections": 24000,
+  "reports": [
+    {
+      "accepted_cases": 1000,
+      "contract_sha256": "71a996fd0c3af4f3a68aeb4070f165dff3b2f4b75ec005bcab81c862f70219d1",
+      "correct_portable": 1000,
+      "correct_primary": 1000,
+      "demonstration_sha256": "c72387a3a57d727e526a80e75a2facbc9f88a737f0760997c27b3a2247e0b50c",
+      "exact_digest_used": false,
+      "final_predicate_cost": 7,
+      "final_predicates": [
+        {
+          "cost": 5,
+          "name": "changed_mask"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "fresh_mutant_cases": 8000,
+      "fresh_runtime_invalid_mutations": 8000,
+      "gate": 1,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "mutation_manifest_size": 25,
+      "program_sha256": "e0aeb597c5fab61345f077efebf977d8eccc178387fccd7b68fa242e7628eb9e",
+      "revisions": [
+        {
+          "contract_sha256": "691ff1f7937b88e62d7b8e0739432d2e9c1fe754481ecc31d128bf3b1da982ea",
+          "exact_digest_used": false,
+          "fresh_false_accepts": 1,
+          "fresh_mutant_cases": 8000,
+          "fresh_runtime_invalid_mutations": 8000,
+          "predicate_cost": 6,
+          "predicates": [
+            {
+              "cost": 6,
+              "name": "checksum_1"
+            }
+          ],
+          "revision": 0,
+          "training_mutation_cases": 90,
+          "training_runtime_invalid_mutations": 48
+        },
+        {
+          "contract_sha256": "71a996fd0c3af4f3a68aeb4070f165dff3b2f4b75ec005bcab81c862f70219d1",
+          "exact_digest_used": false,
+          "fresh_false_accepts": 0,
+          "fresh_mutant_cases": 8000,
+          "fresh_runtime_invalid_mutations": 8000,
+          "predicate_cost": 7,
+          "predicates": [
+            {
+              "cost": 5,
+              "name": "changed_mask"
+            },
+            {
+              "cost": 2,
+              "name": "palette"
+            }
+          ],
+          "revision": 1,
+          "training_mutation_cases": 91,
+          "training_runtime_invalid_mutations": 48
+        }
+      ],
+      "screening_rejected_portable": 8000,
+      "screening_rejected_primary": 8000,
+      "shape_only_survivors": 73,
+      "soundness_rejected_portable": 8000,
+      "soundness_rejected_primary": 8000,
+      "task": "dc433765"
+    },
+    {
+      "accepted_cases": 1000,
+      "contract_sha256": "d9d2fc7ac08120f9a1c3cb12b916b0567ed4557bb7043f2e564b25501360670b",
+      "correct_portable": 1000,
+      "correct_primary": 1000,
+      "demonstration_sha256": "8f98cadb5d3c6d3fc00ac91238662852d39c58c9c5f1acc626eaca45a1422a4a",
+      "exact_digest_used": false,
+      "final_predicate_cost": 8,
+      "final_predicates": [
+        {
+          "cost": 8,
+          "name": "column_digests"
+        }
+      ],
+      "fresh_mutant_cases": 8000,
+      "fresh_runtime_invalid_mutations": 0,
+      "gate": 2,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "mutation_manifest_size": 46,
+      "program_sha256": "cdfa961c096f47aabd05b7de4bb8384d31c45ef515fdfc7c479b2a888acef118",
+      "revisions": [
+        {
+          "contract_sha256": "32f3fbbbc14b06cc6ac52e0ba69afd2db859e39e52aa394a500e0b323c63e4b3",
+          "exact_digest_used": false,
+          "fresh_false_accepts": 2,
+          "fresh_mutant_cases": 8000,
+          "fresh_runtime_invalid_mutations": 0,
+          "predicate_cost": 7,
+          "predicates": [
+            {
+              "cost": 4,
+              "name": "boundary"
+            },
+            {
+              "cost": 3,
+              "name": "histogram"
+            }
+          ],
+          "revision": 0,
+          "training_mutation_cases": 263,
+          "training_runtime_invalid_mutations": 0
+        },
+        {
+          "contract_sha256": "d9d2fc7ac08120f9a1c3cb12b916b0567ed4557bb7043f2e564b25501360670b",
+          "exact_digest_used": false,
+          "fresh_false_accepts": 0,
+          "fresh_mutant_cases": 8000,
+          "fresh_runtime_invalid_mutations": 0,
+          "predicate_cost": 8,
+          "predicates": [
+            {
+              "cost": 8,
+              "name": "column_digests"
+            }
+          ],
+          "revision": 1,
+          "training_mutation_cases": 265,
+          "training_runtime_invalid_mutations": 0
+        }
+      ],
+      "screening_rejected_portable": 8000,
+      "screening_rejected_primary": 8000,
+      "shape_only_survivors": 211,
+      "soundness_rejected_portable": 8000,
+      "soundness_rejected_primary": 8000,
+      "task": "49d1d64f"
+    },
+    {
+      "accepted_cases": 1000,
+      "contract_sha256": "f4145d0f16705926099de376f85ea145f37c5eb65054048bb9ea46714439140f",
+      "correct_portable": 1000,
+      "correct_primary": 1000,
+      "demonstration_sha256": "abe3449188ad82d75632b30bccd3aa973abed79e7a61fdd49cff50a0fed06d8d",
+      "exact_digest_used": false,
+      "final_predicate_cost": 6,
+      "final_predicates": [
+        {
+          "cost": 4,
+          "name": "boundary"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "fresh_mutant_cases": 8000,
+      "fresh_runtime_invalid_mutations": 0,
+      "gate": 3,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "mutation_manifest_size": 18,
+      "program_sha256": "14c89819adfe568c543fbdf6cd10a416608a2aeca03ee7fa13d2b85c30e82d9b",
+      "revisions": [
+        {
+          "contract_sha256": "f4145d0f16705926099de376f85ea145f37c5eb65054048bb9ea46714439140f",
+          "exact_digest_used": false,
+          "fresh_false_accepts": 0,
+          "fresh_mutant_cases": 8000,
+          "fresh_runtime_invalid_mutations": 0,
+          "predicate_cost": 6,
+          "predicates": [
+            {
+              "cost": 4,
+              "name": "boundary"
+            },
+            {
+              "cost": 2,
+              "name": "palette"
+            }
+          ],
+          "revision": 0,
+          "training_mutation_cases": 84,
+          "training_runtime_invalid_mutations": 0
+        }
+      ],
+      "screening_rejected_portable": 8000,
+      "screening_rejected_primary": 8000,
+      "shape_only_survivors": 66,
+      "soundness_rejected_portable": 8000,
+      "soundness_rejected_primary": 8000,
+      "task": "c8f0f002"
+    }
+  ],
+  "runtime_invalid_mutations": 8000,
+  "schema": "lexigen-v17-verifier-cosynthesis-report-v1",
+  "screening_rejections": 24000,
+  "soundness_rejections": 24000,
+  "target_used_by_verifier": false,
+  "world_level_breakthrough": false
+}

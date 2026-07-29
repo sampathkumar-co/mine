@@ -1,26 +1,30 @@
 {
   "constructive_grammar_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
-  "contract_sha256": "d9d2fc7ac08120f9a1c3cb12b916b0567ed4557bb7043f2e564b25501360670b",
+  "contract_sha256": "32f3fbbbc14b06cc6ac52e0ba69afd2db859e39e52aa394a500e0b323c63e4b3",
   "demonstration_sha256": "8f98cadb5d3c6d3fc00ac91238662852d39c58c9c5f1acc626eaca45a1422a4a",
   "exact_digest_used": false,
   "mutation_manifest_sha256": "eec998f9d8aaab4a8f1414507eb3d671da52e07bca8e151ebdb6889c2a6ca51d",
   "portable_runtime_sha256": "d8ec69724d5d23e708b5fe6ae7068e09315131dcfa8d6957867e7c627338f648",
-  "predicate_cost": 8,
+  "predicate_cost": 7,
   "predicates": [
     {
-      "cost": 8,
-      "name": "column_digests"
+      "cost": 4,
+      "name": "boundary"
+    },
+    {
+      "cost": 3,
+      "name": "histogram"
     }
   ],
   "program_sha256": "cdfa961c096f47aabd05b7de4bb8384d31c45ef515fdfc7c479b2a888acef118",
-  "revision": 1,
+  "revision": 0,
   "schema": "lexigen-v17-verifier-contract-v1",
-  "shape_only_survivors": 211,
+  "shape_only_survivors": 209,
   "soundness_anchor": {
     "mandatory": true,
     "name": "exact_digest"
   },
-  "training_mutation_cases": 265,
+  "training_mutation_cases": 263,
   "training_runtime_invalid_mutations": 0,
   "verifier_grammar_sha256": "d4bea2fb44a449759581c3cf5dbfa6661b333e9525aa24b9a98b52a328443093"
 }
