@@ -1,0 +1,54 @@
+name: Lexigen v12 Campaign Freeze
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/external/V12_CAMPAIGN.md"
+      - "lexigen-language-genesis/external/arcgen_campaign_v12.py"
+      - ".github/workflows/lexigen-language-genesis-v12-campaign.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freeze-campaign:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out campaign commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate campaign wrapper
+        working-directory: lexigen-language-genesis/external
+        run: python -m py_compile arcgen_campaign_v12.py arcgen_gate_v12.py
+
+      - name: Verify language implementation is unchanged
+        run: |
+          git diff --exit-code 8584f5600c6466185806a7940e9e00b42c004c7e -- \
+            lexigen-language-genesis/v7 \
+            lexigen-language-genesis/v8 \
+            lexigen-language-genesis/v9 \
+            lexigen-language-genesis/v10 \
+            lexigen-language-genesis/v11 \
+            lexigen-language-genesis/v12 \
+            lexigen-language-genesis/external/arcgen_gate_v12.py
+
+      - name: Verify exactly twenty precommitted gates
+        working-directory: lexigen-language-genesis/external
+        run: |
+          python - <<'PY'
+          import arcgen_campaign_v12
+          expected = {f"v12-campaign-{i:02d}" for i in range(1, 21)}
+          assert arcgen_campaign_v12.ALLOWED_GATES == expected
+          PY
+
+      - name: Hash campaign manifest
+        run: sha256sum lexigen-language-genesis/external/V12_CAMPAIGN.md
