@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Activation note: ordinary Mini-ORIGIN CI passed on preregistered head aea1fb3125f48c8457d1cddce456157bb3bd019e.
+# This annotation changes no campaign input, adapter, solver, budget, or scientific threshold.
 set -euo pipefail
 
 PARENT=d04379797d5aa3da5328bc8c1f51bfc6d4204f4f
