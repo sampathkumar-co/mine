@@ -1,0 +1,100 @@
+name: Lexigen Language Genesis v17
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v17/**"
+      - ".github/workflows/lexigen-language-genesis-v17.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v17:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out v17
+        uses: actions/checkout@v4
+
+      - name: Check out frozen v13 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile v17
+        run: python -m py_compile lexigen-language-genesis/v17/*.py
+
+      - name: Run constructive and verifier adversarial tests
+        run: |
+          python lexigen-language-genesis/v17/test_v17.py
+          python lexigen-language-genesis/v17/test_verifier_v17.py
+
+      - name: Reproduce full constructive gate
+        run: |
+          python lexigen-language-genesis/v17/validate_v17.py \
+            --v14-evidence lexigen-language-genesis/v14/V14_EVIDENCE.json \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 10000 \
+            --output lexigen-language-genesis/v17/V17_REPORT.json
+
+      - name: Reproduce verifier co-synthesis
+        run: |
+          python lexigen-language-genesis/v17/validate_verifier_v17.py \
+            --v14-evidence lexigen-language-genesis/v14/V14_EVIDENCE.json \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 1000 \
+            --mutations-per-case 8 \
+            --output lexigen-language-genesis/v17/V17_VERIFIER_REPORT.json
+
+      - name: Regenerate frozen evidence twice
+        run: |
+          python lexigen-language-genesis/v17/freeze_v17_evidence.py
+          first=$(sha256sum lexigen-language-genesis/v17/V17_EVIDENCE.json | cut -d' ' -f1)
+          python lexigen-language-genesis/v17/freeze_v17_evidence.py
+          second=$(sha256sum lexigen-language-genesis/v17/V17_EVIDENCE.json | cut -d' ' -f1)
+          test "$first" = "$second"
+          test "$first" = "5ecedba17a6fdacfe1e9a6ec0ca1938e60b7474d65502f05d0876fbee6f7f771"
+
+      - name: Verify byte-identical frozen artifacts
+        run: |
+          git diff --exit-code -- \
+            lexigen-language-genesis/v17/V17_REPORT.json \
+            lexigen-language-genesis/v17/V17_VERIFIER_REPORT.json \
+            lexigen-language-genesis/v17/V17_EVIDENCE.json \
+            lexigen-language-genesis/v17/EVIDENCE.md \
+            lexigen-language-genesis/v17/programs \
+            lexigen-language-genesis/v17/contracts
+
+      - name: Upload v17 reproduction
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v17-reproduction
+          path: |
+            lexigen-language-genesis/v17/V17_REPORT.json
+            lexigen-language-genesis/v17/V17_VERIFIER_REPORT.json
+            lexigen-language-genesis/v17/V17_EVIDENCE.json
+            lexigen-language-genesis/v17/EVIDENCE.md
+            lexigen-language-genesis/v17/programs
+            lexigen-language-genesis/v17/contracts
+          if-no-files-found: error
+          retention-days: 90
