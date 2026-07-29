@@ -2,6 +2,8 @@
 set -euo pipefail
 
 PARENT=555c3146111a7726702bb98e0a72f3b214d07190
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
 
 git diff --exit-code "$PARENT" -- \
   mini-origin/src/mini_origin/small_query_coverage_v79.py \
@@ -12,6 +14,7 @@ git diff --exit-code "$PARENT" -- \
   mini-origin/compiled/response_cost_lower_bound_v66.rs \
   research-evidence/mini-origin-v79-small-query-coverage-pass.json
 
+cd mini-origin
 python -m pytest -q \
   tests/test_pmlb_preblind_audit_v80.py \
   tests/test_openml_preblind_audit_v76.py \
