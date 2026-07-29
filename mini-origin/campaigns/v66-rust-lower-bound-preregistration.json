@@ -1,0 +1,42 @@
+{
+  "status": "preregistered_before_v66_execution",
+  "parent_v65_commit": "eecc699ebc66e298b814c3e56ca5e2aee9366da9",
+  "parent_v65_evidence_digest": "3a1ef2c86c07600a591a900caf920456acecacb158b8faeb8bdb4c6d97d0550a",
+  "state_source": "exactly the 180 opened v0.64 profiled states selected by the unchanged v0.60 generator",
+  "independence": {
+    "language": "Rust",
+    "python_planner_invocation_during_rust_solve": false,
+    "inputs": ["labels", "hypothesis masses", "local response table", "response-dependent costs", "original query IDs"],
+    "must_implement_independently": [
+      "response partitions",
+      "Pareto representative selection",
+      "optimistic child first-step lower bounds",
+      "candidate ordering",
+      "full-mass incumbent pruning",
+      "memoisation",
+      "budget accounting",
+      "deterministic root-query tie-breaking"
+    ]
+  },
+  "locked_gate": {
+    "state_count": 180,
+    "solved_count": 180,
+    "exact_plan_matches": 180,
+    "mismatch_count": 0,
+    "operation_counters": [
+      "query_expansions",
+      "calls",
+      "memo_entries",
+      "memo_hits",
+      "raw_queries_considered",
+      "representative_queries_considered",
+      "dominated_queries_removed",
+      "bound_evaluations",
+      "bound_pruned_queries",
+      "impossible_full_diagnosis_prunes"
+    ],
+    "require_every_counter_exact": true,
+    "parent_v65_digest_exact": true
+  },
+  "claim_boundary": "A pass is independent compiled implementation evidence for the opened-data v0.65 mechanism. It is not outside-human reproduction or a fresh external result."
+}
