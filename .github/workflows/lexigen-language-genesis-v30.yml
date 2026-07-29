@@ -1,0 +1,119 @@
+name: Lexigen Language Genesis v30
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v30/**"
+      - ".github/workflows/lexigen-language-genesis-v30.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-v30:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce frozen grammar
+        run: |
+          python lexigen-language-genesis/v30/grammar_v30.py
+          python lexigen-language-genesis/v30/freeze_grammar_v30.py
+          git diff --exit-code -- lexigen-language-genesis/v30/V30_GRAMMAR_MANIFEST.json
+      - name: Compile and test v30
+        run: |
+          python -m compileall -q lexigen-language-genesis/v30
+          python lexigen-language-genesis/v30/test_v30.py
+          python lexigen-language-genesis/v30/test_aggregate_v30.py
+
+  scan-validation:
+    needs: test-v30
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        task:
+          - "469497ad"
+          - "28bf18c6"
+          - "46c35fc7"
+          - "1bfc4729"
+          - "9565186b"
+          - "6ca952ad"
+          - "681b3aeb"
+          - "465b7d93"
+          - "3ee1011a"
+          - "1e81d6f9"
+          - "b7256dcd"
+          - "639f5a19"
+          - "b60334d2"
+          - "3b4c2228"
+          - "e39e9282"
+          - "d94c3b52"
+          - "6d0160f0"
+          - "2dee498d"
+          - "e4075551"
+          - "05f2a901"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce frozen grammar
+        run: |
+          python lexigen-language-genesis/v30/grammar_v30.py
+          python lexigen-language-genesis/v30/freeze_grammar_v30.py
+          git diff --exit-code -- lexigen-language-genesis/v30/V30_GRAMMAR_MANIFEST.json
+      - name: Scan one fresh frozen identity
+        run: |
+          python lexigen-language-genesis/v30/scan_one_v30.py \
+            --arcgen-root arcgen \
+            --task-id "${{ matrix.task }}" \
+            --output "task-${{ matrix.task }}.json"
+      - name: Upload task report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v30-validation-${{ matrix.task }}
+          path: task-${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-validation:
+    needs: scan-validation
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download all frozen validation reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v30-validation-*
+          path: reports
+          merge-multiple: true
+      - name: Aggregate exact validation denominator
+        run: |
+          python lexigen-language-genesis/v30/aggregate_validation_v30.py \
+            --reports-root reports \
+            --output lexigen-language-genesis/v30/V30_VALIDATION_REPORT.json
+      - name: Upload v30 validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v30-validation-evidence
+          path: |
+            lexigen-language-genesis/v30/V30_VALIDATION_REPORT.json
+            reports
+          if-no-files-found: error
+          retention-days: 90
