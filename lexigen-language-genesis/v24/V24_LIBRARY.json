@@ -1,0 +1,11 @@
+{
+  "discovery_task_count": 64,
+  "generator_invalid_tasks": 0,
+  "precommit_sha256": "c92c5efc24f270f1f9f15df286c75e64bbf3783cd40fc9dce8678d9bd9c0ba6b",
+  "qualification_rule": "exact on at least two distinct frozen discovery identities",
+  "qualifying_structure_count": 0,
+  "schema": "lexigen-v24-induced-library-v1",
+  "structures": [],
+  "validation_generators_imported": 0,
+  "validation_outputs_opened": false
+}

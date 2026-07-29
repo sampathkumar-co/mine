@@ -1,0 +1,1172 @@
+{
+  "candidate_programs_tested": 17408512,
+  "completed_tasks": 64,
+  "discovery_tasks": 64,
+  "distinct_exact_structures": 0,
+  "exact_complete_programs": 0,
+  "generator_invalid_tasks": 0,
+  "library_sha256": "433b95280eb914a18dc552905ee258b1b04b39a872dfd8b7dbfaa106cc2a9b5e",
+  "precommit_sha256": "c92c5efc24f270f1f9f15df286c75e64bbf3783cd40fc9dce8678d9bd9c0ba6b",
+  "qualifying_structures": 0,
+  "runtime_invalid_candidates": 11875520,
+  "schema": "lexigen-v24-discovery-report-v1",
+  "task_reports": [
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "3bd67248"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 163200,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "b457fec5"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "31d5ba1a"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "46442a0e"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 184960,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "d47aa2ff"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 136000,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "85fa5666"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "b527c5c6"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "c59eb873"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 114240,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "5b37cb25"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 141440,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "90347967"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 223040,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "53b68214"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 76160,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "5af49b42"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 168640,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "3cd86f4f"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "80af3007"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 163200,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "50aad11f"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 201280,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "6fa7a44f"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "3490cc26"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 179520,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "b4a43f3b"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 190400,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "84db8fc4"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "445eab21"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "ba1aa698"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "83302e8f"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 195840,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "22168020"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 163200,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "7d1f7ee8"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 141440,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "6ad5bdfd"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "84ba50d3"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 223040,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "ae58858e"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 174080,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "c9f8e694"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 217600,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "00d62c1b"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 223040,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "af726779"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 201280,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "e8dc4411"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 168640,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "5751f35e"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 16320,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "1a6449f1"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 163200,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "342ae2ed"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 179520,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "05269061"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "ba26e723"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "c62e2108"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 184960,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "03560426"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "ed98d772"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "25d487eb"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 163200,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "f25ffba3"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "b5bb5719"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "8a371977"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "5289ad53"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 184960,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "0e671a1a"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 179520,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "88a10436"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 152320,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "62b74c02"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 184960,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "2753e76c"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 146880,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "2546ccf6"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 163200,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "833966f4"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 152320,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "1efba499"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "bb43febb"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 223040,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "bc4146bd"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 223040,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "aa18de87"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 141440,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "7d7772cc"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 87040,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "bf699163"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "bd5af378"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "8403a5d5"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 206720,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "692cd3b6"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 141440,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "070dd51e"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 228480,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "1478ab18"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 201280,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "2013d3e2"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 136000,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "e84fef15"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_programs_tested": 272008,
+      "exact_complete_programs": 0,
+      "exact_structure_count": 0,
+      "exact_structures": [],
+      "generation": {
+        "attempts": 6,
+        "failure_examples": [],
+        "failures": 0,
+        "timeouts": 0
+      },
+      "runtime_invalid_candidates": 184960,
+      "schema": "lexigen-v24-task-scan-v1",
+      "split": "discovery",
+      "status": "completed",
+      "task_id": "7e2bad24"
+    }
+  ],
+  "tasks_with_any_exact_program": 0,
+  "transfer_demonstrated": false,
+  "validation_generators_imported": 0,
+  "validation_outputs_opened": false,
+  "world_level_breakthrough": false
+}
