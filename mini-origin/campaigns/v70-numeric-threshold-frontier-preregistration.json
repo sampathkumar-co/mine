@@ -1,0 +1,52 @@
+{
+  "status": "preregistered_before_execution",
+  "parent_v68_evidence_digest": "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b",
+  "development_data": "the seven opened v0.68 archives only",
+  "compiler": {
+    "maximum_sampled_distinct_records": 384,
+    "missing_tokens": ["", "?", "na", "nan", "none", "null"],
+    "numeric_detection": "all nonmissing tokens parse as finite Decimal",
+    "low_cardinality_exact_cutoff": 8,
+    "quantile_denominator": 8,
+    "quantile_numerators": [1, 2, 3, 4, 5, 6, 7],
+    "quantile_rank_rule": "ceil(k*n/8)-1 on sorted nonmissing sampled values",
+    "numeric_response_values": ["missing", "le", "gt"],
+    "categorical_response": "preserve exact token",
+    "labels_or_costs_used": false,
+    "query_cap": null
+  },
+  "unchanged_components": [
+    "v0.60 conditioned-cell state selector",
+    "v0.56 response-cost Pareto quotient",
+    "v0.65 exact lower-bound planner",
+    "v0.66 independent Rust lower-bound solver"
+  ],
+  "exact_budget": 500000,
+  "budget_ladder": [10000, 50000, 250000, 500000],
+  "locked_gate": {
+    "contributing_datasets": 7,
+    "minimum_states_from_each_previously_zero_dataset": 6,
+    "previously_zero_datasets": [
+      "Connectionist Bench (Sonar, Mines vs. Rocks)",
+      "Hill-Valley",
+      "Libras Movement"
+    ],
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0
+  },
+  "claim_boundary": "Opened-data benchmark-representation development. A pass freezes the label-free compiler for a separately audited fresh external campaign. It is not fresh external evidence, outside-human reproduction, publication novelty, peer review, acceptance, or a world-level claim."
+}
