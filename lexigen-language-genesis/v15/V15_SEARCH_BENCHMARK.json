@@ -1,0 +1,114 @@
+{
+  "aggregate_candidate_reduction": 1.0,
+  "claim_boundary": "in-sample induced-language search ordering; not blind transfer",
+  "families": 9,
+  "families_improved": 0,
+  "families_unchanged": 9,
+  "families_worsened": 0,
+  "induced_macro_count": 3,
+  "macro_training_includes_benchmark_programs": true,
+  "reports": [
+    {
+      "baseline_candidate_count": 3,
+      "baseline_tested": 3,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 15,
+      "gate": 1,
+      "induced_candidate_count": 3,
+      "induced_representation_size": 15,
+      "induced_tested": 3,
+      "task": "dc433765"
+    },
+    {
+      "baseline_candidate_count": 1,
+      "baseline_tested": 1,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 3,
+      "gate": 2,
+      "induced_candidate_count": 1,
+      "induced_representation_size": 3,
+      "induced_tested": 1,
+      "task": "49d1d64f"
+    },
+    {
+      "baseline_candidate_count": 2,
+      "baseline_tested": 1,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 4,
+      "gate": 3,
+      "induced_candidate_count": 2,
+      "induced_representation_size": 4,
+      "induced_tested": 1,
+      "task": "c8f0f002"
+    },
+    {
+      "baseline_candidate_count": 5,
+      "baseline_tested": 1,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 6,
+      "gate": 4,
+      "induced_candidate_count": 5,
+      "induced_representation_size": 6,
+      "induced_tested": 1,
+      "task": "9f236235"
+    },
+    {
+      "baseline_candidate_count": 24,
+      "baseline_tested": 13,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 12,
+      "gate": 5,
+      "induced_candidate_count": 24,
+      "induced_representation_size": 12,
+      "induced_tested": 13,
+      "task": "ea9794b1"
+    },
+    {
+      "baseline_candidate_count": 1,
+      "baseline_tested": 1,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 10,
+      "gate": 6,
+      "induced_candidate_count": 1,
+      "induced_representation_size": 4,
+      "induced_tested": 1,
+      "task": "c920a713"
+    },
+    {
+      "baseline_candidate_count": 2,
+      "baseline_tested": 1,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 10,
+      "gate": 8,
+      "induced_candidate_count": 2,
+      "induced_representation_size": 4,
+      "induced_tested": 1,
+      "task": "eb5a1d5d"
+    },
+    {
+      "baseline_candidate_count": 7,
+      "baseline_tested": 5,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 5,
+      "gate": 9,
+      "induced_candidate_count": 7,
+      "induced_representation_size": 5,
+      "induced_tested": 5,
+      "task": "da2b0fe3"
+    },
+    {
+      "baseline_candidate_count": 1,
+      "baseline_tested": 1,
+      "candidate_reduction": 1.0,
+      "expanded_ast_size": 7,
+      "gate": 12,
+      "induced_candidate_count": 1,
+      "induced_representation_size": 7,
+      "induced_tested": 1,
+      "task": "6e19193c"
+    }
+  ],
+  "schema": "lexigen-v15-search-benchmark-v1",
+  "total_baseline_candidates_tested": 27,
+  "total_induced_candidates_tested": 27
+}

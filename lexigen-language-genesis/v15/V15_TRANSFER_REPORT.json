@@ -1,0 +1,112 @@
+{
+  "cases_per_family": 1000,
+  "families": 9,
+  "induced_macro_count": 3,
+  "ir_failures": 0,
+  "portable_failures": 0,
+  "reports": [
+    {
+      "accepted_cases": 1000,
+      "gate": 1,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 0.1237,
+      "task": "dc433765"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 2,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 0.0387,
+      "task": "49d1d64f"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 3,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 0.0375,
+      "task": "c8f0f002"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 4,
+      "generator_attempts": 1002,
+      "generator_rejections": 2,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 0.3774,
+      "task": "9f236235"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 5,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 0.1491,
+      "task": "ea9794b1"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 6,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 62.2596,
+      "task": "c920a713"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 8,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 2.6292,
+      "task": "eb5a1d5d"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 9,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 1.1011,
+      "task": "da2b0fe3"
+    },
+    {
+      "accepted_cases": 1000,
+      "gate": 12,
+      "generator_attempts": 1000,
+      "generator_rejections": 0,
+      "ir_exact": 1000,
+      "portable_exact": 1000,
+      "runtime_agreement": 1000,
+      "seconds": 0.9857,
+      "task": "6e19193c"
+    }
+  ],
+  "runtime_disagreements": 0,
+  "schema": "lexigen-v15-transfer-report-v1",
+  "total_cases": 9000,
+  "total_generator_rejections": 2
+}

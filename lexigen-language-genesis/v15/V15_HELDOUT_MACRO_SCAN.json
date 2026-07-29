@@ -1,0 +1,14 @@
+{
+  "checked_families": 898,
+  "errors": [],
+  "import_or_validation_errors": 0,
+  "imported_families": 898,
+  "match_count": 0,
+  "matches": [],
+  "schema": "lexigen-v15-heldout-macro-scan-v1",
+  "source_tasks_excluded": [
+    "c920a713",
+    "eb5a1d5d"
+  ],
+  "task_files": 900
+}

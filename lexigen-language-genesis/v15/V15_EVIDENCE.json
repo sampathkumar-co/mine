@@ -1,0 +1,42 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "base_v14_commit": "9b4ce5aa7f2600b04290fab272fc1922135007c8",
+  "break_even_replays": 3,
+  "claim_boundary": {
+    "autonomous_primitive_invention": false,
+    "reason": "Macros were induced automatically, but every underlying v14 scene atom was human-authored after visible failures.",
+    "world_level_breakthrough": false
+  },
+  "dynamic_compression_ratio_at_10000_replays": 1.1428190488888466,
+  "files": {
+    "V15_HELDOUT_MACRO_SCAN.json": "7b04f975aba3d333f1e6328af95cba43ee8ac37d90fe8de10f3a31f71ab47c55",
+    "V15_INDEPENDENT_REPORT.json": "36ad9fe553c5fb388759ee0d7f307280b8011facaa08843271a83770c2f85ac6",
+    "V15_INDUCTION_REPORT.json": "1cc8d2a86e12ccf260db74056628ebe95a7b2be9f22adc33e88b0623198690ce",
+    "V15_PORTFOLIO_BENCHMARK.json": "2772e0b1c322dc7a33d6843fdb959e42223a0249a76ac21a0d6aae068f95ca10",
+    "V15_SEARCH_BENCHMARK.json": "130a20d0495f08bf17f5e85e6f219c15f3941c31b412b5636f13a853833608b6",
+    "V15_TRANSFER_REPORT.json": "dc55c6e538f8b2d9ef16e0682b2043fc861ddd1acdbf8a0f0249e06a11bedcc7",
+    "benchmark_portfolio_v15.py": "630525ef980ac139ca48a59fdc7fbe47f05e95a3eea7218dc53747e4efbdd95d",
+    "benchmark_search_v15.py": "2f21e0692527496da98231788b070cae1edfd63d927dc2e3b1be98779cbf3530",
+    "compiler_v15.py": "1349c290b66e771d9720e719ad604598c1fd9fffa024fe9277c1ae996d8c89cd",
+    "induce_language_v15.py": "513c56b41b224d40678e9d7c60f7a9d5c276cf9f416cd5ed17b3dd6b78de1ea2",
+    "ir_runtime_v15.py": "b6abff980db33566b4e9775dc1f9e3a365f1b8a34e382c937673da81b6f61209",
+    "macro_miner_v15.py": "0b3572222b0c9902409f8e004e62fcc9db6f4606e4588e5f391af59763c1274f",
+    "portable_ir_runtime_v15.py": "b5c4be3129221d9aa76dc7688a5e037a28d74bde63eb62ea8b0a132c7d5c4280",
+    "scan_macro_transfer_v15.py": "f971282aeae4d5021acdbb9565414c47e732442f6b8e1613d6cfe1d0842ca244",
+    "test_v15.py": "b312e6fb25b3a64d7f56aa7237904a7a0af59b39d60782ed50a1be1d50cbe617",
+    "validate_v15_independent.py": "f7b4208a8377c13a8f1559b79b384ea982832617c2fad2bd071521dc52ce59ed",
+    "validate_v15_transfer.py": "f44abc1a73dabd58eacb50e6df076762a1163fa04b726b54c222fc99f4105431"
+  },
+  "heldout_macro_matches": 0,
+  "heldout_public_families": 898,
+  "induced_macros": 3,
+  "portfolio_aggregate_speedup": 1.5185185185185186,
+  "portfolio_worst_slowdown": 1.064516129032258,
+  "saved_nodes_per_replay": 9,
+  "schema": "lexigen-v15-frozen-evidence-v1",
+  "source_programs": 9,
+  "three_runtime_cases": 90000,
+  "three_runtime_failures": 0,
+  "v13_visible_evidence_commit": "13cd271a2d4813001563842a51a1e72dd100aa1a",
+  "version": 15
+}

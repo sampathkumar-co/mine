@@ -1,0 +1,113 @@
+{
+  "cases_per_family": 10000,
+  "families": 9,
+  "generator_rejections": 8,
+  "induced_macro_count": 3,
+  "portable_ir_failures": 0,
+  "portable_v14_failures": 0,
+  "primary_failures": 0,
+  "reports": [
+    {
+      "accepted_cases": 10000,
+      "gate": 1,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "dc433765",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 2,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "49d1d64f",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 3,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "c8f0f002",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 4,
+      "generator_attempts": 10008,
+      "generator_rejections": 8,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "9f236235",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 5,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "ea9794b1",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 6,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "c920a713",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 8,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "eb5a1d5d",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 9,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "da2b0fe3",
+      "three_runtime_agreement": 10000
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 12,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "portable_ir_exact": 10000,
+      "portable_v14_exact": 10000,
+      "primary_exact": 10000,
+      "task": "6e19193c",
+      "three_runtime_agreement": 10000
+    }
+  ],
+  "schema": "lexigen-v15-independent-ir-report-v1",
+  "three_runtime_disagreements": 0,
+  "total_cases": 90000
+}
