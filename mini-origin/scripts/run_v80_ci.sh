@@ -20,7 +20,8 @@ python -m pytest -q \
   tests/test_openml_preblind_audit_v76.py \
   tests/test_repository_dataset_audit_v73.py
 
-rm -rf results/v80
-mkdir -p results/v80
+cd "$ROOT"
+rm -rf mini-origin/results/v80
+mkdir -p mini-origin/results/v80
 python -m mini_origin.pmlb_preblind_audit_v80 \
-  --output results/v80/registry.json
+  --output mini-origin/results/v80/registry.json
