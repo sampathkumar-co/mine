@@ -1,0 +1,44 @@
+name: Mini-ORIGIN Coq Quotient Kernel v0.76
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v76-coq-quotient-kernel
+    paths:
+      - "mini-origin/formal/QuotientKernelV76.v"
+      - ".github/workflows/mini-origin-v76-coq-kernel.yml"
+  pull_request:
+    paths:
+      - "mini-origin/formal/QuotientKernelV76.v"
+      - ".github/workflows/mini-origin-v76-coq-kernel.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coq-kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Coq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y coq
+          coqc --version
+      - name: Verify parent theorem evidence
+        run: |
+          python - <<'PY'
+          import json
+          p = 'research-evidence/mini-origin-v75-theorem-obligation-pass.json'
+          data = json.load(open(p, encoding='utf-8'))
+          assert data['development_gate'] is True
+          assert data['evidence_digest'] == 'ce5e72bedb1be80d7f6203300782feb681f7ddf45dbaf0ca0e7cd465071c7541'
+          assert data['failure_count'] == 0
+          PY
+      - name: Compile formal quotient kernel
+        run: coqc mini-origin/formal/QuotientKernelV76.v
+      - name: Verify admitted-proof absence
+        run: |
+          ! grep -R -n -E '\b(Admitted|admit|Axiom)\b' mini-origin/formal/QuotientKernelV76.v
