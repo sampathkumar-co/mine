@@ -1,0 +1,48 @@
+name: Mini-ORIGIN PMLB Preblind Audit v0.80
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v80-pmlb-preblind-audit
+    paths:
+      - "mini-origin/campaigns/v80-pmlb-preblind-audit.json"
+      - "mini-origin/src/mini_origin/pmlb_preblind_audit_v80.py"
+      - "mini-origin/tests/test_pmlb_preblind_audit_v80.py"
+      - "mini-origin/scripts/run_v80_ci.sh"
+      - ".github/workflows/mini-origin-v80-pmlb-preblind-audit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v80-pmlb-preblind-audit
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  repository-only-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Run repository-only PMLB preblind audit
+        run: bash scripts/run_v80_ci.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v80-pmlb-preblind-registry
+          path: mini-origin/results/v80/registry.json
+          if-no-files-found: warn
+          retention-days: 90
