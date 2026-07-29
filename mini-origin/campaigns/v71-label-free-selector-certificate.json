@@ -1,0 +1,28 @@
+{
+  "status": "preregistered_before_execution",
+  "parent_v70_commit": "c35bcd68d91b988d69b5f8192473f6aadb02a22b",
+  "objective": "Prove by deterministic metamorphic tests that labels cannot affect record sampling, numeric-threshold compilation, conditioned response paths, oversized-cell sampling, or selected structural states.",
+  "protocol": {
+    "synthetic_task_count": 64,
+    "seed_start": 71001,
+    "records_per_task": 420,
+    "features_per_task": 18,
+    "paired_labelings": 2,
+    "record_sampling": "feature-only SHA-256 rank with original row index tie-break",
+    "oversized_cell_sampling": "SHA-256(task name, salt, sampled row index, compiled response row), labels excluded",
+    "state_selector": "v0.60 conditioned-cell selector with only sample_allowed replaced",
+    "solver_execution": false,
+    "external_archive_access": false
+  },
+  "locked_gate": {
+    "task_pairs": 64,
+    "sampled_feature_table_mismatches": 0,
+    "compiled_response_table_mismatches": 0,
+    "compiled_query_count_mismatches": 0,
+    "conditioned_cell_mismatches": 0,
+    "selected_state_mismatches": 0,
+    "minimum_pairs_with_oversized_cells": 20,
+    "minimum_pairs_with_selected_states": 20
+  },
+  "claim_boundary": "Methodological label-independence certificate on synthetic tasks only. A pass is not algorithmic performance evidence, fresh external validation, independent outside-human reproduction, publication novelty, peer review, acceptance, or a world-level claim."
+}
