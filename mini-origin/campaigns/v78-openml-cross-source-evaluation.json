@@ -5,7 +5,7 @@
   "parent_v76_registry_digest": "d312c4f0b853237479d6be8a74b6bf47776722d7aea1ce00c7b9745be90d57d2",
   "frozen_v75_commit": "d8aa4153b69b82ccb714cfbb50d12c5137186047",
   "parent_v75_evidence_digest": "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47",
-  "selected_openml_dataset_ids": [1068, 188, 1053, 1462, 1494, 1510, 40975],
+  "selected_openml_dataset_ids": [1068, 188, 40499, 1067, 1063, 469, 1049],
   "selected_dataset_count": 7,
   "adapter_protocol": {
     "format": "dense ARFF only",
