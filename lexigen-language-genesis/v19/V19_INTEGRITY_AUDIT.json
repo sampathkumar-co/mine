@@ -1,0 +1,36 @@
+{
+  "schema": "lexigen-v19-integrity-audit-v1",
+  "base_v18_commit": "bad7e917d07f1cf3fe467081161fba53cfc434af",
+  "audit_result": "rejected_as_frozen_v19_evidence",
+  "world_level_breakthrough": false,
+  "sealed_external_success": false,
+  "hidden_outputs_opened": false,
+  "preserved_outcomes": [
+    {
+      "file": "V19_GATE09_PRECOMMIT_SMOKE_REPORT.json",
+      "status": "preregistered_development_smoke",
+      "gate": 9,
+      "fresh_cases": 0,
+      "reason": "demonstrations fit, but no fresh validation was completed"
+    },
+    {
+      "file": "V19_GATE11_DEVELOPMENT_1000_REPORT.json",
+      "status": "unpreregistered_and_currently_unreproducible",
+      "gate": 11,
+      "fresh_cases": 1000,
+      "reason": "report conflicts with the committed v19 precommit and current inventor/runtime files"
+    }
+  ],  "failed_reproduction": {
+    "command": "validate_v19.py --cases 10000",
+    "failure_type": "PrimitiveRuntimeError",
+    "failure": "unique reduction expected 1 item, got 0",
+    "interpretation": "the current gate-9 axis program does not transfer across the requested fresh generator cases"
+  },
+  "claim_boundary": {
+    "autonomous_grammar_production_candidate": false,
+    "autonomous_semantic_substrate_invention": false,
+    "transfer_demonstrated": false,
+    "reason": "The preregistered result lacks fresh transfer, while the separate gate-11 report was produced outside the precommit and cannot be regenerated from the preserved implementation."
+  },
+  "required_next_step": "Create a new isolated revision with its own precommit before choosing a development gate, preserve the current files unchanged, and require byte-reproducible dual-runtime validation plus verifier co-synthesis."
+}
