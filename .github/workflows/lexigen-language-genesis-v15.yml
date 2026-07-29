@@ -1,0 +1,86 @@
+name: Lexigen Language Genesis v15
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v15/**"
+      - ".github/workflows/lexigen-language-genesis-v15.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v15:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out v15
+        uses: actions/checkout@v4
+
+      - name: Check out frozen v13 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile v15
+        run: |
+          python -m py_compile \
+            lexigen-language-genesis/v15/compiler_v15.py \
+            lexigen-language-genesis/v15/ir_runtime_v15.py \
+            lexigen-language-genesis/v15/portable_ir_runtime_v15.py \
+            lexigen-language-genesis/v15/macro_miner_v15.py \
+            lexigen-language-genesis/v15/induce_language_v15.py \
+            lexigen-language-genesis/v15/validate_v15_independent.py \
+            lexigen-language-genesis/v15/scan_macro_transfer_v15.py \
+            lexigen-language-genesis/v15/freeze_v15_evidence.py
+
+      - name: Run mechanism and adversarial tests
+        run: python lexigen-language-genesis/v15/test_v15.py
+
+      - name: Reproduce three-runtime accepted-case gate
+        run: |
+          python lexigen-language-genesis/v15/validate_v15_independent.py \
+            --v14-evidence lexigen-language-genesis/v14/V14_EVIDENCE.json \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 10000 \
+            --output lexigen-language-genesis/v15/V15_INDEPENDENT_REPORT.json
+
+      - name: Reproduce held-out public-family scan
+        run: |
+          python lexigen-language-genesis/v15/scan_macro_transfer_v15.py \
+            --v14-evidence lexigen-language-genesis/v14/V14_EVIDENCE.json \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --output lexigen-language-genesis/v15/V15_HELDOUT_MACRO_SCAN.json
+
+      - name: Verify frozen evidence manifest
+        run: python lexigen-language-genesis/v15/freeze_v15_evidence.py
+
+      - name: Upload v15 reproduction reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v15-reproduction
+          path: |
+            lexigen-language-genesis/v15/V15_INDEPENDENT_REPORT.json
+            lexigen-language-genesis/v15/V15_HELDOUT_MACRO_SCAN.json
+            lexigen-language-genesis/v15/V15_EVIDENCE.json
+          if-no-files-found: error
+          retention-days: 90
