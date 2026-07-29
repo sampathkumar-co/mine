@@ -1,0 +1,94 @@
+name: Mini-ORIGIN Numeric Threshold Frontier v0.70
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v70-numeric-threshold-frontier
+    paths:
+      - "mini-origin/campaigns/v70-numeric-threshold-frontier-preregistration.json"
+      - "mini-origin/src/mini_origin/numeric_threshold_frontier_v70.py"
+      - "mini-origin/tests/test_numeric_threshold_frontier_v70.py"
+      - ".github/workflows/mini-origin-v70-numeric-threshold-frontier.yml"
+      - "research-evidence/mini-origin-v68-clean-lower-bound-rejected.json"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v70-numeric-threshold-frontier-preregistration.json"
+      - "mini-origin/src/mini_origin/numeric_threshold_frontier_v70.py"
+      - "mini-origin/tests/test_numeric_threshold_frontier_v70.py"
+      - ".github/workflows/mini-origin-v70-numeric-threshold-frontier.yml"
+      - "research-evidence/mini-origin-v68-clean-lower-bound-rejected.json"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v70-numeric-threshold-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  numeric-threshold-frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen parent and unchanged algorithms
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          prereg = json.loads(Path("campaigns/v70-numeric-threshold-frontier-preregistration.json").read_text())
+          parent = json.loads(Path("../research-evidence/mini-origin-v68-clean-lower-bound-rejected.json").read_text())
+          assert not parent["development_gate"]
+          assert parent["evidence_digest"] == prereg["parent_v68_evidence_digest"] == "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b"
+          assert parent["contributing_dataset_count"] == 4
+          assert parent["base_state_count"] == 48
+          assert parent["profiled_state_count"] == 144
+          PY
+          git diff --exit-code f73ad897377ae1189844ea9ab49aa429c6b1c1c3 -- \
+            src/mini_origin/conditioned_cell_frontier_v60.py \
+            src/mini_origin/response_cost_pareto_v56.py
+          git diff --exit-code eecc699ebc66e298b814c3e56ca5e2aee9366da9 -- \
+            src/mini_origin/response_cost_lower_bound_v65.py
+          git diff --exit-code 2d001d3d4dcec4c315327f318a4918acc552aa7c -- \
+            compiled/response_cost_lower_bound_v66.rs
+      - name: Run focused compiler tests
+        run: pytest -q tests/test_numeric_threshold_frontier_v70.py
+      - name: Compile opened archives and compute Python reference
+        run: >-
+          mkdir -p results/v70 &&
+          python -m mini_origin.numeric_threshold_frontier_v70 reference
+          --states results/v70/states.txt
+          --reference results/v70/python-reference.json
+      - name: Compile independent Rust lower-bound solver
+        run: rustc -C opt-level=3 -C debuginfo=0 compiled/response_cost_lower_bound_v66.rs -o results/v70/response_cost_lower_bound_v70
+      - name: Run independent Rust lower-bound solver
+        run: results/v70/response_cost_lower_bound_v70 --input results/v70/states.txt --output results/v70/rust-results.json
+      - name: Apply frozen opened-data gate
+        run: >-
+          python -m mini_origin.numeric_threshold_frontier_v70 validate
+          --reference results/v70/python-reference.json
+          --rust results/v70/rust-results.json
+          --output results/v70/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v70-numeric-threshold-frontier
+          path: |
+            mini-origin/results/v70/python-reference.json
+            mini-origin/results/v70/rust-results.json
+            mini-origin/results/v70/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
