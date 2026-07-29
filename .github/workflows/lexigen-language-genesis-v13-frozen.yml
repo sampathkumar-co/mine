@@ -1,0 +1,75 @@
+name: Lexigen Language Genesis v13 Frozen
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v13/**"
+      - ".github/workflows/lexigen-language-genesis-v13-frozen.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-cross-runtime-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out v13 branch
+        uses: actions/checkout@v4
+        with:
+          path: current
+
+      - name: Check out frozen v12 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          ref: lexigen/external-arcgen-v12-campaign
+          path: campaign
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile frozen v13 stack
+        working-directory: current/lexigen-language-genesis/v13
+        run: |
+          python -m py_compile \
+            latent_runtime_v13.py \
+            latent_runtime_v13_ext.py \
+            latent_runtime_v13_ext2.py \
+            latent_runtime_v13_ext3.py \
+            latent_synthesizer_v13.py \
+            latent_synthesizer_v13_ext.py \
+            latent_synthesizer_v13_ext2.py \
+            latent_synthesizer_v13_ext3.py \
+            latent_synthesizer_v13_final.py \
+            portable_runtime_v13.py \
+            replay_v13_frozen.py
+
+      - name: Reproduce frozen fourteen-family evidence
+        working-directory: current/lexigen-language-genesis/v13
+        run: |
+          python replay_v13_frozen.py \
+            --evidence-root ../../../campaign/lexigen-language-genesis/external/evidence/v12-campaign \
+            --arcgen-root ../../../arcgen \
+            --output-dir artifacts/v13
+
+      - name: Hash evidence
+        working-directory: current/lexigen-language-genesis/v13
+        run: sha256sum artifacts/v13/*.json | tee artifacts/v13/SHA256SUMS
+
+      - name: Upload v13 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-language-genesis-v13-${{ github.sha }}
+          path: current/lexigen-language-genesis/v13/artifacts/v13/
+          if-no-files-found: error
+          retention-days: 90
