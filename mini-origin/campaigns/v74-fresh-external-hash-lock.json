@@ -1,0 +1,28 @@
+{
+  "status": "preregistered_before_metadata_access",
+  "parent_v73_commit": "989dec266a8bdb715cbee14488e84a348e9ce466",
+  "parent_v73_registry_digest": "3fde8f0138548928651937201cef66aa71ee41bbb792ade82b1a02337ae8b392",
+  "frozen_v72_commit": "dae02829efc4819935a4ec87c31ea5eee3305d83",
+  "parent_v72_evidence_digest": "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090",
+  "objective": "Deterministically select and hash-lock genuinely fresh UCI classification datasets using official metadata only, after excluding every repository-contaminated dataset.",
+  "metadata_list_url": "https://archive.ics.uci.edu/api/datasets/list?filter=python",
+  "metadata_dataset_url_template": "https://archive.ics.uci.edu/api/dataset?id={uci_id}",
+  "selection_seed": "mini-origin-v74|b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090|3fde8f0138548928651937201cef66aa71ee41bbb792ade82b1a02337ae8b392",
+  "selection": {
+    "dataset_count": 7,
+    "required_task": "Classification",
+    "minimum_instances": 200,
+    "maximum_instances": 20000,
+    "minimum_features": 4,
+    "maximum_features": 120,
+    "required_target_columns": 1,
+    "maximum_csv_bytes": 20000000
+  },
+  "candidate_ids_names_urls_committed_before_execution": false,
+  "data_bytes_access_before_preregistration": false,
+  "record_or_label_parsing_during_lock": false,
+  "solver_execution_during_lock": false,
+  "protocol": "Fetch official UCI Python-available metadata; exclude every frozen UCI ID and contaminated dataset-name token; filter only by preregistered metadata criteria; rank by SHA-256 of the frozen seed, ID, name and canonical metadata digest; download ranked standardized CSV bytes only to hash and size them; never parse records or labels.",
+  "next_stage": "Commit the resulting immutable manifest, then run the frozen v0.72 compiler, selector and planners unchanged on a separate blind-execution branch.",
+  "claim_boundary": "Hash-lock provenance only. No dataset record or label is parsed and no solver is executed. This stage is not external algorithmic evidence, novelty, publication, acceptance, or a world-level claim."
+}
