@@ -43,3 +43,16 @@ The primary and portable runtimes are independently implemented. Adversarial tes
 v14 is not a Language Genesis breakthrough. The generic scene atoms were designed by humans after observing visible task failures. A future v14-only sealed win would demonstrate useful external transfer and broader representation coverage, but would not prove autonomous invention of new semantics.
 
 The next autonomous gate must construct or extend these atoms from a lower-level relational substrate without a human-authored post-failure operation.
+
+## Frozen development result
+
+The clean primary and portable runtimes were evaluated on 10,000 accepted fresh ARC-GEN cases for each of the nine families:
+
+- 90,000/90,000 exact in the primary runtime;
+- 90,000/90,000 exact in the portable runtime;
+- 90,000/90,000 cross-runtime agreement;
+- 15 rejected generator seeds recorded separately;
+- 8/8 adversarial parity tests;
+- 38/38 combined RIFT, v13 and v14 regression tests.
+
+The machine-readable evidence and file hashes are stored in `V14_EVIDENCE.json`. Its frozen SHA-256 is recorded in `EVIDENCE.md`.
