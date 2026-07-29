@@ -1,0 +1,76 @@
+name: Mini-ORIGIN Rust Lower Bound Reproduction v0.66
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v66-rust-lower-bound-reproduction
+    paths:
+      - "mini-origin/campaigns/v66-rust-lower-bound-preregistration.json"
+      - "mini-origin/src/mini_origin/lower_bound_export_v66.py"
+      - "mini-origin/src/mini_origin/lower_bound_validate_v66.py"
+      - "mini-origin/compiled/response_cost_lower_bound_v66.rs"
+      - ".github/workflows/mini-origin-v66-rust-lower-bound.yml"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v66-rust-lower-bound-preregistration.json"
+      - "mini-origin/src/mini_origin/lower_bound_export_v66.py"
+      - "mini-origin/src/mini_origin/lower_bound_validate_v66.py"
+      - "mini-origin/compiled/response_cost_lower_bound_v66.rs"
+      - ".github/workflows/mini-origin-v66-rust-lower-bound.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v66-rust-lower-bound-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  rust-lower-bound-reproduction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen parent and independence boundary
+        run: >-
+          python -c "import json,pathlib; p=json.load(open('campaigns/v66-rust-lower-bound-preregistration.json')); e=json.load(open('../research-evidence/mini-origin-v65-pareto-lower-bound-pass.json')); assert p['status']=='preregistered_before_v66_execution'; assert p['parent_v65_evidence_digest']==e['evidence_digest']=='3a1ef2c86c07600a591a900caf920456acecacb158b8faeb8bdb4c6d97d0550a'; assert e['development_gate']; text=pathlib.Path('compiled/response_cost_lower_bound_v66.rs').read_text(); assert 'python' not in text.lower(); assert 'subprocess' not in text.lower()"
+      - name: Export exactly 180 frozen states and Python bounded reference
+        run: >-
+          mkdir -p results/v66 &&
+          python -m mini_origin.lower_bound_export_v66
+          --states results/v66/states.txt
+          --manifest results/v66/input-manifest.json
+          --reference results/v66/python-reference.json
+      - name: Compile independent Rust solver
+        run: rustc -C opt-level=3 -C debuginfo=0 compiled/response_cost_lower_bound_v66.rs -o results/v66/response_cost_lower_bound_v66
+      - name: Run independent Rust solver
+        run: results/v66/response_cost_lower_bound_v66 --input results/v66/states.txt --output results/v66/rust-results.json
+      - name: Apply exact plan-and-counter gate
+        run: >-
+          python -m mini_origin.lower_bound_validate_v66
+          --manifest results/v66/input-manifest.json
+          --reference results/v66/python-reference.json
+          --rust results/v66/rust-results.json
+          --output results/v66/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v66-rust-lower-bound-reproduction
+          path: |
+            mini-origin/results/v66/input-manifest.json
+            mini-origin/results/v66/python-reference.json
+            mini-origin/results/v66/rust-results.json
+            mini-origin/results/v66/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
