@@ -1,10 +1,41 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
 from . import refinement_dominance_certificate_v65 as certificate
+
+
+def corrected_profile(
+    partitions: tuple[tuple[int, ...], ...], profile_index: int
+) -> tuple[tuple[int, ...], tuple[tuple[int, ...], ...]]:
+    size = len(partitions[0])
+    masses = tuple(1 + ((index + profile_index) % 2) for index in range(size))
+    max_cells = max(len(set(partition)) for partition in partitions)
+    rows = []
+    for query, partition in enumerate(partitions):
+        by_response: dict[int, int] = {}
+        for response in sorted(set(partition)):
+            if profile_index == 0:
+                value = 1
+            elif profile_index == 1:
+                value = 1 + max_cells - len(set(partition))
+            elif profile_index == 2:
+                value = 1 + max_cells - len(set(partition)) + ((query + response) % 2)
+            else:
+                value = 1 + hashlib.sha256(
+                    f"v65:{query}:{response}:{partition}".encode("utf-8")
+                ).digest()[0] % 3
+            by_response[response] = value
+        row = tuple(by_response[response] for response in partition)
+        for response in set(partition):
+            observed = {row[index] for index, value in enumerate(partition) if value == response}
+            if len(observed) != 1:
+                raise AssertionError("response cell received multiple test costs")
+        rows.append(row)
+    return masses, tuple(rows)
 
 
 def corrected_counterexamples() -> dict[str, object]:
@@ -37,8 +68,11 @@ def corrected_counterexamples() -> dict[str, object]:
 
 
 def run() -> dict[str, object]:
+    certificate.profile = corrected_profile
     certificate.counterexamples = corrected_counterexamples
-    return certificate.run()
+    report = certificate.run()
+    report["profile_conformance"] = "one static cost per query response cell"
+    return report
 
 
 def main() -> None:
