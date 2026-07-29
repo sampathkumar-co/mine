@@ -1,0 +1,15 @@
+{
+  "status": "preregistered_before_new_source_metadata_access",
+  "frozen_v79_commit": "555c3146111a7726702bb98e0a72f3b214d07190",
+  "parent_v79_evidence_digest": "5c28f39546d8e7d988fbc78ce254fa35d2b1d85d49a4b270b50edde1235d3001",
+  "parent_v79_workflow_run": 30470081666,
+  "objective": "Refresh the repository-wide dataset contamination boundary after the v0.79 opened-data selector repair and before choosing any untouched external source or dataset.",
+  "scope": "Scan every remote branch under mini-origin, research-evidence and Mini-ORIGIN workflows for UCI identifiers, OpenML identifiers and normalized dataset names, and require all seven v0.78/v0.79 OpenML datasets to be excluded.",
+  "future_source": "A source not selected until this audit is completed and preserved.",
+  "new_source_candidate_ids_names_or_urls_committed_before_audit": false,
+  "new_source_api_access_before_audit": false,
+  "new_source_dataset_bytes_access_before_audit": false,
+  "solver_execution_before_audit": false,
+  "next_stage": "Only after this registry is preserved may a separate branch preregister a deterministic metadata-only selection and hash-only byte lock from an untouched source.",
+  "claim_boundary": "Provenance infrastructure only. This stage produces no new algorithmic evidence, external performance claim, novelty claim, publication claim, acceptance claim or world-level claim."
+}
