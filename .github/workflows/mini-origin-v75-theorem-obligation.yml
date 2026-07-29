@@ -1,0 +1,74 @@
+name: Mini-ORIGIN Theorem Obligation Audit v0.75
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v75-formal-theorem-package
+    paths:
+      - "mini-origin/THEOREMS_v75.md"
+      - "mini-origin/src/mini_origin/theorem_obligation_audit_v75.py"
+      - "mini-origin/tests/test_theorem_obligation_v75.py"
+      - ".github/workflows/mini-origin-v75-theorem-obligation.yml"
+  pull_request:
+    paths:
+      - "mini-origin/THEOREMS_v75.md"
+      - "mini-origin/src/mini_origin/theorem_obligation_audit_v75.py"
+      - "mini-origin/tests/test_theorem_obligation_v75.py"
+      - ".github/workflows/mini-origin-v75-theorem-obligation.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v75-theorem-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  theorem-obligation-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify theorem inputs remain frozen
+        run: |
+          test -s THEOREMS_v75.md
+          git diff --exit-code a70c23e50d87efedb3be1f117d3a7c22398c3094 -- \
+            src/mini_origin/response_cost_pareto_v56.py \
+            src/mini_origin/response_cost_lower_bound_v65.py \
+            src/mini_origin/state_policy_v34.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          audit = json.loads(Path('../research-evidence/mini-origin-v46-prior-art-reviewed.json').read_text())
+          assert audit['status'] == 'pinned_prior_art_source_audit_reviewed'
+          assert len(audit['accessible_snapshots']) == 4
+          assert audit['unavailable_snapshot']['solver'] == 'MurTree'
+          assert audit['unavailable_snapshot']['source_audited'] is False
+          PY
+      - name: Run focused theorem tests
+        run: pytest -q tests/test_theorem_obligation_v75.py
+      - name: Run executable theorem-obligation audit
+        run: >-
+          mkdir -p results/v75 &&
+          python -m mini_origin.theorem_obligation_audit_v75
+          --output results/v75/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v75-theorem-obligation-audit
+          path: mini-origin/results/v75/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
