@@ -1,0 +1,127 @@
+{
+  "ambiguous_discovery_count": 7,
+  "ambiguous_discovery_seeds": [
+    11058,
+    11098,
+    13824,
+    15063,
+    15392,
+    16982,
+    18601
+  ],
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "benchmark": "ARC-GEN 228f6490 counterexample-guided semantic synthesis",
+  "claim_boundary": "v7 autonomously refines a relational AST using public post-failure generator counterexamples. The semantic meta-grammar and identifiability model remain human supplied.",
+  "counterexample_count": 4,
+  "final_ast": {
+    "match": {
+      "feature": "normalised_points",
+      "symmetry": "identity"
+    },
+    "render": {
+      "erase_source": true,
+      "op": "paint_destination_from_source_colour",
+      "preserve_unmatched": true
+    },
+    "scene": {
+      "background_colour": 0,
+      "exclude_frame_objects": true,
+      "frame_colour": 5,
+      "hole_boundary": "all",
+      "object_colour_role": "single_component"
+    },
+    "schema": "lexigen-arc-relational-ast-v1"
+  },
+  "final_ast_sha256": "bc5e1ff25f653e105fd8ab9eea0c4e61c57b76e69afb41958574ad8004d77c14",
+  "holdout_ambiguous": 9,
+  "holdout_count": 10000,
+  "holdout_exact": 9991,
+  "holdout_identifiable": 9991,
+  "holdout_start": 20000,
+  "identifiable_accuracy": 1.0,
+  "initial_demonstration_count": 6,
+  "portable_holdout_exact": 9991,
+  "rounds": [
+    {
+      "ast": {
+        "background_colour": 0,
+        "erase_source": true,
+        "frame_colour": 5,
+        "hole_boundary": "all",
+        "match_feature": "area",
+        "match_symmetry": "identity",
+        "object_colour_role": "any"
+      },
+      "ast_sha256": "4f0c39a9d1e058457ef1c2e36efd986959f99a59191485c07f4e9ad3c24145b9",
+      "counterexample_seed": 10006,
+      "exact_candidate_count": 28,
+      "round": 0
+    },
+    {
+      "ast": {
+        "background_colour": 0,
+        "erase_source": true,
+        "frame_colour": 5,
+        "hole_boundary": "all",
+        "match_feature": "area",
+        "match_symmetry": "identity",
+        "object_colour_role": "single_component"
+      },
+      "ast_sha256": "7df2b6a4c1d12356daed6e890a6e5ec82b4b010c57faf5d8fda104224a031dd5",
+      "counterexample_seed": 10335,
+      "exact_candidate_count": 20,
+      "round": 1
+    },
+    {
+      "ast": {
+        "background_colour": 0,
+        "erase_source": true,
+        "frame_colour": 5,
+        "hole_boundary": "all",
+        "match_feature": "normalised_points",
+        "match_symmetry": "identity",
+        "object_colour_role": "any"
+      },
+      "ast_sha256": "77e36390d463da52ca96a6ce11dac7c900ccac4a6a7408f2f002de0678e48400",
+      "counterexample_seed": 10053,
+      "exact_candidate_count": 12,
+      "round": 2
+    },
+    {
+      "ast": {
+        "background_colour": 0,
+        "erase_source": true,
+        "frame_colour": 5,
+        "hole_boundary": "all",
+        "match_feature": "bbox",
+        "match_symmetry": "identity",
+        "object_colour_role": "single_component"
+      },
+      "ast_sha256": "a34b4e66d8298c246cb0b72018cd094df89ba00963ea7d83693e5bd2c1debfce",
+      "counterexample_seed": 10013,
+      "exact_candidate_count": 8,
+      "round": 3
+    },
+    {
+      "ast": {
+        "background_colour": 0,
+        "erase_source": true,
+        "frame_colour": 5,
+        "hole_boundary": "all",
+        "match_feature": "normalised_points",
+        "match_symmetry": "identity",
+        "object_colour_role": "single_component"
+      },
+      "ast_sha256": "bc5e1ff25f653e105fd8ab9eea0c4e61c57b76e69afb41958574ad8004d77c14",
+      "counterexample_seed": null,
+      "exact_candidate_count": 4,
+      "round": 4
+    }
+  ],
+  "sealed_outputs_accessed": false,
+  "source_sealed_outputs_sha256": "2e2734865ab532e861195d38f70846137bfbb2e52f8884c918ba71728c74f8b0",
+  "source_task_id": "228f6490",
+  "status": "post-failure external-family validation; no blind breakthrough claim",
+  "task_source_sha256": "317db17e6a4ca6f221d2dc5509ea962753e49d306754e3b38f7d0c9f5e700bbb",
+  "version": "v7"
+}

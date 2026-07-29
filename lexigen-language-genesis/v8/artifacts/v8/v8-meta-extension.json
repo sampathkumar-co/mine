@@ -1,0 +1,75 @@
+{
+  "component_class": {
+    "arg": {
+      "body": {
+        "name": "dc",
+        "op": "var"
+      },
+      "collection": "edges",
+      "op": "fold_sum"
+    },
+    "op": "sign"
+  },
+  "group_score": {
+    "body": {
+      "op": "cardinality",
+      "target": "points"
+    },
+    "collection": "components",
+    "op": "fold_sum"
+  },
+  "name": "generated_production_754a19e6bb8a",
+  "provenance": {
+    "candidate_extensions_tested": 2016,
+    "exact_candidate_count": 80,
+    "human_supplied_finished_task_operator": false,
+    "human_supplied_generic_substrate": true,
+    "method": "typed enumerative meta-grammar synthesis"
+  },
+  "relation": {
+    "left": {
+      "left": {
+        "arg": {
+          "name": "dr",
+          "op": "var"
+        },
+        "op": "abs"
+      },
+      "op": "add",
+      "right": {
+        "arg": {
+          "name": "dc",
+          "op": "var"
+        },
+        "op": "abs"
+      }
+    },
+    "op": "eq",
+    "right": {
+      "op": "const",
+      "value": 2
+    }
+  },
+  "render": {
+    "op": "paint_component_class",
+    "other_colour": 8,
+    "winner_colour": 2
+  },
+  "schema": "lexigen-meta-grammar-extension-v1",
+  "source": {
+    "colour": 5,
+    "op": "select_cells_equal"
+  },
+  "types": {
+    "component_class": "Component\u2192Int",
+    "group_score": "List[Component]\u2192Int",
+    "input": "Grid",
+    "output": "Grid",
+    "relation": "Point\u00d7Point\u2192Bool",
+    "source": "Set[Point]"
+  },
+  "winner": {
+    "mode": "min",
+    "op": "select_extreme_group"
+  }
+}

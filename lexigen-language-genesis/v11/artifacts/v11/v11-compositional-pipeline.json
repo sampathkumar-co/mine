@@ -1,0 +1,45 @@
+{
+  "name": "generated_compositional_pipeline_ea7ffa0c9fe8",
+  "provenance": {
+    "candidates_tested": 5184,
+    "exact_candidate_count": 8,
+    "human_supplied_finished_task_operator": false,
+    "human_supplied_generic_stage_substrates": true,
+    "method": "typed multi-stage pipeline synthesis"
+  },
+  "schema": "lexigen-compositional-pipeline-v1",
+  "stages": [
+    {
+      "background": 0,
+      "kind": "extract_lattice",
+      "mode": "compress_blank_axes"
+    },
+    {
+      "gap": 2,
+      "kind": "allocate_layout",
+      "margin": 2,
+      "output_height": 26,
+      "output_width": 26
+    },
+    {
+      "kind": "build_relations",
+      "predicate": "equal_nonbackground"
+    },
+    {
+      "kind": "apply_precedence",
+      "mode": "horizontal_then_vertical_unclaimed"
+    },
+    {
+      "canvas_background": 0,
+      "kind": "render",
+      "skip_background_tiles": false
+    }
+  ],
+  "types": [
+    "Grid",
+    "Lattice",
+    "Relations",
+    "Plan",
+    "Grid"
+  ]
+}
