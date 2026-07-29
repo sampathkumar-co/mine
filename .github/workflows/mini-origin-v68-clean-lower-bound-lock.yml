@@ -1,0 +1,51 @@
+name: Mini-ORIGIN Clean Lower-Bound Lock v0.68
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v68-clean-lower-bound-lock
+    paths:
+      - "mini-origin/src/mini_origin/clean_lower_bound_lock_v68.py"
+      - ".github/workflows/mini-origin-v68-clean-lower-bound-lock.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/clean_lower_bound_lock_v68.py"
+      - ".github/workflows/mini-origin-v68-clean-lower-bound-lock.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v68-lock-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  clean-lower-bound-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify registry, parent and hash-only boundary
+        run: >-
+          python -c "import ast,pathlib; p=pathlib.Path('src/mini_origin/clean_lower_bound_lock_v68.py'); tree=ast.parse(p.read_text()); forbidden={'zipfile','csv','pandas','numpy','conditioned_cell_frontier_v60','response_cost_lower_bound_v65'}; imported={a.name for n in ast.walk(tree) if isinstance(n,ast.Import) for a in n.names}|{n.module for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)}; assert not (forbidden & imported)"
+      - name: Download bytes and freeze hashes only
+        run: >-
+          mkdir -p external-data/uci-v68 &&
+          python -m mini_origin.clean_lower_bound_lock_v68
+          --output external-data/uci-v68/manifest.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v68-clean-lower-bound-archive-lock
+          path: mini-origin/external-data/uci-v68/manifest.json
+          retention-days: 90
