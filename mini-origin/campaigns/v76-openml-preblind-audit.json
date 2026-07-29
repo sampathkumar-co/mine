@@ -1,0 +1,15 @@
+{
+  "status": "preregistered_before_openml_metadata_access",
+  "frozen_v75_commit": "d8aa4153b69b82ccb714cfbb50d12c5137186047",
+  "parent_v75_evidence_digest": "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47",
+  "parent_v75_workflow_run": 30449862500,
+  "objective": "Freeze a source-independent repository contamination boundary before selecting any cross-source OpenML replication datasets.",
+  "scope": "Scan every remote branch under mini-origin, research-evidence and Mini-ORIGIN workflows for prior UCI identifiers, OpenML dataset identifiers and normalized dataset names.",
+  "future_source": "OpenML benchmark suites and official OpenML REST metadata, only after this audit is preserved.",
+  "openml_candidate_ids_names_or_urls_committed_before_audit": false,
+  "openml_api_access_before_audit": false,
+  "openml_dataset_bytes_access_before_audit": false,
+  "solver_execution_before_audit": false,
+  "next_stage": "After this registry artifact is preserved, a separate branch may deterministically choose and hash-lock datasets from an official OpenML benchmark suite while excluding every frozen ID, name and UCI-origin source.",
+  "claim_boundary": "Provenance infrastructure only. This stage produces no new algorithmic evidence, external performance claim, novelty claim, publication claim, acceptance claim or world-level claim."
+}
