@@ -1,0 +1,16 @@
+{
+  "status": "pmlb_preblind_audit_v80_attempt2_infrastructure_failure",
+  "workflow_run_id": 30478188311,
+  "job_id": 90665097473,
+  "head_commit": "a94dd78e539f51679762cd76ade4a8629578de7e",
+  "focused_tests_passed": 10,
+  "failure_stage": "inherited v0.76 registry wrapper before v0.80 repository scan",
+  "failure_reason": "openml_preblind_audit_v76.audit() returned an incomplete inherited registry, causing v0.80 to stop before its own scan",
+  "pmlb_catalogue_accessed": false,
+  "pmlb_repository_tree_accessed": false,
+  "pmlb_candidate_names_or_metadata_accessed": false,
+  "pmlb_dataset_bytes_accessed": false,
+  "solver_executed": false,
+  "v80_registry_produced": false,
+  "allowed_repair": "replace the inherited wrapper dependency with a one-pass current-history audit that recomputes every underlying UCI, OpenML, normalized-name, PYSTREED, PMLB-occurrence, unreadable-file and required-v0.79 check without changing the preregistered boundary"
+}
