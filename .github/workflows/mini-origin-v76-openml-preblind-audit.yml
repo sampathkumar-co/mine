@@ -1,0 +1,81 @@
+name: Mini-ORIGIN OpenML Preblind Audit v0.76
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v76-openml-preblind-audit
+    paths:
+      - "mini-origin/campaigns/v76-openml-preblind-audit.json"
+      - "mini-origin/src/mini_origin/openml_preblind_audit_v76.py"
+      - "mini-origin/tests/test_openml_preblind_audit_v76.py"
+      - ".github/workflows/mini-origin-v76-openml-preblind-audit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v76-openml-preblind-audit
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  openml-preblind-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch every remote branch
+        run: git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: python -m pip install -e ".[dev]"
+      - name: Verify preregistration and frozen successful parent
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          row = json.loads(Path("mini-origin/campaigns/v76-openml-preblind-audit.json").read_text(encoding="utf-8-sig"))
+          assert row["status"] == "preregistered_before_openml_metadata_access"
+          assert row["frozen_v75_commit"] == "d8aa4153b69b82ccb714cfbb50d12c5137186047"
+          assert row["parent_v75_evidence_digest"] == "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47"
+          assert row["openml_candidate_ids_names_or_urls_committed_before_audit"] is False
+          assert row["openml_api_access_before_audit"] is False
+          assert row["openml_dataset_bytes_access_before_audit"] is False
+          assert row["solver_execution_before_audit"] is False
+          PY
+          git diff --exit-code d8aa4153b69b82ccb714cfbb50d12c5137186047 -- \
+            research-evidence/mini-origin-v75-fresh-external-blind-pass.json \
+            mini-origin/campaigns/v75-fresh-external-blind.json \
+            mini-origin/src/mini_origin/fresh_external_blind_v75.py \
+            mini-origin/src/mini_origin/label_free_frontier_v72.py \
+            mini-origin/src/mini_origin/numeric_threshold_frontier_v70.py \
+            mini-origin/src/mini_origin/numeric_threshold_repaired_v70.py \
+            mini-origin/src/mini_origin/label_free_selector_certificate_v71.py \
+            mini-origin/src/mini_origin/conditioned_cell_frontier_v60.py \
+            mini-origin/src/mini_origin/response_cost_pareto_v56.py \
+            mini-origin/src/mini_origin/response_cost_lower_bound_v65.py \
+            mini-origin/compiled/response_cost_lower_bound_v66.rs
+      - name: Test OpenML preblind audit boundary
+        working-directory: mini-origin
+        run: pytest -q tests/test_openml_preblind_audit_v76.py
+      - name: Build source-independent contamination registry
+        run: >-
+          mkdir -p mini-origin/results/v76 &&
+          python -m mini_origin.openml_preblind_audit_v76
+          --output mini-origin/results/v76/openml-preblind-registry.json
+        env:
+          PYTHONPATH: mini-origin/src
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v76-openml-preblind-registry
+          path: mini-origin/results/v76/openml-preblind-registry.json
+          if-no-files-found: warn
+          retention-days: 90
