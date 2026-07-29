@@ -1,0 +1,47 @@
+{
+  "status": "preregistered_before_opened-data rerun",
+  "parent_v68_evidence_digest": "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b",
+  "parent_v71_evidence_digest": "58382c7aa2bcd7c28fec54642fcf76cc88e5059e0eb62e942d6cccf33d6ddfe2",
+  "development_data": "the seven already-opened v0.68 archives only",
+  "representation": {
+    "record_sampling": "v0.70 feature-only SHA-256 row rank with original row index tie-break",
+    "query_compiler": "v0.70 label-free numeric thresholds at seven fixed empirical ranks",
+    "oversized_cell_sampling": "v0.71 feature-only SHA-256 rank over task name, salt, row index and compiled response row",
+    "labels_or_costs_used_for_sampling_or_compilation": false
+  },
+  "unchanged_components": [
+    "v0.60 conditioned-cell traversal and structural-state criteria",
+    "v0.56 response-cost Pareto quotient",
+    "v0.65 exact lower-bound planner",
+    "v0.66 independent Rust lower-bound solver",
+    "v0.70 datasets, compiler thresholds and scientific gate"
+  ],
+  "exact_budget": 500000,
+  "budget_ladder": [10000, 50000, 250000, 500000],
+  "locked_gate": {
+    "contributing_datasets": 7,
+    "minimum_states_from_each_previously_zero_dataset": 6,
+    "previously_zero_datasets": [
+      "Connectionist Bench (Sonar, Mines vs. Rocks)",
+      "Hill-Valley",
+      "Libras Movement"
+    ],
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0
+  },
+  "claim_boundary": "Opened-data representation and selector validation. A pass freezes the fully label-free protocol for a later registry-audited fresh external campaign. It is not fresh external evidence, outside-human reproduction, publication novelty, peer review, acceptance, or a world-level/world-first breakthrough."
+}
