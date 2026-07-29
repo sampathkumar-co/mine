@@ -140,6 +140,7 @@ def validate(reference_path: Path, rust_path: Path, output_path: Path) -> dict[s
     result["parent_v71_evidence_digest"] = v71["evidence_digest"]
     result["compiler_protocol"] = compiler_protocol()
     result["protocol"] = protocol()
+    result.pop("evidence_digest", None)
     result["evidence_digest"] = hashlib.sha256(
         json.dumps(result, sort_keys=True).encode("utf-8")
     ).hexdigest()
