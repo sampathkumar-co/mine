@@ -1,0 +1,108 @@
+name: Mini-ORIGIN Fully Label-Free Threshold Frontier v0.72
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v72-label-free-threshold-frontier
+    paths:
+      - "mini-origin/campaigns/v72-label-free-threshold-frontier-preregistration.json"
+      - "mini-origin/src/mini_origin/label_free_numeric_frontier_v72.py"
+      - "mini-origin/src/mini_origin/label_free_selector_certificate_v71.py"
+      - "mini-origin/tests/test_label_free_numeric_frontier_v72.py"
+      - ".github/workflows/mini-origin-v72-label-free-threshold-frontier.yml"
+      - "research-evidence/mini-origin-v71-label-free-selector-pass.json"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v72-label-free-threshold-frontier-preregistration.json"
+      - "mini-origin/src/mini_origin/label_free_numeric_frontier_v72.py"
+      - "mini-origin/src/mini_origin/label_free_selector_certificate_v71.py"
+      - "mini-origin/tests/test_label_free_numeric_frontier_v72.py"
+      - ".github/workflows/mini-origin-v72-label-free-threshold-frontier.yml"
+      - "research-evidence/mini-origin-v71-label-free-selector-pass.json"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v72-label-free-threshold-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  label-free-threshold-frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen parents, gate and algorithms
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path("campaigns/v72-label-free-threshold-frontier-preregistration.json").read_text())
+          p70 = json.loads(Path("campaigns/v70-numeric-threshold-frontier-preregistration.json").read_text())
+          e68 = json.loads(Path("../research-evidence/mini-origin-v68-clean-lower-bound-rejected.json").read_text())
+          e71 = json.loads(Path("../research-evidence/mini-origin-v71-label-free-selector-pass.json").read_text())
+          assert not e68["development_gate"]
+          assert e68["evidence_digest"] == p["parent_v68_evidence_digest"] == "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b"
+          assert e71["development_gate"]
+          assert e71["evidence_digest"] == p["parent_v71_evidence_digest"] == "58382c7aa2bcd7c28fec54642fcf76cc88e5059e0eb62e942d6cccf33d6ddfe2"
+          assert p["locked_gate"] == p70["locked_gate"]
+          assert p["exact_budget"] == p70["exact_budget"] == 500000
+          assert p["representation"]["labels_or_costs_used_for_sampling_or_compilation"] is False
+          PY
+          git diff --exit-code c35bcd68d91b988d69b5f8192473f6aadb02a22b -- \
+            src/mini_origin/numeric_threshold_frontier_v70.py \
+            src/mini_origin/numeric_threshold_repaired_v70.py
+          git diff --exit-code 4ebdb73d6f30c261c4830934e1d3908335e1f7f2 -- \
+            src/mini_origin/label_free_selector_certificate_v71.py
+          git diff --exit-code f73ad897377ae1189844ea9ab49aa429c6b1c1c3 -- \
+            src/mini_origin/conditioned_cell_frontier_v60.py \
+            src/mini_origin/response_cost_pareto_v56.py
+          git diff --exit-code eecc699ebc66e298b814c3e56ca5e2aee9366da9 -- \
+            src/mini_origin/response_cost_lower_bound_v65.py
+          git diff --exit-code 2d001d3d4dcec4c315327f318a4918acc552aa7c -- \
+            compiled/response_cost_lower_bound_v66.rs
+      - name: Run focused label-independence tests
+        run: >-
+          pytest -q
+          tests/test_label_free_selector_v71.py
+          tests/test_label_free_numeric_frontier_v72.py
+      - name: Compile opened archives and compute Python reference
+        run: >-
+          mkdir -p results/v72 &&
+          python -m mini_origin.label_free_numeric_frontier_v72 reference
+          --states results/v72/states.txt
+          --reference results/v72/python-reference.json
+      - name: Compile independent Rust lower-bound solver
+        run: rustc -C opt-level=3 -C debuginfo=0 compiled/response_cost_lower_bound_v66.rs -o results/v72/response_cost_lower_bound_v72
+      - name: Run independent Rust lower-bound solver
+        run: results/v72/response_cost_lower_bound_v72 --input results/v72/states.txt --output results/v72/rust-results.json
+      - name: Apply unchanged opened-data gate
+        run: >-
+          python -m mini_origin.label_free_numeric_frontier_v72 validate
+          --reference results/v72/python-reference.json
+          --rust results/v72/rust-results.json
+          --output results/v72/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v72-label-free-threshold-frontier
+          path: |
+            mini-origin/results/v72/python-reference.json
+            mini-origin/results/v72/rust-results.json
+            mini-origin/results/v72/evidence.json
+          if-no-files-found: warn
+          retention-days: 90

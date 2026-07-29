@@ -1,0 +1,29 @@
+{
+  "status": "preexecution_and_preverdict_repair_history",
+  "scientific_result_claimed": false,
+  "accepted_metrics_exposed": false,
+  "datasets_changed": false,
+  "budgets_changed": false,
+  "thresholds_changed": false,
+  "solver_changed": false,
+  "events": [
+    {
+      "workflow_run": 30430132541,
+      "stage": "focused tests before archive compilation",
+      "failure": "protocol-reporting recursion caused by replacing a dynamically referenced v0.70 module function",
+      "repair": "read the already-frozen v0.70 compiler protocol directly from its preregistration JSON",
+      "archive_compilation_executed": false,
+      "solver_executed": false
+    },
+    {
+      "workflow_run": 30430319079,
+      "stage": "opened-data Python reference in progress; no completed reference, Rust replay, validator or artifact",
+      "failure": "review found that the workflow checked the v0.71 evidence digest but did not byte-pin the certified selector implementation",
+      "repair": "add the v0.71 selector source to workflow path filters and verify byte identity against certified commit 4ebdb73d6f30c261c4830934e1d3908335e1f7f2",
+      "accepted_result": false,
+      "reason_discarded": "the run did not prove that the implementation used was the exact implementation covered by the cited certificate"
+    }
+  ],
+  "authoritative_run_requirement": "Only a run after commit 13a55066c225535d6dba0963658a1f3e13d8841c may support the v0.72 development verdict.",
+  "scientific_note": "These repairs strengthen provenance and do not alter the label-free compiler, selector semantics, datasets, cost profiles, exact planners, Rust solver, budgets, state criteria or locked acceptance thresholds."
+}
