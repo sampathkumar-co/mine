@@ -1,0 +1,60 @@
+name: Lexigen v13 Seed Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/lexigen-v13-seed-debug.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out v13 branch
+        uses: actions/checkout@v4
+        with:
+          path: current
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Print rare public seed geometry
+        working-directory: current/lexigen-language-genesis/v13
+        run: |
+          PYTHONPATH="$GITHUB_WORKSPACE/arcgen:$PWD" python - <<'PY'
+          import json, random
+          from tasks import task_9b2a60aa
+          from latent_runtime_v13_ext2 import _legend_lines, _components_of_colour
+          random.seed(720000)
+          item = task_9b2a60aa.generate()
+          source = tuple(tuple(row) for row in item["input"])
+          target = tuple(tuple(row) for row in item["output"])
+          background = max(set(v for row in source for v in row), key=lambda v: sum(x == v for row in source for x in row))
+          print("INPUT")
+          print("\n".join("".join(map(str, row)) for row in source))
+          print("OUTPUT")
+          print("\n".join("".join(map(str, row)) for row in target))
+          print("BACKGROUND", background)
+          for rank, legend in sorted(_legend_lines(source, background), reverse=True):
+              positions = {(r, c) for r, c, _ in legend}
+              components = _components_of_colour(source, 2, positions)
+              print(json.dumps({
+                  "rank": rank,
+                  "legend": legend,
+                  "key_positions": [(r,c) for r,c,v in legend if v == 2],
+                  "remaining_components": [sorted(component) for component in components],
+              }))
+          PY

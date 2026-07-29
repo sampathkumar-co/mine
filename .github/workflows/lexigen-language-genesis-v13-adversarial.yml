@@ -1,0 +1,31 @@
+name: Lexigen v13 Adversarial Parity
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v13/**"
+      - ".github/workflows/lexigen-language-genesis-v13-adversarial.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  adversarial-parity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out v13 branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest==8.3.5
+
+      - name: Run adversarial parity tests
+        working-directory: lexigen-language-genesis/v13
+        run: python -m pytest -q test_v13_final.py
