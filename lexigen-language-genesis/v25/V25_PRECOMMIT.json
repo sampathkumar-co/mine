@@ -49,8 +49,9 @@
   "enumeration": {
     "candidate_order": "depth, output type order, total node count, canonical serialization",
     "deduplication": "retain lowest node count then canonical serialization for each semantic signature",
+    "depth_rationale": "Depth 5 is the minimum needed to compose colour -> points -> components -> selection -> selected points -> paint.",
     "enumeration_order": "depth, type, node count, canonical serialization",
-    "maximum_depth": 4,
+    "maximum_depth": 5,
     "maximum_raw_candidate_evaluations_per_task": 5000000,
     "maximum_total_unique_expressions_per_task": 250000,
     "maximum_unique_expressions_per_type_per_depth": 50000,
