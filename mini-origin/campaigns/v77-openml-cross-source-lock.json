@@ -1,0 +1,31 @@
+{
+  "status": "openml_cross_source_lock_v77_preregistered",
+  "parent_v76_registry_digest": "d312c4f0b853237479d6be8a74b6bf47776722d7aea1ce00c7b9745be90d57d2",
+  "parent_v75_evidence_digest": "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47",
+  "suite": {"name": "OpenML-CC18", "suite_id": 99},
+  "selection_seed": "mini-origin-v77-openml-cross-source-lock",
+  "dataset_count": 7,
+  "metadata_only_eligibility": {
+    "status": "active",
+    "format": ["ARFF"],
+    "min_instances": 500,
+    "max_instances": 10000,
+    "min_features": 4,
+    "max_features": 500,
+    "min_classes": 2,
+    "max_classes": 20,
+    "max_missing_fraction": 0.20,
+    "exclude_registry_ids_and_names": true,
+    "exclude_uci_origin": true
+  },
+  "ranking": "sha256(seed || dataset_id || normalized_name || version || file_id)",
+  "stage_a_allowed": ["official OpenML suite metadata", "official OpenML dataset metadata", "raw dataset byte download", "byte length", "SHA-256"],
+  "stage_a_forbidden": ["ARFF parsing", "record inspection", "label inspection", "feature statistics beyond frozen OpenML metadata", "threshold compilation", "state generation", "cost generation", "solver execution"],
+  "future_stage_b": {
+    "method_commit": "d8aa4153b69b82ccb714cfbb50d12c5137186047",
+    "method": "exact frozen v0.72 label-free compiler, selector, Python planners and independent Rust replay",
+    "scientific_gate": "same breadth, exactness, non-regression, Rust agreement and search-advantage thresholds as v0.75"
+  },
+  "revision_budget_after_raw_byte_lock": {"dataset_identity": 0, "selection": 0, "scientific_thresholds": 0, "parser_only_repairs": "permitted and preserved"},
+  "claim_scope": "Hash-lock provenance infrastructure only; no algorithmic or performance claim."
+}
