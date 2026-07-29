@@ -1,0 +1,18 @@
+﻿--- stdout ---
+--- stderr ---
+Could not find platform independent libraries <prefix>
+Traceback (most recent call last):
+  File "C:\Users\SAMPATH\AppData\Local\Temp\lexigen-v13-campaign-engine\lexigen-language-genesis\external\arcgen_campaign_v13.py", line 69, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\SAMPATH\AppData\Local\Temp\lexigen-v13-campaign-engine\lexigen-language-genesis\external\arcgen_campaign_v13.py", line 65, in main
+    args.function(args)
+    ~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\SAMPATH\AppData\Local\Temp\lexigen-v13-campaign-engine\lexigen-language-genesis\external\arcgen_gate.py", line 104, in command_seal
+    pairs = generate_pairs(arcgen_root, selection["selected_task_id"], DEMONSTRATIONS + HIDDEN_TESTS)
+  File "C:\Users\SAMPATH\AppData\Local\Temp\lexigen-v13-campaign-engine\lexigen-language-genesis\external\arcgen_gate.py", line 86, in generate_pairs
+    pair = generator()
+  File "C:\Users\SAMPATH\AppData\Local\Temp\arcgen\tasks\task_34cfa167.py", line 75, in generate
+    output[row][bcol + wide - 2 - i] = output[row][bcol + 1 + i] = colors[3]
+    ~~~~~~^^^^^
+IndexError: list index out of range

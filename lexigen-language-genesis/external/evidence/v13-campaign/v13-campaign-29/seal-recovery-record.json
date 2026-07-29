@@ -1,0 +1,11 @@
+﻿{
+    "gate_id":  "v13-campaign-29",
+    "status":  "recovered-after-local-exit-code-capture-bug",
+    "original_sealed_outputs_sha256":  "0c8810e135e1298c988715abccd69aedd85e28d75c3608cdb637dbbcecc82a6a",
+    "regenerated_sealed_outputs_sha256":  "0c8810e135e1298c988715abccd69aedd85e28d75c3608cdb637dbbcecc82a6a",
+    "regenerated_redacted_task_sha256":  "83e1f31ad8fab06c40247348015a6c5d6c894d8a6eb5cc9aeafc41b5698b9464",
+    "deterministic_hash_equality":  true,
+    "hidden_outputs_read_or_scored":  false,
+    "task_reselected":  false,
+    "replacement_attempted":  false
+}
