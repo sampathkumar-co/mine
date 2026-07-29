@@ -14,7 +14,7 @@ DATASETS = (
     {"name":"Optical Recognition of Handwritten Digits","uci_id":80,"url":"https://archive.ics.uci.edu/static/public/80/optical+recognition+of+handwritten+digits.zip","doi":"10.24432/C50P49"},
     {"name":"Statlog (Landsat Satellite)","uci_id":146,"url":"https://archive.ics.uci.edu/static/public/146/statlog+landsat+satellite.zip","doi":"10.24432/C55887"},
     {"name":"Madelon","uci_id":171,"url":"https://archive.ics.uci.edu/static/public/171/madelon.zip","doi":"10.24432/C5602H"},
-    {"name":"Glioma Grading Clinical and Mutation Features","uci_id":759,"url":"https://archive.ics.uci.edu/static/public/759/glioma+grading+clinical+and+mutation+features.zip","doi":"10.24432/C5R62J"},
+    {"name":"Glioma Grading Clinical and Mutation Features","uci_id":759,"url":"https://archive.ics.uci.edu/static/public/759/glioma+grading+clinical+and+mutation+features+dataset.zip","doi":"10.24432/C5R62J"},
 )
 
 
