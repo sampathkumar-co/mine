@@ -1,0 +1,62 @@
+{
+  "status": "preregistered_before_record_access",
+  "parent_v77_commit": "8168664e4068aa3a8b8736dc3ff13b35ecf67981",
+  "parent_v77_lock_digest": "03a64c8c5928070fb41b15d4892c2f720a909fc39c3a7f5b9597cd79f1879590",
+  "parent_v77_manifest_sha256": "e9e500a6441720feff3455cfea183248b03b4fb991a5e4e8448840463c845284",
+  "parent_v77_workflow_run": 30455307664,
+  "parent_v77_artifact_digest": "sha256:2c53a90eb95b3a2b6f2fc5050d19e64dc439fd84b9caf54a515f642c25198780",
+  "parent_v76_registry_digest": "d312c4f0b853237479d6be8a74b6bf47776722d7aea1ce00c7b9745be90d57d2",
+  "frozen_v75_commit": "d8aa4153b69b82ccb714cfbb50d12c5137186047",
+  "parent_v75_evidence_digest": "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47",
+  "objective": "Run the exact frozen Mini-ORIGIN v0.75 solver architecture on the seven cross-source OpenML-CC18 datasets hash-locked by v0.77, with independent Rust replay.",
+  "adapter_protocol": {
+    "data": "raw ARFF byte length, MD5 and SHA-256 must match the v0.77 lock before parsing",
+    "parser": "liac-arff 2.5.0, dense ARFF only, UTF-8-sig strict decoding",
+    "target_column": "the single exact committed OpenML target attribute",
+    "ignored_columns": "only committed row_id_attribute and ignore_attribute names when present",
+    "feature_columns": "all ARFF attributes in declared order except target and committed ignored columns",
+    "values": "missing features become the empty token; other values are stripped string forms; labels must be nonempty",
+    "shape": "record count equals frozen num_instances and declared attribute count equals frozen num_features"
+  },
+  "record_or_label_access_before_preregistration": false,
+  "solver_execution_before_preregistration": false,
+  "algorithm_revisions_after_record_access": 0,
+  "scientific_threshold_revisions_after_record_access": 0,
+  "exact_budget": 500000,
+  "budget_ladder": [
+    10000,
+    50000,
+    250000,
+    500000
+  ],
+  "locked_gate": {
+    "contributing_datasets": 7,
+    "minimum_states_from_each_previously_zero_dataset": 6,
+    "previously_zero_datasets": [
+      "pc1",
+      "eucalyptus",
+      "texture",
+      "kc1",
+      "kc2",
+      "analcatdata_dmft",
+      "pc4"
+    ],
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0
+  },
+  "claim_boundary": "A pass is a second, cross-source, repository-audited blind replication for the frozen Mini-ORIGIN method. It is not outside-human reproduction, direct state-of-the-art superiority, peer review, publication acceptance, a general AI breakthrough, or a world-first claim."
+}
