@@ -1,0 +1,58 @@
+name: Mini-ORIGIN Fresh External Blind v0.75
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v75-fresh-external-blind
+    paths:
+      - "mini-origin/campaigns/v75-fresh-external-blind.json"
+      - "mini-origin/src/mini_origin/fresh_external_blind_v75.py"
+      - "mini-origin/tests/test_fresh_external_blind_v75.py"
+      - "mini-origin/scripts/run_v75_ci.sh"
+      - ".github/workflows/mini-origin-v75-fresh-external-blind.yml"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v75-fresh-external-blind.json"
+      - "mini-origin/src/mini_origin/fresh_external_blind_v75.py"
+      - "mini-origin/tests/test_fresh_external_blind_v75.py"
+      - "mini-origin/scripts/run_v75_ci.sh"
+      - ".github/workflows/mini-origin-v75-fresh-external-blind.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v75-fresh-external-blind
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  fresh-external-blind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Run preregistered fresh external campaign
+        run: bash scripts/run_v75_ci.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v75-fresh-external-blind
+          path: |
+            mini-origin/results/v75/python-reference.json
+            mini-origin/results/v75/rust-results.json
+            mini-origin/results/v75/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
