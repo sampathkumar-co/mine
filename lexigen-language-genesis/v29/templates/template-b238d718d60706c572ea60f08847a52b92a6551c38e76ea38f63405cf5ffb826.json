@@ -1,0 +1,80 @@
+{
+  "fixed_operator_nodes": 6,
+  "operator_holes": [
+    {
+      "allowed_choices": [
+        "bbox_border",
+        "bbox_fill",
+        "bbox_reflect_bottom",
+        "bbox_reflect_left",
+        "bbox_reflect_right",
+        "bbox_reflect_top",
+        "col_span",
+        "connect_aligned",
+        "dilate4",
+        "erode4",
+        "grid_flip_h_points",
+        "grid_flip_v_points",
+        "grid_rotate180_points",
+        "holes",
+        "outline4",
+        "row_span"
+      ],
+      "name": "h0",
+      "path": [
+        "points",
+        "points",
+        "points",
+        "op"
+      ],
+      "signature": "PointSet->PointSet"
+    }
+  ],
+  "origin": {
+    "differing_operator_count": 1,
+    "method": "all_pair_operator_value_antiunification",
+    "whole_subtree_holes": 0
+  },
+  "schema": "lexigen-v29-operator-hole-template-v1",
+  "source_instantiations": {
+    "67a423a3": {
+      "h0": "erode4"
+    },
+    "810b9b61": {
+      "h0": "holes"
+    }
+  },
+  "source_structure_sha256": [
+    "7c6cc28e4f7bb5f69cebea824d175ed8d873efc97df13a6566238ba32cf65cb9",
+    "9093e05ac7306f078a51fe10b58f3039aedd912447fbbb63cc758d615f1c1b53"
+  ],
+  "source_task_ids": [
+    "67a423a3",
+    "810b9b61"
+  ],
+  "template_ast": {
+    "colour": {
+      "name": "c0",
+      "op": "param_color"
+    },
+    "grid": {
+      "op": "input_grid"
+    },
+    "op": "paint",
+    "points": {
+      "op": "bbox_border",
+      "points": {
+        "op": "dilate4",
+        "points": {
+          "op": {
+            "$operator_hole": "h0"
+          },
+          "points": {
+            "op": "non_background_points"
+          }
+        }
+      }
+    }
+  },
+  "template_sha256": "b238d718d60706c572ea60f08847a52b92a6551c38e76ea38f63405cf5ffb826"
+}

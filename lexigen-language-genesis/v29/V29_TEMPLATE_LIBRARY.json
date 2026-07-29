@@ -1,0 +1,91 @@
+{
+  "eligible_template_count": 1,
+  "heldout_transfer_demonstrated": false,
+  "pair_reports": [
+    {
+      "eligible": false,
+      "structure_sha256": [
+        "2a8bc0338ab5aa09094438fb990efde9c3c138dc6549369b8d715febe984cecb",
+        "7c6cc28e4f7bb5f69cebea824d175ed8d873efc97df13a6566238ba32cf65cb9"
+      ],
+      "task_ids": [
+        "67a423a3",
+        "b94a9452"
+      ],
+      "template_sha256": null
+    },
+    {
+      "eligible": true,
+      "structure_sha256": [
+        "7c6cc28e4f7bb5f69cebea824d175ed8d873efc97df13a6566238ba32cf65cb9",
+        "9093e05ac7306f078a51fe10b58f3039aedd912447fbbb63cc758d615f1c1b53"
+      ],
+      "task_ids": [
+        "67a423a3",
+        "810b9b61"
+      ],
+      "template_sha256": "b238d718d60706c572ea60f08847a52b92a6551c38e76ea38f63405cf5ffb826"
+    },
+    {
+      "eligible": false,
+      "structure_sha256": [
+        "2a8bc0338ab5aa09094438fb990efde9c3c138dc6549369b8d715febe984cecb",
+        "9093e05ac7306f078a51fe10b58f3039aedd912447fbbb63cc758d615f1c1b53"
+      ],
+      "task_ids": [
+        "810b9b61",
+        "b94a9452"
+      ],
+      "template_sha256": null
+    }
+  ],
+  "precommit_sha256": "7160a225dfcd8dcb4a9a68ff2b31dd7c8722704c4f0a8244712ab478ce853e38",
+  "schema": "lexigen-v29-template-library-v1",
+  "source_pair_count": 3,
+  "source_structure_count": 3,
+  "source_structures_sha256": "0d90539da866975b2e2521c91fa8612bc4bd7dc8b5ff8f60831b7890aae2b49c",
+  "templates": [
+    {
+      "fixed_operator_nodes": 6,
+      "operator_holes": [
+        {
+          "allowed_choices": [
+            "bbox_border",
+            "bbox_fill",
+            "bbox_reflect_bottom",
+            "bbox_reflect_left",
+            "bbox_reflect_right",
+            "bbox_reflect_top",
+            "col_span",
+            "connect_aligned",
+            "dilate4",
+            "erode4",
+            "grid_flip_h_points",
+            "grid_flip_v_points",
+            "grid_rotate180_points",
+            "holes",
+            "outline4",
+            "row_span"
+          ],
+          "name": "h0",
+          "path": [
+            "points",
+            "points",
+            "points",
+            "op"
+          ],
+          "signature": "PointSet->PointSet"
+        }
+      ],
+      "source_task_ids": [
+        "67a423a3",
+        "810b9b61"
+      ],
+      "template_file_sha256": "ba7142f26d7efdddf03e2abc2a5f17230ab8dfb3b6e25d976e8796294b7dd962",
+      "template_sha256": "b238d718d60706c572ea60f08847a52b92a6551c38e76ea38f63405cf5ffb826"
+    }
+  ],
+  "validation_generators_imported": 0,
+  "validation_outputs_opened": false,
+  "world_level_breakthrough": false
+}
