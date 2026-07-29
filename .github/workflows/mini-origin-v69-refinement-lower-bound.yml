@@ -1,0 +1,78 @@
+name: Mini-ORIGIN Refinement Lower-Bound v0.69
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v69-refinement-lower-bound
+    paths:
+      - "mini-origin/campaigns/v69-refinement-lower-bound-preregistration.json"
+      - "mini-origin/src/mini_origin/refinement_lower_bound_v69.py"
+      - "mini-origin/tests/test_refinement_lower_bound_v69.py"
+      - "research-evidence/mini-origin-v65-refinement-dominance-pass.json"
+      - ".github/workflows/mini-origin-v69-refinement-lower-bound.yml"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v69-refinement-lower-bound-preregistration.json"
+      - "mini-origin/src/mini_origin/refinement_lower_bound_v69.py"
+      - "mini-origin/tests/test_refinement_lower_bound_v69.py"
+      - "research-evidence/mini-origin-v65-refinement-dominance-pass.json"
+      - ".github/workflows/mini-origin-v69-refinement-lower-bound.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v69-refinement-lower-bound-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  refinement-lower-bound:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen parents and unchanged solver
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          prereg = json.loads(Path("campaigns/v69-refinement-lower-bound-preregistration.json").read_text())
+          lower = json.loads(Path("../research-evidence/mini-origin-v65-pareto-lower-bound-pass.json").read_text())
+          refinement = json.loads(Path("../research-evidence/mini-origin-v65-refinement-dominance-pass.json").read_text())
+          assert lower["development_gate"]
+          assert lower["evidence_digest"] == prereg["parent_v65_lower_bound_evidence_digest"] == "3a1ef2c86c07600a591a900caf920456acecacb158b8faeb8bdb4c6d97d0550a"
+          assert refinement["development_gate"]
+          assert refinement["mismatch_count"] == 0
+          assert refinement["protocol_digest"] == prereg["parent_refinement_certificate_protocol_digest"] == "bffae9dc7cf32079c28f86539da31233e32e08c8ab6e627f93ed5ef91491edf7"
+          PY
+          git diff --exit-code 2d001d3d4dcec4c315327f318a4918acc552aa7c -- \
+            src/mini_origin/response_cost_lower_bound_v65.py \
+            src/mini_origin/response_cost_pareto_v56.py \
+            src/mini_origin/conditioned_cell_frontier_v60.py
+      - name: Run focused tests
+        run: pytest -q tests/test_refinement_lower_bound_v69.py
+      - name: Run frozen opened-data development gate
+        run: >-
+          mkdir -p results/v69 &&
+          python -m mini_origin.refinement_lower_bound_v69
+          --output results/v69/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v69-refinement-lower-bound
+          path: mini-origin/results/v69/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
