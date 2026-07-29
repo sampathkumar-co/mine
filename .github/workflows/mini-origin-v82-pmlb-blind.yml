@@ -12,10 +12,19 @@ on:
       - "mini-origin/tests/test_pmlb_blind_v82.py"
       - "mini-origin/scripts/run_v82_ci.sh"
       - ".github/workflows/mini-origin-v82-pmlb-blind.yml"
+  pull_request:
+    branches:
+      - research/mini-origin-v81-pmlb-hash-lock
+    paths:
+      - "mini-origin/campaigns/v82-pmlb-blind.json"
+      - "mini-origin/src/mini_origin/pmlb_blind_v82.py"
+      - "mini-origin/tests/test_pmlb_blind_v82.py"
+      - "mini-origin/scripts/run_v82_ci.sh"
+      - ".github/workflows/mini-origin-v82-pmlb-blind.yml"
   workflow_dispatch:
 
 concurrency:
-  group: mini-origin-v82-pmlb-blind
+  group: mini-origin-v82-pmlb-blind-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
