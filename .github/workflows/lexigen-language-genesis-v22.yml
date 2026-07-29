@@ -37,7 +37,13 @@ jobs:
             --arcgen-root arcgen \
             --cases 10000 \
             --output V22_REPORT_REPRODUCED.json
-          cmp lexigen-language-genesis/v22/V22_REPORT.json V22_REPORT_REPRODUCED.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected = json.loads(Path("lexigen-language-genesis/v22/V22_REPORT.json").read_text())
+          actual = json.loads(Path("V22_REPORT_REPRODUCED.json").read_text())
+          assert actual == expected, "semantic report mismatch"
+          PY
       - name: Verify evidence digest
         run: |
           test "$(sha256sum lexigen-language-genesis/v22/V22_EVIDENCE.json | cut -d' ' -f1)" = "a5d6c302055b0017545184987246e4f1a3ea13a3a0702537957e174a624782bb"
