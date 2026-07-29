@@ -1,0 +1,34 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "base_v20_commit": "892817ffbd86d97f66324888c21a96e482c5a1f6",
+  "discovery_examples_per_task": 6,
+  "discovery_library_rule": "retain a structure only if it has exact programs on at least two distinct discovery task identities; structure hash excludes colour arguments",
+  "discovery_task_count": 631,
+  "frozen_meta_grammar": {
+    "argument_pairs_per_structure": 100,
+    "arguments": [
+      "marker_colour",
+      "output_background"
+    ],
+    "complete_structures": 2500,
+    "maximum_complete_programs_per_task": 250000,
+    "source": "lexigen-language-genesis/v19r3/enumerate_v19r3.py",
+    "source_sha256": "273ae5f3ec71523fec1dc89404a81c5bb43cd02c10032318ef213acd63c924d0",
+    "structure_fields": [
+      "marker-side actions for left/right/top/bottom",
+      "mapped-only or source-union coordinates",
+      "input or new-canvas base"
+    ]
+  },
+  "library_selection": "all qualifying structures ordered by structure hash; no manual selection",
+  "maximum_generator_attempts_per_task": 100,
+  "registry_sha256": "8add280b9731a5736268a18a7abe2c3153e2d6055b5dffd69096010e3cea5560",
+  "schema": "lexigen-v19r5-registry-factorization-precommit-v1",
+  "seed_rule": "uint32(first_16_hex(sha256(lexigen-v19r5-case-v1:<split>:<task_id>:<attempt_index>)))",
+  "success_requirement": "at least one frozen structure solves a distinct validation task identity with exact dual-runtime outputs and frozen-v17 failure",
+  "validation_examples_per_task": 6,
+  "validation_outputs_opened": false,
+  "validation_rule": "freeze the complete discovery library before generating validation examples; infer only colour arguments on validation tasks; no structure edits",
+  "validation_task_count": 244,
+  "world_level_breakthrough": false
+}
