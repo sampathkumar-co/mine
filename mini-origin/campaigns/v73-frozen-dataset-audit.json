@@ -1,0 +1,15 @@
+{
+  "status": "preregistered_before_registry_execution",
+  "frozen_v72_commit": "dae02829efc4819935a4ec87c31ea5eee3305d83",
+  "parent_v72_evidence_digest": "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090",
+  "parent_v72_workflow_run": 30437637331,
+  "objective": "Refresh the repository-wide contamination registry before any new external candidate IDs, names, URLs, archives, labels, records, or solver outputs are introduced.",
+  "scope": "Every remote branch under mini-origin, research-evidence, and Mini-ORIGIN GitHub workflows.",
+  "newly_opened_uci_ids_that_must_be_excluded": [52, 74, 94, 151, 166, 181, 295],
+  "candidate_metadata_committed_before_registry": false,
+  "external_archive_access_before_registry": false,
+  "record_or_label_access_before_registry": false,
+  "solver_execution_before_registry": false,
+  "next_stage": "Only after this registry artifact is preserved may a separate branch commit a hash-only lock for candidates absent from the frozen exclusion list.",
+  "claim_boundary": "Provenance infrastructure only. This stage produces no algorithmic, external-validation, novelty, publication, acceptance, or world-level claim."
+}
