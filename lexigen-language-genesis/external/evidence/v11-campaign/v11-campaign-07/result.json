@@ -1,0 +1,10 @@
+{
+  "gate_id": "v11-campaign-07",
+  "selected_task_id": "234bbc79",
+  "status": "permanent-pre-score-failure",
+  "solver_exit_code": 0,
+  "predictions_committed": false,
+  "hidden_scoring_performed": false,
+  "sealed_outputs_accessed": false,
+  "breakthrough_candidate": false
+}

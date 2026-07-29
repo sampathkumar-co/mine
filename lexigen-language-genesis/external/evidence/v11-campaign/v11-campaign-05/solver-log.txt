@@ -1,0 +1,15 @@
+{
+  "breakthrough_candidate": false,
+  "protocol": "arcgen-v11-campaign-05",
+  "redacted_task_sha256": "6eaa048e63e35b7101cbf3eb6143c70772097e55a235858f5c0c4eded1e654bd",
+  "selected_task_id": "af24b4cc",
+  "v10_state_machine_found": false,
+  "v11_generated_pipeline_found": false,
+  "v6_candidate_budget": 75000,
+  "v6_candidates_tested": 75000,
+  "v6_fixed_language_found": false,
+  "v6_signatures_seen": 37975,
+  "v7_relational_language_found": false,
+  "v8_meta_grammar_found": false,
+  "v9_motion_grammar_found": false
+}
