@@ -1,0 +1,11 @@
+{
+    "schema":  "lexigen-v25-cancelled-local-recovery-v1",
+    "task_id":  "0dfd9992",
+    "scientific_result_produced":  false,
+    "reason":  "duplicate local recovery stopped after dedicated GitHub recovery became authoritative",
+    "observed_elapsed_seconds":  234.1,
+    "observed_working_set_mb":  7503.1,
+    "observed_private_memory_mb":  11162.1,
+    "output_file_created":  false,
+    "hidden_or_validation_outputs_opened":  false
+}
