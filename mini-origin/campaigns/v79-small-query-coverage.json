@@ -1,0 +1,103 @@
+{
+    "status":  "opened_data_development_preregistration",
+    "parent_v78_commit":  "1171b81240069e2880aec29dbaacae65b30ea26f",
+    "parent_v78_first_attempt_run":  30459481449,
+    "parent_v78_artifact_digest":  "sha256:dfecc2dd89b64ac506b9db591cc215f1b9cb0609f298a477dd55ac93a28767c7",
+    "parent_v78_state_input_sha256":  "ac08558b4a6f47a9d7dc502a0d33aafa235ce8cb0f04a602d4661376341769e7",
+    "parent_v78_frozen_external_digest":  "6fd10a0e477d49c3b5f4b260efc88928ee6a5ec6de289a5ffdf589472e01ed54",
+    "objective":  "Repair the generic conditioned-cell selector for small query spaces after v0.78 exposed an impossible fixed raw-query floor, while preserving exact behavior on normal-sized tasks.",
+    "opened_datasets":  [
+                            "pc1",
+                            "eucalyptus",
+                            "texture",
+                            "kc1",
+                            "kc2",
+                            "analcatdata_dmft",
+                            "pc4"
+                        ],
+    "fresh_blind_claim":  false,
+    "exact_solver_revisions":  0,
+    "compiler_revisions":  0,
+    "selector_revisions":  1,
+    "adaptive_selector":  {
+                              "activation":  "task.query_count \u003c= 10",
+                              "effective_min_raw_queries":  "min(10, max(7, task.query_count - 1))",
+                              "effective_min_redundancy":  "min(4, max(2, effective_min_raw_queries - 6))",
+                              "small_query_sample_sizes":  [
+                                                               24,
+                                                               20,
+                                                               16,
+                                                               12,
+                                                               10,
+                                                               8
+                                                           ],
+                              "small_query_allowed_seeds":  6,
+                              "small_query_remaining_seeds":  8,
+                              "normal_query_sample_sizes":  [
+                                                                24,
+                                                                20,
+                                                                16,
+                                                                12
+                                                            ],
+                              "normal_query_allowed_seeds":  3,
+                              "normal_query_remaining_seeds":  4,
+                              "label_or_cost_use":  false,
+                              "dataset_specific_exceptions":  false
+                          },
+    "normal_task_state_set_digests":  {
+                                          "pc1":  "1dcdd1f27910b7d822bacac2468f77d18137c54270b273c16ca431afa5e538a1",
+                                          "eucalyptus":  "92bb690d3cf20e47b5372f58ec5318420efe1c16f952cd7864028e014d81596a",
+                                          "texture":  "243b7cce5d7090209e806d6c56aaf753b4d60f1d46ec5dedf38dbc4d027a2516",
+                                          "kc1":  "43230e78424955780adbbcc61b235c22f299f608eab9c3cc3607829d31233dc6",
+                                          "kc2":  "d819fed1d2cb0afbfbfa4a8d1ab83451e7a3c29c08347031ea44172a55a3dee9",
+                                          "pc4":  "d01c11552f252c8031ba6e28549bd5ee150bf7f4dd5efffa28dbb4dc23f43bf5"
+                                      },
+    "locked_gate":  {
+                        "contributing_datasets":  7,
+                        "minimum_states_from_each_previously_zero_dataset":  6,
+                        "previously_zero_datasets":  [
+                                                         "analcatdata_dmft"
+                                                     ],
+                        "minimum_base_states":  78,
+                        "minimum_profiled_states":  234,
+                        "minimum_bounded_solve_fraction":  0.9,
+                        "minimum_both_plain_bounded":  40,
+                        "plain_bounded_objective_mismatches":  0,
+                        "minimum_bounded_only":  25,
+                        "current_bounded_plan_mismatches":  0,
+                        "bounded_expansion_regressions":  0,
+                        "minimum_states_with_lower_bound_pruning":  30,
+                        "minimum_aggregate_bounded_reduction_fraction":  0.1,
+                        "minimum_dominated_queries_removed":  1000,
+                        "minimum_root_incomparable_classes":  1,
+                        "minimum_median_plain_bounded_ratio":  10,
+                        "minimum_p90_plain_bounded_ratio":  30,
+                        "minimum_50k_solve_advantage":  20,
+                        "rust_mismatches":  0
+                    },
+    "development_gate":  {
+                             "contributing_datasets":  7,
+                             "minimum_analcatdata_dmft_states":  6,
+                             "minimum_base_states":  78,
+                             "minimum_profiled_states":  234,
+                             "normal_task_state_set_digest_mismatches":  0,
+                             "minimum_bounded_solve_fraction":  0.9,
+                             "minimum_both_plain_bounded":  40,
+                             "plain_bounded_objective_mismatches":  0,
+                             "minimum_bounded_only":  25,
+                             "current_bounded_plan_mismatches":  0,
+                             "bounded_expansion_regressions":  0,
+                             "minimum_states_with_lower_bound_pruning":  30,
+                             "minimum_aggregate_bounded_reduction_fraction":  0.1,
+                             "minimum_dominated_queries_removed":  1000,
+                             "minimum_root_incomparable_classes":  1,
+                             "minimum_median_plain_bounded_ratio":  10.0,
+                             "minimum_p90_plain_bounded_ratio":  30.0,
+                             "minimum_50k_solve_advantage":  20,
+                             "rust_mismatches":  0,
+                             "label_independence_mismatches":  0,
+                             "minimum_label_certificate_selected_states":  6
+                         },
+    "next_blind_rule":  "Any selector that passes this opened-data campaign must be frozen before selecting a completely new untouched external suite. The seven v0.78 datasets cannot be reused as fresh evidence.",
+    "claim_boundary":  "Opened-data methodological repair only. A pass shows that the generic small-query selector repairs the v0.78 coverage failure without changing normal-task states or exact solver correctness. It is not fresh external evidence, outside reproduction, state-of-the-art superiority, publication acceptance, a general AI breakthrough, or a world-first claim."
+}
