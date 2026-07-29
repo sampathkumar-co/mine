@@ -1,0 +1,80 @@
+{
+  "base_rejected_v19_commit": "eb15da3373817ffa69633fb6cd423b2fb06d0f60",
+  "cases_per_success": 0,
+  "claim_boundary": {
+    "autonomous_grammar_production_candidate": true,
+    "human_supplied_bias": "primitive inventory and bounded affine composition template",
+    "sealed_external_success": false,
+    "transfer_demonstrated": false
+  },
+  "gates_fixed": 3,
+  "hidden_outputs_opened": false,
+  "no_program_failures": 2,
+  "outcomes": [
+    {
+      "demonstrations": 6,
+      "fresh_cases_requested": 0,
+      "fresh_cases_run": 0,
+      "frozen_v17_ablation_failed": true,
+      "frozen_v17_failure": "constructive grammar found no exact program",
+      "gate": 7,
+      "hidden_outputs_opened": false,
+      "reason": "fixed affine meta-grammar found no exact production",
+      "status": "no_program",
+      "task_id": "fc10701f"
+    },
+    {
+      "accepted_fresh_cases": 0,
+      "arguments_sha256": "c449dd9c1da00c383d5ddc55a577e263dd0c93ff6801554bb2b6d29a47517932",
+      "concrete_program_sha256": "79c1e77a1a671011de444200c9c12c0639e714ddf0d2c986f04ceca36c83133c",
+      "demonstration_portable_exact": 6,
+      "demonstration_primary_exact": 6,
+      "demonstrations": 6,
+      "forbidden_opcode_hits": [],
+      "fresh_cases_requested": 0,
+      "fresh_gate_passed": true,
+      "fresh_portable_exact": 0,
+      "fresh_primary_exact": 0,
+      "fresh_runtime_agreement": 0,
+      "frozen_v17_ablation_failed": true,
+      "frozen_v17_failure": "constructive grammar found no exact program",
+      "gate": 10,
+      "generator_attempts": 0,
+      "generator_rejection_examples": [],
+      "generator_rejections": 0,
+      "hidden_outputs_opened": false,
+      "invention": {
+        "candidate_productions_evaluated": 100,
+        "concrete_program_sha256": "79c1e77a1a671011de444200c9c12c0639e714ddf0d2c986f04ceca36c83133c",
+        "exact_survivors": 1,
+        "named_task_operator_used": false,
+        "production_sha256": "39a2528b370b899e4909e22698d47aa7414aa3db6092e75e64cff384d710f8df",
+        "runtime_invalid_candidates": 80,
+        "selected_arguments": {
+          "marker_colour": 2,
+          "output_background": 3
+        },
+        "selected_node_count": 252
+      },
+      "production_sha256": "39a2528b370b899e4909e22698d47aa7414aa3db6092e75e64cff384d710f8df",
+      "status": "production_found",
+      "task_id": "2bcee788",
+      "task_id_hits": []
+    },
+    {
+      "demonstrations": 6,
+      "fresh_cases_requested": 0,
+      "fresh_cases_run": 0,
+      "frozen_v17_ablation_failed": true,
+      "frozen_v17_failure": "constructive grammar found no exact program",
+      "gate": 13,
+      "hidden_outputs_opened": false,
+      "reason": "fixed affine meta-grammar found no exact production",
+      "status": "no_program",
+      "task_id": "36fdfd69"
+    }
+  ],
+  "productions_found": 1,
+  "schema": "lexigen-v19r2-fixed-pool-report-v1",
+  "world_level_breakthrough": false
+}

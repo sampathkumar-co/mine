@@ -1,0 +1,352 @@
+{
+  "bindings": [
+    {
+      "expr": {
+        "items": {
+          "items": {
+            "op": "palette"
+          },
+          "op": "filter",
+          "predicate": {
+            "items": [
+              {
+                "left": {
+                  "name": "colour",
+                  "op": "var"
+                },
+                "op": "ne",
+                "right": {
+                  "op": "mode"
+                }
+              },
+              {
+                "left": {
+                  "name": "colour",
+                  "op": "var"
+                },
+                "op": "ne",
+                "right": 2
+              }
+            ],
+            "op": "and"
+          },
+          "var": "colour"
+        },
+        "op": "unique"
+      },
+      "name": "payload_colour"
+    },
+    {
+      "expr": {
+        "colour": {
+          "name": "payload_colour",
+          "op": "var"
+        },
+        "op": "coords_colour"
+      },
+      "name": "payload_coords"
+    },
+    {
+      "expr": {
+        "colour": 2,
+        "op": "coords_colour"
+      },
+      "name": "marker_coords"
+    },
+    {
+      "expr": {
+        "coords": {
+          "name": "payload_coords",
+          "op": "var"
+        },
+        "op": "bbox"
+      },
+      "name": "payload_box"
+    },
+    {
+      "expr": {
+        "coords": {
+          "name": "marker_coords",
+          "op": "var"
+        },
+        "op": "bbox"
+      },
+      "name": "marker_box"
+    },
+    {
+      "expr": {
+        "body": {
+          "col": {
+            "condition": {
+              "left": {
+                "bbox": {
+                  "name": "marker_box",
+                  "op": "var"
+                },
+                "name": "max_col",
+                "op": "bbox_field"
+              },
+              "op": "lt",
+              "right": {
+                "bbox": {
+                  "name": "payload_box",
+                  "op": "var"
+                },
+                "name": "min_col",
+                "op": "bbox_field"
+              }
+            },
+            "else": {
+              "condition": {
+                "left": {
+                  "bbox": {
+                    "name": "marker_box",
+                    "op": "var"
+                  },
+                  "name": "min_col",
+                  "op": "bbox_field"
+                },
+                "op": "gt",
+                "right": {
+                  "bbox": {
+                    "name": "payload_box",
+                    "op": "var"
+                  },
+                  "name": "max_col",
+                  "op": "bbox_field"
+                }
+              },
+              "else": {
+                "op": "second",
+                "value": {
+                  "name": "point",
+                  "op": "var"
+                }
+              },
+              "op": "if",
+              "then": {
+                "left": {
+                  "left": {
+                    "left": 2,
+                    "op": "mul",
+                    "right": {
+                      "bbox": {
+                        "name": "payload_box",
+                        "op": "var"
+                      },
+                      "name": "max_col",
+                      "op": "bbox_field"
+                    }
+                  },
+                  "op": "add",
+                  "right": 1
+                },
+                "op": "sub",
+                "right": {
+                  "op": "second",
+                  "value": {
+                    "name": "point",
+                    "op": "var"
+                  }
+                }
+              }
+            },
+            "op": "if",
+            "then": {
+              "left": {
+                "left": {
+                  "left": 2,
+                  "op": "mul",
+                  "right": {
+                    "bbox": {
+                      "name": "payload_box",
+                      "op": "var"
+                    },
+                    "name": "min_col",
+                    "op": "bbox_field"
+                  }
+                },
+                "op": "sub",
+                "right": 1
+              },
+              "op": "sub",
+              "right": {
+                "op": "second",
+                "value": {
+                  "name": "point",
+                  "op": "var"
+                }
+              }
+            }
+          },
+          "op": "pair",
+          "row": {
+            "condition": {
+              "left": {
+                "bbox": {
+                  "name": "marker_box",
+                  "op": "var"
+                },
+                "name": "max_row",
+                "op": "bbox_field"
+              },
+              "op": "lt",
+              "right": {
+                "bbox": {
+                  "name": "payload_box",
+                  "op": "var"
+                },
+                "name": "min_row",
+                "op": "bbox_field"
+              }
+            },
+            "else": {
+              "condition": {
+                "items": [
+                  {
+                    "left": {
+                      "bbox": {
+                        "name": "marker_box",
+                        "op": "var"
+                      },
+                      "name": "max_col",
+                      "op": "bbox_field"
+                    },
+                    "op": "lt",
+                    "right": {
+                      "bbox": {
+                        "name": "payload_box",
+                        "op": "var"
+                      },
+                      "name": "min_col",
+                      "op": "bbox_field"
+                    }
+                  },
+                  {
+                    "left": {
+                      "bbox": {
+                        "name": "marker_box",
+                        "op": "var"
+                      },
+                      "name": "min_col",
+                      "op": "bbox_field"
+                    },
+                    "op": "gt",
+                    "right": {
+                      "bbox": {
+                        "name": "payload_box",
+                        "op": "var"
+                      },
+                      "name": "max_col",
+                      "op": "bbox_field"
+                    }
+                  }
+                ],
+                "op": "or"
+              },
+              "else": {
+                "left": {
+                  "left": {
+                    "left": 2,
+                    "op": "mul",
+                    "right": {
+                      "bbox": {
+                        "name": "payload_box",
+                        "op": "var"
+                      },
+                      "name": "max_row",
+                      "op": "bbox_field"
+                    }
+                  },
+                  "op": "add",
+                  "right": 1
+                },
+                "op": "sub",
+                "right": {
+                  "op": "first",
+                  "value": {
+                    "name": "point",
+                    "op": "var"
+                  }
+                }
+              },
+              "op": "if",
+              "then": {
+                "op": "first",
+                "value": {
+                  "name": "point",
+                  "op": "var"
+                }
+              }
+            },
+            "op": "if",
+            "then": {
+              "left": {
+                "left": {
+                  "left": 2,
+                  "op": "mul",
+                  "right": {
+                    "bbox": {
+                      "name": "payload_box",
+                      "op": "var"
+                    },
+                    "name": "min_row",
+                    "op": "bbox_field"
+                  }
+                },
+                "op": "sub",
+                "right": 1
+              },
+              "op": "sub",
+              "right": {
+                "op": "first",
+                "value": {
+                  "name": "point",
+                  "op": "var"
+                }
+              }
+            }
+          }
+        },
+        "items": {
+          "name": "payload_coords",
+          "op": "var"
+        },
+        "op": "map",
+        "var": "point"
+      },
+      "name": "reflected_coords"
+    }
+  ],
+  "body": {
+    "colour": {
+      "name": "payload_colour",
+      "op": "var"
+    },
+    "coords": {
+      "items": [
+        {
+          "name": "payload_coords",
+          "op": "var"
+        },
+        {
+          "name": "reflected_coords",
+          "op": "var"
+        }
+      ],
+      "op": "set_union"
+    },
+    "grid": {
+      "cols": {
+        "op": "width"
+      },
+      "fill": 3,
+      "op": "canvas",
+      "rows": {
+        "op": "height"
+      }
+    },
+    "op": "paint"
+  },
+  "schema": "lexigen-v19r2-executable-production-v1"
+}
