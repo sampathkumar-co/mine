@@ -1,0 +1,62 @@
+name: Mini-ORIGIN PMLB Development v0.83
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v83-near-small-query-coverage
+    paths:
+      - "mini-origin/campaigns/v83-near-small-query-coverage.json"
+      - "mini-origin/src/mini_origin/near_small_query_coverage_v83.py"
+      - "mini-origin/src/mini_origin/pmlb_development_v83.py"
+      - "mini-origin/scripts/run_v83_ci.sh"
+      - ".github/workflows/mini-origin-v83-development.yml"
+  pull_request:
+    branches:
+      - research/mini-origin-v82-pmlb-blind
+    paths:
+      - "mini-origin/campaigns/v83-near-small-query-coverage.json"
+      - "mini-origin/src/mini_origin/near_small_query_coverage_v83.py"
+      - "mini-origin/src/mini_origin/pmlb_development_v83.py"
+      - "mini-origin/scripts/run_v83_ci.sh"
+      - ".github/workflows/mini-origin-v83-development.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v83-development-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pmlb-opened-data-development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Run preregistered opened-data repair campaign
+        run: bash scripts/run_v83_ci.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v83-development
+          path: |
+            mini-origin/results/v83/states.txt
+            mini-origin/results/v83/python-reference.json
+            mini-origin/results/v83/rust-results.json
+            mini-origin/results/v83/evidence.json
+            mini-origin/results/v83/adapted-manifest.json
+          if-no-files-found: warn
+          retention-days: 90
