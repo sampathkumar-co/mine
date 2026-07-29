@@ -1,0 +1,124 @@
+{
+  "cell": {
+    "condition": {
+      "items": [
+        {
+          "items": [
+            {
+              "left": {
+                "name": "row",
+                "op": "var"
+              },
+              "op": "lt",
+              "right": 1
+            },
+            {
+              "left": {
+                "name": "row",
+                "op": "var"
+              },
+              "op": "ge",
+              "right": {
+                "left": {
+                  "op": "height"
+                },
+                "op": "add",
+                "right": 1
+              }
+            }
+          ],
+          "op": "or"
+        },
+        {
+          "items": [
+            {
+              "left": {
+                "name": "col",
+                "op": "var"
+              },
+              "op": "lt",
+              "right": 1
+            },
+            {
+              "left": {
+                "name": "col",
+                "op": "var"
+              },
+              "op": "ge",
+              "right": {
+                "left": {
+                  "op": "width"
+                },
+                "op": "add",
+                "right": 1
+              }
+            }
+          ],
+          "op": "or"
+        }
+      ],
+      "op": "and"
+    },
+    "else": {
+      "col": {
+        "high": {
+          "left": {
+            "op": "width"
+          },
+          "op": "sub",
+          "right": 1
+        },
+        "low": 0,
+        "op": "clamp",
+        "value": {
+          "left": {
+            "name": "col",
+            "op": "var"
+          },
+          "op": "sub",
+          "right": 1
+        }
+      },
+      "default": 0,
+      "op": "sample",
+      "row": {
+        "high": {
+          "left": {
+            "op": "height"
+          },
+          "op": "sub",
+          "right": 1
+        },
+        "low": 0,
+        "op": "clamp",
+        "value": {
+          "left": {
+            "name": "row",
+            "op": "var"
+          },
+          "op": "sub",
+          "right": 1
+        }
+      }
+    },
+    "op": "if",
+    "then": 0
+  },
+  "schema": "lexigen-v17-constructive-grid-v1",
+  "shape": {
+    "cols": {
+      "left": {
+        "op": "width"
+      },
+      "op": "add",
+      "right": 2
+    },
+    "rows": {
+      "left": {
+        "op": "height"
+      },
+      "op": "add",
+      "right": 2
+    }
+  }
+}

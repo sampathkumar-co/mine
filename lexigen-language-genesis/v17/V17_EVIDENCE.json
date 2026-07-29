@@ -1,0 +1,165 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "base_v16_commit": "851e6117b64ea74f5eaaa631f1611ed6205464a8",
+  "checks": {
+    "canonical_utf8_lf": true,
+    "deterministic_candidate_ordering": true,
+    "forbidden_opcode_scan_passed": true,
+    "independent_constructive_runtime": true,
+    "independent_portable_verifier": true,
+    "task_id_absence_check_passed": true
+  },
+  "claim_boundary": {
+    "autonomous_semantic_substrate_invention": false,
+    "hidden_external_success": false,
+    "random_task_generality": false,
+    "reason": "v17 constructed composite programs from generic low-level coordinate/dataflow operations and co-synthesized verifier screens, but the low-level grammar, search-family schemas, and verifier predicate grammar remain human supplied.",
+    "unrestricted_language_invention": false,
+    "world_level_breakthrough": false
+  },
+  "construction": {
+    "accepted_cases": 30000,
+    "families": 3,
+    "forbidden_opcode_hits": {
+      "v17-program-01.json": [],
+      "v17-program-02.json": [],
+      "v17-program-03.json": []
+    },
+    "generator_attempts": 30000,
+    "generator_rejections": 0,
+    "portable_exact": 30000,
+    "primary_exact": 30000,
+    "runtime_agreement": 30000,
+    "task_id_hits": {
+      "v17-program-01.json": [],
+      "v17-program-02.json": [],
+      "v17-program-03.json": []
+    }
+  },
+  "contracts": {
+    "v17-contract-01.json": {
+      "contract_sha256": "71a996fd0c3af4f3a68aeb4070f165dff3b2f4b75ec005bcab81c862f70219d1",
+      "file_sha256": "6a5efde0f4b504ce78cc33a17dee4c43b28f63da82017543a91960c6119f3595",
+      "predicates": [
+        {
+          "cost": 5,
+          "name": "changed_mask"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "revision": 1
+    },
+    "v17-contract-02.json": {
+      "contract_sha256": "d9d2fc7ac08120f9a1c3cb12b916b0567ed4557bb7043f2e564b25501360670b",
+      "file_sha256": "a41527a2d331c200c26e229d603a247ad17aa7e4597f6e5b8c1b4a7c08db261e",
+      "predicates": [
+        {
+          "cost": 8,
+          "name": "column_digests"
+        }
+      ],
+      "revision": 1
+    },
+    "v17-contract-03.json": {
+      "contract_sha256": "f4145d0f16705926099de376f85ea145f37c5eb65054048bb9ea46714439140f",
+      "file_sha256": "e94b33165cc846234c516927a15d6b1a7671c7d23400accaa025d085cabafe5f",
+      "predicates": [
+        {
+          "cost": 4,
+          "name": "boundary"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  "files": {
+    "V17_REPORT.json": "1f709f6fec213f71a3c73ce5920bb66acc5cc371d09e4bf1a5b5a14a3c0f01b0",
+    "V17_SMOKE_REPORT.json": "86095db48385ccd74e7f0b69939f0dfea133a6fd9afbd13006f58a13457d33a1",
+    "V17_VERIFIER_REPORT.json": "a2e8fcb96f209e2261777dca880842e2ad077d46efa208d3993750c79b3aec04",
+    "V17_VERIFIER_SMOKE_REPORT.json": "1ccb2ea5f09e9ba968008908e2fa992e82b952102ec5255828c9cea31a905f6f",
+    "constructive_dsl_v17.py": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+    "cosynthesize_verifier_v17.py": "3e574d87630490ac7f1db0ad39f2a4df43d16b1002bef30471bb86cc042942db",
+    "freeze_v17_evidence.py": "0a60376d518548c3e929cde8eaeec3d15d207a3a7f567a3ec32f683b473e875c",
+    "mutations_v17.py": "4b30ac276cd0563d7cd8784a859463aa04e6ee117c8271fdb69694cdf9de0582",
+    "portable_constructive_dsl_v17.py": "d8ec69724d5d23e708b5fe6ae7068e09315131dcfa8d6957867e7c627338f648",
+    "portable_verifier_v17.py": "69a78ed6ef2fe2454e24bbf116066a40a5b996d75066cd160c143974b51b7871",
+    "test_v17.py": "353b13b17b5fe50d8fe65b16bd02e317a5cf0c5d98206705c7c84a7d9052fd8d",
+    "test_verifier_v17.py": "22c6cb46322f749c04631422f3e56e67c863a64658f51673ba6599e1a56986a8",
+    "validate_v17.py": "e38bb3c04bc1a2ce109601aaf039ab2805babe203653503a87af9288b1ef6ff2",
+    "validate_verifier_v17.py": "d5e295bca86885eadd523ecaa55abcb57fb1e5a24372fba00351db20cc4a697e",
+    "verifier_grammar_v17.py": "4dd30b436498cc49592d65cab62293627e2c9389e4f9171d250df097f585953a"
+  },
+  "hashes": {
+    "construction_report_sha256": "1f709f6fec213f71a3c73ce5920bb66acc5cc371d09e4bf1a5b5a14a3c0f01b0",
+    "constructive_grammar_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+    "portable_runtime_sha256": "d8ec69724d5d23e708b5fe6ae7068e09315131dcfa8d6957867e7c627338f648",
+    "portable_verifier_sha256": "69a78ed6ef2fe2454e24bbf116066a40a5b996d75066cd160c143974b51b7871",
+    "primary_runtime_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+    "synthesizer_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+    "verifier_grammar_sha256": "4dd30b436498cc49592d65cab62293627e2c9389e4f9171d250df097f585953a",
+    "verifier_report_sha256": "a2e8fcb96f209e2261777dca880842e2ad077d46efa208d3993750c79b3aec04"
+  },
+  "module_layout": {
+    "constructive_grammar_and_primary_runtime_share_module": true,
+    "synthesizer_and_constructive_grammar_share_module": true
+  },
+  "programs": {
+    "v17-program-01.json": {
+      "file_sha256": "3047b3195667d9c39354f1a33b331e85d92da9fd1aae98c0151ec09fc848b3a7",
+      "node_count": 61,
+      "program_sha256": "e0aeb597c5fab61345f077efebf977d8eccc178387fccd7b68fa242e7628eb9e",
+      "search_family": "directed_point"
+    },
+    "v17-program-02.json": {
+      "file_sha256": "c6374028268d0a5a3e8b20db78900d3499134b620e1af2bf62d9879790821ffb",
+      "node_count": 88,
+      "program_sha256": "cdfa961c096f47aabd05b7de4bb8384d31c45ef515fdfc7c479b2a888acef118",
+      "search_family": "coordinate_border"
+    },
+    "v17-program-03.json": {
+      "file_sha256": "1a1107608617993c766dff0c3105efb5b386ab48b35eafd0e02986c4b3618070",
+      "node_count": 31,
+      "program_sha256": "14c89819adfe568c543fbdf6cd10a416608a2aeca03ee7fa13d2b85c30e82d9b",
+      "search_family": "cell_local"
+    }
+  },
+  "schema": "lexigen-v17-frozen-evidence-v1",
+  "v13_visible_evidence_commit": "13cd271a2d4813001563842a51a1e72dd100aa1a",
+  "verifier_cosynthesis": {
+    "bootstrap_contracts": {
+      "v17-contract-01.json": "fd4841884921ffefae6493006e15eca9da5dde9383410c097d3cc41c330bf641",
+      "v17-contract-02.json": "bf2f71c1aa6cb14dfcb4a8a54a10fe676bbf9ed71d6399c99ec0c7d7773ad947",
+      "v17-contract-03.json": "7bde7b7094bb7e67606e534ac4d30a4a11077d69e8d0d852c60319ee0f9a92ea"
+    },
+    "contracts_requiring_revision": 2,
+    "contracts_using_exact_digest": 0,
+    "correct_outputs_checked": 3000,
+    "mutant_outputs_checked": 24000,
+    "portable_screening_failures": 0,
+    "portable_soundness_failures": 0,
+    "primary_screening_failures": 0,
+    "primary_soundness_failures": 0,
+    "revision_files": {
+      "v17-gate-01-revision-0-false-accepts.json": "e35f42ef625265e89cb7fd1371fa549ca9024cc3a4381a2d3695bd8a16a3e88c",
+      "v17-gate-01-revision-0.json": "bd8ef1c824e6ddc6d5aa2b34ba6d5f4718c879a68ab8671e1eeb8a9ac89d0b27",
+      "v17-gate-01-revision-1-false-accepts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "v17-gate-01-revision-1.json": "6a5efde0f4b504ce78cc33a17dee4c43b28f63da82017543a91960c6119f3595",
+      "v17-gate-02-revision-0-false-accepts.json": "66b44b46acb6d948f7bf594603c6f7c0ea3d59ca9aa1d7fa75c0bbbceb349b9c",
+      "v17-gate-02-revision-0.json": "42adad45aea70beadcb6e3f274fd4a612a4bedcdf4c449daa948562d824be1d2",
+      "v17-gate-02-revision-1-false-accepts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "v17-gate-02-revision-1.json": "a41527a2d331c200c26e229d603a247ad17aa7e4597f6e5b8c1b4a7c08db261e",
+      "v17-gate-03-revision-0-false-accepts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "v17-gate-03-revision-0.json": "e94b33165cc846234c516927a15d6b1a7671c7d23400accaa025d085cabafe5f"
+    },
+    "runtime_invalid_mutations": 8000
+  },
+  "version": 17,
+  "world_level_breakthrough": false
+}

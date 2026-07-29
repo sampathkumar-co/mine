@@ -1,0 +1,43 @@
+{
+  "cell": {
+    "condition": {
+      "left": {
+        "col": {
+          "name": "col",
+          "op": "var"
+        },
+        "default": 0,
+        "op": "sample",
+        "row": {
+          "name": "row",
+          "op": "var"
+        }
+      },
+      "op": "eq",
+      "right": 7
+    },
+    "else": {
+      "col": {
+        "name": "col",
+        "op": "var"
+      },
+      "default": 0,
+      "op": "sample",
+      "row": {
+        "name": "row",
+        "op": "var"
+      }
+    },
+    "op": "if",
+    "then": 5
+  },
+  "schema": "lexigen-v17-constructive-grid-v1",
+  "shape": {
+    "cols": {
+      "op": "width"
+    },
+    "rows": {
+      "op": "height"
+    }
+  }
+}

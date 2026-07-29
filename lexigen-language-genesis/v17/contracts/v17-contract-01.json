@@ -1,0 +1,30 @@
+{
+  "constructive_grammar_sha256": "b8cc1658bca9bd30c0d32a8117725256598cc11e22f60236f769bea6d3c482e8",
+  "contract_sha256": "71a996fd0c3af4f3a68aeb4070f165dff3b2f4b75ec005bcab81c862f70219d1",
+  "demonstration_sha256": "c72387a3a57d727e526a80e75a2facbc9f88a737f0760997c27b3a2247e0b50c",
+  "exact_digest_used": false,
+  "mutation_manifest_sha256": "17d00f0636f95571d2e02cab78a3000d649623282d3488e495deb6f1b2bcfdf8",
+  "portable_runtime_sha256": "d8ec69724d5d23e708b5fe6ae7068e09315131dcfa8d6957867e7c627338f648",
+  "predicate_cost": 7,
+  "predicates": [
+    {
+      "cost": 5,
+      "name": "changed_mask"
+    },
+    {
+      "cost": 2,
+      "name": "palette"
+    }
+  ],
+  "program_sha256": "e0aeb597c5fab61345f077efebf977d8eccc178387fccd7b68fa242e7628eb9e",
+  "revision": 1,
+  "schema": "lexigen-v17-verifier-contract-v1",
+  "shape_only_survivors": 73,
+  "soundness_anchor": {
+    "mandatory": true,
+    "name": "exact_digest"
+  },
+  "training_mutation_cases": 91,
+  "training_runtime_invalid_mutations": 48,
+  "verifier_grammar_sha256": "d4bea2fb44a449759581c3cf5dbfa6661b333e9525aa24b9a98b52a328443093"
+}
