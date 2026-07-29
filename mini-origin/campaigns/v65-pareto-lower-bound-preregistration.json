@@ -1,0 +1,39 @@
+{
+  "status": "preregistered_before_v65_measurement",
+  "parent_v64_commit": "ea24cc679763fb071e6560ff09a892c0eb2b8910",
+  "parent_v64_evidence_digest": "55262ceab2e6e0004af9101c382f5995be7ce7afc41d7378615a155b3ba6d08a",
+  "scope": "opened v0.64 states only; development evidence, not a new external claim",
+  "algorithm": {
+    "base": "unchanged descendant-local response-cost Pareto quotient",
+    "query_order": "ascending optimistic full-diagnosis expected-cost lower bound, then worst-cost lower bound, then query index",
+    "expected_lower_bound": "candidate immediate expected cost plus, for each impure response child, the minimum immediate expected cost of any separating remaining test",
+    "worst_lower_bound": "candidate response cost plus the minimum maximum response cost among child tests attaining that child's minimum immediate expected cost",
+    "pruning": "only after a full-state-mass incumbent exists; prune if full diagnosis is impossible under the one-step test check, or the lexicographic optimistic lower bound cannot beat the incumbent",
+    "cost_assumption": "positive response costs, as frozen by v0.56 profiles",
+    "objective": "maximise diagnosed mass, minimise expected cost, minimise worst cost, then lowest root query index"
+  },
+  "certificate": {
+    "deterministic_random_tasks": 96,
+    "seed_start": 65001,
+    "require_exact_plan_metric_match": true,
+    "require_zero_mismatches": true
+  },
+  "opened_v64_evaluation": {
+    "expected_base_states": 60,
+    "expected_profiled_states": 180,
+    "exact_budget": 500000,
+    "budget_ladder": [10000, 50000, 250000, 500000],
+    "require_current_pareto_solved": 180,
+    "require_bounded_solved": 180,
+    "require_exact_plan_metric_matches": 180,
+    "require_zero_mismatches": true,
+    "minimum_states_with_bound_pruning": 30,
+    "maximum_states_with_expansion_regression": 0,
+    "minimum_aggregate_pareto_expansion_reduction_fraction": 0.10,
+    "minimum_median_current_over_bounded_expansion_ratio": 1.10,
+    "minimum_median_plain_over_bounded_expansion_ratio": 10.0,
+    "minimum_p90_plain_over_bounded_expansion_ratio": 30.0,
+    "minimum_bounded_solve_advantage_over_plain_at_50000": 20
+  },
+  "claim_boundary": "A pass freezes the lower-bound mechanism for independent compiled reproduction and a separate registry-audited fresh external suite. It is not itself external validation, novelty proof, peer review or a world-level claim."
+}
