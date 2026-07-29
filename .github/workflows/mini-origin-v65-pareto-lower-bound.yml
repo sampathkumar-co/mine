@@ -1,0 +1,59 @@
+name: Mini-ORIGIN Pareto Lower Bound v0.65
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v65-pareto-lower-bound
+    paths:
+      - "mini-origin/campaigns/v65-pareto-lower-bound-preregistration.json"
+      - "mini-origin/src/mini_origin/response_cost_lower_bound_v65.py"
+      - "mini-origin/tests/test_response_cost_lower_bound_v65.py"
+      - ".github/workflows/mini-origin-v65-pareto-lower-bound.yml"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v65-pareto-lower-bound-preregistration.json"
+      - "mini-origin/src/mini_origin/response_cost_lower_bound_v65.py"
+      - "mini-origin/tests/test_response_cost_lower_bound_v65.py"
+      - ".github/workflows/mini-origin-v65-pareto-lower-bound.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v65-lower-bound-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pareto-lower-bound:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen preregistration and rejected parent
+        run: >-
+          python -c "import json; p=json.load(open('campaigns/v65-pareto-lower-bound-preregistration.json')); e=json.load(open('../research-evidence/mini-origin-v64-clean-external-rejected.json')); assert p['status']=='preregistered_before_v65_measurement'; assert p['parent_v64_commit']=='ea24cc679763fb071e6560ff09a892c0eb2b8910'; assert p['parent_v64_evidence_digest']==e['frozen_external_digest']=='55262ceab2e6e0004af9101c382f5995be7ce7afc41d7378615a155b3ba6d08a'; assert not e['development_gate']; assert e['expansion_ratio_median']<10.0"
+      - name: Run focused exactness tests
+        run: pytest -q tests/test_response_cost_lower_bound_v65.py
+      - name: Run frozen theorem and opened-v0.64 development gate
+        run: >-
+          mkdir -p results/v65 &&
+          python -m mini_origin.response_cost_lower_bound_v65
+          --output results/v65/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v65-pareto-lower-bound
+          path: mini-origin/results/v65/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
