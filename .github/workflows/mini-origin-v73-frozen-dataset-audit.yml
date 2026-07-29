@@ -1,0 +1,80 @@
+name: Mini-ORIGIN Frozen Dataset Audit v0.73
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v73-frozen-dataset-audit
+    paths:
+      - "mini-origin/campaigns/v73-frozen-dataset-audit.json"
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v73.py"
+      - "mini-origin/tests/test_repository_dataset_audit_v73.py"
+      - ".github/workflows/mini-origin-v73-frozen-dataset-audit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v73-frozen-dataset-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-dataset-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch every remote branch
+        run: git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: python -m pip install -e ".[dev]"
+      - name: Verify preregistration and frozen v0.72 parent
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          row = json.loads(Path("mini-origin/campaigns/v73-frozen-dataset-audit.json").read_text(encoding="utf-8-sig"))
+          assert row["status"] == "preregistered_before_registry_execution"
+          assert row["frozen_v72_commit"] == "dae02829efc4819935a4ec87c31ea5eee3305d83"
+          assert row["parent_v72_evidence_digest"] == "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090"
+          assert row["candidate_metadata_committed_before_registry"] is False
+          assert row["external_archive_access_before_registry"] is False
+          assert row["record_or_label_access_before_registry"] is False
+          assert row["solver_execution_before_registry"] is False
+          PY
+          git diff --exit-code dae02829efc4819935a4ec87c31ea5eee3305d83 -- \
+            research-evidence/mini-origin-v72-label-free-frontier-pass.json \
+            mini-origin/campaigns/v72-label-free-frontier-revalidation.json \
+            mini-origin/src/mini_origin/label_free_frontier_v72.py \
+            mini-origin/src/mini_origin/numeric_threshold_frontier_v70.py \
+            mini-origin/src/mini_origin/numeric_threshold_repaired_v70.py \
+            mini-origin/src/mini_origin/label_free_selector_certificate_v71.py \
+            mini-origin/src/mini_origin/conditioned_cell_frontier_v60.py \
+            mini-origin/src/mini_origin/response_cost_pareto_v56.py \
+            mini-origin/src/mini_origin/response_cost_lower_bound_v65.py \
+            mini-origin/compiled/response_cost_lower_bound_v66.rs
+      - name: Test frozen registry wrapper
+        working-directory: mini-origin
+        run: pytest -q tests/test_repository_dataset_audit_v73.py
+      - name: Build repository-wide preblind registry
+        run: >-
+          mkdir -p mini-origin/results/v73 &&
+          python -m mini_origin.repository_dataset_audit_v73
+          --output mini-origin/results/v73/repository-dataset-registry.json
+        env:
+          PYTHONPATH: mini-origin/src
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v73-frozen-dataset-registry
+          path: mini-origin/results/v73/repository-dataset-registry.json
+          if-no-files-found: warn
+          retention-days: 90
