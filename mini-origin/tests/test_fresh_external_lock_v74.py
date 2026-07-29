@@ -95,9 +95,14 @@ def test_hash_lock_is_deterministic_and_excludes_registry(tmp_path, monkeypatch)
         {"id": 3, "name": "Gamma", "url": "x"},
         {"id": 4, "name": "Delta", "url": "x"},
         {"id": 5, "name": "Epsilon", "url": "x"},
+        {"id": 6, "name": "Stale", "url": "x"},
     ]}
     payloads = {
         "https://example.test/list": json.dumps(list_payload).encode(),
+        "https://example.test/meta/6": json.dumps({
+            "status": 404,
+            "message": "Dataset not found",
+        }).encode(),
     }
     for uci_id, name in (
         (2, "Heart Study"),
@@ -120,5 +125,6 @@ def test_hash_lock_is_deterministic_and_excludes_registry(tmp_path, monkeypatch)
     assert first["lock_digest"] == second["lock_digest"]
     assert first["dataset_count"] == 2
     assert first["selected_overlap"] == []
-    assert {row["uci_id"] for row in first["datasets"]}.isdisjoint({1, 2})
+    assert first["metadata_rejection_counts"]["metadata_unavailable"] == 1
+    assert {row["uci_id"] for row in first["datasets"]}.isdisjoint({1, 2, 6})
     assert all("csv_sha256" in row for row in first["datasets"])
