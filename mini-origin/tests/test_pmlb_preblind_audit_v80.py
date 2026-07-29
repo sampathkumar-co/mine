@@ -50,3 +50,34 @@ def test_source_has_no_pmlb_client_or_network_dependency():
     assert "requests" not in source
     assert "urlopen" not in source
     assert "urllib" not in source
+
+
+def test_extracts_openml_ids_from_all_supported_forms():
+    text = """
+    {"openml_dataset_id": 1068}
+    https://openml.org/d/188
+    https://www.openml.org/data/40499
+    """
+    assert audit.extract_openml_ids(text) == {1068, 188, 40499}
+
+
+def test_extracts_normalized_names_from_json_and_pairs():
+    text = json.dumps({
+        "datasets": [
+            {"openml_dataset_id": 469, "name": "analcatdata_dmft"},
+            {"uci_id": 3, "task": "Annealing Data"},
+        ]
+    })
+    assert audit.extract_dataset_names(text, ".json") == {
+        "analcatdata-dmft",
+        "annealing-data",
+    }
+
+
+def test_occurrence_rows_are_deterministic():
+    mapping = {
+        "9": [{"ref": "b", "path": "two"}],
+        "2": [{"ref": "a", "path": "one"}],
+    }
+    rows = audit.occurrence_rows(mapping, "dataset_id", numeric=True)
+    assert [row["dataset_id"] for row in rows] == [2, 9]
