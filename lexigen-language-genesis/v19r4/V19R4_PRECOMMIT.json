@@ -1,0 +1,34 @@
+{
+  "schema": "lexigen-v19r4-compositional-cegis-precommit-v1",
+  "base_v19r3_commit": "baf4ca5",
+  "frozen_meta_grammar": "lexigen-language-genesis/v19r3/enumerate_v19r3.py",
+  "candidate_compositions_per_gate": 250000,
+  "fixed_development_gates": [7, 10, 13],
+  "frozen_gate10_survivor_hashes": [
+    "aab35796ce5e0f0511e9d021c2580a2b3aa08305f66e70b435b1c34c5dc9ff4b",
+    "09ee8c2414f06aa73bfaa63d36a9ac8c1037a485fb0d165e98552f3d408556b3",
+    "b877f8409fbc1712293096164566f434f79b58a51522d975343db0b010442990",
+    "c887750e98d2518c9d79d20a972753a1bc800f58a6168ffd10a02deb4fa48846",
+    "c40c009a1bcbd74fea9160377e83c7e10c422192214c8eb410280e034d78b2b6"
+  ],
+  "cegis": {
+    "task_id_available_only_to_case_generator": true,
+    "task_id_available_to_candidate_programs": false,
+    "seed_formula": "8500000 + gate*100000 + attempted_seed_index",
+    "maximum_accepted_refinement_cases": 64,
+    "generator_rejections_preserved": true,
+    "stop_condition": "exactly one survivor or accepted-case budget exhausted",
+    "human_survivor_selection_allowed": false
+  },
+  "final_validation": {
+    "seed_formula": "9500000 + gate*100000 + attempted_seed_index",
+    "intermediate_accepted_cases": 1000,
+    "final_accepted_cases": 10000,
+    "same_production_hash_required": true,
+    "dual_runtime_agreement_required": true
+  },
+  "required_selected_descriptor_removal_ablation": true,
+  "required_verifier_cosynthesis": true,
+  "hidden_outputs_opened": false,
+  "world_level_breakthrough": false
+}

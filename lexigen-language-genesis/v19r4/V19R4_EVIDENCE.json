@@ -1,0 +1,99 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "arguments_sha256": "c449dd9c1da00c383d5ddc55a577e263dd0c93ff6801554bb2b6d29a47517932",
+  "base_v19r3_commit": "baf4ca5",
+  "candidate_compositions_per_gate": 250000,
+  "cegis_accepted_cases": 7,
+  "cegis_checkpoint_commit": "ed3494b4851a6f5e35df7513e096ee2330bd68fd",
+  "cegis_generator_rejections": 0,
+  "claim_boundary": {
+    "complete_composition_selected_within_frozen_finite_meta_grammar": true,
+    "external_discovery": false,
+    "human_supplied_finite_meta_grammar": true,
+    "sealed_external_success": false,
+    "transfer_demonstrated": false,
+    "unrestricted_semantic_substrate_invention": false,
+    "world_level_breakthrough": false
+  },
+  "concrete_program_sha256": "c887750e98d2518c9d79d20a972753a1bc800f58a6168ffd10a02deb4fa48846",
+  "files": {
+    "v19r2/cosynthesize_verifier_v19r2.py": "dfe6522ee5ed64f5b957ffd0718b3b91a6e9e6b3e5da41418842f540b856b324",
+    "v19r2/mutations_v19r2.py": "7ac3e20302093484a347d6b31f33f9a392bd7e4d2b4d91ffb0ee98537e25a56b",
+    "v19r2/portable_runtime_v19r2.py": "c082ccb0db094ae0c92b7475d5e5bd9078c4f64da498b1c1f104f57e720ee527",
+    "v19r2/portable_verifier_v19r2.py": "f6936a6efedde85d54cd36c3ae5e42a2f1f3599ce08042b851ab1a10c2135cad",
+    "v19r2/runtime_v19r2.py": "3607a880a019aef9c46e3c29304ed330947ced4acb2406718d89d56c671037ac",
+    "v19r2/verifier_grammar_v19r2.py": "2afa083b1bbe80b0bb72749d538f1cd9d090b18c24dad168aea58a56d7daa50a",
+    "v19r3/V19R3_ATTEMPT_REPORT.json": "3d93bd79ae8259f73746e91d8f4211e1da91e2b97f0fe778056524869dfa26ef",
+    "v19r3/V19R3_EVIDENCE.json": "95e04222b4ee5ff344e820d00bdd6b7042ae52daa41c6686a7ed827320d55853",
+    "v19r3/enumerate_v19r3.py": "273ae5f3ec71523fec1dc89404a81c5bb43cd02c10032318ef213acd63c924d0",
+    "v19r4/README.md": "1de57c766d3293d9ba014a609eaa7fa0aaed528827627ef10b21b205328caf6d",
+    "v19r4/V19R4_CEGIS_REPORT.json": "60c90da10022ad03887d2eb43d310250bd3f7d1d2b8a62a836cb490953bcf600",
+    "v19r4/V19R4_INTEGRITY_AUDIT.json": "868ad9f17a5db10330470f47b49845d0366068117856956381ad4450fd6cee07",
+    "v19r4/V19R4_INTERMEDIATE_REPORT.json": "3ff865c4588b3fa310b8e3ef6f21fca94ca97f3052d507056ecc80ff6c2104e8",
+    "v19r4/V19R4_PRECOMMIT.json": "8ecb4e5b51982b49491b9cc070a4ccf3375ff142380bfa392e2c5e4bcdf83e3a",
+    "v19r4/V19R4_REPORT.json": "cc6e9905ee7482396d4d0ada2a6245c3d9274525d8bfc541a7e75976b914eec3",
+    "v19r4/V19R4_VERIFIER_REPORT.json": "2219b99dd797f7f76b2da32b227193ad769dfd3c3a4db15e9f4b9df405b51ee6",
+    "v19r4/V19R4_VERIFIER_SMOKE_REPORT.json": "343447871affce66910b855945ae5d6c0b45918205b9c7afe1da6cc12896d100",
+    "v19r4/contracts/gate-10-contract.json": "07639f4df052dafeb6ce0f4e6b8f0facb35b910ac8aa619c2639aa8a1629ba20",
+    "v19r4/contracts/revisions/gate-10-contract-r0.json": "07639f4df052dafeb6ce0f4e6b8f0facb35b910ac8aa619c2639aa8a1629ba20",
+    "v19r4/contracts/revisions/gate-10-false-accepts-r0.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "v19r4/freeze_v19r4_evidence.py": "5b7cbe92b24c5d0dd45c62304fe19878073261094179cf8ebf8c37305560d933",
+    "v19r4/production/v19r4-arguments.json": "27d57578ea7f05fe791a6d37c213ea36ab69b9446f5f253bd40e3833eba1a1bd",
+    "v19r4/production/v19r4-concrete-program.json": "3f2c5cdcf6c00344cc002ecd75e697b42f5a03059b943cdcaf967cfc3e2eb67c",
+    "v19r4/production/v19r4-production.json": "caf925327278632e82520b4c7bb3ccd28fd9e4594f1f87cb69998e1fab6574e5",
+    "v19r4/run_cegis_v19r4.py": "3a877a9ccd7a9a1d75cf2b31f7b402b6a10c0aef7d9c7fb44a7b180bec3d49e4",
+    "v19r4/test_v19r4.py": "8b8fa364b9276fd0896ec7c5225af6f7a2e504d56626eb0744cb15b24e85138a",
+    "v19r4/validate_v19r4.py": "9cb768f5ad6165bb0e5fac35c7c1de1801b555c0961f23fd159d0f58c9985a3f",
+    "v19r4/validate_verifier_v19r4.py": "49127452d802f428c8ed6330028c84bd77264a163466d802f1696d94be405e4a"
+  },
+  "final_survivors": 1,
+  "fixed_development_gates": [
+    7,
+    10,
+    13
+  ],
+  "fixed_no_program_gates": [
+    7,
+    13
+  ],
+  "fresh_cases": 10000,
+  "fresh_portable_exact": 10000,
+  "fresh_primary_exact": 10000,
+  "fresh_runtime_agreement": 10000,
+  "frozen_v17_ablation_failed": true,
+  "frozen_v17_commit": "cd89382e38b45d12916e662af052a7aa1a374896",
+  "generator_rejections": 0,
+  "initial_demonstration_survivors": 5,
+  "production_checkpoint_commit": "87f99380759815d97db0968582fcaadd6e51e950",
+  "production_sha256": "751e258d9dbdcdf2641503bacdc32f927fb2872fddaadbbbe348d668f5f25523",
+  "schema": "lexigen-v19r4-frozen-evidence-v1",
+  "selected_actions": [
+    "reflect_left",
+    "reflect_right",
+    "reflect_top",
+    "reflect_bottom"
+  ],
+  "selected_descriptor_removal_survivors": 0,
+  "verifier": {
+    "contract_revision": 0,
+    "contract_sha256": "d204f96e21a694715843b2f7b85bdc7e73024c6156cbb2a10752415a77614d6d",
+    "correct_outputs": 1000,
+    "fresh_runtime_invalid_mutations": 1690,
+    "learned_exact_digest": false,
+    "mutant_outputs": 8000,
+    "portable_screening_failures": 0,
+    "portable_soundness_failures": 0,
+    "predicates": [
+      {
+        "cost": 6,
+        "name": "checksum_1"
+      }
+    ],
+    "primary_screening_failures": 0,
+    "primary_soundness_failures": 0,
+    "training_runtime_invalid_mutations": 30
+  },
+  "verifier_checkpoint_commit": "20208d5f440008b177eaf020021d75a38efd9929",
+  "version": "19r4",
+  "visible_evidence_commit": "13cd271a2d4813001563842a51a1e72dd100aa1a"
+}

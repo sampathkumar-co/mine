@@ -1,0 +1,48 @@
+{
+  "accepted_cases": 100,
+  "concrete_program_sha256": "c887750e98d2518c9d79d20a972753a1bc800f58a6168ffd10a02deb4fa48846",
+  "contract_sha256": "d204f96e21a694715843b2f7b85bdc7e73024c6156cbb2a10752415a77614d6d",
+  "contracts_requiring_revision": false,
+  "correct_portable": 100,
+  "correct_primary": 100,
+  "demonstration_sha256": "952e51db1b6ece583c40a4ce0a1a45991ccd67ec97f7fd7a7c23d0df22014c08",
+  "exact_digest_used_by_learned_screen": false,
+  "fresh_runtime_invalid_mutations": 170,
+  "gate": 10,
+  "generator_attempts": 100,
+  "generator_rejection_examples": [],
+  "generator_rejections": 0,
+  "hidden_outputs_opened": false,
+  "mutant_cases": 800,
+  "mutation_manifest_size": 41,
+  "mutations_per_case": 8,
+  "portable_runtime_sha256": "c082ccb0db094ae0c92b7475d5e5bd9078c4f64da498b1c1f104f57e720ee527",
+  "primary_runtime_sha256": "3607a880a019aef9c46e3c29304ed330947ced4acb2406718d89d56c671037ac",
+  "production_sha256": "751e258d9dbdcdf2641503bacdc32f927fb2872fddaadbbbe348d668f5f25523",
+  "revisions": [
+    {
+      "contract_sha256": "d204f96e21a694715843b2f7b85bdc7e73024c6156cbb2a10752415a77614d6d",
+      "exact_digest_used": false,
+      "fresh_false_accepts": 0,
+      "fresh_mutant_cases": 800,
+      "fresh_runtime_invalid_mutations": 170,
+      "predicate_cost": 6,
+      "predicates": [
+        {
+          "cost": 6,
+          "name": "checksum_1"
+        }
+      ],
+      "revision": 0,
+      "training_mutation_cases": 104,
+      "training_runtime_invalid_mutations": 30
+    }
+  ],
+  "schema": "lexigen-v19r4-verifier-cosynthesis-report-v1",
+  "screening_rejected_portable": 800,
+  "screening_rejected_primary": 800,
+  "soundness_rejected_portable": 800,
+  "soundness_rejected_primary": 800,
+  "task_id": "2bcee788",
+  "world_level_breakthrough": false
+}
