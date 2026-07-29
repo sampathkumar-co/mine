@@ -46,9 +46,13 @@ def download(url: str) -> bytes:
         return response.read()
 
 
-def fetch_json(url: str) -> dict[str, object]:
+def fetch_json(
+    url: str,
+    *,
+    allow_non_200: bool = False,
+) -> dict[str, object]:
     payload = json.loads(download(url))
-    if int(payload.get("status", 0)) != 200:
+    if int(payload.get("status", 0)) != 200 and not allow_non_200:
         raise RuntimeError(f"metadata request failed: {url}")
     return payload
 
@@ -151,7 +155,10 @@ def run(output: Path) -> dict[str, object]:
         url = str(preregistration["metadata_dataset_url_template"]).format(
             uci_id=uci_id
         )
-        metadata_payload = fetch_json(url)
+        metadata_payload = fetch_json(url, allow_non_200=True)
+        if int(metadata_payload.get("status", 0)) != 200:
+            rejection_counts["metadata_unavailable"] += 1
+            continue
         metadata = metadata_payload["data"]
         if int(metadata["uci_id"]) != uci_id:
             raise RuntimeError(f"metadata ID mismatch: {uci_id}")
