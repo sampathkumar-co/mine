@@ -1,0 +1,42 @@
+{
+  "comparison": {
+    "precommitted_gate_passed": true,
+    "raw_reduction_fraction": 0.3792553048395919,
+    "retained_reduction_fraction": 0.4439038681783073,
+    "runtime_reduction_fraction": 0.40009842519685035,
+    "verdict": "clear architecture efficiency pass with exact-set preservation; no exact program found"
+  },
+  "exact_structure_set_preserved": true,
+  "same_demonstrations": true,
+  "schema": "lexigen-v28-first-comparison-summary-v1",
+  "task_id": "c074846d",
+  "v27": {
+    "raw": 1003659,
+    "retained": 112637,
+    "retained_by_type": {
+      "Color": 10,
+      "Grid": 32175,
+      "ObjectSet": 20226,
+      "PointSet": 60226
+    },
+    "wall_seconds_observed": 121.92
+  },
+  "v28": {
+    "beam_dropped_by_type": {
+      "Color": 0,
+      "Grid": 130000,
+      "ObjectSet": 0,
+      "PointSet": 38188
+    },
+    "raw": 623016,
+    "retained": 62637,
+    "retained_by_type": {
+      "Color": 10,
+      "Grid": 22175,
+      "ObjectSet": 226,
+      "PointSet": 40226
+    },
+    "wall_seconds_observed": 73.14
+  },
+  "world_level_breakthrough": false
+}
