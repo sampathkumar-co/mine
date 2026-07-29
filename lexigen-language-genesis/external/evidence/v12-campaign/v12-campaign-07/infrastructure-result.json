@@ -1,0 +1,10 @@
+﻿{
+    "gate_id":  "v12-campaign-07",
+    "selected_task_id":  "e57337a4",
+    "status":  "generator-invalid-before-seal",
+    "solver_run":  false,
+    "predictions_committed":  false,
+    "hidden_scoring_performed":  false,
+    "sealed_outputs_accessed":  false,
+    "error":  "    + FullyQualifiedErrorId : NativeCommandError"
+}

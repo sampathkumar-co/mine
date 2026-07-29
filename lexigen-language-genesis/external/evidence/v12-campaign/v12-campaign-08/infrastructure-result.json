@@ -1,0 +1,10 @@
+﻿{
+    "gate_id":  "v12-campaign-08",
+    "selected_task_id":  "c64f1187",
+    "status":  "generator-invalid-before-seal",
+    "solver_run":  false,
+    "predictions_committed":  false,
+    "hidden_scoring_performed":  false,
+    "sealed_outputs_accessed":  false,
+    "error":  "ValueError: empty range in randrange(0, 0)"
+}
