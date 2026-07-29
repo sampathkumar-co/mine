@@ -32,7 +32,10 @@ PARENT_V68_DIGEST = "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba5
 
 
 def compiler_protocol() -> dict[str, object]:
-    result = dict(repaired.compiler_protocol())
+    v70_preregistration = json.loads(
+        original.PREREGISTRATION.read_text(encoding="utf-8")
+    )
+    result = dict(v70_preregistration["compiler"])
     result["oversized_cell_sampling"] = (
         "SHA-256(task name, salt, sampled row index, compiled response row); "
         "labels excluded"
