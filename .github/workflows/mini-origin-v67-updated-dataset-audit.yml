@@ -1,0 +1,54 @@
+name: Mini-ORIGIN Updated Dataset Audit v0.67
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v67-updated-dataset-audit
+    paths:
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v63.py"
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v67.py"
+      - ".github/workflows/mini-origin-v67-updated-dataset-audit.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v63.py"
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v67.py"
+      - ".github/workflows/mini-origin-v67-updated-dataset-audit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v67-dataset-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  updated-dataset-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch every remote branch
+        run: git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: python -m pip install -e ".[dev]"
+      - name: Build updated repository-wide registry
+        run: >-
+          mkdir -p mini-origin/results/v67 &&
+          python -m mini_origin.repository_dataset_audit_v67
+          --output mini-origin/results/v67/repository-dataset-registry.json
+        env:
+          PYTHONPATH: mini-origin/src
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v67-updated-dataset-registry
+          path: mini-origin/results/v67/repository-dataset-registry.json
+          retention-days: 90
