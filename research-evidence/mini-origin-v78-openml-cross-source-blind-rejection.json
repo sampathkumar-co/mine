@@ -1,0 +1,1538 @@
+{
+  "status": "openml_cross_source_blind_rejected_v78",
+  "claim_scope": "A pass is a second, cross-source, repository-audited blind replication for the frozen Mini-ORIGIN method. It is not outside-human reproduction, direct state-of-the-art superiority, peer review, publication acceptance, a general AI breakthrough, or a world-first claim.",
+  "archive_lock_digest": "03a64c8c5928070fb41b15d4892c2f720a909fc39c3a7f5b9597cd79f1879590",
+  "frozen_external_digest": "6fd10a0e477d49c3b5f4b260efc88928ee6a5ec6de289a5ffdf589472e01ed54",
+  "compiler_protocol": {
+    "maximum_sampled_records": 384,
+    "sampling": "rank original rows by SHA-256(dataset name, feature vector) with original row index as the duplicate-feature tie-break; labels excluded",
+    "missing_tokens": [
+      "",
+      "?",
+      "na",
+      "nan",
+      "none",
+      "null"
+    ],
+    "numeric_detection": "all nonmissing tokens parse as finite Decimal",
+    "low_cardinality_exact_cutoff": 8,
+    "quantile_denominator": 8,
+    "quantile_numerators": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "quantile_rank_rule": "ceil(k*n/8)-1 on sorted nonmissing sampled values",
+    "numeric_response_values": [
+      "missing",
+      "le",
+      "gt"
+    ],
+    "categorical_response": "preserve exact token",
+    "labels_or_costs_used": false,
+    "query_cap": null
+  },
+  "contributing_dataset_count": 6,
+  "base_state_count": 72,
+  "profiled_state_count": 216,
+  "bounded_solved_count": 216,
+  "both_plain_bounded_count": 69,
+  "bounded_only_count": 147,
+  "plain_bounded_objective_mismatch_count": 0,
+  "current_bounded_plan_mismatch_count": 0,
+  "bounded_expansion_regression_count": 0,
+  "states_with_lower_bound_pruning": 122,
+  "current_query_expansions": 37249,
+  "bounded_query_expansions": 14997,
+  "aggregate_bounded_reduction_fraction": 0.5973851647024081,
+  "dominated_queries_removed": 90237,
+  "root_incomparable_classes": 389,
+  "expansion_ratio_median": 5813.96511627907,
+  "expansion_ratio_p90": 238019.25,
+  "budget_ladder_summary": {
+    "10000": {
+      "bounded_solved": 216,
+      "plain_solved": 12
+    },
+    "50000": {
+      "bounded_solved": 216,
+      "plain_solved": 12
+    },
+    "250000": {
+      "bounded_solved": 216,
+      "plain_solved": 54
+    },
+    "500000": {
+      "bounded_solved": 216,
+      "plain_solved": 69
+    }
+  },
+  "rust_total_milliseconds": 62.439786,
+  "rust_exact_match_count": 216,
+  "rust_mismatch_count": 0,
+  "rust_mismatches": [],
+  "dataset_summaries": [
+    {
+      "raw_records": 1109,
+      "distinct_records": 954,
+      "sampled_records": 384,
+      "original_features": 21,
+      "compiled_queries": 130,
+      "numeric_columns": 21,
+      "threshold_columns": 21,
+      "exact_columns": 0,
+      "threshold_queries": 130,
+      "labels": 2,
+      "compiler_columns": [
+        {
+          "feature_index": 0,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 80,
+          "queries": 7
+        },
+        {
+          "feature_index": 1,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 33,
+          "queries": 6
+        },
+        {
+          "feature_index": 2,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 18,
+          "queries": 3
+        },
+        {
+          "feature_index": 3,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 22,
+          "queries": 4
+        },
+        {
+          "feature_index": 4,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 181,
+          "queries": 7
+        },
+        {
+          "feature_index": 5,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 301,
+          "queries": 7
+        },
+        {
+          "feature_index": 6,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 36,
+          "queries": 7
+        },
+        {
+          "feature_index": 7,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 255,
+          "queries": 7
+        },
+        {
+          "feature_index": 8,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 310,
+          "queries": 7
+        },
+        {
+          "feature_index": 9,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 324,
+          "queries": 7
+        },
+        {
+          "feature_index": 10,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 84,
+          "queries": 7
+        },
+        {
+          "feature_index": 11,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 324,
+          "queries": 7
+        },
+        {
+          "feature_index": 12,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 76,
+          "queries": 7
+        },
+        {
+          "feature_index": 13,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 39,
+          "queries": 4
+        },
+        {
+          "feature_index": 14,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 20,
+          "queries": 3
+        },
+        {
+          "feature_index": 15,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 39,
+          "queries": 6
+        },
+        {
+          "feature_index": 16,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 36,
+          "queries": 7
+        },
+        {
+          "feature_index": 17,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 74,
+          "queries": 7
+        },
+        {
+          "feature_index": 18,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 141,
+          "queries": 7
+        },
+        {
+          "feature_index": 19,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 125,
+          "queries": 7
+        },
+        {
+          "feature_index": 20,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 42,
+          "queries": 6
+        }
+      ],
+      "arff_attribute_count": 22,
+      "feature_columns": [
+        "loc",
+        "v(g)",
+        "ev(g)",
+        "iv(G)",
+        "N",
+        "V",
+        "L",
+        "D",
+        "I",
+        "E",
+        "B",
+        "T",
+        "lOCode",
+        "lOComment",
+        "locCodeAndComment",
+        "lOBlank",
+        "uniq_Op",
+        "uniq_Opnd",
+        "total_Op",
+        "total_Opnd",
+        "branchCount"
+      ],
+      "target_column": "defects",
+      "ignored_columns": [],
+      "record_count": 1109,
+      "missing_feature_cells": 0,
+      "conditioned_cells": 1053,
+      "structural_candidates": 37709,
+      "selected_states": 12,
+      "task": "pc1",
+      "uci_id": 1068
+    },
+    {
+      "raw_records": 736,
+      "distinct_records": 736,
+      "sampled_records": 384,
+      "original_features": 19,
+      "compiled_queries": 76,
+      "numeric_columns": 15,
+      "threshold_columns": 12,
+      "exact_columns": 7,
+      "threshold_queries": 69,
+      "labels": 5,
+      "compiler_columns": [
+        {
+          "feature_index": 0,
+          "kind": "exact",
+          "numeric": false,
+          "distinct_nonmissing": 16,
+          "queries": 1
+        },
+        {
+          "feature_index": 1,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 4,
+          "queries": 1
+        },
+        {
+          "feature_index": 2,
+          "kind": "exact",
+          "numeric": false,
+          "distinct_nonmissing": 8,
+          "queries": 1
+        },
+        {
+          "feature_index": 3,
+          "kind": "exact",
+          "numeric": false,
+          "distinct_nonmissing": 14,
+          "queries": 1
+        },
+        {
+          "feature_index": 4,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 12,
+          "queries": 6
+        },
+        {
+          "feature_index": 5,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 9,
+          "queries": 5
+        },
+        {
+          "feature_index": 6,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 10,
+          "queries": 6
+        },
+        {
+          "feature_index": 7,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 2,
+          "queries": 1
+        },
+        {
+          "feature_index": 8,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 5,
+          "queries": 1
+        },
+        {
+          "feature_index": 9,
+          "kind": "exact",
+          "numeric": false,
+          "distinct_nonmissing": 26,
+          "queries": 1
+        },
+        {
+          "feature_index": 10,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 80,
+          "queries": 7
+        },
+        {
+          "feature_index": 11,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 345,
+          "queries": 7
+        },
+        {
+          "feature_index": 12,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 322,
+          "queries": 7
+        },
+        {
+          "feature_index": 13,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 34,
+          "queries": 6
+        },
+        {
+          "feature_index": 14,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 29,
+          "queries": 5
+        },
+        {
+          "feature_index": 15,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 25,
+          "queries": 5
+        },
+        {
+          "feature_index": 16,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 21,
+          "queries": 5
+        },
+        {
+          "feature_index": 17,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 22,
+          "queries": 4
+        },
+        {
+          "feature_index": 18,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 25,
+          "queries": 6
+        }
+      ],
+      "arff_attribute_count": 20,
+      "feature_columns": [
+        "Abbrev",
+        "Rep",
+        "Locality",
+        "Map_Ref",
+        "Latitude",
+        "Altitude",
+        "Rainfall",
+        "Frosts",
+        "Year",
+        "Sp",
+        "PMCno",
+        "DBH",
+        "Ht",
+        "Surv",
+        "Vig",
+        "Ins_res",
+        "Stem_Fm",
+        "Crown_Fm",
+        "Brnch_Fm"
+      ],
+      "target_column": "Utility",
+      "ignored_columns": [],
+      "record_count": 736,
+      "missing_feature_cells": 448,
+      "conditioned_cells": 1119,
+      "structural_candidates": 32196,
+      "selected_states": 12,
+      "task": "eucalyptus",
+      "uci_id": 188
+    },
+    {
+      "raw_records": 5500,
+      "distinct_records": 5473,
+      "sampled_records": 384,
+      "original_features": 40,
+      "compiled_queries": 280,
+      "numeric_columns": 40,
+      "threshold_columns": 40,
+      "exact_columns": 0,
+      "threshold_queries": 280,
+      "labels": 11,
+      "compiler_columns": [
+        {
+          "feature_index": 0,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 268,
+          "queries": 7
+        },
+        {
+          "feature_index": 1,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 293,
+          "queries": 7
+        },
+        {
+          "feature_index": 2,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 315,
+          "queries": 7
+        },
+        {
+          "feature_index": 3,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 305,
+          "queries": 7
+        },
+        {
+          "feature_index": 4,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 316,
+          "queries": 7
+        },
+        {
+          "feature_index": 5,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 296,
+          "queries": 7
+        },
+        {
+          "feature_index": 6,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 283,
+          "queries": 7
+        },
+        {
+          "feature_index": 7,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 300,
+          "queries": 7
+        },
+        {
+          "feature_index": 8,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 312,
+          "queries": 7
+        },
+        {
+          "feature_index": 9,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 319,
+          "queries": 7
+        },
+        {
+          "feature_index": 10,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 268,
+          "queries": 7
+        },
+        {
+          "feature_index": 11,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 303,
+          "queries": 7
+        },
+        {
+          "feature_index": 12,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 328,
+          "queries": 7
+        },
+        {
+          "feature_index": 13,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 268,
+          "queries": 7
+        },
+        {
+          "feature_index": 14,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 281,
+          "queries": 7
+        },
+        {
+          "feature_index": 15,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 278,
+          "queries": 7
+        },
+        {
+          "feature_index": 16,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 297,
+          "queries": 7
+        },
+        {
+          "feature_index": 17,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 307,
+          "queries": 7
+        },
+        {
+          "feature_index": 18,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 287,
+          "queries": 7
+        },
+        {
+          "feature_index": 19,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 324,
+          "queries": 7
+        },
+        {
+          "feature_index": 20,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 268,
+          "queries": 7
+        },
+        {
+          "feature_index": 21,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 305,
+          "queries": 7
+        },
+        {
+          "feature_index": 22,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 320,
+          "queries": 7
+        },
+        {
+          "feature_index": 23,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 325,
+          "queries": 7
+        },
+        {
+          "feature_index": 24,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 318,
+          "queries": 7
+        },
+        {
+          "feature_index": 25,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 313,
+          "queries": 7
+        },
+        {
+          "feature_index": 26,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 304,
+          "queries": 7
+        },
+        {
+          "feature_index": 27,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 313,
+          "queries": 7
+        },
+        {
+          "feature_index": 28,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 313,
+          "queries": 7
+        },
+        {
+          "feature_index": 29,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 316,
+          "queries": 7
+        },
+        {
+          "feature_index": 30,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 268,
+          "queries": 7
+        },
+        {
+          "feature_index": 31,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 294,
+          "queries": 7
+        },
+        {
+          "feature_index": 32,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 333,
+          "queries": 7
+        },
+        {
+          "feature_index": 33,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 264,
+          "queries": 7
+        },
+        {
+          "feature_index": 34,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 287,
+          "queries": 7
+        },
+        {
+          "feature_index": 35,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 283,
+          "queries": 7
+        },
+        {
+          "feature_index": 36,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 288,
+          "queries": 7
+        },
+        {
+          "feature_index": 37,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 309,
+          "queries": 7
+        },
+        {
+          "feature_index": 38,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 291,
+          "queries": 7
+        },
+        {
+          "feature_index": 39,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 313,
+          "queries": 7
+        }
+      ],
+      "arff_attribute_count": 41,
+      "feature_columns": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7",
+        "V8",
+        "V9",
+        "V10",
+        "V11",
+        "V12",
+        "V13",
+        "V14",
+        "V15",
+        "V16",
+        "V17",
+        "V18",
+        "V19",
+        "V20",
+        "V21",
+        "V22",
+        "V23",
+        "V24",
+        "V25",
+        "V26",
+        "V27",
+        "V28",
+        "V29",
+        "V30",
+        "V31",
+        "V32",
+        "V33",
+        "V34",
+        "V35",
+        "V36",
+        "V37",
+        "V38",
+        "V39",
+        "V40"
+      ],
+      "target_column": "Class",
+      "ignored_columns": [],
+      "record_count": 5500,
+      "missing_feature_cells": 0,
+      "conditioned_cells": 1084,
+      "structural_candidates": 34255,
+      "selected_states": 12,
+      "task": "texture",
+      "uci_id": 40499
+    },
+    {
+      "raw_records": 2109,
+      "distinct_records": 1212,
+      "sampled_records": 384,
+      "original_features": 21,
+      "compiled_queries": 116,
+      "numeric_columns": 21,
+      "threshold_columns": 20,
+      "exact_columns": 1,
+      "threshold_queries": 115,
+      "labels": 2,
+      "compiler_columns": [
+        {
+          "feature_index": 0,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 72,
+          "queries": 6
+        },
+        {
+          "feature_index": 1,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 19,
+          "queries": 4
+        },
+        {
+          "feature_index": 2,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 11,
+          "queries": 2
+        },
+        {
+          "feature_index": 3,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 17,
+          "queries": 4
+        },
+        {
+          "feature_index": 4,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 121,
+          "queries": 7
+        },
+        {
+          "feature_index": 5,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 184,
+          "queries": 7
+        },
+        {
+          "feature_index": 6,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 40,
+          "queries": 7
+        },
+        {
+          "feature_index": 7,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 151,
+          "queries": 7
+        },
+        {
+          "feature_index": 8,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 203,
+          "queries": 7
+        },
+        {
+          "feature_index": 9,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 205,
+          "queries": 7
+        },
+        {
+          "feature_index": 10,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 48,
+          "queries": 6
+        },
+        {
+          "feature_index": 11,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 205,
+          "queries": 7
+        },
+        {
+          "feature_index": 12,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 63,
+          "queries": 6
+        },
+        {
+          "feature_index": 13,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 15,
+          "queries": 2
+        },
+        {
+          "feature_index": 14,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 18,
+          "queries": 4
+        },
+        {
+          "feature_index": 15,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 6,
+          "queries": 1
+        },
+        {
+          "feature_index": 16,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 27,
+          "queries": 7
+        },
+        {
+          "feature_index": 17,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 47,
+          "queries": 7
+        },
+        {
+          "feature_index": 18,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 96,
+          "queries": 7
+        },
+        {
+          "feature_index": 19,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 77,
+          "queries": 7
+        },
+        {
+          "feature_index": 20,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 24,
+          "queries": 4
+        }
+      ],
+      "arff_attribute_count": 22,
+      "feature_columns": [
+        "loc",
+        "v(g)",
+        "ev(g)",
+        "iv(g)",
+        "n",
+        "v",
+        "l",
+        "d",
+        "i",
+        "e",
+        "b",
+        "t",
+        "lOCode",
+        "lOComment",
+        "lOBlank",
+        "locCodeAndComment",
+        "uniq_Op",
+        "uniq_Opnd",
+        "total_Op",
+        "total_Opnd",
+        "branchCount"
+      ],
+      "target_column": "defects",
+      "ignored_columns": [],
+      "record_count": 2109,
+      "missing_feature_cells": 0,
+      "conditioned_cells": 942,
+      "structural_candidates": 27154,
+      "selected_states": 12,
+      "task": "kc1",
+      "uci_id": 1067
+    },
+    {
+      "raw_records": 522,
+      "distinct_records": 375,
+      "sampled_records": 384,
+      "original_features": 21,
+      "compiled_queries": 122,
+      "numeric_columns": 21,
+      "threshold_columns": 20,
+      "exact_columns": 1,
+      "threshold_queries": 121,
+      "labels": 2,
+      "compiler_columns": [
+        {
+          "feature_index": 0,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 107,
+          "queries": 7
+        },
+        {
+          "feature_index": 1,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 35,
+          "queries": 5
+        },
+        {
+          "feature_index": 2,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 19,
+          "queries": 2
+        },
+        {
+          "feature_index": 3,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 25,
+          "queries": 4
+        },
+        {
+          "feature_index": 4,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 163,
+          "queries": 7
+        },
+        {
+          "feature_index": 5,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 238,
+          "queries": 7
+        },
+        {
+          "feature_index": 6,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 43,
+          "queries": 7
+        },
+        {
+          "feature_index": 7,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 203,
+          "queries": 7
+        },
+        {
+          "feature_index": 8,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 262,
+          "queries": 7
+        },
+        {
+          "feature_index": 9,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 267,
+          "queries": 7
+        },
+        {
+          "feature_index": 10,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 77,
+          "queries": 7
+        },
+        {
+          "feature_index": 11,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 268,
+          "queries": 7
+        },
+        {
+          "feature_index": 12,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 99,
+          "queries": 7
+        },
+        {
+          "feature_index": 13,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 24,
+          "queries": 3
+        },
+        {
+          "feature_index": 14,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 31,
+          "queries": 5
+        },
+        {
+          "feature_index": 15,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 7,
+          "queries": 1
+        },
+        {
+          "feature_index": 16,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 29,
+          "queries": 7
+        },
+        {
+          "feature_index": 17,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 61,
+          "queries": 6
+        },
+        {
+          "feature_index": 18,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 132,
+          "queries": 7
+        },
+        {
+          "feature_index": 19,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 116,
+          "queries": 7
+        },
+        {
+          "feature_index": 20,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 35,
+          "queries": 5
+        }
+      ],
+      "arff_attribute_count": 22,
+      "feature_columns": [
+        "loc",
+        "v(g)",
+        "ev(g)",
+        "iv(g)",
+        "n",
+        "v",
+        "l",
+        "d",
+        "i",
+        "e",
+        "b",
+        "t",
+        "lOCode",
+        "lOComment",
+        "lOBlank",
+        "lOCodeAndComment",
+        "uniq_Op",
+        "uniq_Opnd",
+        "total_Op",
+        "total_Opnd",
+        "branchCount"
+      ],
+      "target_column": "problems",
+      "ignored_columns": [],
+      "record_count": 522,
+      "missing_feature_cells": 0,
+      "conditioned_cells": 1013,
+      "structural_candidates": 32448,
+      "selected_states": 12,
+      "task": "kc2",
+      "uci_id": 1063
+    },
+    {
+      "raw_records": 797,
+      "distinct_records": 556,
+      "sampled_records": 384,
+      "original_features": 4,
+      "compiled_queries": 10,
+      "numeric_columns": 2,
+      "threshold_columns": 1,
+      "exact_columns": 3,
+      "threshold_queries": 7,
+      "labels": 6,
+      "compiler_columns": [
+        {
+          "feature_index": 0,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 9,
+          "queries": 7
+        },
+        {
+          "feature_index": 1,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 7,
+          "queries": 1
+        },
+        {
+          "feature_index": 2,
+          "kind": "exact",
+          "numeric": false,
+          "distinct_nonmissing": 2,
+          "queries": 1
+        },
+        {
+          "feature_index": 3,
+          "kind": "exact",
+          "numeric": false,
+          "distinct_nonmissing": 3,
+          "queries": 1
+        }
+      ],
+      "arff_attribute_count": 5,
+      "feature_columns": [
+        "DMFT.Begin",
+        "DMFT.End",
+        "Gender",
+        "Ethnic"
+      ],
+      "target_column": "Prevention",
+      "ignored_columns": [],
+      "record_count": 797,
+      "missing_feature_cells": 0,
+      "conditioned_cells": 757,
+      "structural_candidates": 0,
+      "selected_states": 0,
+      "task": "analcatdata_dmft",
+      "uci_id": 469
+    },
+    {
+      "raw_records": 1458,
+      "distinct_records": 1344,
+      "sampled_records": 384,
+      "original_features": 37,
+      "compiled_queries": 202,
+      "numeric_columns": 37,
+      "threshold_columns": 34,
+      "exact_columns": 3,
+      "threshold_queries": 199,
+      "labels": 2,
+      "compiler_columns": [
+        {
+          "feature_index": 0,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 36,
+          "queries": 7
+        },
+        {
+          "feature_index": 1,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 39,
+          "queries": 6
+        },
+        {
+          "feature_index": 2,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 17,
+          "queries": 5
+        },
+        {
+          "feature_index": 3,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 20,
+          "queries": 4
+        },
+        {
+          "feature_index": 4,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 34,
+          "queries": 4
+        },
+        {
+          "feature_index": 5,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 27,
+          "queries": 4
+        },
+        {
+          "feature_index": 6,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 27,
+          "queries": 6
+        },
+        {
+          "feature_index": 7,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 53,
+          "queries": 7
+        },
+        {
+          "feature_index": 8,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 16,
+          "queries": 4
+        },
+        {
+          "feature_index": 9,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 5,
+          "queries": 1
+        },
+        {
+          "feature_index": 10,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 19,
+          "queries": 4
+        },
+        {
+          "feature_index": 11,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 44,
+          "queries": 4
+        },
+        {
+          "feature_index": 12,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 66,
+          "queries": 7
+        },
+        {
+          "feature_index": 13,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 16,
+          "queries": 2
+        },
+        {
+          "feature_index": 14,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 2,
+          "queries": 1
+        },
+        {
+          "feature_index": 15,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 69,
+          "queries": 7
+        },
+        {
+          "feature_index": 16,
+          "kind": "exact",
+          "numeric": true,
+          "distinct_nonmissing": 7,
+          "queries": 1
+        },
+        {
+          "feature_index": 17,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 300,
+          "queries": 7
+        },
+        {
+          "feature_index": 18,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 242,
+          "queries": 7
+        },
+        {
+          "feature_index": 19,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 315,
+          "queries": 7
+        },
+        {
+          "feature_index": 20,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 71,
+          "queries": 7
+        },
+        {
+          "feature_index": 21,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 168,
+          "queries": 7
+        },
+        {
+          "feature_index": 22,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 36,
+          "queries": 7
+        },
+        {
+          "feature_index": 23,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 314,
+          "queries": 7
+        },
+        {
+          "feature_index": 24,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 290,
+          "queries": 7
+        },
+        {
+          "feature_index": 25,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 43,
+          "queries": 3
+        },
+        {
+          "feature_index": 26,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 20,
+          "queries": 4
+        },
+        {
+          "feature_index": 27,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 27,
+          "queries": 4
+        },
+        {
+          "feature_index": 28,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 55,
+          "queries": 7
+        },
+        {
+          "feature_index": 29,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 50,
+          "queries": 7
+        },
+        {
+          "feature_index": 30,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 110,
+          "queries": 7
+        },
+        {
+          "feature_index": 31,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 138,
+          "queries": 7
+        },
+        {
+          "feature_index": 32,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 49,
+          "queries": 7
+        },
+        {
+          "feature_index": 33,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 33,
+          "queries": 7
+        },
+        {
+          "feature_index": 34,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 101,
+          "queries": 7
+        },
+        {
+          "feature_index": 35,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 145,
+          "queries": 5
+        },
+        {
+          "feature_index": 36,
+          "kind": "numeric-threshold",
+          "distinct_nonmissing": 73,
+          "queries": 7
+        }
+      ],
+      "arff_attribute_count": 38,
+      "feature_columns": [
+        "LOC_BLANK",
+        "BRANCH_COUNT",
+        "CALL_PAIRS",
+        "LOC_CODE_AND_COMMENT",
+        "LOC_COMMENTS",
+        "CONDITION_COUNT",
+        "CYCLOMATIC_COMPLEXITY",
+        "CYCLOMATIC_DENSITY",
+        "DECISION_COUNT",
+        "DECISION_DENSITY",
+        "DESIGN_COMPLEXITY",
+        "DESIGN_DENSITY",
+        "EDGE_COUNT",
+        "ESSENTIAL_COMPLEXITY",
+        "ESSENTIAL_DENSITY",
+        "LOC_EXECUTABLE",
+        "PARAMETER_COUNT",
+        "HALSTEAD_CONTENT",
+        "HALSTEAD_DIFFICULTY",
+        "HALSTEAD_EFFORT",
+        "HALSTEAD_ERROR_EST",
+        "HALSTEAD_LENGTH",
+        "HALSTEAD_LEVEL",
+        "HALSTEAD_PROG_TIME",
+        "HALSTEAD_VOLUME",
+        "MAINTENANCE_SEVERITY",
+        "MODIFIED_CONDITION_COUNT",
+        "MULTIPLE_CONDITION_COUNT",
+        "NODE_COUNT",
+        "NORMALIZED_CYLOMATIC_COMPLEXITY",
+        "NUM_OPERANDS",
+        "NUM_OPERATORS",
+        "NUM_UNIQUE_OPERANDS",
+        "NUM_UNIQUE_OPERATORS",
+        "NUMBER_OF_LINES",
+        "PERCENT_COMMENTS",
+        "LOC_TOTAL"
+      ],
+      "target_column": "c",
+      "ignored_columns": [],
+      "record_count": 1458,
+      "missing_feature_cells": 0,
+      "conditioned_cells": 1018,
+      "structural_candidates": 31335,
+      "selected_states": 12,
+      "task": "pc4",
+      "uci_id": 1049
+    }
+  ],
+  "protocol": {
+    "profile_seeds": [
+      6001,
+      6002,
+      6003
+    ],
+    "path_seeds": [
+      60101,
+      60102,
+      60103,
+      60104,
+      60105,
+      60106,
+      60107,
+      60108,
+      60109,
+      60110,
+      60111,
+      60112
+    ],
+    "maximum_depth": 3,
+    "maximum_query_choices": 6,
+    "maximum_cells_per_depth": 96,
+    "sample_sizes": [
+      24,
+      20,
+      16,
+      12
+    ],
+    "max_states_per_task": 12,
+    "partition_class_range": [
+      6,
+      16
+    ],
+    "raw_query_range": [
+      10,
+      64
+    ],
+    "minimum_redundancy": 4,
+    "budget": 500000,
+    "budget_ladder": [
+      10000,
+      50000,
+      250000,
+      500000
+    ],
+    "query_compiler": {
+      "maximum_sampled_records": 384,
+      "sampling": "rank original rows by SHA-256(dataset name, feature vector) with original row index as the duplicate-feature tie-break; labels excluded",
+      "missing_tokens": [
+        "",
+        "?",
+        "na",
+        "nan",
+        "none",
+        "null"
+      ],
+      "numeric_detection": "all nonmissing tokens parse as finite Decimal",
+      "low_cardinality_exact_cutoff": 8,
+      "quantile_denominator": 8,
+      "quantile_numerators": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "quantile_rank_rule": "ceil(k*n/8)-1 on sorted nonmissing sampled values",
+      "numeric_response_values": [
+        "missing",
+        "le",
+        "gt"
+      ],
+      "categorical_response": "preserve exact token",
+      "labels_or_costs_used": false,
+      "query_cap": null
+    },
+    "state_selector": "v0.60 conditioned-cell selector with the v0.71 feature-only oversized-cell sampler; labels excluded",
+    "lower_bound_solver": "byte-identical v0.65 planner",
+    "record_sampler": "v0.70 feature-only SHA-256 sampler; labels excluded",
+    "selector_certificate_parent": "5594d601356382e45875d26a82052f300d745fe7",
+    "openml_cross_source_adapter": {
+      "data": "raw ARFF byte length, MD5 and SHA-256 must match the v0.77 lock before parsing",
+      "parser": "liac-arff 2.5.0, dense ARFF only, UTF-8-sig strict decoding",
+      "target_column": "the single exact committed OpenML target attribute",
+      "ignored_columns": "only committed row_id_attribute and ignore_attribute names when present",
+      "feature_columns": "all ARFF attributes in declared order except target and committed ignored columns",
+      "values": "missing features become the empty token; other values are stripped string forms; labels must be nonempty",
+      "shape": "record count equals frozen num_instances and declared attribute count equals frozen num_features"
+    },
+    "v77_lock_digest": "03a64c8c5928070fb41b15d4892c2f720a909fc39c3a7f5b9597cd79f1879590",
+    "v77_manifest_sha256": "e9e500a6441720feff3455cfea183248b03b4fb991a5e4e8448840463c845284"
+  },
+  "evidence_digest": "1838c66a13446e804d3a2afb8fe799c4be16bbc52edd1542e5ee3dd863e4e24f",
+  "external_gate": false,
+  "fresh_dataset_minimum_states_passed": false,
+  "v77_lock_digest": "03a64c8c5928070fb41b15d4892c2f720a909fc39c3a7f5b9597cd79f1879590",
+  "v77_manifest_sha256": "e9e500a6441720feff3455cfea183248b03b4fb991a5e4e8448840463c845284",
+  "frozen_v75_commit": "d8aa4153b69b82ccb714cfbb50d12c5137186047",
+  "parent_v75_evidence_digest": "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47",
+  "selected_openml_dataset_ids": [
+    1068,
+    188,
+    40499,
+    1067,
+    1063,
+    469,
+    1049
+  ],
+  "selected_openml_task_ids": [
+    3918,
+    2079,
+    125922,
+    3917,
+    3913,
+    3560,
+    3902
+  ]
+}

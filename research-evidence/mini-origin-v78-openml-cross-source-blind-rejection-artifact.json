@@ -1,0 +1,14 @@
+{
+    "status":  "preserved_openml_cross_source_blind_rejection_v78",
+    "workflow_run":  30465914330,
+    "workflow_job":  90623465615,
+    "head_commit":  "1171b81240069e2880aec29dbaacae65b30ea26f",
+    "artifact_id":  8731894211,
+    "artifact_name":  "mini-origin-v78-openml-cross-source-blind",
+    "artifact_zip_sha256":  "4a6453e11d4b96a34288120b3cb4868e3579a501711dfa38b61ba7f8e16ea9e9",
+    "evidence_file_sha256":  "51122806102e40ae3fc894be6f77c0f73ec7daa09fcf8291e3da38190c0cdef0",
+    "evidence_digest":  "1838c66a13446e804d3a2afb8fe799c4be16bbc52edd1542e5ee3dd863e4e24f",
+    "scientific_result":  "rejected",
+    "rejection_reason":  "Only six of seven frozen OpenML datasets contributed selected states; analcatdata_dmft contributed zero states.",
+    "claim_boundary":  "Preserved blind rejection. Strong performance and exact cross-language agreement do not override the frozen coverage gate."
+}
