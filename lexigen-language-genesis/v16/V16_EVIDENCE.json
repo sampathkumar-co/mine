@@ -1,21 +1,152 @@
 {
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
   "base_v15_commit": "4a8d1bf303951b1c4de704eada76bb95ffc89b77",
-  "claim_boundary": "Verifier grammar and scene IR atoms remain human supplied; this is verifier co-synthesis, not autonomous primitive invention.",
-  "contracts_requiring_revision": 4,
-  "correct_outputs_checked": 900,
+  "claim_boundary": {
+    "autonomous_primitive_invention": false,
+    "reason": "Verifier contracts were co-synthesized automatically, but both the scene IR and verifier predicate grammar remain human supplied.",
+    "world_level_breakthrough": false
+  },
+  "contracts": {
+    "v16-contract-01.json": {
+      "contract_sha256": "b429e066b8da8f2aa12f3e3b57523570a4be5f3678fea5bbc590c375b1133c2e",
+      "predicates": [
+        {
+          "cost": 5,
+          "name": "changed_mask"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "revision": 1,
+      "sha256": "1a96fe32dcf0899ccc4a506e0bd0269da1af017341eda24c68e40b44ded0c7ea"
+    },
+    "v16-contract-02.json": {
+      "contract_sha256": "82bdc380c8744ae6f4ee5c0e0bd44e274f60603dc2f09719bc0599447c28473c",
+      "predicates": [
+        {
+          "cost": 4,
+          "name": "boundary"
+        },
+        {
+          "cost": 3,
+          "name": "histogram"
+        }
+      ],
+      "revision": 0,
+      "sha256": "c11b08a4c11255401cf401f9bde73f2235d87413561640c729b7d7dc6fa95e35"
+    },
+    "v16-contract-03.json": {
+      "contract_sha256": "41cd8d903d097607478c8c775953504d5a7648fec0e248dd6798be98ffaba0e5",
+      "predicates": [
+        {
+          "cost": 5,
+          "name": "changed_mask"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "revision": 1,
+      "sha256": "2b11ff74dbabab43bb09b91b8aebb959dc8c1009bbbda3e7b630eac7bd886436"
+    },
+    "v16-contract-04.json": {
+      "contract_sha256": "9e88329f0148351e0ec1a6bcbafda2518eee4ea208cbf32189d5d29e8aaf1642",
+      "predicates": [
+        {
+          "cost": 8,
+          "name": "column_digests"
+        }
+      ],
+      "revision": 1,
+      "sha256": "558e70309bb8e7c803f71de3db24e626359a19d41dfddb24ef774cbc7f2e5111"
+    },
+    "v16-contract-05.json": {
+      "contract_sha256": "1b43db920532e457257983dd3097800016424805a4c9966c2ca6603c1b24757a",
+      "predicates": [
+        {
+          "cost": 8,
+          "name": "column_digests"
+        }
+      ],
+      "revision": 2,
+      "sha256": "a8259760bf960e01f9b6c5c1d120f12357e87e7fd7f3398d5558656139774a91"
+    },
+    "v16-contract-06.json": {
+      "contract_sha256": "ef613356233b7af12b1b3f125857c34c78c24a0042ea702bdb548511fe98d8d1",
+      "predicates": [
+        {
+          "cost": 3,
+          "name": "histogram"
+        }
+      ],
+      "revision": 0,
+      "sha256": "6bac5d7e510c1718653870b951f5f99d4ace1d0e02c7e60035f35095e3e1ef69"
+    },
+    "v16-contract-08.json": {
+      "contract_sha256": "dc10f7ec84aba8f8b5657bd09bc8f38ff51443b58f2f4a68e0047d489c717784",
+      "predicates": [
+        {
+          "cost": 3,
+          "name": "histogram"
+        }
+      ],
+      "revision": 0,
+      "sha256": "55e84edd5eec3f0def6de0d6fa8d329f34ffae7fe1757c765e6455d402a5b0d0"
+    },
+    "v16-contract-09.json": {
+      "contract_sha256": "f17fadc7ed025fc475bd5b096a1daa3962f981d816ca678f2d6bffbe58ddaed3",
+      "predicates": [
+        {
+          "cost": 5,
+          "name": "changed_mask"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "revision": 1,
+      "sha256": "95d63aed562e714835efe5cc1dd9e3fc927d031808f2a4b30070955e8f0774d2"
+    },
+    "v16-contract-12.json": {
+      "contract_sha256": "08438ccb04b5c89b88112083e487917f3f9ea6a3dc2a44fbd909fa22c1aa4b06",
+      "predicates": [
+        {
+          "cost": 5,
+          "name": "changed_mask"
+        },
+        {
+          "cost": 2,
+          "name": "palette"
+        }
+      ],
+      "revision": 2,
+      "sha256": "6b3a407bd1af520a4cad0966ae011c5683292a6b0785dcd4c2b8a355ee9dc965"
+    }
+  },
+  "contracts_requiring_revision": 6,
+  "correct_outputs_checked": 9000,
   "families": 9,
   "files": {
-    "V16_REPORT.json": "06b4f5c24d66dab6bc2f9ffd07e2e07c091d5f0466fc180298a9c912ba83b771",
+    "V16_REPORT.json": "923615dbf20c176e39f9f587575ea72c0974258dc258c3ca784eb4be19086872",
     "cosynthesize_verifier_v16.py": "8e7fe7da54f648572e453eb96ba21d8d757e07ab6732018cbe8805eaf7b4c49d",
     "mutations_v16.py": "54a8dc5cf6730ae2f429a0f5bfe1daba474774f5d14a8f60aa537da509bb1cfa",
     "portable_verifier_v16.py": "3f23e8f595f6037b6034a5a0abc9a05e6c57e91d3f506f9586244ba5d30fb707",
+    "test_v16.py": "c2b7cef1743ada2774a772f9fe4bea4a91f059845a6454200e1e1fd93da773ac",
     "validate_v16.py": "50cd09454b0e189258325c889b0862168478e0c1a558fc6ca4a9cd6b012aa31a",
     "verifier_grammar_v16.py": "79494bc2696214bf6738fc4377b68d7e8a87ec4d56b31fc504e831885a1e59a4"
   },
-  "mandatory_soundness_anchor": "exact_digest",
-  "mutant_outputs_checked": 6969,
+  "mutant_outputs_checked": 69841,
+  "portable_screening_failures": 0,
+  "portable_soundness_failures": 0,
+  "primary_screening_failures": 0,
+  "primary_soundness_failures": 0,
   "schema": "lexigen-v16-frozen-evidence-v1",
-  "screening_contracts_using_exact_digest": 0,
-  "version": 16,
-  "world_level_breakthrough": false
+  "screening_exact_digest_contracts": 0,
+  "target_used_by_verifier": false,
+  "v13_visible_evidence_commit": "13cd271a2d4813001563842a51a1e72dd100aa1a",
+  "version": 16
 }

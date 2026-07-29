@@ -1,11 +1,15 @@
 # v16 frozen evidence
 
-- Families: **9**
-- Correct outputs verified in both runtimes: **900**
-- Mutant outputs rejected by learned screening and mandatory soundness anchor: **6,969**
-- Contracts requiring CEGIS revision: **4**
-- Learned screening contracts using exact digest: **0**
+- Programs/contracts: **9**
+- Correct fresh outputs checked: **9,000**
+- Mutant outputs checked: **69,841**
+- Screening and soundness failures: **0**
+- Contracts revised by counterexamples: **6**
+- Screening contracts using exact digest: **0**
+- Hidden target used by verifier: **no**
 
-The exact digest is a mandatory final soundness anchor, not a learned screening predicate. v16 is not autonomous primitive invention and not a world-level breakthrough.
+## Claim boundary
 
-Evidence JSON SHA-256: `ddb1af4114d231856773969945d7da9abcbe82354a02e92f334ff5d567087651`
+This is verifier co-synthesis over human-authored scene and verifier atoms. It is not autonomous primitive invention and not a world-level breakthrough.
+
+Evidence JSON SHA-256: `27e3741369d597f90daffce8df0647b91cb3641f0d5d5d101a85ccbebcd571ee`

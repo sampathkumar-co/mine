@@ -1,22 +1,26 @@
 {
-  "contract_sha256": "27c8d5812a14807f3ad9218ad5dd07e741f578343c8e16f7c26871d16c4cafe9",
+  "contract_sha256": "b429e066b8da8f2aa12f3e3b57523570a4be5f3678fea5bbc590c375b1133c2e",
   "exact_digest_used": false,
   "grammar_sha256": "d4bea2fb44a449759581c3cf5dbfa6661b333e9525aa24b9a98b52a328443093",
   "mutation_manifest_sha256": "280e2fcd95bbccdecf00986d9447ddc99b1190d5fb381d86132025f4da6b8987",
-  "predicate_cost": 6,
+  "predicate_cost": 7,
   "predicates": [
     {
-      "cost": 6,
-      "name": "checksum_1"
+      "cost": 5,
+      "name": "changed_mask"
+    },
+    {
+      "cost": 2,
+      "name": "palette"
     }
   ],
   "program_sha256": "f262dccc29c29855c5b2f8b028cb8ab2b42a247f9ea985821967a09fc6f40d71",
-  "revision": 0,
+  "revision": 1,
   "schema": "lexigen-v16-verifier-contract-v1",
-  "shape_only_survivors": 66,
+  "shape_only_survivors": 67,
   "soundness_anchor": {
     "mandatory": true,
     "name": "exact_digest"
   },
-  "training_mutation_cases": 84
+  "training_mutation_cases": 85
 }

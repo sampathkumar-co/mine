@@ -1,5 +1,5 @@
 {
-  "contract_sha256": "594098ab2a107a1d55dcb4fd1973f37e26d14b4d4ce6353eda0ecbcd9c05b964",
+  "contract_sha256": "08438ccb04b5c89b88112083e487917f3f9ea6a3dc2a44fbd909fa22c1aa4b06",
   "exact_digest_used": false,
   "grammar_sha256": "d4bea2fb44a449759581c3cf5dbfa6661b333e9525aa24b9a98b52a328443093",
   "mutation_manifest_sha256": "3058925563257e18dcf39810e381b3c7f67046569eef1ac0eae2cc0e29398566",
@@ -17,10 +17,10 @@
   "program_sha256": "73575088376e9a3b7c140461b1b664fbfb4241c805920cb59ac6b79854756cff",
   "revision": 2,
   "schema": "lexigen-v16-verifier-contract-v1",
-  "shape_only_survivors": 72,
+  "shape_only_survivors": 311,
   "soundness_anchor": {
     "mandatory": true,
     "name": "exact_digest"
   },
-  "training_mutation_cases": 90
+  "training_mutation_cases": 329
 }
