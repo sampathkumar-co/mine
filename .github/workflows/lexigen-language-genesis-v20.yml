@@ -1,0 +1,75 @@
+name: Lexigen Language Genesis v20
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v20/**"
+      - "lexigen-language-genesis/v19r4/**"
+      - "lexigen-language-genesis/v19r2/**"
+      - ".github/workflows/lexigen-language-genesis-v20.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v20-negative-transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out v20
+        uses: actions/checkout@v4
+
+      - name: Check out frozen v13 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile frozen transfer code
+        run: |
+          python -m py_compile lexigen-language-genesis/v19r2/*.py
+          python -m py_compile lexigen-language-genesis/v19r4/*.py
+          python -m py_compile lexigen-language-genesis/v20/*.py
+
+      - name: Reproduce original fixed-pool scan
+        run: |
+          python lexigen-language-genesis/v20/scan_transfer_v20.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --output lexigen-language-genesis/v20/V20_TRANSFER_SCAN.json
+
+      - name: Verify package hashes and byte-equivalent rejection
+        run: |
+          python lexigen-language-genesis/v20/verify_v20_rejection.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --output lexigen-language-genesis/v20/V20_REPRODUCTION.json
+
+      - name: Reproduce final integrity evidence twice
+        run: |
+          python lexigen-language-genesis/v20/freeze_v20_integrity.py
+          first=$(sha256sum lexigen-language-genesis/v20/V20_FINAL_EVIDENCE.json | cut -d' ' -f1)
+          python lexigen-language-genesis/v20/freeze_v20_integrity.py
+          second=$(sha256sum lexigen-language-genesis/v20/V20_FINAL_EVIDENCE.json | cut -d' ' -f1)
+          test "$first" = "$second"
+          test "$first" = "375bb84d43b39f2ae0d5b3d7462410f28ca5d36b8d630c181c1d42b413dd9441"
+
+      - name: Require byte-identical v20 evidence
+        run: |
+          git diff --exit-code -- lexigen-language-genesis/v20
+          find lexigen-language-genesis/v20 -type d -name __pycache__ -prune -exec rm -rf {} +
+          test -z "$(git status --porcelain --untracked-files=all -- lexigen-language-genesis/v20)"
+
+      - name: Upload v20 negative evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v20-negative-transfer-evidence
+          path: lexigen-language-genesis/v20
+          if-no-files-found: error
+          retention-days: 90
