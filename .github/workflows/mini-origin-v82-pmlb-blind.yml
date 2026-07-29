@@ -1,3 +1,5 @@
+# Activation-only revision: changing this workflow file triggers the frozen v0.82 campaign.
+# No dataset, parser, selector, solver, seed, budget, or threshold is changed here.
 name: Mini-ORIGIN PMLB Blind v0.82
 
 on:
