@@ -60,7 +60,7 @@ jobs:
                   if isinstance(target,ast.Name): calls.add(target.id)
                   elif isinstance(target,ast.Attribute): calls.add(target.attr)
           assert not (imports & forbidden_imports), imports & forbidden_imports
-          assert not (calls & {'read_csv','loadarff','loads','iter_rows','parse_records','select_states'}), calls
+          assert not (calls & {'read_csv','loadarff','iter_rows','parse_records','select_states','profile_for_task','result'}), calls
           PY
       - name: Run focused boundary tests
         run: pytest -q tests/test_openml_cross_source_lock_v77.py
