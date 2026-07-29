@@ -47,18 +47,27 @@
     "810b9b61"
   ],
   "enumeration": {
+    "candidate_order": "depth, output type order, total node count, canonical serialization",
     "deduplication": "retain lowest node count then canonical serialization for each semantic signature",
     "enumeration_order": "depth, type, node count, canonical serialization",
     "maximum_depth": 4,
+    "maximum_raw_candidate_evaluations_per_task": 5000000,
     "maximum_total_unique_expressions_per_task": 250000,
     "maximum_unique_expressions_per_type_per_depth": 50000,
     "semantic_signature": "type plus canonical values across all six demonstrations",
-    "stop_rule": "stop only after all depth <= 4 expressions or deterministic expression budget exhaustion"
+    "stop_rule": "stop only after all depth <= 4 expressions or deterministic expression budget exhaustion",
+    "type_order": [
+      "Color",
+      "Grid",
+      "ObjectSet",
+      "PointSet"
+    ]
   },
   "examples_per_task": 6,
   "generator_attempts_per_task": 16,
   "human_survivor_selection_allowed": false,
   "identity_selection_source": "frozen v19r5 eligible registry; all v21-v24 identities excluded before ranking",
+  "nontriviality_rule": "A task counts only if at least one demonstration output differs from its input and the exact Grid expression is not semantically identical to input_grid across all demonstrations.",
   "per_generation_timeout_seconds": 5,
   "replacement_tasks_allowed": false,
   "schema": "lexigen-v25-typed-semantic-enumeration-precommit-v1",
