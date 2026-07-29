@@ -1,0 +1,40 @@
+{
+  "architectural_verdict": "The v19r4 finite-meta-grammar production is not reusable across the fixed transfer pool. Repeating task selection to seek a favourable gate would weaken the protocol; the next work must redesign the invention architecture rather than rename or resample v20.",
+  "argument_pairs_checked": 274,
+  "base_v19r4_commit": "cedab59bd85594ba265e11a7ea957bae1a142f32",
+  "files": {
+    "EVIDENCE.md": "c1ce1610bd0d8a145c3c97e66e43f3331b980cbbffb2f3233966fc9f087089ee",
+    "V20_EVIDENCE.json": "945d86c6199e3bce41fc9ec581668d0a34b39f0cd905d71f86bc64f2deb13fdc",
+    "V20_INTEGRITY_AUDIT.json": "3191dc50fd46d210816aab0ae4032f05da3efc3fa654d7919a9397690d32c426",
+    "V20_PRECOMMIT.json": "42f7ee4a6f9765d4a0d339235419d06b4e9d8ce16e2800ff907156caa96a49b0",
+    "V20_REPRODUCTION.json": "1a70bcca8411bb9b42f31ac1dadeee54d0a1b6a4b465f79b61dd04860913e8a3",
+    "V20_TRANSFER_SCAN.json": "1dfbfc8d2e0b9278812cb141775e3073f5de1140996d5defee099ab6f5438792",
+    "freeze_v20_integrity.py": "6813e2cd366401582cb65f4e9ed5427eb95a59105980c53d2c761543c56bedd5",
+    "scan_transfer_v20.py": "22323fd4485231dc51bebd35806cd6a91ae4dc7bb98efbe60db2b65aa99a8771",
+    "verify_v20_rejection.py": "c57ff6e506bd5495248ee1fa331a83b34321d186b956788d41805306ef21da93"
+  },
+  "fixed_gates": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "gates_checked": 10,
+  "hidden_outputs_opened": false,
+  "negative_result_commit": "6b24fd0f74c02448eefb22456d3b8fc5c7549f24",
+  "package_hashes_verified": 10,
+  "precommit_commit": "17b96af07f726c202cede3a54fba70ecd6da3cbc",
+  "production_sha256": "751e258d9dbdcdf2641503bacdc32f927fb2872fddaadbbbe348d668f5f25523",
+  "runtime_invalid_pairs": 254,
+  "schema": "lexigen-v20-final-integrity-evidence-v1",
+  "total_exact_survivors": 0,
+  "transfer_demonstrated": false,
+  "v20_pass": false,
+  "world_level_breakthrough": false
+}
