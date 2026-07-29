@@ -70,9 +70,14 @@ def compact_state(task: object, allowed: int, remaining: int, seed: int):
     return row
 
 
-def configure_parent() -> None:
+def install_label_free_components() -> None:
+    """Install both certified label-free sampling repairs for every entry point."""
     selector.configure_selector()
     core.external.deterministic_sample = repaired.label_free_sample
+
+
+def configure_parent() -> None:
+    install_label_free_components()
     core.compiler_protocol = compiler_protocol
     core.protocol = protocol
     core.compact_state = compact_state
@@ -80,6 +85,10 @@ def configure_parent() -> None:
 
 
 def configure_module() -> None:
+    # Direct library users and tests may call conditioned.select_states after only
+    # configuring this wrapper. Install the selector here as well as in the
+    # inherited run-reference path so both entry points have identical semantics.
+    install_label_free_components()
     core.PREREGISTRATION = PREREGISTRATION
     core.compiler_protocol = compiler_protocol
     core.configure_parent = configure_parent
