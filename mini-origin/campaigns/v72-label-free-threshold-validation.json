@@ -1,0 +1,36 @@
+{
+  "status": "v72_label_free_threshold_validation_frozen",
+  "parent_v71_evidence_digest": "58382c7aa2bcd7c28fec54642fcf76cc88e5059e0eb62e942d6cccf33d6ddfe2",
+  "parent_v68_evidence_digest": "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b",
+  "protocol": {
+    "data_scope": "already-opened v0.68 archives only",
+    "record_sampling": "feature-only SHA-256 rank; labels excluded",
+    "oversized_cell_sampling": "SHA-256(task name, salt, row index, compiled response row); labels excluded",
+    "query_compiler": "frozen v0.70 numeric threshold compiler",
+    "selector": "v0.60 conditioned-cell selector with only feature-only sample_allowed replacement",
+    "solvers": ["plain exact", "current Pareto", "lower-bound Pareto", "independent Rust lower-bound"],
+    "expansion_budget": 500000,
+    "profile_seeds": [6001, 6002, 6003]
+  },
+  "locked_gate": {
+    "contributing_datasets": 7,
+    "minimum_states_each_for_sonar_hill_valley_libras": 6,
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_shared_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0
+  },
+  "claim_boundary": "Opened-data methodological and performance validation only. A pass freezes a label-free compiler-selector pair for a future repository-audited external campaign. It is not fresh external evidence, outside-human reproduction, publication novelty, peer review, acceptance, or a world-level claim."
+}
