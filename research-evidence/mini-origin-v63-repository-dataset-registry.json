@@ -1,0 +1,30 @@
+{
+  "status": "repository_dataset_registry_complete",
+  "workflow_run": 30418519425,
+  "workflow_artifact_digest": "sha256:18547d3b9ce11b2f5aa57e8b6c793ed94fb3b609ef47def0f5616689e86944cc",
+  "registry_digest": "870daa9b28450c1717a266ca73b7717ba24abba11b7f4c537e28e77ab1c0cc0d",
+  "ref_count": 164,
+  "files_scanned": 10643,
+  "bytes_scanned": 71464276,
+  "uci_id_count": 41,
+  "pystreed_token_count": 12,
+  "known_contamination_checks": {
+    "uci_3_annealing": true,
+    "uci_83_primary_tumor": true,
+    "uci_90_soybean_large": true,
+    "pystreed_annealing": true
+  },
+  "failure_count": 0,
+  "excluded_uci_ids": [3, 8, 12, 14, 19, 22, 33, 44, 46, 62, 63, 67, 69, 70, 73, 76, 80, 83, 90, 95, 96, 100, 101, 105, 111, 146, 171, 373, 468, 475, 519, 544, 545, 571, 602, 697, 759, 850, 863, 864, 891],
+  "excluded_pystreed_tokens": ["annealing", "australian-credit.csv", "breast", "diabetes", "flare", "heart", "hepatitis", "iris", "mushroom", "nursery", "tictactoe", "wine"],
+  "candidate_absence_checks": {
+    "uci_26_connect_4": true,
+    "uci_50_image_segmentation": true,
+    "uci_59_letter_recognition": true,
+    "uci_72_multiple_features": true,
+    "uci_81_pen_digits": true,
+    "uci_107_waveform_v1": true,
+    "uci_149_vehicle_silhouettes": true
+  },
+  "note": "The full occurrence-level registry is preserved in workflow artifact 8711023363. The compact committed evidence freezes the exclusion IDs and candidate absence checks used before the next archive lock."
+}
