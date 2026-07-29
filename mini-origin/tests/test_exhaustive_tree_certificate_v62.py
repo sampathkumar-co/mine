@@ -3,6 +3,8 @@ from mini_origin.exhaustive_tree_certificate_v62 import (
     all_partitions,
     enumerate_frontier,
     retained_queries,
+)
+from mini_origin.exhaustive_tree_certificate_gate_v62 import (
     scalar_collapse_counterexample,
 )
 
