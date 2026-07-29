@@ -1,0 +1,21 @@
+{
+  "base_v15_commit": "4a8d1bf303951b1c4de704eada76bb95ffc89b77",
+  "claim_boundary": "Verifier grammar and scene IR atoms remain human supplied; this is verifier co-synthesis, not autonomous primitive invention.",
+  "contracts_requiring_revision": 4,
+  "correct_outputs_checked": 900,
+  "families": 9,
+  "files": {
+    "V16_REPORT.json": "06b4f5c24d66dab6bc2f9ffd07e2e07c091d5f0466fc180298a9c912ba83b771",
+    "cosynthesize_verifier_v16.py": "8e7fe7da54f648572e453eb96ba21d8d757e07ab6732018cbe8805eaf7b4c49d",
+    "mutations_v16.py": "54a8dc5cf6730ae2f429a0f5bfe1daba474774f5d14a8f60aa537da509bb1cfa",
+    "portable_verifier_v16.py": "3f23e8f595f6037b6034a5a0abc9a05e6c57e91d3f506f9586244ba5d30fb707",
+    "validate_v16.py": "50cd09454b0e189258325c889b0862168478e0c1a558fc6ca4a9cd6b012aa31a",
+    "verifier_grammar_v16.py": "79494bc2696214bf6738fc4377b68d7e8a87ec4d56b31fc504e831885a1e59a4"
+  },
+  "mandatory_soundness_anchor": "exact_digest",
+  "mutant_outputs_checked": 6969,
+  "schema": "lexigen-v16-frozen-evidence-v1",
+  "screening_contracts_using_exact_digest": 0,
+  "version": 16,
+  "world_level_breakthrough": false
+}

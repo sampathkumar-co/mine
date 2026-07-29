@@ -1,0 +1,26 @@
+{
+  "contract_sha256": "c77fc36f42ec4ba817b3a06dbeef17ef4ad39576c2523a692094b2556845e778",
+  "exact_digest_used": false,
+  "grammar_sha256": "d4bea2fb44a449759581c3cf5dbfa6661b333e9525aa24b9a98b52a328443093",
+  "mutation_manifest_sha256": "3840bded77651c98026bf75a8c11d93b71712660fdb9b08931ab3c5e0fc3368a",
+  "predicate_cost": 6,
+  "predicates": [
+    {
+      "cost": 4,
+      "name": "boundary"
+    },
+    {
+      "cost": 2,
+      "name": "palette"
+    }
+  ],
+  "program_sha256": "14ab9409863725dd89522f5c0433a1ce87cf7ca8af15671b11e9bc79609de76f",
+  "revision": 0,
+  "schema": "lexigen-v16-verifier-contract-v1",
+  "shape_only_survivors": 54,
+  "soundness_anchor": {
+    "mandatory": true,
+    "name": "exact_digest"
+  },
+  "training_mutation_cases": 72
+}
