@@ -1,0 +1,132 @@
+{
+  "status": "novelty_boundary_audit_in_progress",
+  "audit_date": "2026-07-29",
+  "scope": "Primary literature and preserved pinned solver-source evidence relevant to exact adaptive identification trees, response-dependent testing cost, experiment informativeness, and descendant-local pruning.",
+  "primary_sources": [
+    {
+      "key": "blackwell-1953",
+      "title": "Equivalent Comparisons of Experiments",
+      "authors": ["David Blackwell"],
+      "venue": "The Annals of Mathematical Statistics 24(2):265-272",
+      "doi": "10.1214/aoms/1177729032",
+      "relevance": "Classical comparison of statistical experiments by informativeness. For deterministic experiments, a strict partition refinement is a special case of one experiment being obtainable only by garbling/coarsening another. This special-case connection is a mathematical inference and is not presented as a verbatim theorem statement from the paper."
+    },
+    {
+      "key": "garey-1972",
+      "title": "Optimal Binary Identification Procedures",
+      "authors": ["M. R. Garey"],
+      "venue": "SIAM Journal on Applied Mathematics 23(2):173-186",
+      "doi": "10.1137/0123019",
+      "relevance": "Establishes the classical finite-hypothesis identification-tree model with object priors, fixed test costs, and dynamic programming for optimal expected testing cost."
+    },
+    {
+      "key": "cicalese-laber-saettler-2014",
+      "title": "Diagnosis determination: decision trees optimizing simultaneously worst and expected testing cost",
+      "authors": ["Ferdinando Cicalese", "Eduardo Laber", "Aline Medeiros Saettler"],
+      "venue": "ICML 2014, PMLR 32(1):414-422",
+      "url": "https://proceedings.mlr.press/v32/cicalese14.html",
+      "relevance": "Shows that simultaneous expected- and worst-cost diagnosis decision trees are an established objective family."
+    },
+    {
+      "key": "saettler-laber-cicalese-2014",
+      "title": "Trading off Worst and Expected Cost in Decision Tree Problems and a Value Dependent Model",
+      "authors": ["Aline Saettler", "Eduardo Laber", "Ferdinando Cicalese"],
+      "identifier": "arXiv:1406.3655",
+      "relevance": "Explicitly studies a model where the cost of reading a variable depends on its observed value. Therefore response/value-dependent testing cost is not a Mini-ORIGIN novelty claim."
+    },
+    {
+      "key": "jia-navidi-nagarajan-ravi-2024",
+      "title": "Optimal Decision Tree and Adaptive Submodular Ranking with Noisy Outcomes",
+      "authors": ["Su Jia", "Fatemeh Navidi", "Viswanath Nagarajan", "R. Ravi"],
+      "venue": "Journal of Machine Learning Research 25(382):1-42",
+      "url": "https://jmlr.org/papers/v25/23-1484.html",
+      "relevance": "Recent primary reference for the broader ODT literature and noisy/persistent-outcome extensions."
+    },
+    {
+      "key": "deb-stewart-2018",
+      "title": "Optimal adaptive testing: Informativeness and incentives",
+      "authors": ["Rahul Deb", "Colin Stewart"],
+      "venue": "Theoretical Economics 13(3):1233-1274",
+      "doi": "10.3982/TE2914",
+      "relevance": "Applies statistical informativeness ordering to adaptive test choice in a strategic model. It is not the same optimization problem, but reinforces that choosing a more informative test is established theory rather than a broad novelty claim."
+    }
+  ],
+  "previous_pinned_source_audit": {
+    "preserved_evidence_file": "research-evidence/mini-origin-v46-prior-art-reviewed.json",
+    "workflow_run": 30383609697,
+    "workflow_artifact_id": 8698032296,
+    "workflow_artifact_digest": "sha256:7e25b792a7e0f2bbc18429f0ed7a9fc1fe196868b65b7fec963b093944d5b56e",
+    "original_evidence_commit": "134e27a21d913e32b11e4f12d38e1379956fe6d2",
+    "accessible_snapshots": [
+      {
+        "solver": "PySTreeD",
+        "repository": "AlgTUDelft/pystreed",
+        "commit": "9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+        "commit_url": "https://github.com/AlgTUDelft/pystreed/commit/9ad41626a1f26c4b7481e8360c5c8b1871e10d96",
+        "files_scanned": 126,
+        "lines_scanned": 18771
+      },
+      {
+        "solver": "DL8.5",
+        "repository": "aia-uclouvain/pydl8.5",
+        "commit": "a7f0fee72b4c17bbcb727050ba102db7dda10119",
+        "commit_url": "https://github.com/aia-uclouvain/pydl8.5/commit/a7f0fee72b4c17bbcb727050ba102db7dda10119",
+        "files_scanned": 77,
+        "lines_scanned": 9445
+      },
+      {
+        "solver": "OSDT",
+        "repository": "xiyanghu/OSDT",
+        "commit": "d28ff434d5a90a1e49ffcbcab170c9ce457a605f",
+        "commit_url": "https://github.com/xiyanghu/OSDT/commit/d28ff434d5a90a1e49ffcbcab170c9ce457a605f",
+        "files_scanned": 3,
+        "lines_scanned": 1442
+      },
+      {
+        "solver": "GOSDT",
+        "repository": "Jimmy-Lin/GeneralizedOptimalSparseDecisionTrees",
+        "commit": "b9116d0557613dc42ff1fcefcf0bc0be91db1620",
+        "commit_url": "https://github.com/Jimmy-Lin/GeneralizedOptimalSparseDecisionTrees/commit/b9116d0557613dc42ff1fcefcf0bc0be91db1620",
+        "files_scanned": 44,
+        "lines_scanned": 6998
+      }
+    ],
+    "closest_found": "PySTreeD one-time global duplicate-feature preprocessing",
+    "not_found_in_accessible_snapshots": "Recomputation of exact response-partition equivalence classes at every descendant state",
+    "unresolved_source_gap": "MurTree commit 86e439ef537e40cb93afa641aafe2078 could not be obtained reproducibly through the available Bitbucket transport. Its paper is reviewed, but its pinned implementation remains unaudited."
+  },
+  "claim_classification": {
+    "established_not_novel": [
+      "finite-hypothesis optimal identification trees",
+      "arbitrary priors and fixed test costs",
+      "joint expected- and worst-cost objectives",
+      "value/response-dependent testing costs as a problem model",
+      "statistical experiment informativeness",
+      "strict deterministic partition refinement as a special case of greater informativeness",
+      "the general idea that a more informative no-more-expensive experiment may dominate a coarser one"
+    ],
+    "candidate_contribution_requiring_further_review": [
+      "exact descendant-local recomputation of response-partition equivalence classes inside identification-tree dynamic programming",
+      "retaining the componentwise Pareto frontier of response-cost vectors inside each local equivalence class",
+      "combining that quotient with exact full-diagnosis lower bounds while preserving deterministic lexicographic optimum",
+      "the observed exact-search frontier expansion with independent compiled operation-count reproduction"
+    ],
+    "explicitly_not_claimed": [
+      "universal novelty",
+      "world-first status",
+      "novelty of Blackwell informativeness",
+      "novelty of value-dependent test costs",
+      "novelty of strict partition-refinement dominance in isolation",
+      "outside-human independent reproduction",
+      "peer-reviewed acceptance"
+    ]
+  },
+  "required_before_publication_novelty_claim": [
+    "resolve or explicitly retain the MurTree implementation gap",
+    "search backward and forward citations of Garey 1972, Cicalese et al. 2014, Saettler et al. 2014, and recent ODT surveys",
+    "audit terminology including redundant tests, indistinguishable queries, experiment garbling, Blackwell dominance, partition lattice, sufficient experiments, test subsumption, and state-dependent dominance",
+    "obtain review from an outside researcher familiar with optimal decision trees or sequential experimental design",
+    "state the contribution narrowly even if no equivalent implementation is found"
+  ],
+  "claim_boundary": "This audit narrows claims; it does not prove novelty by absence and is not a scientific performance experiment."
+}
