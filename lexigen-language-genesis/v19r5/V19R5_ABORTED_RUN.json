@@ -1,0 +1,53 @@
+{
+  "blocking_discovery_index": 573,
+  "blocking_seed_rule": "uint32(first_16_hex(sha256(lexigen-v19r5-case-v1:discovery:e74e1818:0)))",
+  "blocking_task_id": "e74e1818",
+  "claim_boundary": {
+    "discovery_completed": false,
+    "library_frozen": false,
+    "transfer_demonstrated": false,
+    "validation_started": false,
+    "world_level_breakthrough": false
+  },
+  "diagnostic_last_completed_index": 572,
+  "factorized_reproducer_last_completed_checkpoint": 550,
+  "files": {
+    "V19R5_PRECOMMIT.json": "b576a023578dd114e223e3e073bcb3d4d46a3b0238a2faa65ad372783e8f88bc",
+    "V19R5_REGISTRY.json": "8add280b9731a5736268a18a7abe2c3153e2d6055b5dffd69096010e3cea5560",
+    "reproduce_discovery_v19r5.py": "09e815b72e18ac181ac4bd8a8b3cea2f513824f824fda27a36311dfec2c70d4b",
+    "scan_discovery_v19r5.py": "36f7cc089566e60e61b2dc8431f5108eeab8d606f44730e685d60696002ba51b"
+  },
+  "frozen_discovery_tasks": 631,
+  "observed_exact_complete_programs_through_checkpoint": 0,
+  "observed_structures_through_checkpoint": 0,
+  "original_last_completed_checkpoint": 550,
+  "output_files_created": false,
+  "precommit_commit": "248f84ac882fd8b882497ddc766fd316f0df2016",
+  "process_observations": [
+    {
+      "cpu_seconds_at_audit": 10016.4,
+      "elapsed_minutes_at_audit": 167.5,
+      "pid": 20716,
+      "role": "original_bruteforce"
+    },
+    {
+      "cpu_seconds_at_audit": 1298.3,
+      "elapsed_minutes_at_audit": 21.7,
+      "pid": 26696,
+      "role": "factorized_reproducer"
+    },
+    {
+      "cpu_seconds_at_audit": 163.4,
+      "elapsed_minutes_at_audit": 2.7,
+      "pid": 24224,
+      "role": "isolated_task_diagnostic"
+    }
+  ],
+  "reason": "The task generator entered an unbounded internal while-loop under the frozen seed; three independent processes reached the same boundary and continued consuming a full CPU core without returning.",
+  "scanner_commit": "4f523bd68843b48edfa107bcc4b18d059d568b70",
+  "schema": "lexigen-v19r5-aborted-discovery-run-v1",
+  "status": "aborted_generator_nontermination",
+  "validation_generators_imported": 0,
+  "validation_outputs_opened": false,
+  "validation_tasks": 244
+}
