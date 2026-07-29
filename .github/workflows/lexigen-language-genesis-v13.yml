@@ -44,16 +44,16 @@ jobs:
           python -m py_compile \
             latent_runtime_v13.py \
             latent_runtime_v13_ext.py \
+            latent_runtime_v13_ext2.py \
             latent_synthesizer_v13.py \
             latent_synthesizer_v13_ext.py \
-            replay_v13_multifamily_ext.py
+            latent_synthesizer_v13_ext2.py \
+            replay_v13_multifamily_ext2.py
 
       - name: Run fourteen-family development gate
         working-directory: current/lexigen-language-genesis/v13
         run: |
-          python replay_v13_multifamily_ext.py \
+          python replay_v13_multifamily_ext2.py \
             --evidence-root ../../../campaign/lexigen-language-genesis/external/evidence/v12-campaign \
             --arcgen-root ../../../arcgen \
             --holdout-count 100
-
-# Trigger refined gate after retargeting the draft PR to the frozen v12 base.
