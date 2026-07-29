@@ -1,0 +1,28 @@
+{
+  "schema": "lexigen-v22-relational-sketch-precommit-v1",
+  "base_commit": "93a24ee39b1faf2e3ae4d202c07e749d0508e3c5",
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "development_source": "the 24 already-opened v21 discovery tasks only",
+  "semantic_substrate": {
+    "primitive_types": ["grid", "colour", "point", "point_set", "component", "component_set", "integer", "relation"],
+    "allowed_families": ["extract", "filter", "group", "relate", "reduce", "affine_coordinate", "render"],
+    "forbidden": ["v14_named_scene_operator", "v19_side_action", "task_id_branch", "generator_source_import", "hidden_output_access"]
+  },
+  "search": {
+    "maximum_ast_nodes": 18,
+    "candidate_budget_per_task": 1000000,
+    "equal_budget_baseline": "same enumerator without invented reusable productions",
+    "human_survivor_selection": false
+  },
+  "completion_gate": {
+    "minimum_distinct_task_families_solved": 3,
+    "fresh_accepted_cases_per_family": 10000,
+    "independent_runtime_required": true,
+    "verifier_cosynthesis_required": true,
+    "mutants_per_family": 8000,
+    "invented_production_ablation_must_remove_all_exact_solutions": true,
+    "maximum_runtime_disagreements": 0
+  },
+  "external_boundary": "No v19r5 validation identity may be generated or inspected in v22.",
+  "claim_boundary": "Development mechanism evidence only. A pass is not sealed external success or a world-level breakthrough."
+}

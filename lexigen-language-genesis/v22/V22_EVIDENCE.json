@@ -1,0 +1,23 @@
+{
+  "ablation_result": "Removing each human-authored matching schema leaves zero exact program for its associated solved family.",
+  "completion_gate_passed": false,
+  "equal_budget_candidates_per_task": 1891,
+  "files": {
+    "V22_PRECOMMIT.json": "52878745284ff07d02707da7e804f1f5f17bfc1d9d038ae432fff11c2bdce25e",
+    "V22_REPORT.json": "02833e4db1e5446f31ff2cf96a3ce7d362111dfdabc6e9159311bf6dd9ed9e5f",
+    "portable_runtime_v22.py": "ac212be1849280c0d128703bde6f935c69cd79dd0ef35aa73017f82bf0687601",
+    "runtime_v22.py": "56a5594ba32a5c5a701fda46fa5652cd4f3d3be17acfd3c2e2241b84ab31cf59",
+    "synthesizer_v22.py": "fac97143ff82633e08a030792e64021482d0df8220b3e9880657fd16d0a1f40b",
+    "validate_v22.py": "c1ceb7f22e86a41917819a80b2d60d8e3e7c73e4f86c58af2f83e24ab315bfcf"
+  },
+  "integrity_verdict": "Rejected as autonomous invention evidence because the three search schemas were human-authored after visible task inspection and verifier co-synthesis was not completed.",
+  "portable_failures": 0,
+  "primary_failures": 0,
+  "runtime_disagreements": 0,
+  "schema": "lexigen-v22-evidence-v1",
+  "solved_task_families": 3,
+  "total_fresh_cases": 30000,
+  "verifier_cosynthesis_completed": false,
+  "version": 22,
+  "world_level_breakthrough": false
+}

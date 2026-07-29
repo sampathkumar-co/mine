@@ -1,0 +1,55 @@
+name: Lexigen Language Genesis v22
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v22/**"
+      - ".github/workflows/lexigen-language-genesis-v22.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v22:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile both runtimes and synthesizer
+        run: |
+          python -m py_compile \
+            lexigen-language-genesis/v22/runtime_v22.py \
+            lexigen-language-genesis/v22/portable_runtime_v22.py \
+            lexigen-language-genesis/v22/synthesizer_v22.py \
+            lexigen-language-genesis/v22/validate_v22.py
+      - name: Reproduce frozen report
+        run: |
+          python lexigen-language-genesis/v22/validate_v22.py \
+            --arcgen-root arcgen \
+            --cases 10000 \
+            --output V22_REPORT_REPRODUCED.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected = json.loads(Path("lexigen-language-genesis/v22/V22_REPORT.json").read_text())
+          actual = json.loads(Path("V22_REPORT_REPRODUCED.json").read_text())
+          assert actual == expected, "semantic report mismatch"
+          PY
+      - name: Verify evidence digest
+        run: |
+          test "$(sha256sum lexigen-language-genesis/v22/V22_EVIDENCE.json | cut -d' ' -f1)" = "a5d6c302055b0017545184987246e4f1a3ea13a3a0702537957e174a624782bb"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v22-reproduction
+          path: V22_REPORT_REPRODUCED.json
+          if-no-files-found: error
+          retention-days: 90
