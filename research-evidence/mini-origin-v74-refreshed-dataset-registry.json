@@ -1,16 +1,17 @@
 {
   "status": "repository_dataset_registry_v74_complete",
-  "workflow_run": 30431235112,
-  "workflow_artifact_digest": "sha256:9b91efc63bf6bd016e866d19b8d6186527a0094a4118e9ca9ff2353ab704855d",
+  "workflow_run": 30432394076,
+  "workflow_artifact_digest": "sha256:fa54cca01318c24597c488ea9a0d776c5c15d7f6ed035a8c3c1483f60b6fac36",
   "parent_v68_evidence_digest": "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b",
   "parent_v71_evidence_digest": "58382c7aa2bcd7c28fec54642fcf76cc88e5059e0eb62e942d6cccf33d6ddfe2",
   "ref_count": 179,
-  "files_scanned": 14350,
-  "bytes_scanned": 95768489,
+  "files_scanned": 14353,
+  "bytes_scanned": 95776389,
   "uci_id_count": 55,
   "pystreed_token_count": 12,
   "registry_digest": "2a089db9d801f30fd3072b0eea8be6ef7c34cf1bedc9144d6da39a22bb4ddd71",
-  "unreadable_file_count": 0,
+  "failure_field": "failures",
+  "failure_count": 0,
   "excluded_uci_ids": [3,8,12,14,19,22,26,33,44,46,50,52,59,62,63,67,69,70,72,73,74,76,80,81,83,90,94,95,96,100,101,105,107,111,146,149,151,166,171,181,295,373,468,475,519,544,545,571,602,697,759,850,863,864,891],
   "pystreed_dataset_tokens": ["annealing","australian-credit.csv","breast","diabetes","flare","heart","hepatitis","iris","mushroom","nursery","tictactoe","wine"],
   "required_opened_uci_checks": {
@@ -29,5 +30,5 @@
     "181": true,
     "295": true
   },
-  "scientific_note": "This all-branch registry is provenance infrastructure. It records every UCI ID and PySTreeD dataset family referenced by the current remote-branch corpus and is the mandatory exclusion list for the next hash-only external archive lock. It downloads or parses no candidate dataset and provides no algorithmic evidence."
+  "scientific_note": "This corrected all-branch registry is provenance infrastructure. It records every UCI ID and PySTreeD dataset family referenced by the current remote-branch corpus and is the mandatory exclusion list for the next hash-only external archive lock. The canonical scanner failures list was empty. It downloads or parses no candidate dataset and provides no algorithmic evidence."
 }
