@@ -10,7 +10,7 @@ import zipfile
 
 
 MANIFEST = Path(__file__).resolve().parents[2] / "external-data" / "uci-v68" / "manifest.json"
-LOCK_DIGEST = "9abc52a7e83255498c84b802d432306b5ff15dece032469968b8db3501d0a385"
+LOCK_DIGEST = "c599849c7ba26fdb3e241221dcae3d3feb26d47ad217da53f0d06b97ebc1e02b"
 MAX_SAMPLE_BYTES = 256_000
 MAX_SAMPLE_LINES = 8
 
