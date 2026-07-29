@@ -1,0 +1,20 @@
+{
+  "status": "pmlb_preblind_audit_v80_attempt3_infrastructure_failure",
+  "workflow_run_id": 30479465786,
+  "job_id": 90669476370,
+  "head_commit": "9bf095f0231e4d3f8b46918f45d2f8a29414a457",
+  "focused_tests_passed": 13,
+  "remote_refs_found": 219,
+  "files_scanned": 0,
+  "failure_stage": "repository path filtering before content scan",
+  "failure_reason": "The audit module was invoked from the mini-origin subdirectory. git ls-tree returned subtree-relative paths, so the repository-root prefix filter rejected every file.",
+  "pmlb_catalogue_accessed": false,
+  "pmlb_repository_tree_accessed": false,
+  "pmlb_candidate_names_or_metadata_accessed": false,
+  "pmlb_dataset_bytes_accessed": false,
+  "solver_executed": false,
+  "registry_complete": false,
+  "artifact_id": 8734996820,
+  "artifact_sha256": "7ea12085b47de9c5f94976a30aa4db3987d385083c8c83a3425f6726b067dc71",
+  "allowed_repair": "invoke only the repository audit module from the repository root while leaving tests, scanner logic, exclusions and preregistered boundary unchanged"
+}
