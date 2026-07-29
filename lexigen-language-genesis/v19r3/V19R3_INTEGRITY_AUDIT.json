@@ -1,0 +1,17 @@
+{
+  "schema": "lexigen-v19r3-integrity-audit-v1",
+  "audit_verdict": "failed_unique_production_gate",
+  "fixed_gates": 3,
+  "total_compositions_evaluated": 750000,
+  "no_program_gates": [7, 13],
+  "ambiguous_gate": 10,
+  "ambiguous_survivors": 5,
+  "selected_descriptor_removal_survivors": 4,
+  "ambiguity_source": "The visible demonstrations contain no marker-top case, so all five marker-top actions remain observationally equivalent.",
+  "fresh_scoring_performed": false,
+  "hidden_outputs_opened": false,
+  "v19_pass": false,
+  "transfer_demonstrated": false,
+  "world_level_breakthrough": false,
+  "required_next_step": "Precommit deterministic public-generator CEGIS seeds and revision budgets before using any fresh output to distinguish the five preserved complete compositions."
+}

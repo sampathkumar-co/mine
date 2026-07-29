@@ -1,0 +1,37 @@
+{
+  "ambiguous_gate": 10,
+  "base_v19r2_commit": "7a662e0f2bcfc07fcd955e865b253ff6da9cc749",
+  "candidate_compositions_per_gate": 250000,
+  "claim_boundary": {
+    "reason": "The visible demonstrations contain no marker-top case, so all five marker-top actions remain observationally equivalent."
+  },
+  "exact_survivors": 5,
+  "files": {
+    "README.md": "29fe17b98e8b2d51095898cc61465c65bff082ea52ea5177ceacd52c723b003f",
+    "V19R3_ATTEMPT_REPORT.json": "3d93bd79ae8259f73746e91d8f4211e1da91e2b97f0fe778056524869dfa26ef",
+    "V19R3_INTEGRITY_AUDIT.json": "518917162646b259250d930e07732173a4497e827b8f32b2c27c13c4598701b8",
+    "V19R3_PRECOMMIT.json": "3aea104c47aaef7a3e41252701cf6be73a1b15873c0b7189fa0246ef77d19bfc",
+    "candidates/gate-10-selected-arguments.json": "27d57578ea7f05fe791a6d37c213ea36ab69b9446f5f253bd40e3833eba1a1bd",
+    "candidates/gate-10-selected-production.json": "58b9debcec0e02b8475f10086bf33bfd84ca28ed4a0467b76d55738ff6e631b0",
+    "candidates/gate-10-selected-program.json": "a70645f4fd1895cd3af90f41c634d7ed79083ef11a0ca7b77b42c27c25880dbc",
+    "enumerate_v19r3.py": "273ae5f3ec71523fec1dc89404a81c5bb43cd02c10032318ef213acd63c924d0",
+    "test_v19r3.py": "7bf8217cac99045ca5c6a9d1d7cfb52d2c1951c8e7f25b8f6fd7c2aeee2ec29c",
+    "validate_v19r3.py": "e16a7f78921e38743fcd4a1a3a325b5073f862b351a0dc6b7e0398906c9ff508"
+  },
+  "fixed_gates": [
+    7,
+    10,
+    13
+  ],
+  "fresh_scoring_performed": false,
+  "hidden_outputs_opened": false,
+  "no_program_gates": [
+    7,
+    13
+  ],
+  "schema": "lexigen-v19r3-frozen-negative-evidence-v1",
+  "selected_descriptor_removal_survivors": 4,
+  "total_candidate_compositions": 750000,
+  "v19_pass": false,
+  "world_level_breakthrough": false
+}

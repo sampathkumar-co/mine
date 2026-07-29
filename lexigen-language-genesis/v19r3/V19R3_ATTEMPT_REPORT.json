@@ -1,0 +1,160 @@
+{
+  "ambiguous_program_sets": 1,
+  "candidate_denominator_per_gate": 250000,
+  "claim_boundary": {
+    "reason": "The only demonstration-exact gate retained multiple full-composition survivors and failed selected-descriptor removal ablation. No survivor was promoted or fresh-scored."
+  },
+  "fixed_gates": 3,
+  "fresh_scoring_performed": false,
+  "hidden_outputs_opened": false,
+  "no_program_failures": 2,
+  "outcomes": [
+    {
+      "candidate_denominator": 250000,
+      "demonstrations": 6,
+      "fresh_scoring_performed": false,
+      "frozen_v17_ablation_failed": true,
+      "frozen_v17_failure": "constructive grammar found no exact program",
+      "gate": 7,
+      "hidden_outputs_opened": false,
+      "reason": "full composition meta-grammar found no exact production",
+      "status": "no_program",
+      "task_id": "fc10701f"
+    },
+    {
+      "arguments_sha256": "c449dd9c1da00c383d5ddc55a577e263dd0c93ff6801554bb2b6d29a47517932",
+      "candidate_denominator": 250000,
+      "concrete_program_sha256": "aab35796ce5e0f0511e9d021c2580a2b3aa08305f66e70b435b1c34c5dc9ff4b",
+      "demonstration_portable_exact": 6,
+      "demonstration_primary_exact": 6,
+      "demonstrations": 6,
+      "eligible_for_v19_freeze": false,
+      "fresh_scoring_performed": false,
+      "frozen_v17_ablation_failed": true,
+      "frozen_v17_failure": "constructive grammar found no exact program",
+      "gate": 10,
+      "hidden_outputs_opened": false,
+      "production_sha256": "f902de336a764889a8fafad1573a854b9464819c723d00afa3906f9055361c04",
+      "search": {
+        "candidate_compositions_evaluated": 250000,
+        "complete_composition_enumerated": true,
+        "concrete_program_sha256": "aab35796ce5e0f0511e9d021c2580a2b3aa08305f66e70b435b1c34c5dc9ff4b",
+        "exact_survivor_descriptors": [
+          {
+            "actions": [
+              "reflect_left",
+              "reflect_right",
+              "identity",
+              "reflect_bottom"
+            ],
+            "base_mode": "new_canvas",
+            "marker_colour": 2,
+            "output_background": 3,
+            "program_sha256": "aab35796ce5e0f0511e9d021c2580a2b3aa08305f66e70b435b1c34c5dc9ff4b",
+            "set_mode": "union_source_and_mapped"
+          },
+          {
+            "actions": [
+              "reflect_left",
+              "reflect_right",
+              "reflect_left",
+              "reflect_bottom"
+            ],
+            "base_mode": "new_canvas",
+            "marker_colour": 2,
+            "output_background": 3,
+            "program_sha256": "09ee8c2414f06aa73bfaa63d36a9ac8c1037a485fb0d165e98552f3d408556b3",
+            "set_mode": "union_source_and_mapped"
+          },
+          {
+            "actions": [
+              "reflect_left",
+              "reflect_right",
+              "reflect_right",
+              "reflect_bottom"
+            ],
+            "base_mode": "new_canvas",
+            "marker_colour": 2,
+            "output_background": 3,
+            "program_sha256": "b877f8409fbc1712293096164566f434f79b58a51522d975343db0b010442990",
+            "set_mode": "union_source_and_mapped"
+          },
+          {
+            "actions": [
+              "reflect_left",
+              "reflect_right",
+              "reflect_top",
+              "reflect_bottom"
+            ],
+            "base_mode": "new_canvas",
+            "marker_colour": 2,
+            "output_background": 3,
+            "program_sha256": "c887750e98d2518c9d79d20a972753a1bc800f58a6168ffd10a02deb4fa48846",
+            "set_mode": "union_source_and_mapped"
+          },
+          {
+            "actions": [
+              "reflect_left",
+              "reflect_right",
+              "reflect_bottom",
+              "reflect_bottom"
+            ],
+            "base_mode": "new_canvas",
+            "marker_colour": 2,
+            "output_background": 3,
+            "program_sha256": "c40c009a1bcbd74fea9160377e83c7e10c422192214c8eb410280e034d78b2b6",
+            "set_mode": "union_source_and_mapped"
+          }
+        ],
+        "exact_survivors": 5,
+        "production_sha256": "f902de336a764889a8fafad1573a854b9464819c723d00afa3906f9055361c04",
+        "runtime_invalid_candidates": 225000,
+        "selected_descriptor": {
+          "actions": [
+            "reflect_left",
+            "reflect_right",
+            "identity",
+            "reflect_bottom"
+          ],
+          "base_mode": "new_canvas",
+          "marker_colour": 2,
+          "output_background": 3,
+          "set_mode": "union_source_and_mapped"
+        },
+        "selected_descriptor_removal_survivors": 4,
+        "selected_node_count": 216
+      },
+      "selected_descriptor": {
+        "actions": [
+          "reflect_left",
+          "reflect_right",
+          "identity",
+          "reflect_bottom"
+        ],
+        "base_mode": "new_canvas",
+        "marker_colour": 2,
+        "output_background": 3,
+        "set_mode": "union_source_and_mapped"
+      },
+      "status": "ambiguous_program_set",
+      "task_id": "2bcee788",
+      "task_id_hits": []
+    },
+    {
+      "candidate_denominator": 250000,
+      "demonstrations": 6,
+      "fresh_scoring_performed": false,
+      "frozen_v17_ablation_failed": true,
+      "frozen_v17_failure": "constructive grammar found no exact program",
+      "gate": 13,
+      "hidden_outputs_opened": false,
+      "reason": "full composition meta-grammar found no exact production",
+      "status": "no_program",
+      "task_id": "36fdfd69"
+    }
+  ],
+  "schema": "lexigen-v19r3-full-composition-attempt-report-v1",
+  "unique_productions": 0,
+  "v19_pass": false,
+  "world_level_breakthrough": false
+}
