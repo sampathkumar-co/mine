@@ -1,0 +1,178 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "base_commit": "196ffa02839f448f49ffe2ff0b0e8949fe0804f2",
+  "claim_boundary": "Public ARC-GEN discovery and held-out evidence only; no sealed external result, unrestricted language invention, or world-level breakthrough.",
+  "discovery_rule": "retain every abstract exact structure independently solving at least two distinct discovery identities",
+  "discovery_task_count": 40,
+  "discovery_task_ids": [
+    "c074846d",
+    "794b24be",
+    "d017b73f",
+    "42f83767",
+    "54db823b",
+    "776ffc46",
+    "1f0c79e5",
+    "1d398264",
+    "b0c4d837",
+    "8fbca751",
+    "6d1d5c90",
+    "ed74f2f2",
+    "d4f3cd78",
+    "4c5c2cf0",
+    "0dfd9992",
+    "32597951",
+    "22eb0ac0",
+    "538b439f",
+    "6cf79266",
+    "41e4d17e",
+    "319f2597",
+    "6d58a25d",
+    "90f3ed37",
+    "a3325580",
+    "37d3e8b2",
+    "256b0a75",
+    "d2acf2cb",
+    "8eb1be9a",
+    "b9b7f026",
+    "025d127b",
+    "67a423a3",
+    "973e499e",
+    "b94a9452",
+    "e1baa8a4",
+    "150deff5",
+    "f0afb749",
+    "5207a7b5",
+    "feca6190",
+    "8abad3cf",
+    "810b9b61"
+  ],
+  "enumeration": {
+    "candidate_order": "depth, output type order, total node count, canonical serialization",
+    "deduplication": "retain lowest node count then canonical serialization for each semantic signature",
+    "depth_rationale": "Depth 5 is the minimum needed to compose colour -> points -> components -> selection -> selected points -> paint.",
+    "enumeration_order": "depth, type, node count, canonical serialization",
+    "maximum_depth": 5,
+    "maximum_raw_candidate_evaluations_per_task": 5000000,
+    "maximum_total_unique_expressions_per_task": 250000,
+    "maximum_unique_expressions_per_type_per_depth": 50000,
+    "semantic_signature": "type plus canonical values across all six demonstrations",
+    "stop_rule": "stop only after all depth <= 4 expressions or deterministic expression budget exhaustion",
+    "type_order": [
+      "Color",
+      "Grid",
+      "ObjectSet",
+      "PointSet"
+    ]
+  },
+  "examples_per_task": 6,
+  "generator_attempts_per_task": 16,
+  "human_survivor_selection_allowed": false,
+  "identity_selection_source": "frozen v19r5 eligible registry; all v21-v24 identities excluded before ranking",
+  "nontriviality_rule": "A task counts only if at least one demonstration output differs from its input and the exact Grid expression is not semantically identical to input_grid across all demonstrations.",
+  "per_generation_timeout_seconds": 5,
+  "replacement_tasks_allowed": false,
+  "schema": "lexigen-v25-typed-semantic-enumeration-precommit-v1",
+  "seed_rule": "uint32(first_16_hex(sha256(lexigen-v25:<split>:<task_id>:<attempt_index>)))",
+  "structure_abstraction": "replace distinct literal colours in first-occurrence order with typed colour parameters; background and derived colours remain operators",
+  "typed_language": {
+    "color_expressions": [
+      "literal_0_to_9",
+      "background",
+      "least_non_background",
+      "most_non_background"
+    ],
+    "extrema": [
+      "all",
+      "minimum",
+      "maximum"
+    ],
+    "grid_expressions": [
+      "paint(Grid,PointSet,Color)",
+      "grid_flip_h(Grid)",
+      "grid_flip_v(Grid)",
+      "grid_rotate180(Grid)",
+      "crop_bbox(Grid,PointSet)"
+    ],
+    "grid_leaves": [
+      "input_grid",
+      "canvas(Color)"
+    ],
+    "object_expressions": [
+      "components4(PointSet)",
+      "select_objects(ObjectSet, feature, extremum)",
+      "select_position(ObjectSet, direction)"
+    ],
+    "object_features": [
+      "size",
+      "bbox_area",
+      "bbox_width",
+      "bbox_height"
+    ],
+    "point_binary": [
+      "union",
+      "intersection",
+      "difference"
+    ],
+    "point_leaves": [
+      "points_of_color(Color)",
+      "non_background_points"
+    ],
+    "point_unary": [
+      "objects_to_points",
+      "bbox_fill",
+      "bbox_border",
+      "row_span",
+      "col_span",
+      "connect_aligned",
+      "holes",
+      "outline4",
+      "dilate4",
+      "erode4",
+      "grid_flip_h",
+      "grid_flip_v",
+      "grid_rotate180",
+      "bbox_reflect_left",
+      "bbox_reflect_right",
+      "bbox_reflect_top",
+      "bbox_reflect_bottom"
+    ],
+    "positions": [
+      "topmost",
+      "bottommost",
+      "leftmost",
+      "rightmost"
+    ],
+    "types": [
+      "Grid",
+      "Color",
+      "PointSet",
+      "ObjectSet"
+    ]
+  },
+  "validation_outputs_opened": false,
+  "validation_rule": "freeze discovery library before importing validation generators; infer colour parameters only; exactly one abstract structure must be exact",
+  "validation_task_count": 20,
+  "validation_task_ids": [
+    "5bd6f4ac",
+    "a680ac02",
+    "f823c43c",
+    "9b4c17c4",
+    "673ef223",
+    "5521c0d9",
+    "ce22a75a",
+    "90c28cc7",
+    "e76a88a6",
+    "e9bb6954",
+    "b775ac94",
+    "db7260a4",
+    "67a3c6ac",
+    "28e73c20",
+    "6b9890af",
+    "33b52de3",
+    "93b581b8",
+    "575b1a71",
+    "444801d8",
+    "1a07d186"
+  ],
+  "verifier_requirement": "independent evaluator and mutation-based verifier co-synthesis for every held-out success"
+}
