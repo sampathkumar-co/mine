@@ -1,0 +1,70 @@
+name: Mini-ORIGIN Refreshed Dataset Registry v0.74
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v74-refreshed-dataset-registry
+    paths:
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v63.py"
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v74.py"
+      - ".github/workflows/mini-origin-v74-refreshed-dataset-registry.yml"
+      - "research-evidence/mini-origin-v68-clean-lower-bound-rejected.json"
+      - "research-evidence/mini-origin-v71-label-free-selector-pass.json"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v63.py"
+      - "mini-origin/src/mini_origin/repository_dataset_audit_v74.py"
+      - ".github/workflows/mini-origin-v74-refreshed-dataset-registry.yml"
+      - "research-evidence/mini-origin-v68-clean-lower-bound-rejected.json"
+      - "research-evidence/mini-origin-v71-label-free-selector-pass.json"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v74-registry-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  refreshed-dataset-registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch every remote branch
+        run: git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: python -m pip install -e ".[dev]"
+      - name: Verify immutable evidence parents
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          v68 = json.loads(Path('research-evidence/mini-origin-v68-clean-lower-bound-rejected.json').read_text())
+          v71 = json.loads(Path('research-evidence/mini-origin-v71-label-free-selector-pass.json').read_text())
+          assert v68['development_gate'] is False
+          assert v68['evidence_digest'] == 'b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b'
+          assert v71['development_gate'] is True
+          assert v71['evidence_digest'] == '58382c7aa2bcd7c28fec54642fcf76cc88e5059e0eb62e942d6cccf33d6ddfe2'
+          PY
+      - name: Build refreshed all-branch registry
+        run: >-
+          mkdir -p mini-origin/results/v74 &&
+          python -m mini_origin.repository_dataset_audit_v74
+          --output mini-origin/results/v74/repository-dataset-registry.json
+        env:
+          PYTHONPATH: mini-origin/src
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v74-refreshed-dataset-registry
+          path: mini-origin/results/v74/repository-dataset-registry.json
+          retention-days: 90
