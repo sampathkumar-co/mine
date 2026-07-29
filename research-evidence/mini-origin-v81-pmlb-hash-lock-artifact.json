@@ -1,0 +1,10 @@
+{
+    "status":  "pmlb_hash_lock_v81_preserved",
+    "workflow_run_id":  30482404234,
+    "artifact_id":  8736208433,
+    "artifact_sha256":  "65e1a778635d7cfcc31de00f01ceac19ecc7b0058dc07dfdab755be6ea1c63e5",
+    "manifest_file_sha256":  "00b9bc1830659acab2b8010136706ec065c1ebf2a416db3a223909e11d099f2d",
+    "lock_digest":  "424c98761001c268b1f0574c4e82282e2a4d9321073bc27c87589a92e0f61d8e",
+    "source_commit":  "f1f7246adf0dab83ddccaaebd7c6bcd5af909437",
+    "pmlb_source_commit":  "7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68"
+}

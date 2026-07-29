@@ -1,0 +1,404 @@
+{
+  "status": "pmlb_hash_lock_v81_complete",
+  "protocol": {
+    "source_repository": "EpistasisLab/pmlb",
+    "source_commit": "7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68",
+    "source_tree": "ca5d36e9093c2f7360db57198c8c0586a3217a60",
+    "summary_path": "pmlb/all_summary_stats.tsv",
+    "selection_seed": "mini-origin-v81-pmlb-cross-source-lock-2026-07-29",
+    "metadata_only_eligibility": {
+      "problem_type": "classification",
+      "minimum_instances": 300,
+      "maximum_instances": 6000,
+      "minimum_features": 4,
+      "maximum_features": 80,
+      "minimum_classes": 2,
+      "maximum_classes": 15,
+      "dense_tabular_only": true,
+      "required_target_column": "target",
+      "required_raw_format": "compressed TSV or TSV-compatible PMLB table"
+    },
+    "exclusions": {
+      "normalized_name_in_v80_registry": true,
+      "metadata_provenance_mentions_excluded_name": true,
+      "metadata_provenance_mentions_UCI_or_OpenML": true,
+      "duplicate_normalized_name": true,
+      "missing_or_conflicting_metadata": true,
+      "raw_byte_download_failure": true
+    },
+    "ranking": {
+      "algorithm": "ascending SHA-256",
+      "input": [
+        "selection_seed",
+        "frozen_source_commit",
+        "normalized_dataset_name",
+        "canonical_metadata_digest"
+      ],
+      "tie_break": "normalized dataset name ascending"
+    },
+    "byte_lock_protocol": {
+      "download_only_selected_datasets": true,
+      "hash_raw_compressed_or_source_table_bytes": true,
+      "decompress_before_lock": false,
+      "parse_header_or_records_before_lock": false,
+      "record_or_label_access": false,
+      "store_sha256": true,
+      "store_byte_length": true,
+      "store_source_path_or_url": true,
+      "store_metadata_digest": true
+    },
+    "records_or_labels_accessed": false,
+    "solver_executed": false
+  },
+  "parent_v80_commit": "22cc53c9b22b1d6e15190e769462846992e28149",
+  "parent_v80_registry_digest": "aa6bab47d8d2453b669eee2f7a36720e0eb798a79355b0d2c9a509d81959038c",
+  "source_record": {
+    "status": "pmlb_source_commit_frozen_after_preregistration",
+    "preregistration_commit": "e150c73fb558d6083991e37d7aab9eacc81ca35b",
+    "source_repository": "EpistasisLab/pmlb",
+    "source_default_branch": "master",
+    "source_commit": "7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68",
+    "source_tree": "ca5d36e9093c2f7360db57198c8c0586a3217a60",
+    "source_commit_date": "2025-02-25T21:08:43Z",
+    "catalogue_access_after_preregistration": true,
+    "dataset_records_or_labels_accessed": false,
+    "dataset_bytes_accessed": false,
+    "solver_executed": false
+  },
+  "summary_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/pmlb/all_summary_stats.tsv",
+  "summary_sha256": "d658820a844a555776273a2c1b6766eba983bb078e3bcc539141b1ac2cc33960",
+  "summary_bytes": 32168,
+  "summary_dataset_count": 450,
+  "summary_eligible_count": 99,
+  "metadata_candidate_count": 68,
+  "metadata_failure_count": 0,
+  "metadata_failures": [],
+  "metadata_rejection_count": 31,
+  "metadata_rejections": [
+    {
+      "name": "_deprecated_breast_cancer_wisconsin",
+      "normalized_name": "deprecated-breast-cancer-wisconsin",
+      "reason": "metadata_mentions_excluded_name",
+      "overlaps": [
+        "breast-cancer"
+      ]
+    },
+    {
+      "name": "_deprecated_car",
+      "normalized_name": "deprecated-car",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "_deprecated_car_evaluation",
+      "normalized_name": "deprecated-car-evaluation",
+      "reason": "metadata_mentions_excluded_name",
+      "overlaps": [
+        "car-evaluation"
+      ]
+    },
+    {
+      "name": "analcatdata_dmft",
+      "normalized_name": "analcatdata-dmft",
+      "reason": "name_overlap"
+    },
+    {
+      "name": "balance_scale",
+      "normalized_name": "balance-scale",
+      "reason": "name_overlap"
+    },
+    {
+      "name": "breast_cancer_wisconsin_diagnostic",
+      "normalized_name": "breast-cancer-wisconsin-diagnostic",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "breast_cancer_wisconsin_original",
+      "normalized_name": "breast-cancer-wisconsin-original",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "bupa",
+      "normalized_name": "bupa",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "car_evaluation",
+      "normalized_name": "car-evaluation",
+      "reason": "name_overlap"
+    },
+    {
+      "name": "chess",
+      "normalized_name": "chess",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "congressional_voting_records",
+      "normalized_name": "congressional-voting-records",
+      "reason": "name_overlap"
+    },
+    {
+      "name": "contraceptive_method",
+      "normalized_name": "contraceptive-method",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "credit_approval_australia",
+      "normalized_name": "credit-approval-australia",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "credit_approval_germany",
+      "normalized_name": "credit-approval-germany",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "heart_disease_cleveland",
+      "normalized_name": "heart-disease-cleveland",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "horse_colic_lesion_type",
+      "normalized_name": "horse-colic-lesion-type",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "horse_colic_outcome",
+      "normalized_name": "horse-colic-outcome",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "horse_colic_surgery",
+      "normalized_name": "horse-colic-surgery",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "ionosphere",
+      "normalized_name": "ionosphere",
+      "reason": "name_overlap"
+    },
+    {
+      "name": "irish",
+      "normalized_name": "irish",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "mfeat_fourier",
+      "normalized_name": "mfeat-fourier",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "mfeat_karhunen",
+      "normalized_name": "mfeat-karhunen",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "mfeat_morphological",
+      "normalized_name": "mfeat-morphological",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "mfeat_zernike",
+      "normalized_name": "mfeat-zernike",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "saheart",
+      "normalized_name": "saheart",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "spambase",
+      "normalized_name": "spambase",
+      "reason": "name_overlap"
+    },
+    {
+      "name": "texture",
+      "normalized_name": "texture",
+      "reason": "name_overlap"
+    },
+    {
+      "name": "waveform_21",
+      "normalized_name": "waveform-21",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "waveform_40",
+      "normalized_name": "waveform-40",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "wine_quality_red",
+      "normalized_name": "wine-quality-red",
+      "reason": "metadata_mentions_uci_or_openml"
+    },
+    {
+      "name": "wine_quality_white",
+      "normalized_name": "wine-quality-white",
+      "reason": "metadata_mentions_uci_or_openml"
+    }
+  ],
+  "byte_rejection_count": 0,
+  "byte_rejections": [],
+  "dataset_count": 7,
+  "selected_name_overlap": [],
+  "datasets": [
+    {
+      "name": "vowel",
+      "normalized_name": "vowel",
+      "instances": 990,
+      "features": 13,
+      "classes": 11,
+      "endpoint_type": "categorical",
+      "task": "classification",
+      "metadata_path": "datasets/vowel/metadata.yaml",
+      "metadata_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/vowel/metadata.yaml",
+      "metadata_raw_sha256": "b8692f267b87f6fdac90aa5964e03b56d74bbf6571227428b92fb41d29b08e0b",
+      "metadata_bytes": 1743,
+      "canonical_metadata_digest": "b8692f267b87f6fdac90aa5964e03b56d74bbf6571227428b92fb41d29b08e0b",
+      "rank": "06b01683ec1fd4adcec4151086bc1f0a7f6d0c3eea8b081ccd3e7e18825dd7ae",
+      "raw_path": "datasets/vowel/vowel.tsv.gz",
+      "raw_url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/vowel/vowel.tsv.gz",
+      "raw_sha256": "98d0239c98afa3d94847cd792ce07a316e67927b5e7a178a521fea6a14914eea",
+      "raw_bytes": 27386,
+      "gzip_magic_verified": true,
+      "decompressed": false,
+      "records_or_labels_parsed": false
+    },
+    {
+      "name": "_deprecated_breast_w",
+      "normalized_name": "deprecated-breast-w",
+      "instances": 699,
+      "features": 9,
+      "classes": 2,
+      "endpoint_type": "categorical",
+      "task": "classification",
+      "metadata_path": "datasets/_deprecated_breast_w/metadata.yaml",
+      "metadata_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_breast_w/metadata.yaml",
+      "metadata_raw_sha256": "00054987426d2d2ce381447d46169efa9eaf3c5dc1203e28539ee83e99ccae90",
+      "metadata_bytes": 1499,
+      "canonical_metadata_digest": "00054987426d2d2ce381447d46169efa9eaf3c5dc1203e28539ee83e99ccae90",
+      "rank": "06cf5d6cfb0106a1acf40874a7d7d7100b64d9f934517bd0c78d5bee3f92e75a",
+      "raw_path": "datasets/_deprecated_breast_w/_deprecated_breast_w.tsv.gz",
+      "raw_url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_breast_w/_deprecated_breast_w.tsv.gz",
+      "raw_sha256": "cad1a46f50ff7ff713e8abdff5837ebb28ddb9be5823c5fa35c85ee14400760b",
+      "raw_bytes": 3501,
+      "gzip_magic_verified": true,
+      "decompressed": false,
+      "records_or_labels_parsed": false
+    },
+    {
+      "name": "dis",
+      "normalized_name": "dis",
+      "instances": 3772,
+      "features": 29,
+      "classes": 2,
+      "endpoint_type": "categorical",
+      "task": "classification",
+      "metadata_path": "datasets/dis/metadata.yaml",
+      "metadata_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/dis/metadata.yaml",
+      "metadata_raw_sha256": "c253de661b6bf25631f240ac54aa7fd2ac7aa125ce5464f16bf9f01950c88cea",
+      "metadata_bytes": 3017,
+      "canonical_metadata_digest": "c253de661b6bf25631f240ac54aa7fd2ac7aa125ce5464f16bf9f01950c88cea",
+      "rank": "091c6195ad96c08c1c13d839b1a4202c24043606a2d01aaa78aabe02f6aeb741",
+      "raw_path": "datasets/dis/dis.tsv.gz",
+      "raw_url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/dis/dis.tsv.gz",
+      "raw_sha256": "42944e333c4ceeac9c41dd50a3b84d54865e6302ce0133fb76c392916c9a7833",
+      "raw_bytes": 39672,
+      "gzip_magic_verified": true,
+      "decompressed": false,
+      "records_or_labels_parsed": false
+    },
+    {
+      "name": "_deprecated_cleveland",
+      "normalized_name": "deprecated-cleveland",
+      "instances": 303,
+      "features": 13,
+      "classes": 5,
+      "endpoint_type": "categorical",
+      "task": "classification",
+      "metadata_path": "datasets/_deprecated_cleveland/metadata.yaml",
+      "metadata_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_cleveland/metadata.yaml",
+      "metadata_raw_sha256": "486566e39078426ba4c253f92414f5610b94eb8c7bb0a3b3a4654881e3bae502",
+      "metadata_bytes": 1700,
+      "canonical_metadata_digest": "486566e39078426ba4c253f92414f5610b94eb8c7bb0a3b3a4654881e3bae502",
+      "rank": "0b26b3ebd6e2e3813926abab175cadbcabe2e60309b5202a0af1fa6346f713f4",
+      "raw_path": "datasets/_deprecated_cleveland/_deprecated_cleveland.tsv.gz",
+      "raw_url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_cleveland/_deprecated_cleveland.tsv.gz",
+      "raw_sha256": "d63898a804e7ba51230b693cd9ab9d5b381806a783dd87ca36c98f73164183b1",
+      "raw_bytes": 3452,
+      "gzip_magic_verified": true,
+      "decompressed": false,
+      "records_or_labels_parsed": false
+    },
+    {
+      "name": "_deprecated_diabetes",
+      "normalized_name": "deprecated-diabetes",
+      "instances": 768,
+      "features": 8,
+      "classes": 2,
+      "endpoint_type": "categorical",
+      "task": "classification",
+      "metadata_path": "datasets/_deprecated_diabetes/metadata.yaml",
+      "metadata_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_diabetes/metadata.yaml",
+      "metadata_raw_sha256": "ba15909af1d3e627739874398b2a8308064e6dc8333189b3dd6ee5a540241351",
+      "metadata_bytes": 1292,
+      "canonical_metadata_digest": "ba15909af1d3e627739874398b2a8308064e6dc8333189b3dd6ee5a540241351",
+      "rank": "10e1b2362baeda5f44a0b393dc961f8943c8df6fbb3964b08aed9bc810444a2b",
+      "raw_path": "datasets/_deprecated_diabetes/_deprecated_diabetes.tsv.gz",
+      "raw_url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_diabetes/_deprecated_diabetes.tsv.gz",
+      "raw_sha256": "22c0fae7298efcb4566c4d4cc19a53c505476cccf6518328303e2b7334110781",
+      "raw_bytes": 9398,
+      "gzip_magic_verified": true,
+      "decompressed": false,
+      "records_or_labels_parsed": false
+    },
+    {
+      "name": "_deprecated_solar_flare_1",
+      "normalized_name": "deprecated-solar-flare-1",
+      "instances": 315,
+      "features": 12,
+      "classes": 5,
+      "endpoint_type": "categorical",
+      "task": "classification",
+      "metadata_path": "datasets/_deprecated_solar_flare_1/metadata.yaml",
+      "metadata_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_solar_flare_1/metadata.yaml",
+      "metadata_raw_sha256": "796ee86eb4ad9ef16c998bc508e2e1820f492ed769f751961d9689f5f8724534",
+      "metadata_bytes": 1847,
+      "canonical_metadata_digest": "796ee86eb4ad9ef16c998bc508e2e1820f492ed769f751961d9689f5f8724534",
+      "rank": "10f1517753af00ee2659114dafb726eabee1f08d2bd35bedef8f8bdccb0d9224",
+      "raw_path": "datasets/_deprecated_solar_flare_1/_deprecated_solar_flare_1.tsv.gz",
+      "raw_url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_solar_flare_1/_deprecated_solar_flare_1.tsv.gz",
+      "raw_sha256": "ac1daaa97e5307673a91b60bcc70956e120fb7036d8c3d9b8352507cdb039243",
+      "raw_bytes": 1176,
+      "gzip_magic_verified": true,
+      "decompressed": false,
+      "records_or_labels_parsed": false
+    },
+    {
+      "name": "_deprecated_house_votes_84",
+      "normalized_name": "deprecated-house-votes-84",
+      "instances": 435,
+      "features": 16,
+      "classes": 2,
+      "endpoint_type": "categorical",
+      "task": "classification",
+      "metadata_path": "datasets/_deprecated_house_votes_84/metadata.yaml",
+      "metadata_url": "https://raw.githubusercontent.com/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_house_votes_84/metadata.yaml",
+      "metadata_raw_sha256": "aa1d4cca932d16d9c3ffafc31a6ba811b6c1e5e8485ff79567d159457f037806",
+      "metadata_bytes": 2227,
+      "canonical_metadata_digest": "aa1d4cca932d16d9c3ffafc31a6ba811b6c1e5e8485ff79567d159457f037806",
+      "rank": "16cfab7ea03c214d4faf4668011397a7737276119691b8f67b2423f260438359",
+      "raw_path": "datasets/_deprecated_house_votes_84/_deprecated_house_votes_84.tsv.gz",
+      "raw_url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68/datasets/_deprecated_house_votes_84/_deprecated_house_votes_84.tsv.gz",
+      "raw_sha256": "9def90abb62c1b9872ae2dbed3e425850ae44f98d3664e8b29e2444548e9fec9",
+      "raw_bytes": 2054,
+      "gzip_magic_verified": true,
+      "decompressed": false,
+      "records_or_labels_parsed": false
+    }
+  ],
+  "records_or_labels_accessed": false,
+  "solver_executed": false,
+  "claim_scope": "Deterministic metadata selection and raw-byte hash locking from PMLB after a completed repository-wide contamination audit. This stage must not decompress or parse selected tables, inspect records or labels, execute Mini-ORIGIN, measure performance, claim external validation, novelty, publication, acceptance, or world-level significance.",
+  "lock_digest": "424c98761001c268b1f0574c4e82282e2a4d9321073bc27c87589a92e0f61d8e"
+}
