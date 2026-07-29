@@ -1,0 +1,141 @@
+name: Lexigen v11 Campaign Parallel Solve
+
+on:
+  push:
+    branches:
+      - lexigen/external-arcgen-v11-campaign
+    paths:
+      - .github/workflows/lexigen-v11-campaign-parallel.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FROZEN_ENGINE_COMMIT: 56359f2e4a62660974a08571ee62dacb39cbf840
+  EVIDENCE_BRANCH: lexigen/external-arcgen-v11-campaign
+
+jobs:
+  solve:
+    name: Solve gate ${{ matrix.gate }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: ["03", "04", "05", "06", "07", "08", "10"]
+    steps:
+      - name: Check out frozen campaign evidence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EVIDENCE_BRANCH }}
+          fetch-depth: 0
+          path: current
+
+      - name: Verify language implementation is unchanged
+        working-directory: current
+        run: |
+          git diff --exit-code "$FROZEN_ENGINE_COMMIT" -- \
+            lexigen-language-genesis/v7 \
+            lexigen-language-genesis/v8 \
+            lexigen-language-genesis/v9 \
+            lexigen-language-genesis/v10 \
+            lexigen-language-genesis/v11
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run frozen solver and preserve outcome
+        shell: bash
+        run: |
+          set +e
+          gate="v11-campaign-${{ matrix.gate }}"
+          evidence="$GITHUB_WORKSPACE/current/lexigen-language-genesis/external/evidence/v11-campaign/$gate"
+          output="$GITHUB_WORKSPACE/output"
+          artifact="$GITHUB_WORKSPACE/artifact-$gate"
+          mkdir -p "$output" "$artifact"
+          export LEXIGEN_V11_CAMPAIGN_GATE="$gate"
+          cd "$GITHUB_WORKSPACE/current/lexigen-language-genesis/external"
+          python arcgen_campaign_v11.py solve \
+            --redacted "$evidence/redacted-task.json" \
+            --output-dir "$output" \
+            >"$artifact/solver-log.txt" 2>&1
+          code=$?
+          set -e
+          cp -a "$output"/. "$artifact"/ 2>/dev/null || true
+          GATE="$gate" CODE="$code" ARTIFACT="$artifact" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          gate = os.environ["GATE"]
+          code = int(os.environ["CODE"])
+          root = Path(os.environ["ARTIFACT"])
+          report_path = root / "candidate-report.json"
+          report = json.loads(report_path.read_text()) if report_path.exists() else {}
+          predictions = (root / "candidate-predictions.json").exists()
+          status = (
+              "candidate-awaiting-remote-commit-and-score"
+              if code == 0 and predictions
+              else "permanent-pre-score-failure"
+              if code == 0
+              else "infrastructure-solver-error"
+          )
+          result = {
+              "gate_id": gate,
+              "selected_task_id": report.get("selected_task_id"),
+              "status": status,
+              "solver_exit_code": code,
+              "predictions_committed": predictions,
+              "hidden_scoring_performed": False,
+              "sealed_outputs_accessed": False,
+              "breakthrough_candidate": bool(report.get("breakthrough_candidate", False)),
+          }
+          (root / "result.json").write_text(json.dumps(result, indent=2) + "\n")
+          PY
+
+      - name: Upload immutable candidate checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: v11-campaign-${{ matrix.gate }}-checkpoint
+          path: artifact-v11-campaign-${{ matrix.gate }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    name: Commit all parallel checkpoints
+    needs: solve
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out latest evidence branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EVIDENCE_BRANCH }}
+          fetch-depth: 0
+
+      - name: Download all gate checkpoints
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v11-campaign-*-checkpoint
+          path: campaign-checkpoints
+
+      - name: Copy and commit checkpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          for gate in 03 04 05 06 07 08 10; do
+            src="campaign-checkpoints/v11-campaign-${gate}-checkpoint"
+            dst="lexigen-language-genesis/external/evidence/v11-campaign/v11-campaign-${gate}"
+            test -d "$src"
+            mkdir -p "$dst"
+            cp -a "$src"/. "$dst"/
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-language-genesis/external/evidence/v11-campaign
+          git commit -m "Preserve parallel v11 campaign candidate checkpoints" || exit 0
+          git push origin "HEAD:$EVIDENCE_BRANCH" || {
+            git pull --rebase origin "$EVIDENCE_BRANCH"
+            git push origin "HEAD:$EVIDENCE_BRANCH"
+          }

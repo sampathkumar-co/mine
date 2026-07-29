@@ -1,0 +1,62 @@
+name: Lexigen Language Genesis v11
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v11/**"
+      - "lexigen-language-genesis/external/arcgen_gate_v11.py"
+      - ".github/workflows/lexigen-language-genesis-v11.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compositional-growth:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out frozen v11 branch
+        uses: actions/checkout@v4
+        with:
+          path: current
+      - name: Check out gate-9 redacted evidence only
+        uses: actions/checkout@v4
+        with:
+          ref: lexigen/external-arcgen-gate9
+          path: gate9
+      - name: Check out pinned ARC-GEN source
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest==8.3.5
+      - name: Run v11 tests
+        working-directory: current/lexigen-language-genesis/v11
+        run: python -m pytest -q
+      - name: Validate sealed adapter
+        working-directory: current/lexigen-language-genesis/external
+        run: python -m py_compile arcgen_gate_v11.py
+      - name: Reproduce v11 mechanism gate
+        working-directory: current/lexigen-language-genesis/v11
+        run: |
+          python replay_gate9_v11.py \
+            --redacted ../../../gate9/lexigen-language-genesis/external/evidence/arcgen-gate9/redacted-task.json \
+            --arcgen-root ../../../arcgen \
+            --output-dir artifacts/v11
+      - name: Hash evidence
+        working-directory: current/lexigen-language-genesis/v11
+        run: sha256sum artifacts/v11/*.json | tee artifacts/v11/SHA256SUMS
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-language-genesis-v11-${{ github.sha }}
+          path: current/lexigen-language-genesis/v11/artifacts/v11/
+          if-no-files-found: error
+          retention-days: 90

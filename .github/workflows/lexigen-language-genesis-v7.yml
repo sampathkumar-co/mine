@@ -1,0 +1,77 @@
+name: Lexigen Language Genesis v7
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v7/**"
+      - ".github/workflows/lexigen-language-genesis-v7.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-synthesis:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out frozen v7 branch
+        uses: actions/checkout@v4
+        with:
+          path: current
+
+      - name: Check out published gate-4 training evidence only
+        uses: actions/checkout@v4
+        with:
+          ref: lexigen/external-arcgen-gate4-reveal
+          path: reveal
+
+      - name: Check out pinned independent ARC-GEN source
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arc-gen
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install frozen test runner
+        run: python -m pip install --disable-pip-version-check pytest==8.3.5
+
+      - name: Run adversarial semantic tests
+        working-directory: current/lexigen-language-genesis/v7
+        run: python -m pytest -q
+
+      - name: Replay authentic published gate-4 demonstrations
+        working-directory: current/lexigen-language-genesis/v7
+        run: |
+          python replay_gate4_v7.py \
+            --training ../../../reveal/lexigen-language-genesis/external/evidence/arcgen-gate4/training-demonstrations.json \
+            --output-dir artifacts/v7
+
+      - name: Run counterexample-guided semantic synthesis
+        working-directory: current/lexigen-language-genesis/v7
+        run: |
+          python cegis_arcgen_v7.py \
+            --training ../../../reveal/lexigen-language-genesis/external/evidence/arcgen-gate4/training-demonstrations.json \
+            --arcgen-root ../../../arc-gen \
+            --output-dir artifacts/v7 \
+            --discovery-start 10000 \
+            --discovery-count 10000 \
+            --holdout-start 20000 \
+            --holdout-count 10000
+
+      - name: Hash v7 evidence
+        working-directory: current/lexigen-language-genesis/v7
+        run: sha256sum artifacts/v7/*.json | tee artifacts/v7/SHA256SUMS
+
+      - name: Upload v7 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-language-genesis-v7-${{ github.sha }}
+          path: current/lexigen-language-genesis/v7/artifacts/v7/
+          if-no-files-found: error
+          retention-days: 90
