@@ -1,0 +1,16 @@
+{
+  "byte_identical_report": true,
+  "claim_boundary": "Implementation-equivalence and infrastructure recovery evidence only; no new scientific result or world-level claim.",
+  "equivalence_task_id": "c074846d",
+  "original_observed_private_memory_sample_mb": 3264.0,
+  "recovery_observed_private_memory_sample_mb": 959.4,
+  "recovery_observed_wall_seconds": 261.18,
+  "report_sha256": "4d6b326e3f8334aa5d5542cae59344a76a1baa55b1734ddacd3a70c783440091",
+  "same_candidate_order": true,
+  "same_examples_and_seeds": true,
+  "same_numerical_and_structural_report": true,
+  "same_search_budgets": true,
+  "schema": "lexigen-v25-disk-backed-recovery-equivalence-v1",
+  "validation_outputs_opened": false,
+  "world_level_breakthrough": false
+}

@@ -1,0 +1,133 @@
+name: Lexigen v25 Exact Disk Recovery
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v25-recovery/**"
+      - ".github/workflows/lexigen-language-genesis-v25-disk-recovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-equivalence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and test recovery engine
+        run: |
+          python -m py_compile lexigen-language-genesis/v25-recovery/*.py
+          python lexigen-language-genesis/v25-recovery/test_v25_recovery.py
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - name: Reproduce frozen first report
+        run: |
+          python lexigen-language-genesis/v25-recovery/scan_one_v25_recovery.py \
+            --arcgen-root arcgen \
+            --task-id c074846d \
+            --split discovery \
+            --output recovered-first.json
+          python lexigen-language-genesis/v25-recovery/verify_recovery_report.py recovered-first.json
+
+  recover-targets:
+    needs: verify-equivalence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        task:
+          - "6cf79266"
+          - "0dfd9992"
+          - "319f2597"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run exact compact recovery
+        run: |
+          python lexigen-language-genesis/v25-recovery/scan_one_v25_recovery.py \
+            --arcgen-root arcgen \
+            --task-id "${{ matrix.task }}" \
+            --split discovery \
+            --output "task-${{ matrix.task }}.json"
+      - name: Upload recovered report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v25-disk-recovery-${{ matrix.task }}
+          path: task-${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-exact-denominator:
+    needs: recover-targets
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download original immutable reports
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: sampathkumar-co/mine
+          run-id: 30467389946
+          pattern: v25-discovery-*
+          path: original-reports
+          merge-multiple: true
+      - name: Download compact recovered reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v25-disk-recovery-*
+          path: recovered-reports
+          merge-multiple: true
+      - name: Assemble exact 40-task denominator
+        run: |
+          mkdir combined-reports
+          for report in original-reports/task-*.json; do
+            case "$(basename "$report")" in
+              task-6cf79266.json|task-0dfd9992.json|task-319f2597.json) ;;
+              *) cp "$report" combined-reports/ ;;
+            esac
+          done
+          cp recovered-reports/task-*.json combined-reports/
+          test "$(find combined-reports -maxdepth 1 -name 'task-*.json' | wc -l)" -eq 40
+      - name: Build exact recovered v25 library
+        run: |
+          python lexigen-language-genesis/v25/aggregate_discovery_v25.py \
+            --reports-root combined-reports \
+            --output V25_DISCOVERY_REPORT.json \
+            --library-output V25_LIBRARY.json \
+            --library-dir library
+      - name: Upload complete recovered evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v25-disk-recovered-evidence
+          path: |
+            V25_DISCOVERY_REPORT.json
+            V25_LIBRARY.json
+            library
+            combined-reports
+          if-no-files-found: error
+          retention-days: 90
