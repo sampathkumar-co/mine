@@ -125,9 +125,14 @@ def template_colour_broadcast_invariant_v2(source: Grid, parameters: dict[str, A
     components = _components_of_colour(source, key_colour, legend_positions)
     if not components:
         raise LatentRuntimeError("key template missing")
-    template = max(components, key=lambda component: (len(component), -min(component)))
-    anchor_row = min(row for row, _ in template)
-    anchor_col = min(col for _, col in template)
+    template = max(
+        components,
+        key=lambda component: (
+            len(component),
+            -min(row for row, _ in component),
+            -min(col for _, col in component),
+        ),
+    )
     key_row, key_col = key_markers[0]
     canvas = [list(row) for row in source]
     for marker_row, marker_col, colour in legend:
