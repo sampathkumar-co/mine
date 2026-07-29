@@ -1,0 +1,57 @@
+name: Lexigen Language Genesis v16
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v16/**"
+      - ".github/workflows/lexigen-language-genesis-v16.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v16:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile v16
+        run: python -m py_compile lexigen-language-genesis/v16/*.py
+      - name: Reproduce verifier co-synthesis
+        run: |
+          python lexigen-language-genesis/v16/validate_v16.py \
+            --v14-evidence lexigen-language-genesis/v14/V14_EVIDENCE.json \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --arcgen-root arcgen \
+            --cases 100 \
+            --mutations-per-case 8 \
+            --output lexigen-language-genesis/v16/V16_REPORT.json
+      - name: Verify frozen evidence
+        run: |
+          python lexigen-language-genesis/v16/freeze_v16_evidence.py
+          git diff --exit-code -- lexigen-language-genesis/v16/V16_REPORT.json lexigen-language-genesis/v16/V16_EVIDENCE.json lexigen-language-genesis/v16/EVIDENCE.md lexigen-language-genesis/v16/contracts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v16-reproduction
+          path: |
+            lexigen-language-genesis/v16/V16_REPORT.json
+            lexigen-language-genesis/v16/V16_EVIDENCE.json
+            lexigen-language-genesis/v16/contracts
+          if-no-files-found: error
+          retention-days: 90
