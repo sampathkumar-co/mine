@@ -1,0 +1,18 @@
+{
+  "candidate_instantiations_tested": 3200,
+  "claim_boundary": "Public ARC-GEN held-out negative-transfer evidence for one frozen operator-hole template; not sealed external evidence or unrestricted invention.",
+  "fresh_validation_completed": true,
+  "github_artifact_digest": "sha256:576fd41ca4f08f52c709d2386e536b592ddabd610d2750e093d5292bcf5aff61",
+  "github_artifact_id": 8733180910,
+  "github_workflow_run_id": 30474816826,
+  "heldout_template_match_demonstrated": false,
+  "local_and_github_report_byte_identical": true,
+  "precommit_sha256": "7160a225dfcd8dcb4a9a68ff2b31dd7c8722704c4f0a8244712ab478ce853e38",
+  "schema": "lexigen-v29-frozen-evidence-v1",
+  "template_library_sha256": "77a4adcba04b345a8ff6c77c75ab596025258856aee93cfc5974a1e31e5efb5d",
+  "unique_success_count": 0,
+  "validation_report_sha256": "bf740077661d9d3c596041cbbbd8dc0df772ffdacd732f25791a7c915faaee29",
+  "validation_task_count": 20,
+  "verifier_cosynthesis_completed": false,
+  "world_level_breakthrough": false
+}

@@ -1,0 +1,192 @@
+{
+  "claim_boundary": "Public ARC-GEN held-out template-transfer evidence only; not sealed external evidence, unrestricted semantic invention, outside-human reproduction, or a world-level breakthrough.",
+  "fresh_validation_completed": false,
+  "heldout_template_match_demonstrated": false,
+  "independent_runtime_completed": false,
+  "precommit_sha256": "7160a225dfcd8dcb4a9a68ff2b31dd7c8722704c4f0a8244712ab478ce853e38",
+  "schema": "lexigen-v29-validation-report-v1",
+  "status_counts": {
+    "ambiguous": 0,
+    "generator_invalid": 0,
+    "no_program": 20,
+    "unique_exact": 0
+  },
+  "task_summaries": [
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "f544651a8e42fcabe3583e1f9974cc6710341285f44de11ddfaa69fca9648807",
+      "status": "no_program",
+      "task_id": "5bd6f4ac"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "9c76b99c93815ccea71ce14457dc60c98ffd25a37923af3df63f1ab6c135a76a",
+      "status": "no_program",
+      "task_id": "a680ac02"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "b7ae72ad64fe7720d79545dfb040156c7d2b0016f624fd3caafcf9ee102d9f2a",
+      "status": "no_program",
+      "task_id": "f823c43c"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "8fcae7d58f989f73e65f650348f9504b08e1a3608a9eb6c832b9a8fcf80c9be7",
+      "status": "no_program",
+      "task_id": "9b4c17c4"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "3d2767917ba53370e3ae9a6b43bd7c565749ff9be59ad2f38c5a5d3a1655b622",
+      "status": "no_program",
+      "task_id": "673ef223"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "c667e8e76062e4d260386a749f16a1b4d0b6f115e4c7eea7018a2e8204e18112",
+      "status": "no_program",
+      "task_id": "5521c0d9"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "02dedc4f568827f1527390f7858987923dc61bd7dfd5c6b92ddf4105e3a79377",
+      "status": "no_program",
+      "task_id": "ce22a75a"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "c7b0840c687c17c7955ffc3cf402d089bfc8dcf59dcf161b33ee8e8ea18a2b74",
+      "status": "no_program",
+      "task_id": "90c28cc7"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "95ae4e47e1c3f2f5e82f778d84e01c2b566db5a460f0866bb16cc854ffb2c70a",
+      "status": "no_program",
+      "task_id": "e76a88a6"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "4b93cab4ee0306409d0f93c3149c0523367dc8ab608aa7b77698467828014d26",
+      "status": "no_program",
+      "task_id": "e9bb6954"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "f91654fda0892f1d5f6de477e357094453cc89466bf6cd63b1b948f63f79816b",
+      "status": "no_program",
+      "task_id": "b775ac94"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "0233cb77e8ea357420e7bb1b353d9694ab640f3b979d441cadc7992e08f13d43",
+      "status": "no_program",
+      "task_id": "db7260a4"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "7968b3bf1772ef248afb2a7cc9bea35e9b5f0134a2ab093646e4540978a3f87d",
+      "status": "no_program",
+      "task_id": "67a3c6ac"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "d8de918addf9265722cfd0980f675c31e5ae7e070cf6caf2815ba87b77f1d806",
+      "status": "no_program",
+      "task_id": "28e73c20"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "ed989c6e2e5bc9b93912a7fb1cfccaf5f8793afff5c8847b8a15b5e71abc1f44",
+      "status": "no_program",
+      "task_id": "6b9890af"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "0e5d27ae23c746c2724a96835fcf7f44b06f2aec6e6726f6bfa764df4e40ef8c",
+      "status": "no_program",
+      "task_id": "33b52de3"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "06c216cba59458f89960f306997663f156070fa264c644fbe166f3fe4a1fa04b",
+      "status": "no_program",
+      "task_id": "93b581b8"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "87281bf192ba0d8bda0c0926d7713615a9e644674a9051685beebfe89b6a5c3b",
+      "status": "no_program",
+      "task_id": "575b1a71"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "d4c571f3321cb0c8bb1fe1328f354855052e7902fc121da671876b5eaab525f6",
+      "status": "no_program",
+      "task_id": "444801d8"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_instantiations_tested": 160,
+      "exact_instantiation_count": 0,
+      "report_sha256": "1b910de1f8a0d7a1ad6698021fcee36982163ae1d46bb66962b09fe06484157e",
+      "status": "no_program",
+      "task_id": "1a07d186"
+    }
+  ],
+  "template_library_sha256": "77a4adcba04b345a8ff6c77c75ab596025258856aee93cfc5974a1e31e5efb5d",
+  "totals": {
+    "accepted_examples": 120,
+    "candidate_instantiations_tested": 3200,
+    "exact_instantiations": 0,
+    "generation_attempts": 120,
+    "generation_failures": 0,
+    "generation_timeouts": 0
+  },
+  "unique_success_count": 0,
+  "unique_successes": [],
+  "validation_generators_imported": 20,
+  "validation_outputs_opened": true,
+  "validation_task_count": 20,
+  "verifier_cosynthesis_completed": false,
+  "world_level_breakthrough": false
+}
