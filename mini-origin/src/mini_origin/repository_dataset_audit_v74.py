@@ -48,7 +48,7 @@ def audit() -> dict[str, object]:
         "repository_dataset_registry_v74_complete"
         if report["status"] == "repository_dataset_registry_complete"
         and all(required_checks.values())
-        and not report.get("unreadable_files")
+        and not report.get("failures")
         else "repository_dataset_registry_v74_incomplete"
     )
     return report
@@ -69,7 +69,7 @@ def main() -> None:
         "uci_ids": report["uci_id_count"],
         "pystreed_tokens": report["pystreed_token_count"],
         "opened_checks": report["required_opened_uci_checks"],
-        "unreadable": len(report.get("unreadable_files", [])),
+        "unreadable": len(report.get("failures", [])),
     }, indent=2))
     if report["status"] != "repository_dataset_registry_v74_complete":
         raise SystemExit(1)
