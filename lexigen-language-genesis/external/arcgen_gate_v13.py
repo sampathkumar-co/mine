@@ -15,10 +15,10 @@ VERSION_ROOTS = {name: ROOT / name for name in ("v7", "v8", "v9", "v10", "v11", 
 sys.path.insert(0, str(VERSION_ROOTS["v13"]))
 
 from latent_runtime_v13 import as_grid, to_json_grid  # noqa: E402
-from latent_runtime_v13_ext3 import execute_program  # noqa: E402
+from latent_runtime_v13_ext4 import execute_program  # noqa: E402
 from latent_synthesizer_v13 import canonical_json  # noqa: E402
 from latent_synthesizer_v13_final import synthesize_latent_final  # noqa: E402
-from portable_runtime_v13 import execute_portable  # noqa: E402
+from portable_runtime_v13_ext4 import execute_portable  # noqa: E402
 
 PROTOCOL = "arcgen-gate-v13"
 base.PROTOCOL = PROTOCOL
