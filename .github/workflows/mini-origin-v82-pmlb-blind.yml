@@ -1,0 +1,53 @@
+name: Mini-ORIGIN PMLB Blind v0.82
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v82-pmlb-blind
+    paths:
+      - "mini-origin/campaigns/v82-pmlb-blind.json"
+      - "mini-origin/src/mini_origin/pmlb_blind_v82.py"
+      - "mini-origin/tests/test_pmlb_blind_v82.py"
+      - "mini-origin/scripts/run_v82_ci.sh"
+      - ".github/workflows/mini-origin-v82-pmlb-blind.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v82-pmlb-blind
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pmlb-cross-source-blind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Run preregistered PMLB blind campaign
+        run: bash scripts/run_v82_ci.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v82-pmlb-blind
+          path: |
+            mini-origin/results/v82/states.txt
+            mini-origin/results/v82/python-reference.json
+            mini-origin/results/v82/rust-results.json
+            mini-origin/results/v82/evidence.json
+            mini-origin/results/v82/adapted-manifest.json
+          if-no-files-found: warn
+          retention-days: 90
