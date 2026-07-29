@@ -1,0 +1,98 @@
+name: Lexigen Language Genesis v21
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v21/**"
+      - ".github/workflows/lexigen-language-genesis-v21.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ARCGEN_SHA: a15cbdb44c776610aeeb9f487a06af875d3d0878
+
+jobs:
+  scan-task:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        task:
+          - "dbc1a6ce"
+          - "e7b06bea"
+          - "363442ee"
+          - "d6ad076f"
+          - "25e02866"
+          - "bd14c3bf"
+          - "a8610ef7"
+          - "ad173014"
+          - "b7999b51"
+          - "d5c634a2"
+          - "1e0a9b12"
+          - "0e206a2e"
+          - "1190e5a7"
+          - "1e32b0e9"
+          - "8dab14c2"
+          - "68bc2e87"
+          - "42a50994"
+          - "1b2d62fb"
+          - "34b99a2b"
+          - "7ec998c9"
+          - "a48eeaf7"
+          - "652646ff"
+          - "69889d6e"
+          - "f9012d9b"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: ${{ env.ARCGEN_SHA }}
+          path: arcgen
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile scanner
+        run: |
+          python -m py_compile \
+            lexigen-language-genesis/v21/scan_one_v21.py \
+            lexigen-language-genesis/v21/aggregate_v21.py
+      - name: Scan frozen task
+        run: |
+          mkdir -p result
+          python lexigen-language-genesis/v21/scan_one_v21.py \
+            --arcgen-root arcgen \
+            --task-id "${{ matrix.task }}" \
+            --output "result/${{ matrix.task }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v21-task-${{ matrix.task }}
+          path: result/${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: scan-task
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: v21-task-*
+          path: results
+          merge-multiple: false
+      - name: Aggregate without survivor selection
+        run: |
+          python lexigen-language-genesis/v21/aggregate_v21.py \
+            --results results \
+            --output V21_DISCOVERY_REPORT.json
+          sha256sum V21_DISCOVERY_REPORT.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v21-discovery-report
+          path: V21_DISCOVERY_REPORT.json
+          if-no-files-found: error
+          retention-days: 90

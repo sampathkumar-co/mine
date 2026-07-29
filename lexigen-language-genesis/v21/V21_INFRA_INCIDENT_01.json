@@ -1,0 +1,9 @@
+{
+  "schema": "lexigen-v21-infrastructure-incident-v1",
+  "workflow_run_id": 30456905701,
+  "status": "invalidated_before_scientific_aggregation",
+  "cause": "One unquoted hexadecimal-like task identity, 1e32b0e9, was parsed by YAML as the floating-point token Infinity.",
+  "effect": "The workflow matrix did not preserve the exact 24-task denominator. No aggregate result from this run is scientifically eligible.",
+  "repair_scope": "Quote every matrix task identity. Do not alter the precommitted task list, examples, generator attempts, candidate grammar, survivor threshold, or validation registry.",
+  "evidence_policy": "Any per-task artifacts from the invalid run remain infrastructure diagnostics only and must not enter the v21 aggregate evidence."
+}
