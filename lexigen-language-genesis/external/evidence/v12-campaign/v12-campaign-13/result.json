@@ -1,0 +1,10 @@
+{
+  "breakthrough_candidate": false,
+  "gate_id": "v12-campaign-13",
+  "hidden_scoring_performed": false,
+  "predictions_committed": false,
+  "sealed_outputs_accessed": false,
+  "selected_task_id": "8ee62060",
+  "solver_exit_code": 0,
+  "status": "permanent-pre-score-failure"
+}
