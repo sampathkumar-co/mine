@@ -1,0 +1,23 @@
+{
+  "status": "pmlb_hash_lock_v81_attempt1_transport_failure",
+  "workflow_run_id": 30481649166,
+  "job_id": 90676965985,
+  "head_commit": "1f6d725bd140995fa3af542a04f667b468cedde6",
+  "focused_tests_passed": 18,
+  "summary_dataset_count": 450,
+  "diagnostic_summary_eligible_count": 99,
+  "diagnostic_metadata_candidate_count": 68,
+  "diagnostic_metadata_failure_count": 0,
+  "diagnostic_metadata_rejections": {
+    "name_overlap": 7,
+    "metadata_mentions_uci_or_openml": 22,
+    "metadata_mentions_excluded_name": 2
+  },
+  "selected_dataset_count": 0,
+  "failure_reason": "raw.githubusercontent.com returns Git LFS pointer text for PMLB .tsv.gz paths rather than the gzip object, so every ranked candidate failed the frozen gzip-magic check",
+  "records_or_labels_accessed": false,
+  "dataset_tables_decompressed": false,
+  "solver_executed": false,
+  "manifest_produced": false,
+  "allowed_repair": "change only the immutable raw-byte transport from raw.githubusercontent.com to media.githubusercontent.com/media for the same repository, frozen commit and path; do not alter metadata eligibility, provenance exclusions, rank inputs, candidate order or dataset count"
+}
