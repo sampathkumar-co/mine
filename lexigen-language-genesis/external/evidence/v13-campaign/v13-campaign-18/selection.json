@@ -1,0 +1,12 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "eligible_task_count": 864,
+  "eligible_task_count_before_exclusion": 900,
+  "excluded_task_count": 36,
+  "excluded_task_ids_sha256": "6b95b2f105c43a9b1aa760e8a2b1d488a6f1d01588168527ce8f4c4586942b2f",
+  "lexigen_commit": "ba83723857a809dce2883289831a90211514da6f",
+  "protocol": "arcgen-v13-campaign-18",
+  "selected_task_id": "e78887d1",
+  "selection_digest": "df414662a3fa3bfc51e4f1f873c261af0d924639f0a518c78fed7ff1d3138396",
+  "selection_index": 790
+}
