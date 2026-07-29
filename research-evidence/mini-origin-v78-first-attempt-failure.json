@@ -1,0 +1,52 @@
+{
+  "status": "openml_cross_source_blind_v78_first_attempt_validation_failure",
+  "workflow_run": 30459481449,
+  "workflow_job": 90601502366,
+  "head_commit": "7b1838bbbe171e6188c207a580207f977087154b",
+  "artifact_id": 8729304112,
+  "artifact_digest": "sha256:dfecc2dd89b64ac506b9db591cc215f1b9cb0609f298a477dd55ac93a28767c7",
+  "failure_stage": "final evidence validation",
+  "failure_type": "mechanical_provenance_field_omission",
+  "failure_message": "KeyError: parent_v68_evidence_digest",
+  "records_opened": true,
+  "solver_executed": true,
+  "algorithm_revision_after_record_access": false,
+  "scientific_threshold_revision_after_record_access": false,
+  "python_reference": {
+    "contributing_dataset_count": 6,
+    "base_state_count": 72,
+    "profiled_state_count": 216,
+    "bounded_solved_count": 216,
+    "plain_solved_count": 69,
+    "bounded_only_count": 147,
+    "plain_bounded_objective_mismatch_count": 0,
+    "current_bounded_plan_mismatch_count": 0,
+    "bounded_expansion_regression_count": 0,
+    "states_with_lower_bound_pruning": 122,
+    "aggregate_bounded_reduction_fraction": 0.5973851647024081,
+    "dominated_queries_removed": 90237,
+    "root_incomparable_classes": 389,
+    "expansion_ratio_median": 5813.96511627907,
+    "expansion_ratio_p90": 238019.25,
+    "state_input_sha256": "ac08558b4a6f47a9d7dc502a0d33aafa235ce8cb0f04a602d4661376341769e7",
+    "frozen_external_digest": "6fd10a0e477d49c3b5f4b260efc88928ee6a5ec6de289a5ffdf589472e01ed54"
+  },
+  "rust_replay": {
+    "rows": 216,
+    "exact_mismatches": 0,
+    "total_milliseconds": 62.084655000000005
+  },
+  "dataset_coverage": {
+    "pc1": 12,
+    "eucalyptus": 12,
+    "texture": 12,
+    "kc1": 12,
+    "kc2": 12,
+    "analcatdata_dmft": 0,
+    "pc4": 12
+  },
+  "scientific_outcome_already_determined": "rejection",
+  "scientific_rejection_reason": "Only six of seven locked datasets contributed states; analcatdata_dmft produced zero structural candidates and zero selected states, violating the unchanged seven-dataset and per-dataset coverage gates.",
+  "allowed_repair": "Add only the omitted legacy provenance field required by the unchanged validator, rerun the identical frozen pipeline, and preserve the formal rejection.",
+  "claim_boundary": "This attempt is not a successful cross-source replication. Strong performance on six datasets does not override the preregistered all-seven coverage requirement."
+}
