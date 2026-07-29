@@ -1,0 +1,40 @@
+{
+  "comparison": {
+    "grid_retention_reduction_fraction": 0.6701048951048951,
+    "precommitted_improvement_gate_passed": true,
+    "raw_evaluation_increase_fraction": 0.4884919685310891,
+    "support_retention_increase_fraction": 0.9346667912889055,
+    "verdict": "mixed improvement: deeper support coverage and lower Grid retention, but slower and more memory-intensive; no exact program"
+  },
+  "same_demonstrations": true,
+  "schema": "lexigen-v26-first-comparison-summary-v1",
+  "task_id": "c074846d",
+  "v25": {
+    "enumeration_complete": false,
+    "exact_programs": 0,
+    "raw_candidate_evaluations": 672791,
+    "retained_by_type": {
+      "Color": 10,
+      "Grid": 143000,
+      "ObjectSet": 28576,
+      "PointSet": 78414
+    },
+    "total_retained_expressions": 250000,
+    "wall_seconds_observed": 80.44
+  },
+  "v26": {
+    "beam_dropped_grid_expressions": 105000,
+    "enumeration_complete": true,
+    "exact_programs": 0,
+    "raw_candidate_evaluations": 1001444,
+    "retained_by_type": {
+      "Color": 10,
+      "Grid": 47175,
+      "ObjectSet": 78576,
+      "PointSet": 128414
+    },
+    "total_retained_expressions": 254175,
+    "wall_seconds_observed": 134.22
+  },
+  "world_level_breakthrough": false
+}
