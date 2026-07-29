@@ -4,7 +4,7 @@ import hashlib
 from typing import Sequence
 
 from latent_runtime_v13 import Grid, LatentRuntimeError
-from latent_runtime_v13_ext3 import execute_program
+from latent_runtime_v13_ext4 import execute_program
 from latent_synthesizer_v13 import LatentSynthesisResult, canonical_json
 from latent_synthesizer_v13_ext3 import candidate_programs, description_length
 
