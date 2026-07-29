@@ -1,0 +1,37 @@
+{
+  "status": "blind_claim_invalidated",
+  "scientific_gate_valid": false,
+  "workflow_execution_valid": true,
+  "reason": "The preregistered claim that all seven datasets were genuinely unseen is false. Repository provenance shows prior exposure of three datasets before v0.61.",
+  "invalidating_prior_exposures": [
+    {
+      "dataset": "Annealing",
+      "prior_version": "v0.51",
+      "evidence_path": "research-evidence/mini-origin-v51-native-holdout-rejected.json",
+      "detail": "Selected holdout path data/cost-sensitive/annealing/annealing-test-54.csv"
+    },
+    {
+      "dataset": "Primary Tumor",
+      "prior_version": "v0.34",
+      "evidence_path": "mini-origin/external-data/uci-v34/manifest.json",
+      "uci_id": 83,
+      "sha256": "d866e8d1f358cdd51233982d4ab0680a19a6fd46be0517b5686196e5fa3c33f3"
+    },
+    {
+      "dataset": "Soybean (Large)",
+      "prior_version": "v0.34",
+      "evidence_path": "mini-origin/external-data/uci-v34/manifest.json",
+      "uci_id": 90,
+      "sha256": "c5701e50dd74b3c261d8ec1fd768d3392174a516edab6c661b0ce5dd2e133845"
+    }
+  ],
+  "retained_evidence": {
+    "python_rust_exact_match_count": 228,
+    "plan_mismatch_count": 0,
+    "expansion_ratio_median": 49.65118949053375,
+    "expansion_ratio_p90": 121.30667250992077,
+    "interpretation": "These remain reproducible mixed-development/external benchmark measurements, but they cannot support a clean blind or external-breakthrough claim."
+  },
+  "required_repair": "Run a new archive-lock and evaluation on a repository-audited suite containing no dataset, derivative, split, archive hash, or named source previously used by Mini-ORIGIN. Preserve the v0.60 generator and all v0.61 thresholds unchanged.",
+  "claim_scope": "v0.61 is not a valid clean blind breakthrough. It is preserved as contaminated evidence and must not be described as world-level, world-first, or independently externally confirmed."
+}
