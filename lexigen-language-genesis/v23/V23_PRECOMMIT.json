@@ -1,0 +1,22 @@
+{
+  "schema": "lexigen-v23-heldout-horizon-precommit-v1",
+  "base_commit": "db9f4dfdc9d4effacce978b5d8a8f0dcd7af2cfc",
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "selected_validation_task_ids": [
+    "963e52fc", "6ffe8f07", "252143c9", "5614dbcf", "695367ec",
+    "22425bda", "c3e719e8", "103eff5b", "11852cab", "f25fbde4",
+    "3a301edc", "9356391f", "e21a174a", "66e6c45b", "98cf29f8",
+    "662c240a", "44f52bb0", "b6afb2da", "09629e4f", "e73095fd"
+  ],
+  "task_count": 20,
+  "selection_rule": "lowest SHA-256 ranks under lexigen-v23-heldout:<task_id> from the frozen v19r5 validation registry",
+  "frozen_solver": "exact v22 1,891-candidate relational-sketch inventory",
+  "equal_budget_baseline": "the same inventory order and candidate budget without any post-validation code change",
+  "published_demonstrations_only_for_synthesis": true,
+  "fresh_accepted_cases_per_survivor": 10000,
+  "independent_runtime_required": true,
+  "replacement_tasks_allowed": false,
+  "revision_budget_after_validation_access": 0,
+  "external_real_world_gate": "No world-level or real-world discovery claim is permitted from ARC-GEN success alone. Horizon completion must state whether a separate mathematical, algorithmic, scientific or software discovery was actually produced.",
+  "claim_boundary": "Precommitted public held-out transfer test. It is not hidden sealed evidence, outside-human reproduction or a world breakthrough."
+}
