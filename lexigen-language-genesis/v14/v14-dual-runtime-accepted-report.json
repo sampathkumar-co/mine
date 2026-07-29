@@ -1,0 +1,262 @@
+{
+  "accepted_cases_per_family": 10000,
+  "failure_examples": [],
+  "families": 9,
+  "portable_failures": 0,
+  "primary_failures": 0,
+  "reports": [
+    {
+      "accepted_cases": 10000,
+      "gate": 1,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "op": "move_singleton_towards",
+          "source_colour": 3,
+          "target_colour": 4
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 0.7079,
+      "task": "dc433765"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 2,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "fill_colour": 0,
+          "op": "edge_project",
+          "radius": 1
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 0.2727,
+      "task": "49d1d64f"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 3,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "mapping": {
+            "7": 5
+          },
+          "op": "recolour"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 0.2749,
+      "task": "c8f0f002"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 4,
+      "generator_attempts": 10015,
+      "generator_rejections": 15,
+      "pipeline": [
+        {
+          "line_colour": "structural",
+          "op": "decode_regular_linegrid",
+          "transform": "flip_h"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2102880,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2104522,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2104606,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2105668,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2105676,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2105971,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2106222,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2106435,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2106868,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107293,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107676,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107774,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107997,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2108154,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2109448,
+          "type": "ValueError"
+        }
+      ],
+      "runtime_agreement": 10000,
+      "seconds": 4.3477,
+      "task": "9f236235"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 5,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "op": "overlay_equal_tiles",
+          "order": [
+            0,
+            3,
+            2,
+            1
+          ],
+          "tile_cols": 2,
+          "tile_rows": 2
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 1.8181,
+      "task": "ea9794b1"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 6,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "object_mode": "colours",
+          "op": "canonical_rectangular_layers"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 421.5466,
+      "task": "c920a713"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 8,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "object_mode": "components",
+          "op": "canonical_rectangular_layers"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 16.0047,
+      "task": "eb5a1d5d"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 9,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "fill_colour": 3,
+          "op": "fill_internal_blank_axis"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 8.8317,
+      "task": "da2b0fe3"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 12,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "op": "extend_corner_marked_rays"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 8.9305,
+      "task": "6e19193c"
+    }
+  ],
+  "runtime_disagreements": 0,
+  "total_accepted_cases": 90000,
+  "total_generator_attempts": 90015,
+  "total_generator_rejections": 15
+}

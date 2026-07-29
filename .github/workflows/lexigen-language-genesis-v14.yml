@@ -1,0 +1,83 @@
+name: Lexigen Language Genesis v14
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v14/**"
+      - "lexigen-language-genesis/external/arcgen_gate_v14.py"
+      - ".github/workflows/lexigen-language-genesis-v14.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v14:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out v14
+        uses: actions/checkout@v4
+
+      - name: Check out frozen v13 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependency
+        run: python -m pip install pytest==8.3.5
+
+      - name: Compile v14 and sealed adapter
+        run: |
+          python -m py_compile \
+            lexigen-language-genesis/v14/scene_runtime_v14.py \
+            lexigen-language-genesis/v14/portable_scene_runtime_v14.py \
+            lexigen-language-genesis/v14/scene_synthesizer_v14.py \
+            lexigen-language-genesis/v14/validate_v14_reproducible.py \
+            lexigen-language-genesis/external/arcgen_gate_v14.py
+
+      - name: Run adversarial parity suite
+        working-directory: lexigen-language-genesis/v14
+        run: python -m pytest -q test_scene_v14.py
+
+      - name: Reproduce accepted-case dual-runtime gate
+        run: |
+          python lexigen-language-genesis/v14/validate_v14_reproducible.py \
+            --arcgen-root arcgen \
+            --evidence-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --cases 10000 \
+            --output lexigen-language-genesis/v14/v14-reproducible-report.json
+
+      - name: Hash frozen evidence
+        run: |
+          sha256sum \
+            lexigen-language-genesis/v14/scene_runtime_v14.py \
+            lexigen-language-genesis/v14/portable_scene_runtime_v14.py \
+            lexigen-language-genesis/v14/scene_synthesizer_v14.py \
+            lexigen-language-genesis/v14/test_scene_v14.py \
+            lexigen-language-genesis/v14/v14-reproducible-report.json \
+            lexigen-language-genesis/external/arcgen_gate_v14.py
+
+      - name: Upload v14 reproduction report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v14-reproduction
+          path: lexigen-language-genesis/v14/v14-reproducible-report.json
+          if-no-files-found: error
+          retention-days: 90

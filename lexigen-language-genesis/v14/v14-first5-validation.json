@@ -1,0 +1,52 @@
+{
+  "failures": 0,
+  "fresh_cases": 500,
+  "rows": [
+    {
+      "cases": 100,
+      "failures": 0,
+      "gate": 1,
+      "operator_sequence": [
+        "move_singleton_towards"
+      ],
+      "task": "dc433765"
+    },
+    {
+      "cases": 100,
+      "failures": 0,
+      "gate": 2,
+      "operator_sequence": [
+        "edge_project"
+      ],
+      "task": "49d1d64f"
+    },
+    {
+      "cases": 100,
+      "failures": 0,
+      "gate": 3,
+      "operator_sequence": [
+        "recolour"
+      ],
+      "task": "c8f0f002"
+    },
+    {
+      "cases": 100,
+      "failures": 0,
+      "gate": 4,
+      "operator_sequence": [
+        "decode_regular_linegrid"
+      ],
+      "task": "9f236235"
+    },
+    {
+      "cases": 100,
+      "failures": 0,
+      "gate": 5,
+      "operator_sequence": [
+        "overlay_equal_tiles"
+      ],
+      "task": "ea9794b1"
+    }
+  ],
+  "tasks": 5
+}

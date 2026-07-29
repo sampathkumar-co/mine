@@ -1,0 +1,311 @@
+{
+  "accepted_cases_per_family": 10000,
+  "adversarial_tests_passed": 8,
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "base_engine_commit": "18885982a880eb903f15752be04f7fd7ab2e8c2f",
+  "claim_boundary": {
+    "autonomous_language_genesis": false,
+    "reason": "The generic v14 scene operations were human-authored after visible failures. Sealed v14-only wins would be external capability evidence, not autonomous semantic invention.",
+    "world_level_breakthrough": false
+  },
+  "combined_regression_tests_passed": 38,
+  "composition_only_v13_scan": {
+    "exact_compositions_found": 0,
+    "max_depth": 2,
+    "status": "preserved negative development observation",
+    "visible_packages": 39
+  },
+  "development_gates": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9,
+    12
+  ],
+  "development_task_ids": [
+    "dc433765",
+    "49d1d64f",
+    "c8f0f002",
+    "9f236235",
+    "ea9794b1",
+    "c920a713",
+    "eb5a1d5d",
+    "da2b0fe3",
+    "6e19193c"
+  ],
+  "families": 9,
+  "families_report": [
+    {
+      "accepted_cases": 10000,
+      "gate": 1,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "op": "move_singleton_towards",
+          "source_colour": 3,
+          "target_colour": 4
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 0.7079,
+      "task": "dc433765"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 2,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "fill_colour": 0,
+          "op": "edge_project",
+          "radius": 1
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 0.2727,
+      "task": "49d1d64f"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 3,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "mapping": {
+            "7": 5
+          },
+          "op": "recolour"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 0.2749,
+      "task": "c8f0f002"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 4,
+      "generator_attempts": 10015,
+      "generator_rejections": 15,
+      "pipeline": [
+        {
+          "line_colour": "structural",
+          "op": "decode_regular_linegrid",
+          "transform": "flip_h"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2102880,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2104522,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2104606,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2105668,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2105676,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2105971,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2106222,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2106435,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2106868,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107293,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107676,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107774,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2107997,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2108154,
+          "type": "ValueError"
+        },
+        {
+          "message": "not enough values to unpack (expected 2, got 0)",
+          "seed": 2109448,
+          "type": "ValueError"
+        }
+      ],
+      "runtime_agreement": 10000,
+      "seconds": 4.3477,
+      "task": "9f236235"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 5,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "op": "overlay_equal_tiles",
+          "order": [
+            0,
+            3,
+            2,
+            1
+          ],
+          "tile_cols": 2,
+          "tile_rows": 2
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 1.8181,
+      "task": "ea9794b1"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 6,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "object_mode": "colours",
+          "op": "canonical_rectangular_layers"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 421.5466,
+      "task": "c920a713"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 8,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "object_mode": "components",
+          "op": "canonical_rectangular_layers"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 16.0047,
+      "task": "eb5a1d5d"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 9,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "fill_colour": 3,
+          "op": "fill_internal_blank_axis"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 8.8317,
+      "task": "da2b0fe3"
+    },
+    {
+      "accepted_cases": 10000,
+      "gate": 12,
+      "generator_attempts": 10000,
+      "generator_rejections": 0,
+      "pipeline": [
+        {
+          "op": "extend_corner_marked_rays"
+        }
+      ],
+      "portable_exact": 10000,
+      "primary_exact": 10000,
+      "rejection_examples": [],
+      "runtime_agreement": 10000,
+      "seconds": 8.9305,
+      "task": "6e19193c"
+    }
+  ],
+  "files": {
+    "../external/arcgen_gate_v14.py": "1f271e9f625bbe4bd91d7ac23f9d8ad9d33839e02044825106534c009f26806e",
+    "portable_scene_runtime_v14.py": "76b6f960c8f3c09e0d83c81167e0547f80cfb560b5766b4cf172cbfd13bc86ab",
+    "scene_runtime_v14.py": "071e944bd7e5b9eace67c02369bd83991af775089f00aba153ef52cbf3e67f37",
+    "scene_synthesizer_v14.py": "4f4c1a226736831075e73e29c18869f99a318d8e5a0be86d7e235d59dc8dd591",
+    "test_scene_v14.py": "4cf1b08cb0472e5b3eaeebc855e0ff3d03ee57812d16bc765c86baa15bdbcecb",
+    "v14-dual-runtime-accepted-report.json": "8e1a6845812f1f0ae9bf38cf16518dd82c240bf4b2ce9d2eafd4ba62430ca931",
+    "validate_v14_reproducible.py": "7e16756ba4fc287277a7c78b63ad8c0882ef51f83186f0d69345f0dde6044987"
+  },
+  "generator_attempts": 90015,
+  "generator_rejections": 15,
+  "portable_failures": 0,
+  "primary_failures": 0,
+  "runtime_disagreements": 0,
+  "schema": "lexigen-language-genesis-v14-evidence-v1",
+  "total_accepted_cases_per_runtime": 90000,
+  "total_cross_runtime_executions": 180000,
+  "v13_visible_evidence_commit": "13cd271a2d4813001563842a51a1e72dd100aa1a",
+  "version": "v14"
+}
