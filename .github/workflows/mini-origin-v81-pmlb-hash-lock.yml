@@ -1,0 +1,49 @@
+name: Mini-ORIGIN PMLB Hash Lock v0.81
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v81-pmlb-hash-lock
+    paths:
+      - "mini-origin/campaigns/v81-pmlb-hash-lock.json"
+      - "mini-origin/src/mini_origin/pmlb_hash_lock_v81.py"
+      - "mini-origin/tests/test_pmlb_hash_lock_v81.py"
+      - "mini-origin/scripts/run_v81_ci.sh"
+      - "research-evidence/mini-origin-v81-pmlb-source-commit.json"
+      - ".github/workflows/mini-origin-v81-pmlb-hash-lock.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v81-pmlb-hash-lock
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-byte-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Run deterministic PMLB hash lock
+        run: bash scripts/run_v81_ci.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v81-pmlb-hash-lock
+          path: mini-origin/results/v81/manifest.json
+          if-no-files-found: warn
+          retention-days: 90
