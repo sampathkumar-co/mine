@@ -1,0 +1,56 @@
+name: Mini-ORIGIN Clean External Lock v0.64
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v64-clean-external-lock
+    paths:
+      - "research-evidence/mini-origin-v63-repository-dataset-registry.json"
+      - "mini-origin/src/mini_origin/clean_external_lock_v64.py"
+      - ".github/workflows/mini-origin-v64-clean-external-lock.yml"
+  pull_request:
+    paths:
+      - "research-evidence/mini-origin-v63-repository-dataset-registry.json"
+      - "mini-origin/src/mini_origin/clean_external_lock_v64.py"
+      - ".github/workflows/mini-origin-v64-clean-external-lock.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v64-lock-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  clean-archive-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify repository registry and candidate absence
+        run: >-
+          python -c "import json; row=json.load(open('../research-evidence/mini-origin-v63-repository-dataset-registry.json')); assert row['status']=='repository_dataset_registry_complete'; assert row['registry_digest']=='870daa9b28450c1717a266ca73b7717ba24abba11b7f4c537e28e77ab1c0cc0d'; assert all(row['candidate_absence_checks'].values()); assert row['failure_count']==0"
+      - name: Enforce hash-only source boundary
+        run: >-
+          python -c "from pathlib import Path; text=Path('src/mini_origin/clean_external_lock_v64.py').read_text(); forbidden=('zipfile','csv.reader','pandas','numpy','extractall','read_csv'); assert not any(token in text for token in forbidden)"
+      - name: Download archive bytes and freeze hashes
+        run: >-
+          mkdir -p results/v64 &&
+          python -m mini_origin.clean_external_lock_v64
+          --output results/v64/archive-lock.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v64-clean-external-archive-lock
+          path: mini-origin/results/v64/archive-lock.json
+          retention-days: 90
