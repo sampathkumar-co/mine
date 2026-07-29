@@ -41,7 +41,7 @@ DATASETS = (
     {
         "name": "Pen-Based Recognition of Handwritten Digits",
         "uci_id": 81,
-        "url": "https://archive.ics.uci.edu/static/public/81/pen-based+recognition+of+handwritten+digits.zip",
+        "url": "https://archive.ics.uci.edu/static/public/81/pen+based+recognition+of+handwritten+digits.zip",
         "doi": "10.24432/C5MG6K",
     },
     {
