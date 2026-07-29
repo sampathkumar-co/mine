@@ -1,0 +1,110 @@
+{
+  "antiunification": {
+    "allowed_hole_kind": "operator_value_only",
+    "constant_holes_allowed": false,
+    "field_name_holes_allowed": false,
+    "list_length_changes_allowed": false,
+    "maximum_operator_holes": 1,
+    "minimum_shared_fixed_operator_nodes": 5,
+    "minimum_source_task_identities": 2,
+    "operator_hole_signature_must_match": true,
+    "retain_all_eligible_templates": true,
+    "template_identity": "canonical JSON of the anti-unified AST plus typed hole declaration",
+    "template_order": "template SHA-256 ascending",
+    "tree_shape_changes_allowed": false,
+    "whole_subtree_holes_allowed": false
+  },
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "base_commit": "3a8204f6881fb30eabe4a14a6279c485b08b8f9a",
+  "claim_boundary": "Public ARC-GEN held-out template-transfer evidence only; not sealed external evidence, unrestricted semantic invention, outside-human reproduction, or a world-level breakthrough.",
+  "human_survivor_selection_allowed": false,
+  "maximum_generator_attempts_per_task": 16,
+  "per_generation_timeout_seconds": 5,
+  "post_success_requirements": {
+    "fresh_accepted_cases": [
+      1000,
+      10000
+    ],
+    "frozen_template_hash_required": true,
+    "independent_runtime": true,
+    "verifier_cosynthesis": true
+  },
+  "replacement_tasks_allowed": false,
+  "schema": "lexigen-v29-operator-hole-antiunification-precommit-v1",
+  "seed_rule": "uint32(first_16_hex(sha256(lexigen-v29:validation:<task_id>:<attempt_index>)))",
+  "source_aggregate_report_sha256": "3426c3ca392cabd672b6308a141fc13a358236e7ebeb36dba72369afaa3c6b01",
+  "source_pair_rule": "evaluate all unordered pairs of source structures; no manual pair selection",
+  "source_run_id": 30472075500,
+  "source_structure_count": 3,
+  "source_structures_sha256": "0d90539da866975b2e2521c91fa8612bc4bd7dc8b5ff8f60831b7890aae2b49c",
+  "source_task_count": 3,
+  "success_requirement": "at least one frozen anti-unified template has a unique exact instantiation on a distinct validation task identity",
+  "template_freeze_rule": "commit every eligible template and its source instantiations before importing any validation generator",
+  "typed_operator_catalog": {
+    "Grid->Grid": [
+      "grid_flip_h",
+      "grid_flip_v",
+      "grid_rotate180"
+    ],
+    "ObjectSet->PointSet": [
+      "objects_to_points"
+    ],
+    "PointSet->ObjectSet": [
+      "components4"
+    ],
+    "PointSet->PointSet": [
+      "bbox_border",
+      "bbox_fill",
+      "bbox_reflect_bottom",
+      "bbox_reflect_left",
+      "bbox_reflect_right",
+      "bbox_reflect_top",
+      "col_span",
+      "connect_aligned",
+      "dilate4",
+      "erode4",
+      "grid_flip_h_points",
+      "grid_flip_v_points",
+      "grid_rotate180_points",
+      "holes",
+      "outline4",
+      "row_span"
+    ]
+  },
+  "validation_examples_per_task": 6,
+  "validation_generators_imported": 0,
+  "validation_inference": {
+    "all_ambiguous_and_no-program_tasks_remain_in_denominator": true,
+    "allowed": [
+      "operator_hole choice from frozen typed catalog",
+      "colour parameters 0 through 9"
+    ],
+    "structure_edits_allowed": false,
+    "unique_exact_instantiation_required": true
+  },
+  "validation_outputs_opened": false,
+  "validation_task_count": 20,
+  "validation_task_ids": [
+    "5bd6f4ac",
+    "a680ac02",
+    "f823c43c",
+    "9b4c17c4",
+    "673ef223",
+    "5521c0d9",
+    "ce22a75a",
+    "90c28cc7",
+    "e76a88a6",
+    "e9bb6954",
+    "b775ac94",
+    "db7260a4",
+    "67a3c6ac",
+    "28e73c20",
+    "6b9890af",
+    "33b52de3",
+    "93b581b8",
+    "575b1a71",
+    "444801d8",
+    "1a07d186"
+  ],
+  "world_level_breakthrough": false
+}

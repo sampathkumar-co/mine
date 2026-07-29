@@ -1,0 +1,71 @@
+{
+  "aggregate_report_sha256": "3426c3ca392cabd672b6308a141fc13a358236e7ebeb36dba72369afaa3c6b01",
+  "schema": "lexigen-v29-source-structures-v1",
+  "source_run_id": 30472075500,
+  "structures": [
+    {
+      "demonstration_sha256": "61df90b3aacdd3e85a34f33c32ceea594cbaaa173bc536288e9704a160a6c777",
+      "minimum_depth": 4,
+      "minimum_nodes": 7,
+      "report_sha256": "a6d521ed7a2ce8d4f4835525b55ff55f2d54514bea0710e495c4c754b3786b25",
+      "structure": {
+        "colour": {"name": "c0", "op": "param_color"},
+        "grid": {"op": "input_grid"},
+        "op": "paint",
+        "points": {
+          "op": "bbox_border",
+          "points": {
+            "op": "dilate4",
+            "points": {
+              "op": "erode4",
+              "points": {"op": "non_background_points"}
+            }
+          }
+        }
+      },
+      "structure_sha256": "7c6cc28e4f7bb5f69cebea824d175ed8d873efc97df13a6566238ba32cf65cb9",
+      "task_id": "67a423a3"
+    },
+    {
+      "demonstration_sha256": "eaaa87d10a6c3e3484296161446784a746492fb1d9f4184d38d43000d0baf037",
+      "minimum_depth": 3,
+      "minimum_nodes": 8,
+      "report_sha256": "8e91542fabbdd91e01d634edd0a4cabe6073a088b73b3efbb9575e01bff79b63",
+      "structure": {
+        "grid": {
+          "colour": {"op": "least_non_background"},
+          "grid": {"colour": {"op": "most_non_background"}, "op": "canvas"},
+          "op": "paint",
+          "points": {"colour": {"op": "most_non_background"}, "op": "points_of_color"}
+        },
+        "op": "crop_bbox",
+        "points": {"op": "non_background_points"}
+      },
+      "structure_sha256": "2a8bc0338ab5aa09094438fb990efde9c3c138dc6549369b8d715febe984cecb",
+      "task_id": "b94a9452"
+    },
+    {
+      "demonstration_sha256": "352b2fca0db30190320973e5fa03c45ab8b3b1908d8280742268e18de1f52b65",
+      "minimum_depth": 4,
+      "minimum_nodes": 7,
+      "report_sha256": "56c9b95dd5f758b8abfbb17a7c28db532b2545f49c769fc4b9b0ea5118370016",
+      "structure": {
+        "colour": {"name": "c0", "op": "param_color"},
+        "grid": {"op": "input_grid"},
+        "op": "paint",
+        "points": {
+          "op": "bbox_border",
+          "points": {
+            "op": "dilate4",
+            "points": {
+              "op": "holes",
+              "points": {"op": "non_background_points"}
+            }
+          }
+        }
+      },
+      "structure_sha256": "9093e05ac7306f078a51fe10b58f3039aedd912447fbbb63cc758d615f1c1b53",
+      "task_id": "810b9b61"
+    }
+  ]
+}
