@@ -1,0 +1,25 @@
+{
+  "status": "label_free_selector_certificate_pass",
+  "development_gate": true,
+  "workflow_run": 30427619598,
+  "workflow_artifact_digest": "sha256:3990dfbbdca1f487cd9acf9dbf49cbc8976ffbcc07e87e1204bd4afb0add41a9",
+  "evidence_digest": "58382c7aa2bcd7c28fec54642fcf76cc88e5059e0eb62e942d6cccf33d6ddfe2",
+  "task_pair_count": 64,
+  "sampled_feature_table_mismatch_count": 0,
+  "compiled_response_table_mismatch_count": 0,
+  "compiled_query_count_mismatch_count": 0,
+  "conditioned_cell_mismatch_count": 0,
+  "selected_state_mismatch_count": 0,
+  "pairs_with_oversized_cells": 64,
+  "pairs_with_selected_states": 64,
+  "protocol": {
+    "records_per_task": 420,
+    "features_per_task": 18,
+    "record_sampling": "feature-only SHA-256 rank with original row index tie-break",
+    "oversized_cell_sampling": "SHA-256(task name, salt, sampled row index, compiled response row), labels excluded",
+    "state_selector": "v0.60 conditioned-cell selector with only sample_allowed replaced",
+    "solver_execution": false,
+    "external_archive_access": false
+  },
+  "claim_scope": "Methodological label-independence certificate on synthetic tasks only. This is not algorithmic performance evidence, fresh external validation, independent outside-human reproduction, publication novelty, peer review, acceptance, or a world-level claim."
+}
