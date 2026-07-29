@@ -1,0 +1,25 @@
+{
+  "status": "refinement_dominance_certificate_pass",
+  "development_gate": true,
+  "workflow_run": 30423764161,
+  "workflow_artifact_digest": "sha256:b0bd17b28a04c84874511105b441168eeae0fd88ade306ec0887fe10f596fb83",
+  "protocol_digest": "bffae9dc7cf32079c28f86539da31233e32e08c8ab6e627f93ed5ef91491edf7",
+  "case_count": 16100,
+  "frontier_match_count": 16100,
+  "mismatch_count": 0,
+  "cases_with_root_refinement_reduction": 5176,
+  "root_refinement_queries_removed": 7223,
+  "root_equivalent_queries_removed": 4205,
+  "profile_conformance": "one static cost per query response cell",
+  "counterexamples": {
+    "passed": true,
+    "strict_cost_improvement_required": true,
+    "pointwise_no_worse_cost_required": true,
+    "positive_refinement_example": true
+  },
+  "claim_scope": "Internal exhaustive finite-model evidence for strict descendant-local refinement dominance under positive masses and static response-dependent costs. Not a proof-assistant theorem, external reproduction, publication novelty, peer review, or a world-level claim.",
+  "preserved_negative_history": {
+    "v64_clean_external_gate": "rejected at 8.971719457013574x median versus frozen 10x",
+    "initial_v65_run": "invalid model profile assigned different costs inside one response cell; preserved artifact sha256:c5bf277acfafa01de6ffab6770f9d16c8446d6082e541d4070c079ad0adc85c2"
+  }
+}

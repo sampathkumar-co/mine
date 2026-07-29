@@ -1,0 +1,62 @@
+name: Mini-ORIGIN Refinement Dominance Certificate v0.65
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v65-refinement-dominance-certificate
+    paths:
+      - "mini-origin/src/mini_origin/refinement_dominance_certificate_v65.py"
+      - "mini-origin/src/mini_origin/refinement_dominance_gate_v65.py"
+      - "mini-origin/tests/test_refinement_dominance_v65.py"
+      - ".github/workflows/mini-origin-v65-refinement-dominance.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/refinement_dominance_certificate_v65.py"
+      - "mini-origin/src/mini_origin/refinement_dominance_gate_v65.py"
+      - "mini-origin/tests/test_refinement_dominance_v65.py"
+      - ".github/workflows/mini-origin-v65-refinement-dominance.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v65-refinement-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  refinement-dominance-certificate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify preserved clean v0.64 rejection
+        run: >-
+          python -c "import json; r=json.load(open('../research-evidence/mini-origin-v64-clean-external-rejected.json')); assert not r['development_gate']; assert r['expansion_ratio_median']==8.971719457013574; assert r['rust_mismatch_count']==0"
+      - name: Verify preserved v0.65 certificate when present
+        run: >-
+          python -c "from pathlib import Path; import json; p=Path('../research-evidence/mini-origin-v65-refinement-dominance-pass.json'); r=json.load(open(p)) if p.exists() else None; assert r is None or (r['development_gate'] and r['frontier_match_count']==16100 and r['mismatch_count']==0)"
+      - name: Run focused tests
+        run: pytest -q tests/test_refinement_dominance_v65.py
+      - name: Run frozen exhaustive complete-tree gate
+        run: >-
+          mkdir -p results/v65 &&
+          python -m mini_origin.refinement_dominance_gate_v65
+          --output results/v65/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v65-refinement-dominance-certificate
+          path: mini-origin/results/v65/evidence.json
+          if-no-files-found: error
+          retention-days: 90
