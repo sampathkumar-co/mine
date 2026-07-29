@@ -1,0 +1,86 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "arguments_sha256": "c449dd9c1da00c383d5ddc55a577e263dd0c93ff6801554bb2b6d29a47517932",
+  "base_rejected_v19_commit": "eb15da3373817ffa69633fb6cd423b2fb06d0f60",
+  "claim_boundary": {
+    "automated_argument_selection_and_abstraction": true,
+    "autonomous_full_production_invention": false,
+    "reason": "The exact affine composition skeleton in build_program was human-authored after demonstration analysis. Only marker/background arguments and their abstraction were selected automatically.",
+    "sealed_external_success": false,
+    "transfer_demonstrated": false,
+    "world_level_breakthrough": false
+  },
+  "concrete_program_sha256": "79c1e77a1a671011de444200c9c12c0639e714ddf0d2c986f04ceca36c83133c",
+  "files": {
+    "README.md": "f095c6b59ca25525421bb2f661b470181f5cae26099eb9257478e259dd7657d9",
+    "V19R2_INTEGRITY_AUDIT.json": "bb338820b4cc09468f62a90e12298259e6b0ac9098c6e0c7e1a8018919058cb3",
+    "V19R2_INTERMEDIATE_REPORT.json": "2574afde9463ea0f8958c8b5eabea0eb6920de36c4fd8a31a16fda240778a2a3",
+    "V19R2_PRECOMMIT.json": "133286d89084534eb541db87cb1eaf24c87517b6cfae5b464ce50fb3d82e1a00",
+    "V19R2_REPORT.json": "7befc9249645aa5d85ce5d8d41d11d91f82ce71ea398d715f028ec198a21d650",
+    "V19R2_SMOKE_REPORT.json": "1298ce9e58153ff8531772b7345988c72e44478a1de47c96e2415482ca061c49",
+    "V19R2_VERIFIER_REPORT.json": "d879aaab0564cd9fbbadea113c4e75449518b7d47e45e162f92e6b718a4f0565",
+    "V19R2_VERIFIER_SMOKE_REPORT.json": "e583459b8e262713e673114336ae784f7fd90bd063311e82904c0171fa8233e4",
+    "contracts/gate-10-contract.json": "4abbd93bd418586b066379bc3ef5f7bb4fc8d50739426b6e521792b221db0526",
+    "contracts/revisions/gate-10-contract-r0.json": "4abbd93bd418586b066379bc3ef5f7bb4fc8d50739426b6e521792b221db0526",
+    "contracts/revisions/gate-10-false-accepts-r0.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "cosynthesize_verifier_v19r2.py": "dfe6522ee5ed64f5b957ffd0718b3b91a6e9e6b3e5da41418842f540b856b324",
+    "freeze_v19r2_evidence.py": "b9d0ddb28935d03942c426b9f32d262961d67ba96f856009247f709d63c1d884",
+    "invent_v19r2.py": "3b817ee3d8eb2f76198b6f987537fb6901e95ed1829c83fcce76c6eb5088cd8c",
+    "mutations_v19r2.py": "7ac3e20302093484a347d6b31f33f9a392bd7e4d2b4d91ffb0ee98537e25a56b",
+    "portable_runtime_v19r2.py": "c082ccb0db094ae0c92b7475d5e5bd9078c4f64da498b1c1f104f57e720ee527",
+    "portable_verifier_v19r2.py": "f6936a6efedde85d54cd36c3ae5e42a2f1f3599ce08042b851ab1a10c2135cad",
+    "productions/gate-10-arguments.json": "27d57578ea7f05fe791a6d37c213ea36ab69b9446f5f253bd40e3833eba1a1bd",
+    "productions/gate-10-concrete.json": "e2040689c1283f0c8f860f25239dded49d6d1dc00ab238eaaeb6c5c152e9ddee",
+    "productions/gate-10-production.json": "53b04a0bc7430f73d5b0cbbe68da5ddefe7b0549257d905a1b6c09fd5bd68ff3",
+    "runtime_v19r2.py": "3607a880a019aef9c46e3c29304ed330947ced4acb2406718d89d56c671037ac",
+    "test_v19r2.py": "5ca2620ef19b6abc891ffc904517fbf2ae45e35174222f4fb11fbb8ab2073898",
+    "test_verifier_v19r2.py": "7393651f6b54c143f93211d9ac109d62b135559a7cb382dfcb93529e894e9cba",
+    "validate_v19r2.py": "30a2ea07d0fdbb95b45e675796131359928d87567feb2603647640e12a422a39",
+    "validate_verifier_v19r2.py": "504a59589b8522c6646b24820c52d8f59a1b16215507aac0527da01ccaf95494",
+    "verifier_grammar_v19r2.py": "2afa083b1bbe80b0bb72749d538f1cd9d090b18c24dad168aea58a56d7daa50a"
+  },
+  "fixed_development_gates": [
+    7,
+    10,
+    13
+  ],
+  "fresh_cases": 10000,
+  "fresh_portable_exact": 10000,
+  "fresh_primary_exact": 10000,
+  "fresh_runtime_agreement": 10000,
+  "frozen_v17_ablation_failed": true,
+  "frozen_v17_commit": "cd89382e38b45d12916e662af052a7aa1a374896",
+  "generator_rejections": 0,
+  "no_program_gates": [
+    7,
+    13
+  ],
+  "numerical_checkpoint_commit": "5e3d82b89078f6ee3c7b4e5d364b2071571cf726",
+  "production_file_sha256": "53b04a0bc7430f73d5b0cbbe68da5ddefe7b0549257d905a1b6c09fd5bd68ff3",
+  "production_found_gates": [
+    10
+  ],
+  "production_sha256": "39a2528b370b899e4909e22698d47aa7414aa3db6092e75e64cff384d710f8df",
+  "schema": "lexigen-v19r2-frozen-evidence-v1",
+  "verifier": {
+    "contract_revision": 0,
+    "contract_sha256": "39f3c9c841627e4a1059ef8881e0a2c1d1a32a032b81f697cd3d43694cb3dd57",
+    "correct_outputs": 1000,
+    "fresh_runtime_invalid_mutations": 1692,
+    "learned_exact_digest": false,
+    "mutant_outputs": 8000,
+    "portable_screening_failures": 0,
+    "portable_soundness_failures": 0,
+    "predicates": [
+      {
+        "cost": 6,
+        "name": "checksum_1"
+      }
+    ],
+    "primary_screening_failures": 0,
+    "primary_soundness_failures": 0,
+    "training_runtime_invalid_mutations": 30
+  },
+  "version": "19r2",
+  "visible_evidence_commit": "13cd271a2d4813001563842a51a1e72dd100aa1a"
+}

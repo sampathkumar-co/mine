@@ -1,0 +1,24 @@
+{
+  "schema": "lexigen-v19r2-integrity-audit-v1",
+  "base_rejected_v19_commit": "eb15da3373817ffa69633fb6cd423b2fb06d0f60",
+  "audit_verdict": "partial_mechanism_not_v19_pass",
+  "numerical_result_preserved": {
+    "fixed_gates": 3,
+    "production_found": 1,
+    "no_program_failures": 2,
+    "fresh_primary_exact": 10000,
+    "fresh_portable_exact": 10000,
+    "runtime_agreement": 10000,
+    "verifier_correct_outputs": 1000,
+    "verifier_mutants_rejected_by_both_screens": 8000
+  },
+  "positive_claim": "The system selected concrete arguments, serialized an executable abstraction, reproduced it in an independent runtime, and co-synthesized a bound verifier contract.",
+  "rejected_claim": "The system autonomously invented the full affine grammar production.",
+  "reason": "The exact affine composition skeleton in build_program was human-authored after demonstration analysis. Only marker/background arguments and their abstraction were selected automatically.",
+  "hidden_outputs_opened": false,
+  "sealed_external_success": false,
+  "transfer_demonstrated": false,
+  "autonomous_grammar_production_invention": false,
+  "world_level_breakthrough": false,
+  "required_next_step": "Start a new preregistered revision whose meta-grammar enumerates complete typed compositions from primitive expressions and preserves the full fixed-pool denominator."
+}

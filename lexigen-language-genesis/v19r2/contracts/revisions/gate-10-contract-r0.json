@@ -1,0 +1,27 @@
+{
+  "concrete_program_sha256": "79c1e77a1a671011de444200c9c12c0639e714ddf0d2c986f04ceca36c83133c",
+  "contract_sha256": "39f3c9c841627e4a1059ef8881e0a2c1d1a32a032b81f697cd3d43694cb3dd57",
+  "demonstration_sha256": "952e51db1b6ece583c40a4ce0a1a45991ccd67ec97f7fd7a7c23d0df22014c08",
+  "exact_digest_used": false,
+  "mutation_manifest_sha256": "9416b48c96db374be3b4e8fdc67d1ce4cbeedc0135a919ea2612ddcf93a82d58",
+  "portable_runtime_sha256": "c082ccb0db094ae0c92b7475d5e5bd9078c4f64da498b1c1f104f57e720ee527",
+  "predicate_cost": 6,
+  "predicates": [
+    {
+      "cost": 6,
+      "name": "checksum_1"
+    }
+  ],
+  "primary_runtime_sha256": "3607a880a019aef9c46e3c29304ed330947ced4acb2406718d89d56c671037ac",
+  "production_sha256": "39a2528b370b899e4909e22698d47aa7414aa3db6092e75e64cff384d710f8df",
+  "revision": 0,
+  "schema": "lexigen-v19r2-verifier-contract-v1",
+  "shape_only_survivors": 86,
+  "soundness_anchor": {
+    "mandatory": true,
+    "name": "exact_digest"
+  },
+  "training_mutation_cases": 104,
+  "training_runtime_invalid_mutations": 30,
+  "verifier_grammar_sha256": "d4bea2fb44a449759581c3cf5dbfa6661b333e9525aa24b9a98b52a328443093"
+}

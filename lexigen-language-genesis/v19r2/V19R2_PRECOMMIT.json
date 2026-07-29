@@ -1,0 +1,32 @@
+{
+  "schema": "lexigen-v19r2-fixed-pool-precommit-v1",
+  "base_rejected_v19_commit": "eb15da3373817ffa69633fb6cd423b2fb06d0f60",
+  "frozen_v17_commit": "cd89382e38b45d12916e662af052a7aa1a374896",
+  "fixed_development_gates": [
+    {"gate": 7, "task_id": "fc10701f", "redacted_task_sha256": "21d3ec99746da929c7bd630da8b9ecea1768eaa4050e8c38eb02c01236fe90ae"},
+    {"gate": 10, "task_id": "2bcee788", "redacted_task_sha256": "cd8a1fd1ed57040d8e3211fca83b96e220c953c1f5250e7a3bcca5d1f31cc783"},
+    {"gate": 13, "task_id": "36fdfd69", "redacted_task_sha256": "84179e95077992fc04568efcffe6f08b210112bc68a7bc8f50844d8cba782747"}
+  ],
+  "replacement_allowed": false,
+  "task_id_available_to_inventor": false,
+  "hidden_outputs_opened": false,
+  "primitive_inventory": [
+    "colour_components_4_neighbour",
+    "component_and_grid_coordinate_sets",
+    "size_bbox_dimensions_bbox_area_fill_ratio_holes_border_contacts",
+    "row_column_extrema_and_centres",
+    "translate_reflect_rotate_coordinates",
+    "set_union_intersection_difference_filter_and_fold",
+    "sample_paint_erase_crop_and_same_grid_render"
+  ],
+  "production_depth_limit": 4,
+  "candidate_budget_per_gate": 250000,
+  "selection": "minimum node count then canonical JSON",
+  "intermediate_fresh_cases_per_success": 1000,
+  "final_fresh_cases_per_success": 10000,
+  "required_dual_runtime": true,
+  "required_frozen_v17_ablation_failure": true,
+  "required_production_ablation_failure": true,
+  "required_verifier_cosynthesis": true,
+  "world_level_breakthrough": false
+}
