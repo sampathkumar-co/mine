@@ -1,0 +1,115 @@
+name: Lexigen Language Genesis v29
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v29/**"
+      - ".github/workflows/lexigen-language-genesis-v29.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-v29:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce frozen template library
+        run: |
+          python -m py_compile lexigen-language-genesis/v29/*.py
+          python lexigen-language-genesis/v29/antiunify_v29.py
+          git diff --exit-code -- \
+            lexigen-language-genesis/v29/V29_TEMPLATE_LIBRARY.json \
+            lexigen-language-genesis/v29/templates
+      - name: Run template and validator tests
+        run: |
+          python lexigen-language-genesis/v29/test_v29.py
+          python lexigen-language-genesis/v29/test_validation_v29.py
+
+  scan-validation:
+    needs: test-v29
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        task:
+          - "5bd6f4ac"
+          - "a680ac02"
+          - "f823c43c"
+          - "9b4c17c4"
+          - "673ef223"
+          - "5521c0d9"
+          - "ce22a75a"
+          - "90c28cc7"
+          - "e76a88a6"
+          - "e9bb6954"
+          - "b775ac94"
+          - "db7260a4"
+          - "67a3c6ac"
+          - "28e73c20"
+          - "6b9890af"
+          - "33b52de3"
+          - "93b581b8"
+          - "575b1a71"
+          - "444801d8"
+          - "1a07d186"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scan one frozen validation identity
+        run: |
+          python lexigen-language-genesis/v29/scan_one_v29.py \
+            --arcgen-root arcgen \
+            --task-id "${{ matrix.task }}" \
+            --output "task-${{ matrix.task }}.json"
+      - name: Upload task report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v29-validation-${{ matrix.task }}
+          path: task-${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-validation:
+    needs: scan-validation
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download all frozen validation reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v29-validation-*
+          path: reports
+          merge-multiple: true
+      - name: Aggregate exact validation denominator
+        run: |
+          python lexigen-language-genesis/v29/aggregate_validation_v29.py \
+            --reports-root reports \
+            --output lexigen-language-genesis/v29/V29_VALIDATION_REPORT.json
+      - name: Upload v29 validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v29-validation-evidence
+          path: |
+            lexigen-language-genesis/v29/V29_VALIDATION_REPORT.json
+            reports
+          if-no-files-found: error
+          retention-days: 90
