@@ -1,0 +1,83 @@
+name: Mini-ORIGIN Clean External Conditioned Blind v0.64
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v64-clean-external-lock
+    paths:
+      - "mini-origin/external-data/uci-v64/manifest.json"
+      - "mini-origin/src/mini_origin/clean_external_conditioned_v64.py"
+      - "mini-origin/src/mini_origin/clean_external_validate_v64.py"
+      - ".github/workflows/mini-origin-v64-clean-external-conditioned.yml"
+      - "mini-origin/compiled/response_cost_pareto_v57.rs"
+  pull_request:
+    paths:
+      - "mini-origin/external-data/uci-v64/manifest.json"
+      - "mini-origin/src/mini_origin/clean_external_conditioned_v64.py"
+      - "mini-origin/src/mini_origin/clean_external_validate_v64.py"
+      - ".github/workflows/mini-origin-v64-clean-external-conditioned.yml"
+      - "mini-origin/compiled/response_cost_pareto_v57.rs"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v64-clean-eval-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  clean-external-conditioned:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify clean registry, archive lock and frozen generator
+        run: >-
+          python -c "import json; p=json.load(open('../research-evidence/mini-origin-v60-conditioned-cell-pass.json')); m=json.load(open('external-data/uci-v64/manifest.json')); assert p['development_gate']; assert p['frozen_frontier_digest']=='fe0c56d83095bfc6607f9bfffb480ca829f369d6bd9db5ff47860184f7e246fb'; assert m['repository_registry_digest']=='870daa9b28450c1717a266ca73b7717ba24abba11b7f4c537e28e77ab1c0cc0d'; assert m['lock_digest']=='5f48634b5e4f020b7dec6ec23b98141b4221f4495e3c1cfc8eb8ff44ba51609b'; assert m['dataset_count']==7; assert not m['candidate_overlap']" &&
+          git diff --exit-code f73ad897377ae1189844ea9ab49aa429c6b1c1c3 --
+          src/mini_origin/conditioned_cell_frontier_v60.py
+          src/mini_origin/response_cost_pareto_v56.py
+          src/mini_origin/response_cost_export_v57.py
+          compiled/response_cost_pareto_v57.rs
+      - name: Verify all hash-locked dataset adapters
+        run: >-
+          python -c "import json; from mini_origin import clean_external_conditioned_v64 as e; m=json.load(open('external-data/uci-v64/manifest.json')); rows=[]; [(lambda raw,d: rows.append((d['name'],len(e.parse_records(d['name'],raw)),len(e.parse_records(d['name'],raw)[0][0]))))(e.download(d['url']),d) for d in m['datasets']]; print(json.dumps(rows,indent=2))"
+      - name: Compute matched Python exact reference
+        run: >-
+          mkdir -p results/v64 &&
+          python -m mini_origin.clean_external_conditioned_v64
+          --states results/v64/states.txt
+          --reference results/v64/python-reference.json
+      - name: Compile independent Rust solver
+        run: rustc -C opt-level=3 -C debuginfo=0 compiled/response_cost_pareto_v57.rs -o results/v64/response_cost_pareto_v64
+      - name: Run independent Rust solver
+        run: results/v64/response_cost_pareto_v64 --input results/v64/states.txt --output results/v64/rust-results.json
+      - name: Apply unchanged clean blind gate
+        run: >-
+          python -m mini_origin.clean_external_validate_v64
+          --reference results/v64/python-reference.json
+          --rust results/v64/rust-results.json
+          --output results/v64/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v64-clean-external-conditioned
+          path: |
+            mini-origin/results/v64/python-reference.json
+            mini-origin/results/v64/rust-results.json
+            mini-origin/results/v64/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
