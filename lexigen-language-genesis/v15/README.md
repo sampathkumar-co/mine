@@ -30,3 +30,14 @@ The induced language preserves exact macro expansion and passed 9,000 fresh offi
 A safe baseline-plus-induced portfolio reduces aggregate candidates from 328 to 216 (1.52x), with 22.3x and 55x improvements on the two shared rectangle families and a worst unrelated slowdown of 6.45%. A strict shape-typed benchmark shows no gain, which is preserved as an important negative result.
 
 This is not a world-level breakthrough. The atomic scene operations remain human-authored v14 semantics; v15 only induces reusable executable macros over them.
+## Frozen evidence
+
+The completed v15 freeze strengthens the earlier mechanism result:
+
+- 90,000 accepted fresh ARC-GEN cases across nine source families;
+- exact agreement among the primary IR, an independently implemented portable IR, and the frozen v14 portable runtime;
+- zero semantic failures and zero three-runtime disagreements;
+- seven adversarial and mechanism tests passing;
+- a reproducible scan of 898 other public ARC-GEN validation families finding zero exact matches for the induced rectangle macro.
+
+The zero-of-898 scan means the current induced library has not demonstrated held-out semantic transfer. Its search improvement is therefore treated as in-corpus reuse evidence only. See `V15_EVIDENCE.json` and `EVIDENCE.md` for the frozen hashes and claim boundary.

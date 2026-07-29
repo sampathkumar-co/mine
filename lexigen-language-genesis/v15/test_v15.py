@@ -46,3 +46,28 @@ def test_macro_compression_reduces_repeated_rectangle_ast() -> None:
         assert tree_size(compressed) < tree_size(by_gate[gate])
         assert expand(compressed, macros) == by_gate[gate]
 
+
+
+def test_portable_ir_replays_all_demonstrations() -> None:
+    from portable_ir_runtime_v15 import execute_portable_ir
+
+    programs, examples, metadata = load_programs(V14_EVIDENCE, EVIDENCE)
+    for ast, item in zip(programs, metadata):
+        gate_examples = examples[item["gate"]]
+        assert all(execute_portable_ir(ast, source) == target for source, target in gate_examples)
+
+
+def test_primary_and_portable_ir_agree_on_demonstrations() -> None:
+    from portable_ir_runtime_v15 import execute_portable_ir
+
+    programs, examples, metadata = load_programs(V14_EVIDENCE, EVIDENCE)
+    for ast, item in zip(programs, metadata):
+        for source, _ in examples[item["gate"]]:
+            assert execute(ast, source) == execute_portable_ir(ast, source)
+
+
+def test_induced_macros_are_not_human_named() -> None:
+    programs, _, _ = load_programs(V14_EVIDENCE, EVIDENCE)
+    macros = mine_macros(programs)
+    assert macros
+    assert all(macro.name.startswith("induced_") for macro in macros)
