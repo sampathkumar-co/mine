@@ -2,8 +2,10 @@
   "base_rejected_v19_commit": "eb15da3373817ffa69633fb6cd423b2fb06d0f60",
   "cases_per_success": 10000,
   "claim_boundary": {
-    "autonomous_grammar_production_candidate": true,
-    "human_supplied_bias": "primitive inventory and bounded affine composition template",
+    "automated_argument_abstraction_candidate": true,
+    "autonomous_grammar_production_candidate": false,
+    "fixed_affine_template_human_supplied": true,
+    "reason": "The exact affine composition skeleton was human-authored after demonstration analysis; automation selected arguments and serialized an abstraction but did not invent the skeleton.",
     "sealed_external_success": false,
     "transfer_demonstrated": false
   },
