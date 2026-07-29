@@ -38,7 +38,7 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Verify registry, parent and hash-only boundary
         run: >-
-          python -c "import ast,pathlib; p=pathlib.Path('src/mini_origin/clean_lower_bound_lock_v68.py'); tree=ast.parse(p.read_text()); forbidden={'zipfile','csv','pandas','numpy','conditioned_cell_frontier_v60','response_cost_lower_bound_v65'}; imported={a.name for n in ast.walk(tree) if isinstance(n,ast.Import) for a in n.names}|{n.module for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)}; assert not (forbidden & imported)"
+          python -c "import ast,pathlib; tree=ast.parse(pathlib.Path('src/mini_origin/clean_lower_bound_lock_v68.py').read_text()); names=set(); [(names.add(a.name),names.add(a.name.rsplit('.',1)[-1])) for n in ast.walk(tree) if isinstance(n,ast.Import) for a in n.names]; [(names.add(n.module or ''),names.add((n.module or '').rsplit('.',1)[-1]),*[(names.add(a.name),names.add(((n.module+'.') if n.module else '')+a.name)) for a in n.names]) for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)]; forbidden={'zipfile','csv','pandas','numpy','conditioned_cell_frontier_v60','response_cost_lower_bound_v65'}; assert not (forbidden & names), sorted(forbidden & names)"
       - name: Download bytes and freeze hashes only
         run: >-
           mkdir -p external-data/uci-v68 &&
