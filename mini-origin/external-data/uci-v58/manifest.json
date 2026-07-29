@@ -1,0 +1,18 @@
+{
+  "status": "external_response_cost_archive_hash_lock_v1",
+  "protocol": "download_archive_bytes_and_hash_only_no_archive_open_no_record_parse",
+  "license": "CC BY 4.0",
+  "workflow_run": 30409879731,
+  "workflow_artifact_digest": "sha256:3a6844215cc851bbcc178727f5511083ef0bc73341659ae256b25940c10de8a4",
+  "lock_digest": "9a1d386209b437081d33a15e3395ac60afbc3e368ecb7a37a5202b5f9aab5868",
+  "dataset_count": 7,
+  "datasets": [
+    {"name":"Zoo","uci_id":111,"url":"https://archive.ics.uci.edu/static/public/111/zoo.zip","doi":"10.24432/C5R59V","sha256":"d49013253628277182bb172f5ab1bf3befad090b54bbb7e52733c9c9534e240a","bytes":2496},
+    {"name":"Lymphography","uci_id":63,"url":"https://archive.ics.uci.edu/static/public/63/lymphography.zip","doi":"10.24432/C54598","sha256":"082ff211040ad7dc2122e92441aa3eee494ab6496fecdcd86a440fe863ee5b6f","bytes":2980},
+    {"name":"Congressional Voting Records","uci_id":105,"url":"https://archive.ics.uci.edu/static/public/105/congressional+voting+records.zip","doi":"10.24432/C5C01P","sha256":"ffec9d9328f28f151d95d2f8d36fd94ed8d2b0cdd0c9bd284bd8e65031a5e6a6","bytes":4318},
+    {"name":"Mushroom","uci_id":73,"url":"https://archive.ics.uci.edu/static/public/73/mushroom.zip","doi":"10.24432/C5959T","sha256":"face32f32647e0d939f6233f36dd30dd5d619ae9f3f9b8e10bea4ac7e1f60b1a","bytes":141318},
+    {"name":"Molecular Biology (Promoter Gene Sequences)","uci_id":67,"url":"https://archive.ics.uci.edu/static/public/67/molecular+biology+promoter+gene+sequences.zip","doi":"10.24432/C5S01D","sha256":"56d462fe7e27dfece24dd5033e2c359c604b5675f5ba448eb0a9ceb7284b4eb2","bytes":5237},
+    {"name":"Lung Cancer","uci_id":62,"url":"https://archive.ics.uci.edu/static/public/62/lung+cancer.zip","doi":"10.24432/C57596","sha256":"f3058a86ec89d4dd11a9b2c1e9d8079e661502a485e540c91b32f6dc32d92499","bytes":2010},
+    {"name":"SPECTF Heart","uci_id":96,"url":"https://archive.ics.uci.edu/static/public/96/spectf+heart.zip","doi":"10.24432/C5N015","sha256":"24409e8bd112d372ec993304f029d61e5d2daa2de091399e2c3f84eed4f021ce","bytes":25866}
+  ]
+}
