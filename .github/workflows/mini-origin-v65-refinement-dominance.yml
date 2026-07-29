@@ -51,7 +51,9 @@ jobs:
           python -m mini_origin.refinement_dominance_gate_v65
           --output results/v65/evidence.json
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: mini-origin-v65-refinement-dominance-certificate
           path: mini-origin/results/v65/evidence.json
+          if-no-files-found: error
           retention-days: 90
