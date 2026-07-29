@@ -1,0 +1,31 @@
+{
+  "status": "fresh_external_hash_lock_v74_complete",
+  "workflow_run": 30447729757,
+  "workflow_artifact_digest": "sha256:88a62b4a24b2aec41e4658f8f8f888b41080f5c1471178dad5c3e65408bc83ab",
+  "manifest_payload_sha256": "d0d6b849f4cb07a6ee2ae42b6dfc92319579368c91480dd074522dda7d475019",
+  "lock_digest": "6730d5029294a753236f77cef1be1334885a5e8cc8d114a285637987eae5fbaf",
+  "parent_v73_registry_digest": "3fde8f0138548928651937201cef66aa71ee41bbb792ade82b1a02337ae8b392",
+  "frozen_v72_commit": "dae02829efc4819935a4ec87c31ea5eee3305d83",
+  "parent_v72_evidence_digest": "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090",
+  "metadata_list_count": 209,
+  "excluded_uci_id_count": 62,
+  "metadata_eligible_count": 43,
+  "metadata_unavailable_count": 1,
+  "dataset_count": 7,
+  "selected_overlap": [],
+  "byte_rejection_count": 0,
+  "selected_uci_ids": [890, 426, 27, 225, 277, 292, 78],
+  "selected_dataset_names": [
+    "AIDS Clinical Trials Group Study 175",
+    "Autism Screening Adult",
+    "Credit Approval",
+    "ILPD (Indian Liver Patient Dataset)",
+    "Thoracic Surgery Data",
+    "Wholesale customers",
+    "Page Blocks Classification"
+  ],
+  "first_attempt_failure_preserved": "research-evidence/mini-origin-v74-attempt1-metadata-unavailable.json",
+  "record_or_label_parsing_during_lock": false,
+  "solver_execution_during_lock": false,
+  "scientific_note": "The fresh external suite was selected deterministically only after freezing a repository-wide exclusion registry. The seven standardized CSV files were downloaded solely to record immutable byte lengths and SHA-256 hashes. No records or labels were parsed and no Mini-ORIGIN solver was executed. This is provenance infrastructure, not external algorithmic evidence or a world-level claim."
+}
