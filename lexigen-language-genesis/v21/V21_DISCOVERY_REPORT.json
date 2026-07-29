@@ -1,0 +1,17 @@
+{
+  "claim_boundary": "Public development discovery only. Validation identities and outputs remain unopened; this is not sealed external evidence or a world-level breakthrough.",
+  "generator_invalid_count": 0,
+  "minimum_distinct_tasks": 2,
+  "precommit_sha256": "70fbd50bdad5a032d4828d30e5bcdf1d47c58dd8505d5120164910ec74519b52",
+  "schema": "lexigen-v21-factorized-discovery-report-v1",
+  "surviving_factorized_productions": [],
+  "survivor_count": 0,
+  "task_count": 24,
+  "tasks_with_any_exact_program": 0,
+  "total_exact_complete_programs": 0,
+  "unique_production_structures": 0,
+  "workflow_run_id": 30457044752,
+  "workflow_artifact_digest": "sha256:9e4afed0d0deb3569e7fa3c68b9d10464e7ded43b96f7202f864fe2cc293852d",
+  "invalid_prior_workflow_run_id": 30456905701,
+  "invalid_prior_run_reason": "Unquoted task identity 1e32b0e9 was parsed by YAML as Infinity; the run is permanently excluded from scientific evidence."
+}
