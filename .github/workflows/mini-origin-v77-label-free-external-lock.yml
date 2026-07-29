@@ -1,0 +1,90 @@
+name: Mini-ORIGIN Label-Free External Lock v0.77
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v77-label-free-external-lock
+    paths:
+      - "mini-origin/src/mini_origin/label_free_external_lock_v77.py"
+      - "research-evidence/mini-origin-v72-label-free-frontier-pass.json"
+      - "research-evidence/mini-origin-v74-refreshed-dataset-registry.json"
+      - ".github/workflows/mini-origin-v77-label-free-external-lock.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/label_free_external_lock_v77.py"
+      - "research-evidence/mini-origin-v72-label-free-frontier-pass.json"
+      - "research-evidence/mini-origin-v74-refreshed-dataset-registry.json"
+      - ".github/workflows/mini-origin-v77-label-free-external-lock.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hash-only-lock:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify immutable parents and Stage A boundary
+        run: |
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          root = Path('..')
+          registry = json.loads((root / 'research-evidence/mini-origin-v74-refreshed-dataset-registry.json').read_text())
+          parent = json.loads((root / 'research-evidence/mini-origin-v72-label-free-frontier-pass.json').read_text())
+          expected = [3,8,12,14,19,22,26,33,44,46,50,52,59,62,63,67,69,70,72,73,74,76,80,81,83,90,94,95,96,100,101,105,107,111,146,149,151,166,171,181,295,373,468,475,519,544,545,571,602,697,759,850,863,864,891]
+          assert registry['registry_digest'] == '2a089db9d801f30fd3072b0eea8be6ef7c34cf1bedc9144d6da39a22bb4ddd71'
+          assert registry['failure_count'] == 0
+          assert registry['excluded_uci_ids'] == expected
+          assert parent['development_gate'] is True
+          assert parent['evidence_digest'] == 'b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090'
+          assert parent['rust_mismatch_count'] == 0
+
+          source = Path('src/mini_origin/label_free_external_lock_v77.py').read_text()
+          tree = ast.parse(source)
+          forbidden = {'zipfile','tarfile','csv','pandas','numpy','openpyxl','scipy','sklearn','ucimlrepo'}
+          imports = set()
+          for node in ast.walk(tree):
+              if isinstance(node, ast.Import):
+                  imports.update(alias.name.split('.')[0] for alias in node.names)
+              elif isinstance(node, ast.ImportFrom):
+                  if node.module:
+                      imports.add(node.module.split('.')[0])
+          assert not (imports & forbidden), sorted(imports & forbidden)
+          assert 'namelist(' not in source and 'extract' not in source and 'parse_records' not in source
+          print(json.dumps({'registry_ids': len(expected), 'imports': sorted(imports)}, indent=2))
+          PY
+      - name: Download bytes and freeze hashes only
+        run: |
+          mkdir -p results/v77
+          python -m mini_origin.label_free_external_lock_v77 --output results/v77/manifest.json
+      - name: Verify manifest boundary
+        run: |
+          python - <<'PY'
+          import json
+          manifest = json.load(open('results/v77/manifest.json'))
+          assert manifest['status'] == 'label_free_external_archive_hash_lock_v77'
+          assert manifest['dataset_count'] == 7
+          assert manifest['candidate_overlap'] == []
+          assert all(len(row['sha256']) == 64 and row['bytes'] > 0 for row in manifest['datasets'])
+          assert set(manifest) == {'status','protocol','license','parent_v72_evidence_digest','repository_registry_digest','excluded_uci_ids','excluded_uci_id_count','candidate_overlap','dataset_count','datasets','lock_digest'}
+          print(json.dumps({'lock_digest': manifest['lock_digest'], 'datasets': [(r['uci_id'], r['bytes'], r['sha256']) for r in manifest['datasets']]}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v77-label-free-external-lock
+          path: mini-origin/results/v77/manifest.json
+          if-no-files-found: error
+          retention-days: 90
