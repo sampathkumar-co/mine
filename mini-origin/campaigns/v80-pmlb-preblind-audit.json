@@ -1,0 +1,46 @@
+{
+  "status": "preregistered_before_pmlb_catalogue_access",
+  "parent_v79_commit": "555c3146111a7726702bb98e0a72f3b214d07190",
+  "parent_v79_evidence_digest": "5c28f39546d8e7d988fbc78ce254fa35d2b1d85d49a4b270b50edde1235d3001",
+  "source_repository": "EpistasisLab/pmlb",
+  "audit_protocol": {
+    "scan_all_remote_refs": true,
+    "scan_roots": [
+      "mini-origin/",
+      "research-evidence/",
+      ".github/workflows/"
+    ],
+    "collect": [
+      "UCI dataset IDs",
+      "OpenML dataset IDs",
+      "normalized dataset names",
+      "explicit PMLB dataset-name occurrences"
+    ],
+    "dataset_name_normalization": "lowercase alphanumeric tokens joined by hyphens"
+  },
+  "pmlb_catalogue_or_repository_tree_access_before_audit": false,
+  "pmlb_candidate_names_ids_or_urls_committed_before_audit": false,
+  "pmlb_dataset_bytes_access_before_audit": false,
+  "solver_execution_before_audit": false,
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "scientific_threshold_revisions": 0,
+  "required_parent_checks": {
+    "v79_status": "small_query_coverage_development_pass_v79",
+    "v79_gate": true,
+    "v79_rust_mismatches": 0,
+    "v79_normal_state_digest_mismatches": 0,
+    "v79_label_independence_mismatches": 0,
+    "required_openml_dataset_names": [
+      "pc1",
+      "eucalyptus",
+      "texture",
+      "kc1",
+      "kc2",
+      "analcatdata-dmft",
+      "pc4"
+    ]
+  },
+  "claim_boundary": "Repository-only preblind contamination audit for a later PMLB campaign. This stage may scan Mini-ORIGIN Git history but must not access the PMLB catalogue, repository tree, metadata, dataset names, URLs, records, labels, or bytes. Completion freezes exclusions only and is not solver evidence, external validation, novelty, publication, peer review, or a world-level claim."
+}
