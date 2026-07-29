@@ -1,0 +1,31 @@
+{
+  "schema": "lexigen-v19r4-integrity-audit-v1",
+  "audit_verdict": "credible_finite_meta_grammar_composition_invention_candidate",
+  "base_v19r3_commit": "baf4ca5",
+  "fixed_pool_gates": [7, 10, 13],
+  "fixed_pool_negative_gates": [7, 13],
+  "candidate_compositions_per_gate": 250000,
+  "gate10_initial_demonstration_survivors": 5,
+  "gate10_cegis_accepted_cases": 7,
+  "gate10_final_survivors": 1,
+  "selected_descriptor_removal_survivors": 0,
+  "production_sha256": "751e258d9dbdcdf2641503bacdc32f927fb2872fddaadbbbe348d668f5f25523",
+  "concrete_program_sha256": "c887750e98d2518c9d79d20a972753a1bc800f58a6168ffd10a02deb4fa48846",
+  "selected_actions": ["reflect_left", "reflect_right", "reflect_top", "reflect_bottom"],
+  "disjoint_fresh_cases": 10000,
+  "dual_runtime_failures": 0,
+  "verifier_correct_outputs": 1000,
+  "verifier_mutant_outputs": 8000,
+  "learned_exact_digest_used": false,
+  "hidden_outputs_opened": false,
+  "positive_claim": "A deterministic engine enumerated complete executable compositions from a frozen finite meta-grammar, preserved five demonstration-exact survivors, used preregistered public-case CEGIS to select one without human choice, and reproduced the selected production and verifier in independent runtimes.",
+  "claim_limits": {
+    "unrestricted_semantic_substrate_invention": false,
+    "human_supplied_finite_meta_grammar": true,
+    "transfer_demonstrated": false,
+    "sealed_external_success": false,
+    "external_discovery": false,
+    "world_level_breakthrough": false
+  },
+  "required_next_step": "Freeze the exact production and test the same production hash on a distinct untouched task without human editing or new task-specific code."
+}
