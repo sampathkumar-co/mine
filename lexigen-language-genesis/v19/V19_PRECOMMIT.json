@@ -1,0 +1,36 @@
+{
+  "schema": "lexigen-v19-production-invention-precommit-v1",
+  "base_v18_commit": "bad7e917d07f1cf3fe467081161fba53cfc434af",
+  "frozen_v17_commit": "cd89382e38b45d12916e662af052a7aa1a374896",
+  "development_gate": 9,
+  "development_task_id": "da2b0fe3",
+  "development_redacted_task_sha256": "fca70f3c788033f1c75517b1d1c0c997d5b96b73bf75a61dc9d446ecfd52b199",
+  "hidden_outputs_opened": false,
+  "forbidden_named_scene_operators": true,
+  "primitive_substrate": [
+    "integer_and_boolean_literals",
+    "row_and_column_coordinates",
+    "grid_ranges_and_coordinate_sets",
+    "input_sampling",
+    "palette_mode",
+    "comparisons_and_boolean_composition",
+    "filter",
+    "fold_any_and_fold_all",
+    "unique_reduction",
+    "conditional_cell_rendering"
+  ],
+  "candidate_axes": ["row", "column"],
+  "candidate_predicate_clauses": [
+    "axis_is_background",
+    "foreground_exists_before_axis",
+    "foreground_exists_after_axis",
+    "axis_is_internal"
+  ],
+  "fill_colour_candidates": "all ARC colours 0 through 9",
+  "selection": "minimum node count then canonical JSON",
+  "fresh_public_cases_after_freeze": 10000,
+  "required_independent_runtime": true,
+  "required_verifier_cosynthesis": true,
+  "required_fixed_v17_ablation_failure": true,
+  "world_level_breakthrough": false
+}
