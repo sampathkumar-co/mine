@@ -25,3 +25,17 @@ Named v14/v15 scene operators are forbidden from generated programs.
 ## Claim boundary
 
 The low-level grammar and candidate-construction schemas remain human supplied. Passing this milestone would demonstrate autonomous construction of composite executable programs, not autonomous invention of the semantic substrate and not a world-level breakthrough.
+
+## Frozen v17 result
+
+- 30,000 accepted fresh cases across three families.
+- 30,000/30,000 exact in the primary runtime.
+- 30,000/30,000 exact in the independent portable runtime.
+- 30,000/30,000 runtime agreement.
+- 3,000 correct outputs accepted by both verifier implementations.
+- 24,000/24,000 mutant outputs rejected by both learned screens and both mandatory soundness anchors.
+- Two of three verifier contracts required preserved CEGIS revision.
+- Zero learned contracts used exact-output digest equality.
+- Evidence SHA-256: `5ecedba17a6fdacfe1e9a6ec0ca1938e60b7474d65502f05d0876fbee6f7f771`.
+
+This remains mechanism evidence, not a world-level breakthrough. The low-level grammar, search-family schemas, and verifier predicate grammar are human supplied.
