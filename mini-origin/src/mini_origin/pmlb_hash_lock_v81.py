@@ -39,6 +39,9 @@ RETRY_ATTEMPTS = 6
 RETRY_BASE_SECONDS = 1.5
 SUMMARY_PATH = "pmlb/all_summary_stats.tsv"
 RAW_BASE = f"https://raw.githubusercontent.com/{SOURCE_REPOSITORY}/{SOURCE_COMMIT}"
+MEDIA_BASE = (
+    f"https://media.githubusercontent.com/media/{SOURCE_REPOSITORY}/{SOURCE_COMMIT}"
+)
 SUMMARY_URL = f"{RAW_BASE}/{SUMMARY_PATH}"
 REQUIRED_SUMMARY_FIELDS = (
     "dataset",
@@ -105,7 +108,7 @@ def metadata_url(name: str) -> str:
 
 def raw_url(name: str) -> str:
     token = quote(name, safe="")
-    return f"{RAW_BASE}/datasets/{token}/{token}.tsv.gz"
+    return f"{MEDIA_BASE}/datasets/{token}/{token}.tsv.gz"
 
 
 def load_inputs() -> tuple[dict[str, object], dict[str, object], dict[str, object]]:

@@ -128,3 +128,10 @@ def test_preregistration_keeps_zero_revision_budget():
     assert data["selector_revisions"] == 0
     assert data["scientific_threshold_revisions"] == 0
     assert data["dataset_count"] == 7
+
+
+def test_raw_byte_url_uses_git_lfs_media_transport():
+    url = lock.raw_url("vowel")
+    assert url.startswith("https://media.githubusercontent.com/media/")
+    assert lock.SOURCE_COMMIT in url
+    assert url.endswith("/datasets/vowel/vowel.tsv.gz")
