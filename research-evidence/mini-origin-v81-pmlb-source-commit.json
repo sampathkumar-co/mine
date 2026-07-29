@@ -1,0 +1,13 @@
+{
+  "status": "pmlb_source_commit_frozen_after_preregistration",
+  "preregistration_commit": "e150c73fb558d6083991e37d7aab9eacc81ca35b",
+  "source_repository": "EpistasisLab/pmlb",
+  "source_default_branch": "master",
+  "source_commit": "7c1f4bdc00136dc2e55c87fa6b8ba6e8af6d1a68",
+  "source_tree": "ca5d36e9093c2f7360db57198c8c0586a3217a60",
+  "source_commit_date": "2025-02-25T21:08:43Z",
+  "catalogue_access_after_preregistration": true,
+  "dataset_records_or_labels_accessed": false,
+  "dataset_bytes_accessed": false,
+  "solver_executed": false
+}
