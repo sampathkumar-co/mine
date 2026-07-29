@@ -66,20 +66,17 @@ def test_indexed_legend_broadcast_handles_reverse_axis():
         "operator": "indexed_legend_template_broadcast",
         "parameters": {"key_colour": 2, "index_stride": 2},
     }
-    source = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 8, 0, 4, 0, 3, 0, 2, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0],
-    ]
+    width = 24
+    source = [[0 for _ in range(width)] for _ in range(7)]
+    for col, colour in ((2, 8), (7, 4), (11, 3), (15, 2)):
+        source[1][col] = colour
+    template = [(4, 19), (4, 20), (5, 20), (6, 19), (6, 20)]
+    for row, col in template:
+        source[row][col] = 2
     expected = [row[:] for row in source]
-    template = [(4, 8), (4, 9), (5, 9), (6, 8), (6, 9)]
-    legend = [(1, 7, 2), (1, 5, 3), (1, 3, 4), (1, 1, 8)]
+    legend = [(1, 15, 2), (1, 11, 3), (1, 7, 4), (1, 2, 8)]
     for index, (_, marker_col, colour) in enumerate(legend):
-        shift = marker_col - 7 - 2 * index
+        shift = marker_col - 15 - 2 * index
         for row, col in template:
             expected[row][col + shift] = colour
     assert_both(program, source, expected)
