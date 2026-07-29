@@ -1,0 +1,71 @@
+{
+  "status": "clean_external_archive_hash_lock_v1",
+  "protocol": "repository_registry_exclusion_then_download_archive_bytes_and_hash_only_no_archive_open_no_record_parse",
+  "license": "CC BY 4.0",
+  "parent_v60_commit": "f73ad897377ae1189844ea9ab49aa429c6b1c1c3",
+  "repository_registry_digest": "870daa9b28450c1717a266ca73b7717ba24abba11b7f4c537e28e77ab1c0cc0d",
+  "excluded_uci_id_count": 41,
+  "candidate_overlap": [],
+  "dataset_count": 7,
+  "datasets": [
+    {
+      "name": "Connect-4",
+      "uci_id": 26,
+      "url": "https://archive.ics.uci.edu/static/public/26/connect+4.zip",
+      "doi": "10.24432/C59P43",
+      "sha256": "81cc51ce1556f1f927bf0d6f3f16f61e277bb8647c5a49426d272b792a30a205",
+      "bytes": 399857
+    },
+    {
+      "name": "Image Segmentation",
+      "uci_id": 50,
+      "url": "https://archive.ics.uci.edu/static/public/50/image+segmentation.zip",
+      "doi": "10.24432/C5GP4N",
+      "sha256": "db4297f9a7d6acfe63495452118bdeff9c0d0eab14c75bd0ee7678f79f488914",
+      "bytes": 110572
+    },
+    {
+      "name": "Letter Recognition",
+      "uci_id": 59,
+      "url": "https://archive.ics.uci.edu/static/public/59/letter+recognition.zip",
+      "doi": "10.24432/C5ZP40",
+      "sha256": "3b5f07a334697b6cace4fbae22940393a18fee596e73f68d97ce5973d52dc60f",
+      "bytes": 387167
+    },
+    {
+      "name": "Multiple Features",
+      "uci_id": 72,
+      "url": "https://archive.ics.uci.edu/static/public/72/multiple+features.zip",
+      "doi": "10.24432/C5HC70",
+      "sha256": "898a50a7637f1ed5a8cee2493aaa0e7f4d52795c412f59b0969ec7c3046ee7bd",
+      "bytes": 5498711
+    },
+    {
+      "name": "Pen-Based Recognition of Handwritten Digits",
+      "uci_id": 81,
+      "url": "https://archive.ics.uci.edu/static/public/81/pen+based+recognition+of+handwritten+digits.zip",
+      "doi": "10.24432/C5MG6K",
+      "sha256": "1e02bea023613c2b11c9492f6f34caf975420455934f3527d270cee9a1f03b64",
+      "bytes": 1668118
+    },
+    {
+      "name": "Waveform Database Generator (Version 1)",
+      "uci_id": 107,
+      "url": "https://archive.ics.uci.edu/static/public/107/waveform+database+generator+version+1.zip",
+      "doi": "10.24432/C5CS3C",
+      "sha256": "c4a923f66c4e060c9da63a5394b4d65fa2383b078bd3b435437037550b3080d4",
+      "bytes": 508826
+    },
+    {
+      "name": "Statlog (Vehicle Silhouettes)",
+      "uci_id": 149,
+      "url": "https://archive.ics.uci.edu/static/public/149/statlog+vehicle+silhouettes.zip",
+      "doi": "10.24432/C5HG6N",
+      "sha256": "66ca807d5be5e3403cf035a579e85113880c3019d6cde825670deff05a4a71e0",
+      "bytes": 26406
+    }
+  ],
+  "lock_digest": "5f48634b5e4f020b7dec6ec23b98141b4221f4495e3c1cfc8eb8ff44ba51609b",
+  "workflow_run": 30418934141,
+  "workflow_artifact_digest": "sha256:c89d7092a0fd9ebb8f05a3a9ea61eaf66100b281f9008beb14fda8a0c4d7d8a7"
+}
