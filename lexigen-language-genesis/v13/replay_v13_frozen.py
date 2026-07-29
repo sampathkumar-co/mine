@@ -9,10 +9,10 @@ from pathlib import Path
 from typing import Any
 
 from latent_runtime_v13 import as_grid, to_json_grid
-from latent_runtime_v13_ext3 import execute_program
+from latent_runtime_v13_ext4 import execute_program
 from latent_synthesizer_v13 import canonical_json
 from latent_synthesizer_v13_final import VALIDATED_OPERATORS, synthesize_latent_final
-from portable_runtime_v13 import execute_portable
+from portable_runtime_v13_ext4 import execute_portable
 
 ARCGEN_COMMIT = "a15cbdb44c776610aeeb9f487a06af875d3d0878"
 HOLDOUT_COUNT = 10_000
