@@ -1,0 +1,53 @@
+name: Mini-ORIGIN Clean Lower-Bound Schema v0.68
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v68-clean-lower-bound-lock
+    paths:
+      - "mini-origin/external-data/uci-v68/manifest.json"
+      - "mini-origin/src/mini_origin/clean_lower_bound_schema_v68.py"
+      - ".github/workflows/mini-origin-v68-clean-lower-bound-schema.yml"
+  pull_request:
+    paths:
+      - "mini-origin/external-data/uci-v68/manifest.json"
+      - "mini-origin/src/mini_origin/clean_lower_bound_schema_v68.py"
+      - ".github/workflows/mini-origin-v68-clean-lower-bound-schema.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v68-schema-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  clean-lower-bound-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen lock and schema-only boundary
+        run: >-
+          python -c "import ast,json,pathlib; m=json.load(open('external-data/uci-v68/manifest.json')); assert m['lock_digest']=='9abc52a7e83255498c84b802d432306b5ff15dece032469968b8db3501d0a385'; tree=ast.parse(pathlib.Path('src/mini_origin/clean_lower_bound_schema_v68.py').read_text()); forbidden={'conditioned_cell_frontier_v60','response_cost_pareto_v56','response_cost_lower_bound_v65','lower_bound_export_v66'}; imported={n.module for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)}; assert not (forbidden & imported)"
+      - name: Open hash-locked archives for schema inventory only
+        run: >-
+          mkdir -p results/v68-schema &&
+          python -m mini_origin.clean_lower_bound_schema_v68
+          --output results/v68-schema/schema.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v68-clean-lower-bound-schema
+          path: mini-origin/results/v68-schema/schema.json
+          retention-days: 90
