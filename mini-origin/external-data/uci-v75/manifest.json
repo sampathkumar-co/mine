@@ -1,0 +1,16 @@
+{
+  "status": "fresh_external_evaluation_manifest_v75",
+  "lock_digest": "6730d5029294a753236f77cef1be1334885a5e8cc8d114a285637987eae5fbaf",
+  "repository_registry_digest": "3fde8f0138548928651937201cef66aa71ee41bbb792ade82b1a02337ae8b392",
+  "parent_v66_evidence_digest": "3b2bb026556ff9f6321ad6a8375854ae46931e64080329c76f86f31d12c0d643",
+  "parent_v72_evidence_digest": "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090",
+  "datasets": [
+    {"name":"AIDS Clinical Trials Group Study 175","uci_id":890,"url":"https://archive.ics.uci.edu/static/public/890/data.csv","sha256":"cf58638c7687764ccb32d037938142518293d505eec349ccec406d4d42ba9532","bytes":159675,"rows":2139,"features":23,"target":"cid"},
+    {"name":"Autism Screening Adult","uci_id":426,"url":"https://archive.ics.uci.edu/static/public/426/data.csv","sha256":"5ffba0d12ea9d867c8e5493109149a95c7f5602dc839a5ed73ebce9cb0cb8e8e","bytes":58264,"rows":704,"features":20,"target":"class"},
+    {"name":"Credit Approval","uci_id":27,"url":"https://archive.ics.uci.edu/static/public/27/data.csv","sha256":"fe592adc0045801c41c0cfe8fbb89537f909d149cc9b96f365ed043d17241488","bytes":32407,"rows":690,"features":15,"target":"A16"},
+    {"name":"ILPD (Indian Liver Patient Dataset)","uci_id":225,"url":"https://archive.ics.uci.edu/static/public/225/data.csv","sha256":"dbb065e6bf2b226b6d9c04f066ddc0b45173861dfb3a4df83f3710d3927ef5de","bytes":23817,"rows":583,"features":10,"target":"Selector"},
+    {"name":"Thoracic Surgery Data","uci_id":277,"url":"https://archive.ics.uci.edu/static/public/277/data.csv","sha256":"d7856924d2410ab479ae43f38dc62fe0e84d4e428625ceeeb6b269b9233500c9","bytes":23810,"rows":470,"features":16,"target":"Risk1Yr"},
+    {"name":"Wholesale customers","uci_id":292,"url":"https://archive.ics.uci.edu/static/public/292/data.csv","sha256":"c3d018c643565b85cee733c4a2ac76dd76e080e857cb23f0ccfcc2e15a6c17ef","bytes":15021,"rows":440,"features":7,"target":"Region"},
+    {"name":"Page Blocks Classification","uci_id":78,"url":"https://archive.ics.uci.edu/static/public/78/data.csv","sha256":"431ac64c358a0bfb9ac0e333e1674abe45b24ebc586cb90d6905b20726b6c06f","bytes":241994,"rows":5473,"features":10,"target":"class"}
+  ]
+}

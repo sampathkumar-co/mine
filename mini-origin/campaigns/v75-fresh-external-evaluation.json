@@ -1,0 +1,42 @@
+{
+  "status": "preregistered_before_record_parsing",
+  "parent_v74_lock_digest": "6730d5029294a753236f77cef1be1334885a5e8cc8d114a285637987eae5fbaf",
+  "parent_v74_manifest_sha256": "d0d6b849f4cb07a6ee2ae42b6dfc92319579368c91480dd074522dda7d475019",
+  "parent_v73_registry_digest": "3fde8f0138548928651937201cef66aa71ee41bbb792ade82b1a02337ae8b392",
+  "parent_v72_commit": "dae02829efc4819935a4ec87c31ea5eee3305d83",
+  "parent_v72_evidence_digest": "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090",
+  "datasets": [890, 426, 27, 225, 277, 292, 78],
+  "record_adapter": "Parse the committed standardized CSV bytes with Python csv.DictReader; use the single committed target column as label; preserve every other column as an exact textual feature in original header order; preserve missing tokens; reject duplicate headers, missing target columns, row-width errors, empty labels, hash mismatches, byte-length mismatches, and metadata row/feature-count mismatches.",
+  "unchanged_components": [
+    "v0.72 feature-only original-record sampler",
+    "v0.71 feature-only oversized-cell sampler",
+    "v0.70 numeric-threshold compiler semantics",
+    "v0.60 conditioned-cell traversal and structural ranking",
+    "v0.56 response-cost Pareto quotient",
+    "v0.65 exact lower-bound planner",
+    "v0.66 independent Rust solver",
+    "profile seeds 6001, 6002, 6003",
+    "500000 expansion budget and 10000/50000/250000/500000 ladder"
+  ],
+  "locked_gate": {
+    "contributing_datasets": 7,
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0
+  },
+  "repair_policy": "Only parser defects may be repaired after record access. Dataset identities, committed CSV hashes and lengths, target columns, representation, selectors, seeds, solvers, budgets, and scientific thresholds may not change.",
+  "claim_boundary": "A pass is clean preregistered external-data evidence for the frozen v0.72 label-free exact-search mechanism with independent Rust replay. It is not outside-human reproduction, publication novelty, peer review, acceptance, or a world-level/world-first breakthrough."
+}
