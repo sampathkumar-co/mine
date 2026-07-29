@@ -40,12 +40,18 @@ jobs:
 
       - name: Compile v13 runtime
         working-directory: current/lexigen-language-genesis/v13
-        run: python -m py_compile latent_runtime_v13.py latent_synthesizer_v13.py replay_v13_multifamily.py
+        run: |
+          python -m py_compile \
+            latent_runtime_v13.py \
+            latent_runtime_v13_ext.py \
+            latent_synthesizer_v13.py \
+            latent_synthesizer_v13_ext.py \
+            replay_v13_multifamily_ext.py
 
       - name: Run fourteen-family development gate
         working-directory: current/lexigen-language-genesis/v13
         run: |
-          python replay_v13_multifamily.py \
+          python replay_v13_multifamily_ext.py \
             --evidence-root ../../../campaign/lexigen-language-genesis/external/evidence/v12-campaign \
             --arcgen-root ../../../arcgen \
             --holdout-count 100
