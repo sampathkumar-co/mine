@@ -1,0 +1,76 @@
+name: Lexigen Language Genesis v18
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v18/**"
+      - ".github/workflows/lexigen-language-genesis-v18.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-v18:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out v18
+        uses: actions/checkout@v4
+
+      - name: Check out frozen v13 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          repository: sampathkumar-co/mine
+          ref: 13cd271a2d4813001563842a51a1e72dd100aa1a
+          path: v13-campaign-evidence
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile v18
+        run: python -m py_compile lexigen-language-genesis/v18/*.py
+
+      - name: Reproduce frozen v17 attempt
+        run: |
+          python lexigen-language-genesis/v18/run_v18_frozen_attempt.py \
+            v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign
+
+      - name: Independently reproduce sealed result
+        run: |
+          python lexigen-language-genesis/v18/prepare_v18_predictions.py \
+            --package-root v13-campaign-evidence/lexigen-language-genesis/external/evidence/v13-campaign \
+            --output lexigen-language-genesis/v18/V18_PREDICTIONS.json
+
+      - name: Verify the same negative result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a = json.loads(Path('lexigen-language-genesis/v18/V18_ATTEMPT_REPORT.json').read_text())
+          b = json.loads(Path('lexigen-language-genesis/v18/V18_PREDICTIONS.json').read_text())
+          assert a['candidate_programs'] == b['programs_found'] == 0
+          assert a['no_program_failures'] == b['no_program_gates'] == 10
+          assert a['gates_scored'] == 0
+          assert not a['hidden_outputs_opened'] and not b['hidden_outputs_opened']
+          PY
+
+      - name: Verify byte-identical reports
+        run: |
+          git diff --exit-code -- \
+            lexigen-language-genesis/v18/V18_ATTEMPT_REPORT.json \
+            lexigen-language-genesis/v18/V18_PREDICTIONS.json
+
+      - name: Upload v18 negative evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v18-sealed-negative-result
+          path: |
+            lexigen-language-genesis/v18/V18_PRECOMMIT.json
+            lexigen-language-genesis/v18/V18_ATTEMPT_REPORT.json
+            lexigen-language-genesis/v18/V18_PREDICTIONS.json
+          if-no-files-found: error
+          retention-days: 90
