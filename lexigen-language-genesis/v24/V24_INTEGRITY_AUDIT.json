@@ -1,0 +1,29 @@
+{
+  "schema": "lexigen-v24-integrity-audit-v1",
+  "audit_verdict": "valid_negative_induced_language_discovery",
+  "precommit_commit": "11791a6",
+  "implementation_commit": "43f17d362a5cb1e87c60f83c0fbbe36e87c78c74",
+  "workflow_run_id": 30463044724,
+  "workflow_artifact_digest": "sha256:2760fa3b2d1419f3cc95ff6cdbdb867b6ff212ab45caaabf56609e6428847e85",
+  "rift_workflow_run_id": 30463043864,
+  "discovery_result": {
+    "frozen_task_count": 64,
+    "completed_task_count": 64,
+    "generator_invalid_tasks": 0,
+    "generator_timeouts": 0,
+    "candidate_programs_tested": 17408512,
+    "exact_complete_programs": 0,
+    "distinct_exact_structures": 0,
+    "qualifying_structures": 0
+  },
+  "claim_limits": {
+    "validation_generators_imported": false,
+    "validation_outputs_opened": false,
+    "heldout_transfer_demonstrated": false,
+    "unrestricted_semantic_language_invention": false,
+    "sealed_external_success": false,
+    "external_discovery": false,
+    "world_level_breakthrough": false
+  },
+  "required_next_step": "Redesign the structural representation or induction objective before opening the frozen v24 validation identities."
+}
