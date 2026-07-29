@@ -1,0 +1,9 @@
+{
+    "status":  "small_query_coverage_development_pass_v79_preserved",
+    "workflow_run_id":  30470081666,
+    "artifact_id":  8733572471,
+    "artifact_sha256":  "23582d5db892e36f851cbf9f6084161812606d455c9bd143c0daeb166764f716",
+    "evidence_file_sha256":  "1fb21f05ab3ea9177245993a4fcbb5d7d619c94e72f57c72fe889e94ac6109b9",
+    "evidence_digest":  "5c28f39546d8e7d988fbc78ce254fa35d2b1d85d49a4b270b50edde1235d3001",
+    "source_commit":  "b612d77e4487a2b07b60c40745ea0fc6ca9c8be0"
+}
