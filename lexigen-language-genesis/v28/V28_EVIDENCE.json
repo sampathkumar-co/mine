@@ -1,0 +1,36 @@
+{
+  "claim_boundary": "Public ARC-GEN architecture comparison and held-out evidence only; no sealed external result, unrestricted invention, or world-level breakthrough.",
+  "completed_task_count": 40,
+  "discovery_task_count": 40,
+  "distinct_exact_structure_count": 3,
+  "files": {
+    "V28_DISCOVERY_REPORT.json": "3426c3ca392cabd672b6308a141fc13a358236e7ebeb36dba72369afaa3c6b01",
+    "V28_FIRST_COMPARISON_REPORT.json": "ced939a5b4ed087c9ad04e71082fe324ae204b00d0e6a8a3932dcd8df05597d1",
+    "V28_FIRST_COMPARISON_SUMMARY.json": "f929a209726d77ab4eb787cf035a0dc9cd9390c811cb72c208f7f7e0702eb3ee",
+    "V28_LIBRARY.json": "daea1d97d3b80c00511d08c3cb8a3939fc99458901b38294dbe207d13b400f0f",
+    "V28_PRECOMMIT.json": "5703206b59b8ef14df8343dbd9ec182f28c8bc164d721b6866a913bdb8c839e2",
+    "aggregate_discovery_v28.py": "fa9900778be7c42f5a25c9c7e70553a9d4dd398645fbd84983a8ec174408c4fe",
+    "enumerator_v28.py": "f887b41389145c8506d3b6a3fd8d72447ade98328be14b68199d10c50bb1bdca",
+    "scan_one_v28.py": "7b4d0f92d86cc2e8b39a1df10fd0849d9413a45abcc814c954bf2d45fcb07040",
+    "test_v28.py": "f6603d44b35bb939a2bfb56b24c8945f82fffebfc358dedfb03bc3e368a7dbbb"
+  },
+  "first_comparison_gate_passed": true,
+  "generator_invalid_task_count": 0,
+  "heldout_transfer_demonstrated": false,
+  "qualifying_structure_count": 0,
+  "schema": "lexigen-v28-evidence-v1",
+  "totals": {
+    "accepted_examples": 240,
+    "exact_concrete_programs": 3,
+    "generation_failures": 2,
+    "generation_timeouts": 0,
+    "raw_candidate_evaluations": 26462296,
+    "runtime_invalid_candidates": 1256899,
+    "semantic_duplicates": 15110098,
+    "total_retained_expressions": 2624086
+  },
+  "validation_generators_imported": 0,
+  "validation_outputs_opened": false,
+  "version": 28,
+  "world_level_breakthrough": false
+}
