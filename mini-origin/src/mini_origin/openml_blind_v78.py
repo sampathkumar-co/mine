@@ -28,6 +28,7 @@ V77_LOCK_DIGEST = "03a64c8c5928070fb41b15d4892c2f720a909fc39c3a7f5b9597cd79f1879
 V77_MANIFEST_SHA256 = "e9e500a6441720feff3455cfea183248b03b4fb991a5e4e8448840463c845284"
 V76_REGISTRY_DIGEST = "d312c4f0b853237479d6be8a74b6bf47776722d7aea1ce00c7b9745be90d57d2"
 V75_EVIDENCE_DIGEST = "db379850b2a517e16d5ea442047ac4933ad06fdcf4d6838d91fc36d72e75bc47"
+LEGACY_PARENT_V68_EVIDENCE_DIGEST = "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090"
 FROZEN_V75_COMMIT = "d8aa4153b69b82ccb714cfbb50d12c5137186047"
 FROZEN_V77_COMMIT = "8168664e4068aa3a8b8736dc3ff13b35ecf67981"
 USER_AGENT = "Mini-ORIGIN-v0.78-openml-blind/1"
@@ -251,6 +252,7 @@ def run_reference(states_path: Path, reference_path: Path):
     result["v77_lock_digest"] = V77_LOCK_DIGEST
     result["v77_manifest_sha256"] = V77_MANIFEST_SHA256
     result["parent_v75_evidence_digest"] = V75_EVIDENCE_DIGEST
+    result["parent_v68_evidence_digest"] = LEGACY_PARENT_V68_EVIDENCE_DIGEST
     result["compiler_protocol"] = frontier.compiler_protocol()
     result["selected_openml_dataset_ids"] = [
         row["dataset_id"] for row in manifest["datasets"]
