@@ -39,11 +39,11 @@ jobs:
         working-directory: mini-origin
         run: python -m pip install -e ".[dev]"
       - name: Build repository-wide dataset registry
-        working-directory: mini-origin
         run: >-
-          mkdir -p results/v63 &&
+          mkdir -p mini-origin/results/v63 &&
+          PYTHONPATH=mini-origin/src
           python -m mini_origin.repository_dataset_audit_v63
-          --output results/v63/repository-dataset-registry.json
+          --output mini-origin/results/v63/repository-dataset-registry.json
       - uses: actions/upload-artifact@v4
         with:
           name: mini-origin-v63-repository-dataset-registry
