@@ -1,0 +1,51 @@
+name: Mini-ORIGIN External Response-Cost Lock v0.58
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v58-external-response-cost-blind
+    paths:
+      - "mini-origin/src/mini_origin/external_response_cost_lock_v58.py"
+      - ".github/workflows/mini-origin-v58-external-response-cost-lock.yml"
+  pull_request:
+    paths:
+      - "mini-origin/src/mini_origin/external_response_cost_lock_v58.py"
+      - ".github/workflows/mini-origin-v58-external-response-cost-lock.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v58-lock-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  archive-hash-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Enforce hash-only source boundary
+        run: >-
+          python -c "from pathlib import Path; p=Path('src/mini_origin/external_response_cost_lock_v58.py').read_text(); forbidden=('zipfile','csv','pandas','numpy','make_task','decode('); assert not any(x in p for x in forbidden)"
+      - name: Download archive bytes and freeze hashes
+        run: >-
+          mkdir -p results/v58-lock &&
+          python -m mini_origin.external_response_cost_lock_v58
+          --output results/v58-lock/archive-lock.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v58-external-archive-lock
+          path: mini-origin/results/v58-lock/archive-lock.json
+          retention-days: 90
