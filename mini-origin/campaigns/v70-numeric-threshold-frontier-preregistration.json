@@ -1,9 +1,16 @@
 {
-  "status": "preregistered_before_execution",
+  "status": "preregistered_with_preexecution_sampling_repair",
   "parent_v68_evidence_digest": "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b",
   "development_data": "the seven opened v0.68 archives only",
+  "preexecution_repair": {
+    "scientific_metrics_exposed": false,
+    "archive_compilation_executed": false,
+    "reason": "the inherited sampler hashed labels, contradicting labels_or_costs_used=false",
+    "repair": "feature-only SHA-256 row ranking with original row index as duplicate-feature tie-break"
+  },
   "compiler": {
-    "maximum_sampled_distinct_records": 384,
+    "maximum_sampled_records": 384,
+    "sampling": "rank original rows by SHA-256(dataset name, feature vector) with original row index as the duplicate-feature tie-break; labels excluded",
     "missing_tokens": ["", "?", "na", "nan", "none", "null"],
     "numeric_detection": "all nonmissing tokens parse as finite Decimal",
     "low_cardinality_exact_cutoff": 8,
