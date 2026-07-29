@@ -1,0 +1,47 @@
+{
+  "status": "clean_lower_bound_external_blind_rejected",
+  "development_gate": false,
+  "workflow_run": 30424424340,
+  "workflow_artifact_digest": "sha256:d2ad364ecbb170e5a6c2d7899196f902b7a94f139dced670e3f8d04d00f40c56",
+  "evidence_digest": "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b",
+  "archive_lock_digest": "c599849c7ba26fdb3e241221dcae3d3feb26d47ad217da53f0d06b97ebc1e02b",
+  "repository_registry_digest": "b88fcb352c2f80af8bc89a3a7576b9cd384800b67d1b168534ad26df9985b6c1",
+  "parent_v66_evidence_digest": "3b2bb026556ff9f6321ad6a8375854ae46931e64080329c76f86f31d12c0d643",
+  "contributing_dataset_count": 4,
+  "base_state_count": 48,
+  "profiled_state_count": 144,
+  "bounded_solved_count": 144,
+  "both_plain_bounded_count": 108,
+  "bounded_only_count": 36,
+  "plain_bounded_objective_mismatch_count": 0,
+  "both_current_bounded_count": 144,
+  "current_bounded_plan_mismatch_count": 0,
+  "bounded_expansion_regression_count": 0,
+  "states_with_lower_bound_pruning": 144,
+  "current_query_expansions": 182876,
+  "bounded_query_expansions": 12007,
+  "aggregate_bounded_reduction_fraction": 0.9343434895776374,
+  "dominated_queries_removed": 460422,
+  "root_incomparable_classes": 252,
+  "expansion_ratio_median": 748.0,
+  "expansion_ratio_p90": 41666.75,
+  "budget_ladder_summary": {
+    "10000": {"bounded_solved": 144, "plain_solved": 108},
+    "50000": {"bounded_solved": 144, "plain_solved": 108},
+    "250000": {"bounded_solved": 144, "plain_solved": 108},
+    "500000": {"bounded_solved": 144, "plain_solved": 108}
+  },
+  "rust_exact_match_count": 144,
+  "rust_mismatch_count": 0,
+  "failed_locked_thresholds": {
+    "minimum_contributing_datasets": {"required": 5, "observed": 4},
+    "minimum_base_states": {"required": 50, "observed": 48},
+    "minimum_profiled_states": {"required": 150, "observed": 144}
+  },
+  "zero_state_datasets": [
+    "Connectionist Bench (Sonar, Mines vs. Rocks)",
+    "Hill-Valley",
+    "Libras Movement"
+  ],
+  "scientific_note": "The repository-audited clean campaign completed matched Python exact search, independent Rust replay and the unchanged gate. Every selected state matched exactly, the lower-bound planner never regressed and reduced aggregate current-Pareto expansions by 93.4%, with a 748x median plain/bounded ratio. The campaign is nevertheless rejected because only four datasets generated eligible conditioned states, yielding 48 base and 144 profiled states below the frozen 5/50/150 breadth requirements. No threshold or dataset was changed."
+}
