@@ -1,0 +1,23 @@
+{
+  "status": "preexecution_protocol_repair",
+  "scientific_metrics_exposed": false,
+  "archive_compilation_executed": false,
+  "solver_executed": false,
+  "failed_workflow_runs": [30425809543, 30425870178],
+  "first_failure": "test referenced a nonexistent ClassTask.query_names attribute",
+  "second_failure": "label-independence test showed the inherited deterministic sampler hashes labels",
+  "contradiction": "The frozen compiler requires labels_or_costs_used=false, but the inherited v0.58 sampler included labels in its ranking hash.",
+  "repair": "Rank original records by SHA-256 of dataset name and feature vector only, using original row index solely as a deterministic tie-break. Labels remain attached after selection but cannot influence which rows are selected.",
+  "unchanged": [
+    "seven opened v0.68 datasets",
+    "numeric detection",
+    "low-cardinality cutoff",
+    "seven quantile ranks",
+    "missing-value responses",
+    "v0.60 selector",
+    "v0.56 Pareto quotient",
+    "v0.65 lower-bound planner",
+    "v0.66 Rust solver",
+    "all scientific thresholds"
+  ]
+}
