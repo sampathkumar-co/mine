@@ -40,7 +40,7 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Verify frozen lock and schema-only boundary
         run: >-
-          python -c "import ast,json,pathlib; m=json.load(open('external-data/uci-v68/manifest.json')); assert m['lock_digest']=='9abc52a7e83255498c84b802d432306b5ff15dece032469968b8db3501d0a385'; tree=ast.parse(pathlib.Path('src/mini_origin/clean_lower_bound_schema_v68.py').read_text()); forbidden={'conditioned_cell_frontier_v60','response_cost_pareto_v56','response_cost_lower_bound_v65','lower_bound_export_v66'}; imported={n.module for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)}; assert not (forbidden & imported)"
+          python -c "import ast,json,pathlib; m=json.load(open('external-data/uci-v68/manifest.json')); assert m['lock_digest']=='c599849c7ba26fdb3e241221dcae3d3feb26d47ad217da53f0d06b97ebc1e02b'; tree=ast.parse(pathlib.Path('src/mini_origin/clean_lower_bound_schema_v68.py').read_text()); names=set(); [(names.add(a.name),names.add(a.name.rsplit('.',1)[-1])) for n in ast.walk(tree) if isinstance(n,ast.Import) for a in n.names]; [(names.add(n.module or ''),names.add((n.module or '').rsplit('.',1)[-1]),*[(names.add(a.name),names.add(((n.module+'.') if n.module else '')+a.name)) for a in n.names]) for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)]; forbidden={'conditioned_cell_frontier_v60','response_cost_pareto_v56','response_cost_lower_bound_v65','lower_bound_export_v66'}; assert not (forbidden & names), sorted(forbidden & names)"
       - name: Open hash-locked archives for schema inventory only
         run: >-
           mkdir -p results/v68-schema &&
