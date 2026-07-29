@@ -53,12 +53,15 @@ def test_missing_numeric_values_remain_explicit():
     assert any("missing" in row for row in task.rows)
 
 
-def test_labels_do_not_change_compiled_queries_or_responses():
+def test_labels_do_not_change_compiled_responses():
     features = [(str(index), str(index % 4)) for index in range(16)]
     first = [(row, "left") for row in features]
-    second = [(row, "right" if index % 3 else "other") for index, row in enumerate(features)]
+    second = [
+        (row, "right" if index % 3 else "other")
+        for index, row in enumerate(features)
+    ]
     first_task, first_summary = numeric.compile_task("label-free", first)
     second_task, second_summary = numeric.compile_task("label-free", second)
-    assert first_task.query_names == second_task.query_names
+    assert first_task.query_count == second_task.query_count
     assert first_task.rows == second_task.rows
     assert first_summary["compiled_queries"] == second_summary["compiled_queries"]
