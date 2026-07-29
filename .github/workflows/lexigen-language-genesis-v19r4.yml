@@ -74,32 +74,36 @@ jobs:
             --mutations-per-case 8 \
             --output lexigen-language-genesis/v19r4/V19R4_VERIFIER_REPORT.json
 
-      - name: Verify byte-identical scientific artifacts
-        run: |
-          git diff --exit-code -- \
-            lexigen-language-genesis/v19r4/V19R4_CEGIS_REPORT.json \
-            lexigen-language-genesis/v19r4/V19R4_REPORT.json \
-            lexigen-language-genesis/v19r4/V19R4_VERIFIER_REPORT.json \
-            lexigen-language-genesis/v19r4/production \
-            lexigen-language-genesis/v19r4/contracts
-
-      - name: Generate frozen evidence twice
+      - name: Generate exact frozen evidence twice
         run: |
           python lexigen-language-genesis/v19r4/freeze_v19r4_evidence.py
           first=$(sha256sum lexigen-language-genesis/v19r4/V19R4_EVIDENCE.json | cut -d' ' -f1)
           python lexigen-language-genesis/v19r4/freeze_v19r4_evidence.py
           second=$(sha256sum lexigen-language-genesis/v19r4/V19R4_EVIDENCE.json | cut -d' ' -f1)
           test "$first" = "$second"
-          printf '%s\n' "$first" > lexigen-language-genesis/v19r4/EVIDENCE_SHA256.txt
+          test "$first" = "72b9b9ff54f90961416006d7bb8dd622c8fa8856c03d3f23663a84b4e12d6451"
 
-      - name: Upload v19r4 bootstrap evidence
+      - name: Verify byte-identical frozen artifacts
+        run: |
+          git diff --exit-code -- \
+            lexigen-language-genesis/v19r4/V19R4_CEGIS_REPORT.json \
+            lexigen-language-genesis/v19r4/V19R4_REPORT.json \
+            lexigen-language-genesis/v19r4/V19R4_VERIFIER_REPORT.json \
+            lexigen-language-genesis/v19r4/V19R4_EVIDENCE.json \
+            lexigen-language-genesis/v19r4/EVIDENCE.md \
+            lexigen-language-genesis/v19r4/V19R4_INTEGRITY_AUDIT.json \
+            lexigen-language-genesis/v19r4/production \
+            lexigen-language-genesis/v19r4/contracts
+          find lexigen-language-genesis/v19r4 -type d -name __pycache__ -prune -exec rm -rf {} +
+          test -z "$(git status --porcelain --untracked-files=all -- lexigen-language-genesis/v19r4)"
+
+      - name: Upload v19r4 evidence
         uses: actions/upload-artifact@v4
         with:
-          name: lexigen-v19r4-bootstrap-evidence
+          name: lexigen-v19r4-frozen-evidence
           path: |
             lexigen-language-genesis/v19r4/V19R4_EVIDENCE.json
             lexigen-language-genesis/v19r4/EVIDENCE.md
-            lexigen-language-genesis/v19r4/EVIDENCE_SHA256.txt
             lexigen-language-genesis/v19r4/V19R4_INTEGRITY_AUDIT.json
             lexigen-language-genesis/v19r4/V19R4_CEGIS_REPORT.json
             lexigen-language-genesis/v19r4/V19R4_REPORT.json
