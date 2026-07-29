@@ -1,0 +1,87 @@
+name: Mini-ORIGIN Fresh External Hash Lock v0.74
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v74-fresh-external-hash-lock
+    paths:
+      - "mini-origin/campaigns/v74-fresh-external-hash-lock.json"
+      - "mini-origin/src/mini_origin/fresh_external_lock_v74.py"
+      - "mini-origin/tests/test_fresh_external_lock_v74.py"
+      - ".github/workflows/mini-origin-v74-fresh-external-hash-lock.yml"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v74-fresh-external-hash-lock.json"
+      - "mini-origin/src/mini_origin/fresh_external_lock_v74.py"
+      - "mini-origin/tests/test_fresh_external_lock_v74.py"
+      - ".github/workflows/mini-origin-v74-fresh-external-hash-lock.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v74-fresh-external-hash-lock
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  fresh-external-hash-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: python -m pip install -e ".[dev]"
+      - name: Verify preregistration and frozen parents
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          row = json.loads(Path("mini-origin/campaigns/v74-fresh-external-hash-lock.json").read_text(encoding="utf-8-sig"))
+          assert row["status"] == "preregistered_before_metadata_access"
+          assert row["parent_v73_commit"] == "989dec266a8bdb715cbee14488e84a348e9ce466"
+          assert row["parent_v73_registry_digest"] == "3fde8f0138548928651937201cef66aa71ee41bbb792ade82b1a02337ae8b392"
+          assert row["frozen_v72_commit"] == "dae02829efc4819935a4ec87c31ea5eee3305d83"
+          assert row["parent_v72_evidence_digest"] == "b1fc70852a2ad35d91972889eb853856cde18bca0ed02db37cd37ac333639090"
+          assert row["candidate_ids_names_urls_committed_before_execution"] is False
+          assert row["data_bytes_access_before_preregistration"] is False
+          assert row["record_or_label_parsing_during_lock"] is False
+          assert row["solver_execution_during_lock"] is False
+          PY
+          git diff --exit-code 989dec266a8bdb715cbee14488e84a348e9ce466 -- \
+            research-evidence/mini-origin-v73-frozen-dataset-registry.json \
+            research-evidence/mini-origin-v72-label-free-frontier-pass.json \
+            mini-origin/campaigns/v72-label-free-frontier-revalidation.json \
+            mini-origin/src/mini_origin/label_free_frontier_v72.py \
+            mini-origin/src/mini_origin/numeric_threshold_frontier_v70.py \
+            mini-origin/src/mini_origin/numeric_threshold_repaired_v70.py \
+            mini-origin/src/mini_origin/label_free_selector_certificate_v71.py \
+            mini-origin/src/mini_origin/conditioned_cell_frontier_v60.py \
+            mini-origin/src/mini_origin/response_cost_pareto_v56.py \
+            mini-origin/src/mini_origin/response_cost_lower_bound_v65.py \
+            mini-origin/compiled/response_cost_lower_bound_v66.rs
+      - name: Test fresh hash-lock protocol
+        working-directory: mini-origin
+        run: pytest -q tests/test_fresh_external_lock_v74.py
+      - name: Select and hash-lock fresh external datasets
+        run: >-
+          mkdir -p mini-origin/results/v74 &&
+          python -m mini_origin.fresh_external_lock_v74
+          --output mini-origin/results/v74/manifest.json
+        env:
+          PYTHONPATH: mini-origin/src
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v74-fresh-external-hash-lock
+          path: mini-origin/results/v74/manifest.json
+          if-no-files-found: warn
+          retention-days: 90
