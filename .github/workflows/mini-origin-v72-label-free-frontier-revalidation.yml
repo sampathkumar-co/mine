@@ -1,0 +1,107 @@
+name: Mini-ORIGIN Label-Free Frontier Revalidation v0.72
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v72-label-free-frontier-revalidation
+    paths:
+      - "mini-origin/campaigns/v72-label-free-frontier-revalidation.json"
+      - "mini-origin/src/mini_origin/label_free_frontier_v72.py"
+      - "mini-origin/tests/test_label_free_frontier_v72.py"
+      - ".github/workflows/mini-origin-v72-label-free-frontier-revalidation.yml"
+  pull_request:
+    paths:
+      - "mini-origin/campaigns/v72-label-free-frontier-revalidation.json"
+      - "mini-origin/src/mini_origin/label_free_frontier_v72.py"
+      - "mini-origin/tests/test_label_free_frontier_v72.py"
+      - ".github/workflows/mini-origin-v72-label-free-frontier-revalidation.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v72-label-free-frontier-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  label-free-frontier-revalidation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify preregistration and frozen parents
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          v70 = json.loads(Path("campaigns/v70-numeric-threshold-frontier-preregistration.json").read_text())
+          v72 = json.loads(Path("campaigns/v72-label-free-frontier-revalidation.json").read_text())
+          assert v72["status"] == "preregistered_before_execution"
+          assert v72["parent_v71_commit"] == "5594d601356382e45875d26a82052f300d745fe7"
+          assert v72["external_archive_access_before_preregistration"] is False
+          assert v72["solver_execution_before_preregistration"] is False
+          assert v72["locked_gate"] == v70["locked_gate"]
+          PY
+          git diff --exit-code 5594d601356382e45875d26a82052f300d745fe7 -- \
+            src/mini_origin/label_free_selector_certificate_v71.py \
+            campaigns/v71-label-free-selector-certificate.json
+          git diff --exit-code f73ad897377ae1189844ea9ab49aa429c6b1c1c3 -- \
+            src/mini_origin/conditioned_cell_frontier_v60.py \
+            src/mini_origin/response_cost_pareto_v56.py
+          git diff --exit-code eecc699ebc66e298b814c3e56ca5e2aee9366da9 -- \
+            src/mini_origin/response_cost_lower_bound_v65.py
+          git diff --exit-code 2d001d3d4dcec4c315327f318a4918acc552aa7c -- \
+            compiled/response_cost_lower_bound_v66.rs
+      - name: Run v0.72 isolation tests first
+        run: pytest -q tests/test_label_free_frontier_v72.py
+      - name: Run complete focused label-free tests
+        run: >-
+          pytest -q
+          tests/test_numeric_threshold_frontier_v70.py
+          tests/test_label_free_selector_v71.py
+          tests/test_label_free_frontier_v72.py
+      - name: Compute repaired Python reference
+        run: >-
+          mkdir -p results/v72 &&
+          python -m mini_origin.label_free_frontier_v72 reference
+          --states results/v72/states.txt
+          --reference results/v72/python-reference.json
+      - name: Compile independent Rust lower-bound solver
+        run: >-
+          rustc -C opt-level=3 -C debuginfo=0
+          compiled/response_cost_lower_bound_v66.rs
+          -o results/v72/response_cost_lower_bound_v72
+      - name: Run independent Rust lower-bound solver
+        run: >-
+          results/v72/response_cost_lower_bound_v72
+          --input results/v72/states.txt
+          --output results/v72/rust-results.json
+      - name: Apply unchanged v0.70 opened-data gate
+        run: >-
+          python -m mini_origin.label_free_frontier_v72 validate
+          --reference results/v72/python-reference.json
+          --rust results/v72/rust-results.json
+          --output results/v72/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v72-label-free-frontier-revalidation
+          path: |
+            mini-origin/results/v72/python-reference.json
+            mini-origin/results/v72/rust-results.json
+            mini-origin/results/v72/evidence.json
+          if-no-files-found: warn
+          retention-days: 90

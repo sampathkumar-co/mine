@@ -1,0 +1,50 @@
+{
+  "status": "preregistered_before_execution",
+  "parent_v71_commit": "5594d601356382e45875d26a82052f300d745fe7",
+  "parent_v68_evidence_digest": "b2ff35cbc40d0c2828fa26a3057c245d5c794f4ea9164b3f560c7bcfba50448b",
+  "development_data": "the seven already-opened v0.68 archives only",
+  "objective": "Revalidate the v0.70 compiler and lower-bound frontier after replacing the inherited oversized-cell sampler with the v0.71 certified feature-only sampler.",
+  "methodological_repairs": {
+    "record_sampling": "v0.70 feature-only SHA-256 ranking; labels excluded",
+    "oversized_cell_sampling": "v0.71 SHA-256(task name, salt, sampled row index, compiled response row); labels excluded",
+    "label_independence_certificate": "64 paired synthetic tasks with zero sampling, compilation, conditioned-cell, or selected-state mismatches"
+  },
+  "unchanged_components": [
+    "v0.70 numeric-threshold compiler semantics",
+    "v0.60 conditioned-cell traversal and structural state eligibility",
+    "v0.56 response-cost Pareto quotient",
+    "v0.65 exact lower-bound planner",
+    "v0.66 independent Rust lower-bound solver",
+    "v0.70 scientific thresholds and budgets"
+  ],
+  "external_archive_access_before_preregistration": false,
+  "solver_execution_before_preregistration": false,
+  "exact_budget": 500000,
+  "budget_ladder": [10000, 50000, 250000, 500000],
+  "locked_gate": {
+    "contributing_datasets": 7,
+    "minimum_states_from_each_previously_zero_dataset": 6,
+    "previously_zero_datasets": [
+      "Connectionist Bench (Sonar, Mines vs. Rocks)",
+      "Hill-Valley",
+      "Libras Movement"
+    ],
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0
+  },
+  "claim_boundary": "Opened-data methodological revalidation only. A pass freezes a fully label-free representation and selector for a later repository-audited fresh external campaign. It is not fresh external evidence, outside-human reproduction, publication novelty, peer review, acceptance, or a world-level/world-first breakthrough."
+}
