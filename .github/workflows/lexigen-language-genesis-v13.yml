@@ -1,0 +1,51 @@
+name: Lexigen Language Genesis v13
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v13/**"
+      - ".github/workflows/lexigen-language-genesis-v13.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  latent-generator-growth:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out v13 branch
+        uses: actions/checkout@v4
+        with:
+          path: current
+
+      - name: Check out frozen v12 campaign evidence
+        uses: actions/checkout@v4
+        with:
+          ref: lexigen/external-arcgen-v12-campaign
+          path: campaign
+
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile v13 runtime
+        working-directory: current/lexigen-language-genesis/v13
+        run: python -m py_compile latent_runtime_v13.py latent_synthesizer_v13.py replay_v13_multifamily.py
+
+      - name: Run fourteen-family development gate
+        working-directory: current/lexigen-language-genesis/v13
+        run: |
+          python replay_v13_multifamily.py \
+            --evidence-root ../../../campaign/lexigen-language-genesis/external/evidence/v12-campaign \
+            --arcgen-root ../../../arcgen \
+            --holdout-count 100
