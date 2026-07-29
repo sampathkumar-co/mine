@@ -1,0 +1,14 @@
+﻿{
+    "gate_id":  "v13-campaign-34",
+    "selected_task_id":  "34cfa167",
+    "status":  "generator-invalid-before-seal",
+    "arcgen_commit":  "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+    "generator_source_sha256":  "2063c7683eea02e3331c8545f347b42d83e5561e75681d8d0a4915358879f7d2",
+    "error_type":  "public-generator-exception",
+    "exception_class":  "IndexError",
+    "generator_exit_code":  1,
+    "timed_out":  false,
+    "hidden_output_created":  false,
+    "hidden_scoring_performed":  false,
+    "replacement_attempted":  false
+}

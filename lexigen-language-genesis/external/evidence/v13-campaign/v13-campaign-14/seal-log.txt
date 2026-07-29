@@ -1,0 +1,8 @@
+Could not find platform independent libraries <prefix>
+{
+  "demonstration_count": 6,
+  "hidden_test_count": 20,
+  "redacted_task_sha256": "775b8176c6e2b44b58e2be0df3529e8a431008ca3d37f38f063fc5407a9be529",
+  "sealed_outputs_sha256": "f02b3ea8c8242612b7aaddaa4bdce84cacc0b3fbe1bf7e0fe5c1c1406c8b657f",
+  "selected_task_id": "ecaa0ec1"
+}

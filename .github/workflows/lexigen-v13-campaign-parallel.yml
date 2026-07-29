@@ -1,0 +1,166 @@
+name: Lexigen v13 Campaign Parallel Solve
+
+on:
+  push:
+    branches:
+      - lexigen/external-arcgen-v13-campaign
+    paths:
+      - "lexigen-language-genesis/external/evidence/v13-campaign/**/seal-manifest.json"
+      - "lexigen-language-genesis/external/evidence/v13-campaign/**/infrastructure-result.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FROZEN_ENGINE_COMMIT: 18885982a880eb903f15752be04f7fd7ab2e8c2f
+  EVIDENCE_BRANCH: lexigen/external-arcgen-v13-campaign
+
+jobs:
+  solve:
+    name: Solve gate ${{ matrix.gate }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"]
+    steps:
+      - name: Check out frozen campaign evidence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EVIDENCE_BRANCH }}
+          fetch-depth: 0
+          path: current
+
+      - name: Verify language implementation is unchanged
+        working-directory: current
+        run: |
+          git diff --exit-code "$FROZEN_ENGINE_COMMIT" -- \
+            lexigen-language-genesis/v7 \
+            lexigen-language-genesis/v8 \
+            lexigen-language-genesis/v9 \
+            lexigen-language-genesis/v10 \
+            lexigen-language-genesis/v11 \
+            lexigen-language-genesis/v12 \
+            lexigen-language-genesis/v13 \
+            lexigen-language-genesis/external/arcgen_gate_v13.py
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run frozen solver and preserve outcome
+        shell: bash
+        run: |
+          set +e
+          gate="v13-campaign-${{ matrix.gate }}"
+          evidence="$GITHUB_WORKSPACE/current/lexigen-language-genesis/external/evidence/v13-campaign/$gate"
+          output="$GITHUB_WORKSPACE/output"
+          artifact="$GITHUB_WORKSPACE/artifact-$gate"
+          mkdir -p "$output" "$artifact"
+          if [[ ! -f "$evidence/redacted-task.json" ]]; then
+            cp -a "$evidence"/. "$artifact"/ 2>/dev/null || true
+            GATE="$gate" ARTIFACT="$artifact" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ["ARTIFACT"])
+          result = {
+              "gate_id": os.environ["GATE"],
+              "status": "generator-invalid-before-seal",
+              "solver_exit_code": None,
+              "predictions_committed": False,
+              "hidden_scoring_performed": False,
+              "sealed_outputs_accessed": False,
+              "breakthrough_candidate": False,
+          }
+          (root / "result.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+          PY
+            exit 0
+          fi
+          export LEXIGEN_V13_CAMPAIGN_GATE="$gate"
+          cd "$GITHUB_WORKSPACE/current/lexigen-language-genesis/external"
+          python arcgen_campaign_v13.py solve \
+            --redacted "$evidence/redacted-task.json" \
+            --output-dir "$output" \
+            >"$artifact/solver-log.txt" 2>&1
+          code=$?
+          set -e
+          cp -a "$output"/. "$artifact"/ 2>/dev/null || true
+          GATE="$gate" CODE="$code" ARTIFACT="$artifact" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          gate = os.environ["GATE"]
+          code = int(os.environ["CODE"])
+          root = Path(os.environ["ARTIFACT"])
+          report_path = root / "candidate-report.json"
+          report = json.loads(report_path.read_text()) if report_path.exists() else {}
+          predictions = (root / "candidate-predictions.json").exists()
+          breakthrough = bool(report.get("breakthrough_candidate", False))
+          if code != 0:
+              status = "infrastructure-solver-error"
+          elif predictions and breakthrough:
+              status = "v13-only-candidate-awaiting-remote-commit-and-score"
+          elif predictions:
+              status = "non-novel-v13-program-pre-score"
+          else:
+              status = "permanent-pre-score-failure"
+          result = {
+              "gate_id": gate,
+              "selected_task_id": report.get("selected_task_id"),
+              "status": status,
+              "solver_exit_code": code,
+              "predictions_committed": predictions,
+              "hidden_scoring_performed": False,
+              "sealed_outputs_accessed": False,
+              "breakthrough_candidate": breakthrough,
+          }
+          (root / "result.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+          PY
+
+      - name: Upload immutable candidate checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: v13-campaign-${{ matrix.gate }}-checkpoint
+          path: artifact-v13-campaign-${{ matrix.gate }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    name: Commit all v13 campaign checkpoints
+    needs: solve
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out latest evidence branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EVIDENCE_BRANCH }}
+          fetch-depth: 0
+
+      - name: Download all gate checkpoints
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v13-campaign-*-checkpoint
+          path: campaign-checkpoints
+
+      - name: Copy and commit checkpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          for gate in $(seq -w 1 40); do
+            src="campaign-checkpoints/v13-campaign-${gate}-checkpoint"
+            dst="lexigen-language-genesis/external/evidence/v13-campaign/v13-campaign-${gate}"
+            test -d "$src"
+            mkdir -p "$dst"
+            cp -a "$src"/. "$dst"/
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-language-genesis/external/evidence/v13-campaign
+          git commit -m "Preserve v13 campaign candidate checkpoints" || exit 0
+          git push origin "HEAD:$EVIDENCE_BRANCH" || {
+            git pull --rebase origin "$EVIDENCE_BRANCH"
+            git push origin "HEAD:$EVIDENCE_BRANCH"
+          }

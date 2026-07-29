@@ -1,0 +1,11 @@
+﻿{
+    "campaign":  "v13-campaign",
+    "frozen_engine_commit":  "18885982a880eb903f15752be04f7fd7ab2e8c2f",
+    "selection_commit":  "4da5520ae06416251c5828b7d278599e3c383387",
+    "arcgen_commit":  "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+    "gate_count":  40,
+    "sealed_gate_count":  39,
+    "generator_invalid_count":  1,
+    "hidden_vault_file_count":  39,
+    "recovery_incident_count":  39
+}

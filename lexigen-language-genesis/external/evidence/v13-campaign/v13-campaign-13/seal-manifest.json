@@ -1,0 +1,16 @@
+{
+  "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+  "demonstration_count": 6,
+  "eligible_task_count": 864,
+  "eligible_task_count_before_exclusion": 900,
+  "excluded_task_count": 36,
+  "excluded_task_ids_sha256": "6b95b2f105c43a9b1aa760e8a2b1d488a6f1d01588168527ce8f4c4586942b2f",
+  "hidden_test_count": 20,
+  "lexigen_commit": "ba83723857a809dce2883289831a90211514da6f",
+  "protocol": "arcgen-v13-campaign-13",
+  "redacted_task_sha256": "84179e95077992fc04568efcffe6f08b210112bc68a7bc8f50844d8cba782747",
+  "sealed_outputs_sha256": "e4b7f77099e37fdd7c46668d13e5f259c29ce62f0c627e4c8ee446d681261e45",
+  "selected_task_id": "36fdfd69",
+  "selection_digest": "f3eda7f3255494c5d7c196d1dcb79d8bbe1648ed117df8c6481dd9877f9dafcd",
+  "selection_index": 173
+}
