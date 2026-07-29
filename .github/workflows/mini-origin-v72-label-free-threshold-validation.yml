@@ -1,0 +1,46 @@
+name: Mini-ORIGIN Label-Free Threshold Validation v0.72
+
+on:
+  push:
+    branches: [research/mini-origin-v72-label-free-threshold-validation]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen protocol
+        run: python -c "from mini_origin.label_free_threshold_validation_v72 import verify_preregistration; print(verify_preregistration())"
+      - name: Test repaired selector
+        run: pytest -q tests/test_label_free_selector_v71.py tests/test_label_free_threshold_validation_v72.py
+      - name: Compute Python reference
+        run: mkdir -p results/v72 && python -m mini_origin.label_free_threshold_validation_v72 reference --states results/v72/states.txt --reference results/v72/python-reference.json
+      - name: Compile Rust solver
+        run: rustc -C opt-level=3 -C debuginfo=0 compiled/response_cost_lower_bound_v66.rs -o results/v72/solver
+      - name: Run Rust solver
+        run: results/v72/solver --input results/v72/states.txt --output results/v72/rust-results.json
+      - name: Apply unchanged gate
+        run: python -m mini_origin.label_free_threshold_validation_v72 validate --reference results/v72/python-reference.json --rust results/v72/rust-results.json --output results/v72/evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v72-label-free-threshold-validation
+          path: mini-origin/results/v72/
+          if-no-files-found: warn
+          retention-days: 90
