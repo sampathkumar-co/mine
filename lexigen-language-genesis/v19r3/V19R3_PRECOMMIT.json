@@ -1,0 +1,38 @@
+{
+  "schema": "lexigen-v19r3-full-composition-precommit-v1",
+  "base_v19r2_commit": "7a662e0f2bcfc07fcd955e865b253ff6da9cc749",
+  "frozen_substrate": {
+    "primary_runtime": "lexigen-language-genesis/v19r2/runtime_v19r2.py",
+    "primary_runtime_sha256": "3607a880a019aef9c46e3c29304ed330947ced4acb2406718d89d56c671037ac",
+    "portable_runtime": "lexigen-language-genesis/v19r2/portable_runtime_v19r2.py",
+    "portable_runtime_sha256": "c082ccb0db094ae0c92b7475d5e5bd9078c4f64da498b1c1f104f57e720ee527"
+  },
+  "fixed_development_gates": [
+    {"gate": 7, "task_id": "fc10701f", "redacted_task_sha256": "21d3ec99746da929c7bd630da8b9ecea1768eaa4050e8c38eb02c01236fe90ae"},
+    {"gate": 10, "task_id": "2bcee788", "redacted_task_sha256": "cd8a1fd1ed57040d8e3211fca83b96e220c953c1f5250e7a3bcca5d1f31cc783"},
+    {"gate": 13, "task_id": "36fdfd69", "redacted_task_sha256": "84179e95077992fc04568efcffe6f08b210112bc68a7bc8f50844d8cba782747"}
+  ],
+  "replacement_allowed": false,
+  "task_id_available_to_enumerator": false,
+  "meta_grammar": {
+    "marker_colour_choices": 10,
+    "output_background_choices": 10,
+    "direction_classes": ["marker_left", "marker_right", "marker_top", "marker_bottom"],
+    "action_choices_per_direction": ["identity", "reflect_left", "reflect_right", "reflect_top", "reflect_bottom"],
+    "coordinate_set_choices": ["mapped_only", "union_source_and_mapped"],
+    "base_grid_choices": ["input", "new_canvas"],
+    "payload_selector": "unique palette colour excluding mode and marker colour",
+    "paint_colour": "inferred payload colour",
+    "total_candidates_per_gate": 250000
+  },
+  "candidate_order": "marker, background, lexicographic four-action tuple, set mode, base mode",
+  "selection": "minimum node count then canonical JSON",
+  "full_composition_ablation": "remove selected complete descriptor and require no remaining exact composition",
+  "intermediate_fresh_cases": 1000,
+  "final_fresh_cases": 10000,
+  "required_dual_runtime": true,
+  "required_frozen_v17_ablation_failure": true,
+  "required_verifier_cosynthesis": true,
+  "hidden_outputs_opened": false,
+  "world_level_breakthrough": false
+}
