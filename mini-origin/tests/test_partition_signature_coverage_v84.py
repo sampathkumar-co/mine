@@ -4,15 +4,21 @@ from mini_origin import numeric_threshold_frontier_v70 as core
 from mini_origin import partition_signature_coverage_v84 as coverage
 
 
-def records(label_shift=0):
+def records(label_shift=0, duplicate_partition=False):
     rows = []
     for index in range(384):
+        sex = "M" if index % 2 else "F"
         features = (
             str(index % 9),
             str((index // 9) % 7),
-            "M" if index % 2 else "F",
+            sex,
             str(index % 3),
         )
+        if duplicate_partition:
+            # A distinct compiled query with exactly the same row partition as f2.
+            # This makes the duplicate-signature property explicit rather than
+            # relying on accidental equivalence among generated thresholds.
+            features += (sex,)
         rows.append((features, str((index + label_shift) % 6)))
     return rows
 
@@ -31,7 +37,9 @@ def test_partition_signature_groups_are_deterministic_and_label_independent():
 
 
 def test_duplicate_signatures_are_grouped_and_masks_keep_complete_classes():
-    task, _ = core.compile_task("signature-duplicates", records())
+    task, _ = core.compile_task(
+        "signature-duplicates", records(duplicate_partition=True)
+    )
     remaining = (1 << task.query_count) - 1
     groups = coverage.partition_signature_groups(task, task.full_mask, remaining)
     assert any(len(queries) > 1 for _, queries in groups)
