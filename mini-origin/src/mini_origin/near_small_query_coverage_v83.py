@@ -16,6 +16,11 @@ PREREGISTRATION = (
 )
 NEAR_SMALL_QUERY_LIMIT = 12
 
+# pmlb_blind_v82 treats its selector module as a small interface and calls
+# selector.compact_state directly. v0.83 changes only state selection, so the
+# frozen v0.79 state serializer must be re-exported byte-for-byte unchanged.
+compact_state = parent.compact_state
+
 
 def canonical_digest(value: object) -> str:
     return hashlib.sha256(
