@@ -1,0 +1,56 @@
+{
+  "status": "partition_signature_coverage_development_rejected_v84",
+  "scientific_interpretation": "The preregistered zero-candidate partition-signature fallback did not repair the mandatory seven-dataset coverage gate on previously opened PMLB development data. This is a negative result and must not be represented as external validation or a breakthrough.",
+  "workflow": {
+    "run_id": 30524674036,
+    "job_id": 90812758384,
+    "artifact_id": 8752816016,
+    "artifact_name": "mini-origin-v84-development",
+    "artifact_zip_sha256": "04128c891925980063f3f8721ddc9e44887b7a9be75d1d0225e743ec2cb5fadd",
+    "evaluated_commit": "509203c9dc8e382ea1094168b7a7b2e5e8da1f4f"
+  },
+  "artifact_file_sha256": {
+    "states.txt": "fdacc3aeee412a05bd84c31df1ef4c0622125fa4d9110178027e075ed341fc1f",
+    "python-reference.json": "34ae3a80448d46a86d36498f2df70a1579b6ee1cea2c4fa0c94bad107885a98a",
+    "rust-results.json": "2c7b1bf2e1ecd4156bcea6d92df99edce69fc7efcc086ca5c9127ece868dfb37",
+    "evidence.json": "fcfabddbcfb7c1ef9b6dcb99b1cfaa30e8a7275078bf8d3d76a11d262925d05f"
+  },
+  "unchanged_preregistered_gate": {
+    "required_contributing_datasets": 7,
+    "required_python_rust_mismatches": 0,
+    "required_objective_mismatches": 0,
+    "required_plan_mismatches": 0,
+    "required_bounded_expansion_regressions": 0
+  },
+  "observed": {
+    "contributing_datasets": 6,
+    "base_states": 72,
+    "profiled_states": 216,
+    "bounded_solved": 216,
+    "plain_and_bounded_solved": 105,
+    "bounded_only_solved": 111,
+    "python_rust_exact_matches": 216,
+    "python_rust_mismatches": 0,
+    "objective_mismatches": 0,
+    "plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "aggregate_bounded_reduction_fraction": 0.5454301102534714,
+    "median_expansion_ratio": 219.29973886070167,
+    "p90_expansion_ratio": 68440.75
+  },
+  "failed_dataset_diagnosis": {
+    "task": "_deprecated_solar_flare_1",
+    "compiled_queries": 12,
+    "conditioned_cells": 814,
+    "partition_signature_fallback_activated": true,
+    "structural_candidates": 0,
+    "selected_states": 0
+  },
+  "decision": {
+    "preserve_v82_v83_v84_negative_results": true,
+    "relax_thresholds_post_hoc": false,
+    "continue_partition_signature_cutoff_tuning": false,
+    "next_valid_work": "Perform task-independent structural diagnosis on synthetic constructions and preregister a genuinely different candidate-generation principle before touching another evaluation campaign. Do not repeatedly inspect or tune against the same opened solar-flare task."
+  },
+  "claim_boundary": "No independent reproduction, untouched external validation, world-class result, or general-AI breakthrough is claimed."
+}
