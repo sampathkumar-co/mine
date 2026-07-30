@@ -1,0 +1,73 @@
+{
+  "status": "opened_data_development_preregistration",
+  "parent_v82_commit": "19b5ae7fd97d92c75451269e78a032d0f298c8d7",
+  "parent_v82_workflow_run": 30494082539,
+  "parent_v82_artifact_digest": "sha256:874fea25a8e5b98a9b476417dc39388e0b6a8c34fb130223d21850c4be9d636b",
+  "parent_v82_evidence_sha256": "f3b0b4367e8e5e7c8dfba92f914f6a78596d7294d20dcdc960b5d78ab45ae4a0",
+  "parent_v82_evidence_digest": "6c5e6e2c48a164c1c38c4cfff205b6ad33e6d44891b6e953ca1623baa6c72863",
+  "objective": "Repair the generic selector boundary exposed by the opened v0.82 PMLB rejection, where a 12-query exact-only task produced zero structural candidates.",
+  "opened_datasets": [
+    "vowel",
+    "_deprecated_breast_w",
+    "dis",
+    "_deprecated_cleveland",
+    "_deprecated_diabetes",
+    "_deprecated_solar_flare_1",
+    "_deprecated_house_votes_84"
+  ],
+  "fresh_blind_claim": false,
+  "exact_solver_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 1,
+  "failure_observation": {
+    "dataset": "_deprecated_solar_flare_1",
+    "compiled_queries": 12,
+    "structural_candidates": 0,
+    "selected_states": 0
+  },
+  "fallback_selector": {
+    "activation": "the frozen v0.79 selector returns zero states and 11 <= task.query_count <= 16",
+    "effective_min_raw_queries": "min(10, max(7, task.query_count - 4))",
+    "effective_min_redundancy": "min(4, max(2, effective_min_raw_queries - 6))",
+    "sample_sizes": [24, 20, 16, 12, 10, 8],
+    "allowed_seed_count": 6,
+    "remaining_seed_count": 8,
+    "preserve_nonzero_parent_selection_exactly": true,
+    "label_or_cost_use": false,
+    "dataset_specific_exceptions": false
+  },
+  "frozen_nonzero_state_set_digests": {
+    "vowel": "ec4c74b6316eb056edf05d6ee32f3bdc4c6e7cf4008690f1de925a5ac53d916c",
+    "_deprecated_breast_w": "1bfa0e77d259bcfe7df10f341292f8716ec9b573dc6afd250c7680c71ecd25db",
+    "dis": "b5a21209dc294baf0cb25c7e6145256884e657827a1b9c8aa78b63f3aaef891c",
+    "_deprecated_cleveland": "9aa3dd686c144550437030c82eb90e8126bcd0585fb9f998953a6ac77d094fc8",
+    "_deprecated_diabetes": "1057db5357804114e3b1ac0b96fa3d4df698a65ab761e0e487d17499e9652562",
+    "_deprecated_house_votes_84": "955013bae02f3d38fecc071b365d751d40d9f02574c23dab9519bd3ce0381f8b"
+  },
+  "development_gate": {
+    "contributing_datasets": 7,
+    "minimum_solar_flare_states": 6,
+    "minimum_base_states": 78,
+    "minimum_profiled_states": 234,
+    "frozen_nonzero_state_set_digest_mismatches": 0,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0,
+    "label_independence_mismatches": 0,
+    "minimum_fallback_certificate_states": 6,
+    "adapter_verification_passed": true
+  },
+  "next_blind_rule": "Any selector that passes this opened-data campaign must be frozen before selecting a completely new untouched external source. All seven v0.82 PMLB datasets remain opened development data and cannot be reused as fresh evidence.",
+  "claim_boundary": "Opened-data methodological repair only. A pass shows that a generic zero-candidate fallback covers the v0.82 12-query exact-only failure while preserving every previously nonzero PMLB state set and exact Python/Rust correctness. It is not fresh external evidence, outside reproduction, state-of-the-art superiority, peer review, publication acceptance, a general AI breakthrough or a world-first claim."
+}
