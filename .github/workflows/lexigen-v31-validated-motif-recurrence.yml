@@ -1,0 +1,156 @@
+name: Lexigen v31 Validated Motif Recurrence
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v31/**"
+      - ".github/workflows/lexigen-v31-validated-motif-recurrence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-v31:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and test frozen v31 campaign
+        run: |
+          python -m compileall -q lexigen-language-genesis/v31
+          python lexigen-language-genesis/v31/test_v31.py
+          python lexigen-language-genesis/v31/test_aggregate_v31.py
+
+  scan-validation:
+    needs: test-v31
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        task:
+          - "bd4472b8"
+          - "9a4bb226"
+          - "f1bcbc2c"
+          - "bc1d5164"
+          - "0d87d2a6"
+          - "5ffb2104"
+          - "67636eac"
+          - "e5790162"
+          - "c64f1187"
+          - "a3f84088"
+          - "48d8fb45"
+          - "6455b5f5"
+          - "358ba94e"
+          - "68b16354"
+          - "6150a2bd"
+          - "f0df5ff0"
+          - "337b420f"
+          - "1e5d6875"
+          - "7039b2d7"
+          - "3de23699"
+          - "746b3537"
+          - "817e6c09"
+          - "9344f635"
+          - "e99362f0"
+          - "cf98881b"
+          - "6c434453"
+          - "239be575"
+          - "14b8e18c"
+          - "cfb2ce5a"
+          - "6a11f6da"
+          - "ff2825db"
+          - "ea786f4a"
+          - "342dd610"
+          - "a8d7556c"
+          - "9aec4887"
+          - "39e1d7f9"
+          - "5117e062"
+          - "fcb5c309"
+          - "af902bf9"
+          - "be94b721"
+          - "d5d6de2d"
+          - "834ec97d"
+          - "9b365c51"
+          - "44d8ac46"
+          - "82819916"
+          - "2a5f8217"
+          - "4938f0c2"
+          - "551d5bf1"
+          - "b91ae062"
+          - "beb8660c"
+          - "96a8c0cd"
+          - "e9c9d9a1"
+          - "9f41bd9c"
+          - "fbf15a0b"
+          - "9caba7c3"
+          - "c8cbb738"
+          - "3906de3d"
+          - "a87f7484"
+          - "9f8de559"
+          - "7d419a02"
+          - "2dc579da"
+          - "5d588b4d"
+          - "e048c9ed"
+          - "7f4411dc"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run frozen motif recurrence task
+        run: python lexigen-language-genesis/v31/scan_one_v31.py --arcgen-root arcgen --task-id "${{ matrix.task }}" --output "task-${{ matrix.task }}.json"
+      - name: Upload task report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v31-validation-${{ matrix.task }}
+          path: task-${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-validation:
+    needs: scan-validation
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download all frozen task reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v31-validation-*
+          path: reports
+          merge-multiple: true
+      - name: Aggregate exact 64-task denominator
+        run: python lexigen-language-genesis/v31/aggregate_v31.py --reports-root reports --output lexigen-language-genesis/v31/V31_REPORT.json
+      - name: Require conservative claim boundary
+        run: |
+          python - <<'PY'
+          import json
+          report = json.load(open("lexigen-language-genesis/v31/V31_REPORT.json"))
+          assert report["validation_task_count"] == 64
+          assert report["completed_report_count"] == 64
+          assert report["world_level_breakthrough"] is False
+          print({"fresh_pass_count": report["fresh_pass_count"]})
+          PY
+      - name: Upload v31 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v31-validation-evidence
+          path: |
+            lexigen-language-genesis/v31/V31_REPORT.json
+            reports
+          if-no-files-found: error
+          retention-days: 90
