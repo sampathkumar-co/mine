@@ -1,0 +1,170 @@
+name: Lexigen v32 Full Grammar Transfer
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v32/**"
+      - ".github/workflows/lexigen-v32-full-grammar-transfer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-v32:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce grammar and test frozen v32 campaign
+        run: |
+          python lexigen-language-genesis/v30/grammar_v30.py
+          python lexigen-language-genesis/v32/make_precommit_v32.py
+          git diff --exit-code -- lexigen-language-genesis/v32/V32_PRECOMMIT.json
+          python -m compileall -q lexigen-language-genesis/v32
+          python lexigen-language-genesis/v32/test_v32.py
+          python lexigen-language-genesis/v32/test_aggregate_v32.py
+
+  scan-validation:
+    needs: test-v32
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        task:
+          - "f8c80d96"
+          - "137eaa0f"
+          - "c803e39c"
+          - "a416b8f3"
+          - "2685904e"
+          - "84f2aca1"
+          - "b7249182"
+          - "e7a25a18"
+          - "3631a71a"
+          - "11dc524f"
+          - "689c358e"
+          - "67e8384a"
+          - "f8cc533f"
+          - "ed36ccf7"
+          - "e509e548"
+          - "2c608aff"
+          - "ea32f347"
+          - "72ca375d"
+          - "8e5a5113"
+          - "c1d99e64"
+          - "29c11459"
+          - "1a244afd"
+          - "c658a4bd"
+          - "981add89"
+          - "b230c067"
+          - "47c1f68c"
+          - "62c24649"
+          - "f3e62deb"
+          - "94be5b80"
+          - "f3e14006"
+          - "917bccba"
+          - "e619ca6e"
+          - "cf5fd0ad"
+          - "0ca9ddb6"
+          - "3f23242b"
+          - "9caf5b84"
+          - "d22278a0"
+          - "2204b7a8"
+          - "5783df64"
+          - "484b58aa"
+          - "1d0a4b61"
+          - "b25e450b"
+          - "e681b708"
+          - "10fcaaa3"
+          - "d0f5fe59"
+          - "e760a62e"
+          - "8be77c9e"
+          - "458e3a53"
+          - "59341089"
+          - "7d18a6fb"
+          - "ac3e2b04"
+          - "5e6bbc0b"
+          - "97999447"
+          - "60d73be6"
+          - "12422b43"
+          - "3befdf3e"
+          - "d492a647"
+          - "aab50785"
+          - "d10ecb37"
+          - "36d67576"
+          - "cce03e0d"
+          - "83b6b474"
+          - "5ad8a7c0"
+          - "a65b410d"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce frozen grammar
+        run: python lexigen-language-genesis/v30/grammar_v30.py
+      - name: Scan one fresh identity
+        run: |
+          python lexigen-language-genesis/v32/scan_one_v32.py \
+            --arcgen-root arcgen \
+            --task-id "${{ matrix.task }}" \
+            --output "task-${{ matrix.task }}.json"
+      - name: Upload task report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v32-validation-${{ matrix.task }}
+          path: task-${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-validation:
+    needs: scan-validation
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download all frozen task reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v32-validation-*
+          path: reports
+          merge-multiple: true
+      - name: Aggregate exact 64-task denominator
+        run: |
+          python lexigen-language-genesis/v32/aggregate_v32.py \
+            --reports-root reports \
+            --output lexigen-language-genesis/v32/V32_REPORT.json
+      - name: Require conservative claim boundary
+        run: |
+          python - <<'PY'
+          import json
+          report = json.load(open("lexigen-language-genesis/v32/V32_REPORT.json"))
+          assert report["validation_task_count"] == 64
+          assert report["completed_report_count"] == 64
+          assert report["outside_human_reproduction_completed"] is False
+          assert report["world_level_breakthrough"] is False
+          print({"fresh_pass_count": report["fresh_pass_count"]})
+          PY
+      - name: Upload v32 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v32-validation-evidence
+          path: |
+            lexigen-language-genesis/v32/V32_REPORT.json
+            reports
+          if-no-files-found: error
+          retention-days: 90
