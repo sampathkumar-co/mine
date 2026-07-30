@@ -1,0 +1,11 @@
+{
+  "actual_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+  "byte_identical": true,
+  "expected_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+  "future_use_authorized": true,
+  "protocol_error_count": 0,
+  "same_seed_retry_count": 0,
+  "schema": "lexigen-v33-persistent-generator-equivalence-v1",
+  "task_id": "9caf5b84",
+  "worker_restart_count": 0
+}

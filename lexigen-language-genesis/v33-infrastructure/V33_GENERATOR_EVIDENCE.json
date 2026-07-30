@@ -1,0 +1,42 @@
+{
+  "schema": "lexigen-v33-persistent-generator-evidence-v1",
+  "precommit_sha256": "b69d7dc53ba733a353d432936d97b21907b73d43280e2c86741e0ca5344f3e4d",
+  "implementation": {
+    "worker_sha256": "6c5c916a0c1ed90959f838b5af6a884bc614ff260f25707e7f0b91925c3f9c3e",
+    "client_sha256": "ebc9fefa3a3564d2a52135500a86834504787fbee9252996ef67f41ca6e31428",
+    "equivalence_runner_sha256": "1127fcab9f12ba6d507a9737c41ffe4099cf040ebfe49334100f229ee4b894a9",
+    "test_sha256": "d03c9c5c0d5154a413c60a160d5c13cb4459a3ab704e6be8d9f4f236ed18a86c"
+  },
+  "equivalence": {
+    "task_id": "9caf5b84",
+    "reference_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+    "persistent_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+    "byte_identical": true,
+    "equivalence_audit_sha256": "0a5732c72b9b3afb04ead9b1048f394a87ebdd9d986a46b4581db68c43524b9c",
+    "independent_reproductions": 3,
+    "worker_restarts": 0,
+    "same_seed_retries": 0,
+    "protocol_errors": 0
+  },
+  "failure_injection": {
+    "forced_worker_timeout": true,
+    "worker_restart_count": 1,
+    "same_seed_retry_count": 1,
+    "replacement_seed_used": false,
+    "result_recovered": true
+  },
+  "benchmark": {
+    "environment": "Sampath Windows laptop, isolated sequential task run",
+    "original_process_per_case_seconds": 16.725,
+    "persistent_worker_seconds": 9.214,
+    "speedup": 1.8151725634903408,
+    "runtime_reduction_percent": 44.908819133034385,
+    "both_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06"
+  },
+  "authorization": {
+    "persistent_generator_future_use_authorized": true,
+    "checkpointed_enumerator_future_use_authorized": false,
+    "scientific_claim": false,
+    "world_level_breakthrough": false
+  }
+}
