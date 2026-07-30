@@ -1,0 +1,70 @@
+{
+  "campaign": "mini-origin-v84-partition-signature-coverage",
+  "status": "preregistered_before_implementation_or_evaluation",
+  "parent_commit": "35e5fb5a425731e9f55361a1911fe4e9eb51d617",
+  "parent_result": {
+    "campaign": "mini-origin-v83-near-small-query-coverage",
+    "verdict": "rejected",
+    "reason": "mandatory all-seven-dataset contribution gate failed",
+    "preserved_evidence": "research-evidence/mini-origin-v83-near-small-query-coverage-rejection.json",
+    "opened_dataset_diagnosis": {
+      "compiled_queries": 12,
+      "conditioned_cells": 814,
+      "structural_candidates": 0,
+      "selected_states": 0
+    }
+  },
+  "scientific_hypothesis": "The zero-candidate failure is caused by constructing remaining-query sets through seeded representative sampling rather than directly from label-free query partition signatures. A deterministic partition-signature generator can improve structural coverage without changing solver thresholds or consulting labels, objectives, costs, dataset identity, or observed solver performance.",
+  "single_allowed_algorithmic_change": {
+    "name": "partition_signature_remaining_generator",
+    "scope": "state generation only",
+    "description": "For each allowed set, compute each compiled query's deterministic truth signature over allowed rows, group queries by identical signatures, and construct remaining-query masks from complete signature classes plus deterministic class representatives. Candidate order is the SHA-256 structural rank of task shape and masks.",
+    "forbidden_inputs": [
+      "dataset name",
+      "dataset identifier",
+      "target labels",
+      "class labels",
+      "objective values",
+      "solver costs",
+      "plain or bounded solver outcomes",
+      "previous acceptance result"
+    ],
+    "unchanged_components": [
+      "dataset bytes and adapters",
+      "task compiler",
+      "allowed-set conditioned-cell construction",
+      "Python exact planners",
+      "independent Rust solver",
+      "seeds and expansion budgets",
+      "minimum and maximum partition-class thresholds",
+      "minimum and maximum raw-query thresholds",
+      "minimum redundancy threshold",
+      "maximum states per task",
+      "all v0.82 scientific acceptance thresholds"
+    ]
+  },
+  "implementation_order": [
+    "implement pure partition-signature grouping helper",
+    "add synthetic unit tests for determinism, label independence, complete-class construction, and duplicate-signature handling",
+    "prove unchanged state digests for tasks where the v0.83 selector already contributes",
+    "run synthetic-only CI",
+    "only after those checks pass, create a separate opened-data development workflow"
+  ],
+  "development_gate_before_opened_data": {
+    "unit_test_failures": 0,
+    "label_independence_mismatches": 0,
+    "determinism_mismatches": 0,
+    "normal_contributing_task_state_digest_mismatches": 0,
+    "solver_or_threshold_changes": 0
+  },
+  "opened_data_gate": {
+    "contributing_dataset_count": 7,
+    "python_rust_exact_mismatches": 0,
+    "objective_mismatches": 0,
+    "plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "threshold_source": "unchanged v0.82 preregistration"
+  },
+  "negative_result_policy": "Every failed preflight, coverage gate, correctness gate, or performance threshold is retained as a permanent negative result. No threshold may be weakened after inspecting results.",
+  "claim_boundary": "This is a preregistered opened-data development repair. A successful result would not constitute fresh external validation, independent reproduction, a world-class result, or a general-AI breakthrough."
+}
