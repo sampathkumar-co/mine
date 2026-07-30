@@ -1,0 +1,651 @@
+{
+  "completed_report_count": 64,
+  "fresh_pass_count": 1,
+  "multi_identity_public_transfer_demonstrated": false,
+  "outside_human_reproduction_completed": false,
+  "precommit_sha256": "555194c0d7d35caab361e81a02bd79002fdb3f1837e4180b644ac1f31ffdbe2e",
+  "schema": "lexigen-v32-full-grammar-transfer-report-v1",
+  "second_fresh_validated_identity_demonstrated": true,
+  "status_counts": {
+    "fresh_fail": 0,
+    "fresh_pass": 1,
+    "generator_invalid": 0,
+    "no_program": 63
+  },
+  "successes": [
+    {
+      "exact_candidate_count": 1,
+      "fresh_totals": {
+        "generated_cases": 100,
+        "generation_errors": 0,
+        "generation_timeouts": 0,
+        "independent_runtime_errors": 0,
+        "passed_cases": 100,
+        "primary_runtime_errors": 0,
+        "requested_cases": 100,
+        "runtime_disagreements": 0,
+        "target_mismatches": 0
+      },
+      "selected_candidate": {
+        "ast_sha256": "d630e72d5fdbff4bbd3e3e8295444ac7efc9646f2f63ac002190e3af01fe5dfc",
+        "concrete_program_sha256": "8f2cb9f03e35dd8ad8cb39d32b26caed4e267d3b99a194fd15bd69338e40e701",
+        "depth": 2,
+        "nodes": 8,
+        "parameters": {
+          "c0": 7
+        },
+        "structural_index": 240
+      },
+      "status": "fresh_pass",
+      "task_id": "9caf5b84"
+    }
+  ],
+  "task_summaries": [
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "20c43818600da65a43a64988192842ab0a29c21f98db80d99f99a0d9c6e26f64",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "f8c80d96"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "74b22c0587c8acbe010cfd777a82186b5953b9e39f398b4b4fd28716f686cd22",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "137eaa0f"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "a577e37898a2f159b2c3d201a8264ba903053fa81154ffea4fe1166e2cc7cd7b",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "c803e39c"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "b3928cddeab758a3e50c0e5ad994187e4809e557545dc7abcee86a5260fe8d69",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "a416b8f3"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "c660a5c82f295fae0eb15eda5f9dc3fb4e8aa3efd128bb34f5c2c5551a710970",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "2685904e"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "31a9a78537b46685db31f579c64bff279beb90970a3141891622e377ab18415c",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "84f2aca1"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "0ac1411d784fff7291b32788695ebab2e8a8f5481daa0378cfe60ba8edbdbf08",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "b7249182"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "a74e40108b7a14db2833ff63a0377b253d9fc9a372845cad4bf1f002c6a488b6",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "e7a25a18"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "68ce18e86a7d36a7139876722c2af00f40749abf081007f347ad29185496a41a",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "3631a71a"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "16d19026fba2798a613ceba398350ec3db3a053360fdb38daa64c3c8f5f857e8",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "11dc524f"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "3b3579a78dc8115715140871c2022650e5f2f11b954c965d73b085518829c33e",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "689c358e"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "b2bb0c3493d2c59c2fe5ae3b0d4d99da2c0e0054fdedf8c5a34a18fb9c4329c3",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "67e8384a"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "f8bd99ee8d885590d782cc770cc05ccff848d58a4134a7754bb7f6a1809ccf4c",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "f8cc533f"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "d6232ffdeb3f894dc346107c60bfe7d414a5e6d1c9e7efdf1a0f6b1c64272594",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "ed36ccf7"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "75242f95f7e074fd397d625afa55308be10975038076a578ec7cfb7f1e28bd37",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "e509e548"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "741ec135ec8ed8ebf83ed08928b273ebdd177cd5a79dc957efdb7809f92ddc99",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "2c608aff"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "e835db8cb59ba39c3a5b5f4c4364ddf58cbd057b5f469be1b9e639980c116438",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "ea32f347"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "b08c251f8eee0b7f31fca1f9046a14286b72ff7187a8c301e13bdc284f846416",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "72ca375d"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "c568a5b24721912c09e50f31c6faa80955152f6ef348d50ac49953fec6e43585",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "8e5a5113"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "1196e5b8cc13f2a0dcf018cf0fa13ab3e4e442efdb8ea1e5eea5b4aeb5a0f2fa",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "c1d99e64"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "56abe128c8559d8e5b23d3d02183217d62c6f5b1cdde0cb4210713316326632d",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "29c11459"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "c1a85fa44de66d8a683c0b2d42a388dc2a23fed5900a4c70b1b2fa1f881897bf",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "1a244afd"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "5d1751c2e6f3bb3f57bdd420b1926888786686a8f262c50c023431a598fb0f41",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "c658a4bd"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "ab04fcb914c009fd2c5e7ec9d6d82e732ac6541f23662b7ca8de68de500435ca",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "981add89"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "f103afb989381242d4799c4705546f316585e80dcc14ff6c4fb6ee89ed6c1610",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "b230c067"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "f17f033bce0ce0efea0187194ddac3112de736140f4af89f43a99028d5c27764",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "47c1f68c"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "aec2a415081fbe085dac552ca95f87e983743e1a283f57a1ec67d4f0a0f12e16",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "62c24649"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "804f8e0e31bfa72c1092964ef14a0056daf2010f0d80d9e9fa8ebc7f630a90e8",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "f3e62deb"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "007e33f8c6f7df2500550f9eba670bfea4276276ccc81ec5b29b0e27d5e1b445",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "94be5b80"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "58ebfe95e0f959bc9c7ad0558dcdffdfdacf625015ef7e91008be0469f1c197b",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "f3e14006"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "585e2b6e5a7a619adb42820439cdc1c0ec3ba24ca64a32f878d3da4f6f13f560",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "917bccba"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "b47fa2ed080942510e2a0e53fdc11123689e92871d2de61aaa927745533d3792",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "e619ca6e"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "c4b9d34a89474924bd0e2ab812b270bcf92671d243ea95577bd9a58d5f0e823d",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "cf5fd0ad"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "3aed692fb75c6cab7291203e9abc2824305bbe4b1aa4c98e25f9a4c561ad065f",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "0ca9ddb6"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "6757ed584eabbeaefe29b0c864cd3571012c1e36d7297364a62c43ed08f7f569",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "3f23242b"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 1,
+      "fresh_passed": true,
+      "report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+      "selected_candidate": {
+        "ast_sha256": "d630e72d5fdbff4bbd3e3e8295444ac7efc9646f2f63ac002190e3af01fe5dfc",
+        "concrete_program_sha256": "8f2cb9f03e35dd8ad8cb39d32b26caed4e267d3b99a194fd15bd69338e40e701",
+        "depth": 2,
+        "nodes": 8,
+        "parameters": {
+          "c0": 7
+        },
+        "structural_index": 240
+      },
+      "status": "fresh_pass",
+      "task_id": "9caf5b84"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "200ac381c77d394e1b0bb2132a934eccc184bd8ec2292c88d05002e411bd0b0d",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "d22278a0"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "61d495aadcbb5873b79caf285a0a4c8cad30df377204cfacc55938728e35847c",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "2204b7a8"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "22fe23933c0f67437b69777349977636c3688681431e00292f2b8b029dc0558c",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "5783df64"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "899fb0f9327e3392285fc853e507fc5d2249dce24375f4ccdb88b6a2670f9fe8",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "484b58aa"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "5434491675e7b8b62f61408444c4343c1f6144144cb25b098a3dde042f6cfe2f",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "1d0a4b61"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "fd7dac3d5337ff220fba4d50d40e4df768fb90e1e549ce17bdb30cf42e46d76f",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "b25e450b"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "c1a8f9654bb30373a77393d59cf45693e354828b2fb456fe4baac2eec73c263e",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "e681b708"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "67496a924b322ba2147e7da267646d26f02b1b56f753cbd8f19b8d9f1cfdc2fd",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "10fcaaa3"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "80b700adb3565bcddbab8d24230b62ad61b9769ea731154fe6eb122d0acfb5ae",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "d0f5fe59"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "249de05481955918292255b9cc852af20177dce1c98f095f83b9beacc127285f",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "e760a62e"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "e5d7f3d450c768700c05a7b5009f706673d886998a568d89e17ffd34f83cb703",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "8be77c9e"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "880e16cf3d91a53d9f06bdbf7322ab3a15bb35be58fe8d5d24a58e768d006a1a",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "458e3a53"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "5319fcf2ed934401bba884b19ea20ccc56d796ee3aa14b7119cc0d4e309f8034",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "59341089"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "ce9ace5f3d2d72e5cbff0e4494efa116784e2bb96ac816dc62030dfca0161cfe",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "7d18a6fb"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "8089b48695ef07a20502e3a4396bbdedb4f4da357d3eb467ecc4192876906762",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "ac3e2b04"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "35ba633386509722110827c285e33b08945a803a21fea194e48ac6b6fc0d63f6",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "5e6bbc0b"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "99f661ee0aa4106a501f60dfd20f861110a5db1a6304b56711d80c431169e018",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "97999447"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "53730968ee58db8d51e22e3f8d4be114b1ce30fb89f18ecd82dd3e52fd0c0ba4",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "60d73be6"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "77e7df775aa887bd2b9ba16d026d1c85b1e4861a8dcbac6bb000af54c6905b17",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "12422b43"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "6c703f16cba761cae5fc0b1746e30930ad2e5b02f67dabef572a24eede6d2699",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "3befdf3e"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "74c1bf3c0c2be8c31cd172defb47dbde5d8a77e7ce0523f8263901ed6bdf6c50",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "d492a647"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "3851e8166fa5921a1e1b1b2f761512066df539bdabca5e2092b9ac7dc6deea92",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "aab50785"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "3562a35eb536d59235dd998aec5b33ec0f07204b4271339883ea45840bbf50eb",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "d10ecb37"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "58eed3bf0edc274501afe004da6bb2d116c9b88c64e1460cc7d9bbc6dc2dc084",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "36d67576"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "47525a95bb1213587b153b86a7dd79d9393ebc7a9f0723a51f3f3cb43d1de90d",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "cce03e0d"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "d45a63b04e3bca7b142e9cadf15411890ba493cb8258028e7a127ea8b260c90d",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "83b6b474"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "9b97b027fa70d6e3dbc6b187711142ae54adfe3944cfb576f6302d0469a579b3",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "5ad8a7c0"
+    },
+    {
+      "accepted_examples": 6,
+      "exact_candidate_count": 0,
+      "fresh_passed": false,
+      "report_sha256": "e1289ef9c90bf615b4ea95068a48a9a613af0cba064417ac39a4bf9b22e8df23",
+      "selected_candidate": null,
+      "status": "no_program",
+      "task_id": "a65b410d"
+    }
+  ],
+  "totals": {
+    "accepted_examples": 384,
+    "concrete_candidates_tested": 8166144,
+    "exact_demonstration_candidates": 1,
+    "fresh_generated_cases": 100,
+    "fresh_generation_errors": 0,
+    "fresh_generation_timeouts": 0,
+    "fresh_independent_runtime_errors": 0,
+    "fresh_passed_cases": 100,
+    "fresh_primary_runtime_errors": 0,
+    "fresh_requested_cases": 100,
+    "fresh_runtime_disagreements": 0,
+    "fresh_target_mismatches": 0,
+    "generation_attempts": 387,
+    "generation_failures": 0,
+    "generation_timeouts": 3,
+    "identity_candidates_rejected": 235815,
+    "runtime_invalid_candidates": 4472710
+  },
+  "validation_task_count": 64,
+  "world_level_breakthrough": false
+}

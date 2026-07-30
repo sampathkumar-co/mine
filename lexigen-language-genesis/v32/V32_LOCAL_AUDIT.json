@@ -1,0 +1,24 @@
+{
+  "aggregate_byte_identical": false,
+  "authoritative_environment": "GitHub ubuntu-24.04 aggregate",
+  "differing_task_ids": [
+    "e681b708"
+  ],
+  "environment_divergence": {
+    "cause": "three additional permitted Windows generator timeouts shifted accepted demonstration seeds",
+    "github_generation_attempts_total": 387,
+    "github_generation_timeouts_total": 3,
+    "github_status": "no_program",
+    "local_generation_attempts_total": 390,
+    "local_generation_timeouts_total": 6,
+    "local_status": "no_program",
+    "scientific_verdict_agrees": true,
+    "task_id": "e681b708"
+  },
+  "github_report_sha256": "2d2c81fd4db7e811736ca02543195e75e952140058a627b0acb095358884a31c",
+  "local_report_sha256": "ffeedae33f076b181a1729b7444fc6fa2baabaff7374e091fe83c125925d0f2a",
+  "schema": "lexigen-v32-local-reproduction-audit-v1",
+  "successful_task_report_byte_identical": true,
+  "successful_task_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+  "verdicts_identical": true
+}
