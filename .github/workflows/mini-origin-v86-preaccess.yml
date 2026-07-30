@@ -1,0 +1,45 @@
+name: Mini-ORIGIN v0.86 Pre-access Invariants
+
+on:
+  pull_request:
+    paths:
+      - 'mini-origin/v86_transferable_gate.py'
+      - 'mini-origin/campaigns/v82-pmlb-blind.json'
+      - 'mini-origin/campaigns/v86-untouched-external-validation.json'
+      - '.github/workflows/mini-origin-v86-preaccess.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  transferable-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen v0.82 lock and v0.86 gate invariants
+        run: |
+          python mini-origin/v86_transferable_gate.py --self-test
+          python - <<'PY'
+          import importlib.util
+          import json
+          from pathlib import Path
+
+          module_path = Path('mini-origin/v86_transferable_gate.py')
+          spec = importlib.util.spec_from_file_location('v86_gate', module_path)
+          module = importlib.util.module_from_spec(spec)
+          assert spec.loader is not None
+          spec.loader.exec_module(module)
+
+          campaign = json.loads(Path('mini-origin/campaigns/v82-pmlb-blind.json').read_text())
+          module.verify_v82_lock(campaign)
+          print('v0.82 transferable threshold lock: PASS')
+          PY
+      - name: Assert no external task-content access in pre-access workflow
+        run: |
+          ! grep -R -E 'openml\.datasets\.get_dataset|openml\.tasks\.get_task|download_data|load_arff' \
+            mini-origin/v86_transferable_gate.py .github/workflows/mini-origin-v86-preaccess.yml
