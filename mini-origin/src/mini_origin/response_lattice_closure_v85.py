@@ -22,6 +22,7 @@ IMPLEMENTATION_AMENDMENT = (
     / "v85-response-lattice-implementation-amendment.json"
 )
 compact_state = parent.compact_state
+frontier = parent.frontier
 
 
 @dataclass(frozen=True)

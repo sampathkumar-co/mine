@@ -16,3 +16,12 @@ def test_development_install_preserves_frozen_gate_and_activates_only_v85_select
         == "joint generator partition refines each determined query partition"
     )
     assert protocol["development_data_status"] == "opened-but-not-accessed-by-v0.85-yet"
+
+
+def test_selector_reexports_frozen_frontier_interface():
+    development._install()
+    assert development.repair.frontier is development.repair.parent.frontier
+    assert (
+        development.parent.selector.frontier.compiler_protocol()
+        == development.repair.parent.frontier.compiler_protocol()
+    )
