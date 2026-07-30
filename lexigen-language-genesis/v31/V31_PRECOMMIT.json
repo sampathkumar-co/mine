@@ -15,6 +15,7 @@
     "per_generation_timeout_seconds": 5,
     "replacement_tasks_allowed": false,
     "seed_namespace": "lexigen-v31-demonstration",
+    "seed_rule": "uint32(first_16_hex(sha256(lexigen-v31-demonstration:<task_id>:<attempt_index>)))",
     "success_rule": "exactly one color candidate must match all six demonstrations"
   },
   "fresh_identity_selection": {
@@ -105,7 +106,8 @@
     "relational_verifier_required": true,
     "replacement_cases_allowed": false,
     "runs_only_after_unique_demonstration_match": true,
-    "seed_namespace": "lexigen-v31-fresh"
+    "seed_namespace": "lexigen-v31-fresh",
+    "seed_rule": "uint32(first_16_hex(sha256(lexigen-v31-fresh:<task_id>:<case_index>)))"
   },
   "motif": {
     "ast": {
