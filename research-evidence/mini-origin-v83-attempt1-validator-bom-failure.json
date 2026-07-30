@@ -1,0 +1,28 @@
+{
+  "status": "infrastructure_only_failure",
+  "stage": "validation_input_decoding",
+  "workflow_run": 30503702910,
+  "workflow_job": 90748760050,
+  "workflow_head_sha": "ef8b7516986056cea7ab56e8b0ff0123be4b382b",
+  "artifact_id": 8744988263,
+  "artifact_zip_sha256": "b36a7f92e22c8dcfdd8de4ce9403c9bb17d5a0fd6eafe1c29534e32edc26d7fa",
+  "artifact_zip_bytes": 163187,
+  "tests_passed": 38,
+  "reference_completed": true,
+  "rust_replay_completed": true,
+  "reference_summary": {
+    "contributing_datasets": 7,
+    "base_states": 84,
+    "profiled_states": 252,
+    "solar_states": 12
+  },
+  "failure": "numeric_threshold_frontier_v70.validate read the v0.83 preregistration with UTF-8 and rejected its Windows UTF-8 BOM before evaluating any scientific gate",
+  "scientific_result_produced": false,
+  "permitted_repair": "remove only the UTF-8 BOM from the preregistration bytes",
+  "selector_changed": false,
+  "compiler_changed": false,
+  "solver_changed": false,
+  "datasets_changed": false,
+  "budgets_changed": false,
+  "thresholds_changed": false
+}
