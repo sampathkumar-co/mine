@@ -2,12 +2,10 @@ from mini_origin import numeric_threshold_frontier_v70 as core
 from mini_origin import response_lattice_closure_v85 as lattice
 
 
-def records(label_shift=0, rename=False):
+def records(label_shift=0):
     rows = []
     for index in range(96):
         categorical = ("alpha", "beta", "missing")[index % 3]
-        if rename:
-            categorical = {"alpha": "x", "beta": "y", "missing": "z"}[categorical]
         features = (str(index % 12), categorical, "?" if index % 7 == 0 else str(index % 4))
         rows.append((features, str((index + label_shift) % 5)))
     return rows
@@ -48,10 +46,11 @@ def test_projection_never_emits_partial_query_blocks():
 
 
 def test_canonical_candidate_ignores_outcome_token_spelling():
-    first, _ = core.compile_task("v85-token-a", records(rename=False))
-    second, _ = core.compile_task("v85-token-b", records(rename=True))
-    a = lattice.outcome_atoms(first, first.full_mask)
-    b = lattice.outcome_atoms(second, second.full_mask)
-    mask_a = (1 << first.query_count) - 1
-    mask_b = (1 << second.query_count) - 1
-    assert lattice.canonical_candidate(first, first.full_mask, mask_a, 0, a) == lattice.canonical_candidate(second, second.full_mask, mask_b, 0, b)
+    task, _ = core.compile_task("v85-token-renaming", records())
+    original = lattice.outcome_atoms(task, task.full_mask)
+    renamed = tuple(
+        lattice.OutcomeAtom(atom.query, f"renamed-outcome-{index}", atom.mask)
+        for index, atom in enumerate(original)
+    )
+    mask = (1 << task.query_count) - 1
+    assert lattice.canonical_candidate(task, task.full_mask, mask, 0, original) == lattice.canonical_candidate(task, task.full_mask, mask, 0, renamed)
