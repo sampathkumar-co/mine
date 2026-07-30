@@ -7,6 +7,12 @@ on:
     paths:
       - "mini-origin/research-diagnostics/v85/**"
       - ".github/workflows/mini-origin-v85-rust-crosscheck.yml"
+  pull_request:
+    branches:
+      - research/mini-origin-v85-response-lattice-closure
+    paths:
+      - "mini-origin/research-diagnostics/v85/**"
+      - ".github/workflows/mini-origin-v85-rust-crosscheck.yml"
   workflow_dispatch:
 
 permissions:
