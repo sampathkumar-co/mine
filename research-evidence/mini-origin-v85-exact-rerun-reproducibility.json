@@ -1,0 +1,70 @@
+{
+  "campaign": "mini-origin-v85-response-lattice-closure",
+  "record_type": "exact_same-commit_reproducibility_evidence",
+  "verdict": "reproduced",
+  "claim_boundary": "This is an exact rerun on the same GitHub Actions environment and opened development datasets. It strengthens computational reproducibility but is not untouched external validation, independent reproduction, peer review, a world-class result, or a breakthrough.",
+  "frozen_commit": "9b624502e13f87993d61358f0c96adcb4f674f55",
+  "authoritative_run": {
+    "workflow_run": 30571576352,
+    "artifact_id": 8772521349,
+    "artifact_name": "mini-origin-v85-development",
+    "artifact_digest": "sha256:69c42c54dc0babc937732d09216578df5fce020af42f7ca8ff32668323eda4f7",
+    "states_sha256": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+    "python_reference_sha256": "d8dc102da548c78a7c0c155662958dea47acd4d1f147c23b1ebaa9fd424b6566",
+    "rust_results_sha256": "c825cabcbcdd6717f5df4f9c72ec276e970b2575cd38f21818d6b1d55eceb111",
+    "evidence_sha256": "efdf8f8e7dc94fbfa5de690beb3b6af2c12d36c812841bfcadf4099f5c306298",
+    "evidence_digest": "ca99dd822bc57fca55ffaf6de3614c7403cdbc0c85f3db81e0652dfe0acc0c20",
+    "rust_total_milliseconds": 2819.876106
+  },
+  "rerun": {
+    "workflow_run": 30576021828,
+    "workflow_conclusion": "success",
+    "artifact_id": 8774173415,
+    "artifact_name": "mini-origin-v85-development",
+    "artifact_digest": "sha256:5d623e444e55e1a8752a181c344a855f46bb3c76c182744353352784a1d14b39",
+    "states_sha256": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+    "python_reference_sha256": "d8dc102da548c78a7c0c155662958dea47acd4d1f147c23b1ebaa9fd424b6566",
+    "rust_results_sha256": "c902ae3e08e15ab150c0d7d23c5ff9745d84d12000c495e41a3a84cc79049f69",
+    "evidence_sha256": "9ababb32b0a42b30c51c876a64f795061a0101fc098bbc23485d35c341923711",
+    "evidence_digest": "d44f5c9a29f2d863d604b53b10c35d88a8e3a49795011f5587a6e6a5ba16d4a7",
+    "rust_total_milliseconds": 2840.811232
+  },
+  "comparison": {
+    "states_byte_identical": true,
+    "python_reference_byte_identical": true,
+    "rust_result_rows_exactly_identical": true,
+    "evidence_fields_identical_except": [
+      "rust_total_milliseconds",
+      "evidence_digest"
+    ],
+    "scientific_gate_fields_identical": true,
+    "dataset_state_set_digests_identical": true,
+    "solver_objectives_and_plans_identical": true,
+    "rust_timing_absolute_difference_milliseconds": 20.935126,
+    "rust_timing_relative_difference_fraction": 0.007424129,
+    "raw_artifact_hash_difference_explained_by_nondeterministic_wall_clock_timing": true
+  },
+  "preserved_results": {
+    "development_gate": true,
+    "contributing_dataset_count": 7,
+    "base_state_count": 84,
+    "profiled_state_count": 252,
+    "bounded_solved_count": 252,
+    "python_rust_exact_mismatch_count": 0,
+    "objective_mismatch_count": 0,
+    "plan_mismatch_count": 0,
+    "bounded_expansion_regression_count": 0,
+    "fresh_external_evidence": false
+  },
+  "scientific_integrity": {
+    "datasets_changed": false,
+    "selector_semantics_changed": false,
+    "solvers_changed": false,
+    "thresholds_changed": false,
+    "seeds_changed": false,
+    "budgets_changed": false,
+    "acceptance_gates_changed": false,
+    "negative_results_removed_or_rewritten": false
+  },
+  "next_step": "Freeze a separate preregistration for genuinely untouched external tasks and execute it without further v0.85 tuning. Do not reuse the opened PMLB development pass as external evidence."
+}
