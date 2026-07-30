@@ -1,0 +1,61 @@
+name: Mini-ORIGIN PMLB Development v0.84
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v84-partition-signature-coverage
+    paths:
+      - "mini-origin/campaigns/v84-partition-signature-coverage.json"
+      - "mini-origin/src/mini_origin/partition_signature_coverage_v84.py"
+      - "mini-origin/src/mini_origin/pmlb_development_v84.py"
+      - "mini-origin/scripts/run_v84_ci.sh"
+      - ".github/workflows/mini-origin-v84-development.yml"
+  pull_request:
+    branches:
+      - research/mini-origin-v83-near-small-query-coverage
+    paths:
+      - "mini-origin/campaigns/v84-partition-signature-coverage.json"
+      - "mini-origin/src/mini_origin/partition_signature_coverage_v84.py"
+      - "mini-origin/src/mini_origin/pmlb_development_v84.py"
+      - "mini-origin/scripts/run_v84_ci.sh"
+      - ".github/workflows/mini-origin-v84-development.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v84-development-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pmlb-opened-data-development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Run preregistered opened-data partition-signature campaign
+        run: bash scripts/run_v84_ci.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v84-development
+          path: |
+            mini-origin/results/v84/states.txt
+            mini-origin/results/v84/python-reference.json
+            mini-origin/results/v84/rust-results.json
+            mini-origin/results/v84/evidence.json
+          if-no-files-found: warn
+          retention-days: 90
