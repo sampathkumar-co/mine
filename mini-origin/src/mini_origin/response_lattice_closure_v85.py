@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
+import itertools
 import json
 
 from mini_origin import partition_signature_coverage_v84 as parent
@@ -12,6 +13,15 @@ class OutcomeAtom:
     query: int
     token: str
     mask: int
+
+
+@dataclass(frozen=True)
+class ClosureCandidate:
+    candidate_queries: int
+    generator_queries: int
+    generator_atoms: tuple[int, ...]
+    serialized: bytes
+    digest: str
 
 
 def outcome_atoms(task: object, allowed: int) -> tuple[OutcomeAtom, ...]:
@@ -80,6 +90,70 @@ def canonical_candidate(
 
 def candidate_digest(serialized: bytes) -> str:
     return hashlib.sha256(serialized).hexdigest()
+
+
+def _query_mask(atoms: tuple[OutcomeAtom, ...], generator_atoms: tuple[int, ...]) -> int:
+    result = 0
+    for index in generator_atoms:
+        result |= 1 << atoms[index].query
+    return result
+
+
+def _candidate_structure_key(task: object, allowed: int, candidate: int, atoms: tuple[OutcomeAtom, ...]) -> bytes:
+    blocks = sorted(
+        block_signature(atoms, query, allowed)
+        for query in range(task.query_count)
+        if candidate & (1 << query)
+    )
+    return json.dumps((task.full_mask.bit_count(), allowed, blocks), separators=(",", ":")).encode("utf-8")
+
+
+def enumerate_closure_candidates(
+    task: object,
+    allowed: int,
+    *,
+    max_generator_atoms: int = 2,
+) -> tuple[ClosureCandidate, ...]:
+    """Enumerate deterministic minimal-generator closure candidates.
+
+    This pure helper is synthetic-only. It considers the empty generator and
+    atom generator sets up to the preregistered bounded order, projects only
+    complete query blocks, and keeps the smallest canonical generator for each
+    index-free candidate structure.
+    """
+    if max_generator_atoms < 0:
+        raise ValueError("max_generator_atoms must be non-negative")
+    atoms = outcome_atoms(task, allowed)
+    best: dict[bytes, tuple[int, bytes, tuple[int, ...], int]] = {}
+    for size in range(min(max_generator_atoms, len(atoms)) + 1):
+        for generator_atoms in itertools.combinations(range(len(atoms)), size):
+            closed = implication_closure(atoms, frozenset(generator_atoms), allowed)
+            candidate = complete_query_projection(atoms, closed)
+            if candidate == 0:
+                continue
+            generator_queries = _query_mask(atoms, generator_atoms)
+            serialized = canonical_candidate(task, allowed, candidate, generator_queries, atoms)
+            structure = _candidate_structure_key(task, allowed, candidate, atoms)
+            rank = (size, serialized, generator_atoms, generator_queries)
+            previous = best.get(structure)
+            if previous is None or rank < previous:
+                best[structure] = rank
+
+    result = []
+    for structure in sorted(best):
+        _, serialized, generator_atoms, generator_queries = best[structure]
+        closed = implication_closure(atoms, frozenset(generator_atoms), allowed)
+        candidate = complete_query_projection(atoms, closed)
+        result.append(
+            ClosureCandidate(
+                candidate_queries=candidate,
+                generator_queries=generator_queries,
+                generator_atoms=generator_atoms,
+                serialized=serialized,
+                digest=candidate_digest(serialized),
+            )
+        )
+    return tuple(sorted(result, key=lambda item: item.serialized))
 
 
 def select_states(task: object):
