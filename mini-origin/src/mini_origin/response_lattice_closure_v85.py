@@ -4,6 +4,8 @@ from dataclasses import dataclass
 import hashlib
 import json
 
+from mini_origin import partition_signature_coverage_v84 as parent
+
 
 @dataclass(frozen=True)
 class OutcomeAtom:
@@ -78,3 +80,16 @@ def canonical_candidate(
 
 def candidate_digest(serialized: bytes) -> str:
     return hashlib.sha256(serialized).hexdigest()
+
+
+def select_states(task: object):
+    """Inactive adapter: preserve every nonempty v0.84 result exactly.
+
+    Response-lattice fallback generation is intentionally not connected yet.
+    Empty parent results remain empty until the remaining synthetic gates pass.
+    """
+    states, summary = parent.select_states(task)
+    preserved = dict(summary)
+    preserved["response_lattice_fallback"] = False
+    preserved["response_lattice_integration"] = "synthetic-preservation-only"
+    return states, preserved
