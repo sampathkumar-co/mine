@@ -1,0 +1,151 @@
+{
+  "claim_boundary": {
+    "one_new_fresh_pass": "repeated public task-level transfer across source and one new identity",
+    "outside_human_reproduction": false,
+    "reason": "public generator family and human-chosen evaluation protocol remain",
+    "two_or_more_new_fresh_passes": "multi-identity recurrence of the validated motif",
+    "world_level_breakthrough": false
+  },
+  "demonstration_gate": {
+    "ambiguous_matches_rejected": true,
+    "candidate_count_per_task": 10,
+    "examples_per_task": 6,
+    "generator_attempts_per_task": 16,
+    "identity_outputs_rejected": true,
+    "per_generation_timeout_seconds": 5,
+    "replacement_tasks_allowed": false,
+    "seed_namespace": "lexigen-v31-demonstration",
+    "success_rule": "exactly one color candidate must match all six demonstrations"
+  },
+  "fresh_identity_selection": {
+    "previously_used_identity_count": 88,
+    "rank_rule": "sha256(lexigen-v31-validated-motif-recurrence:<task_id>), then task_id",
+    "registry": "v19r5 validation_task_ids",
+    "registry_sha256": "8add280b9731a5736268a18a7abe2c3153e2d6055b5dffd69096010e3cea5560",
+    "remaining_identity_count_before_selection": 156,
+    "task_count": 64,
+    "task_ids": [
+      "bd4472b8",
+      "9a4bb226",
+      "f1bcbc2c",
+      "bc1d5164",
+      "0d87d2a6",
+      "5ffb2104",
+      "67636eac",
+      "e5790162",
+      "c64f1187",
+      "a3f84088",
+      "48d8fb45",
+      "6455b5f5",
+      "358ba94e",
+      "68b16354",
+      "6150a2bd",
+      "f0df5ff0",
+      "337b420f",
+      "1e5d6875",
+      "7039b2d7",
+      "3de23699",
+      "746b3537",
+      "817e6c09",
+      "9344f635",
+      "e99362f0",
+      "cf98881b",
+      "6c434453",
+      "239be575",
+      "14b8e18c",
+      "cfb2ce5a",
+      "6a11f6da",
+      "ff2825db",
+      "ea786f4a",
+      "342dd610",
+      "a8d7556c",
+      "9aec4887",
+      "39e1d7f9",
+      "5117e062",
+      "fcb5c309",
+      "af902bf9",
+      "be94b721",
+      "d5d6de2d",
+      "834ec97d",
+      "9b365c51",
+      "44d8ac46",
+      "82819916",
+      "2a5f8217",
+      "4938f0c2",
+      "551d5bf1",
+      "b91ae062",
+      "beb8660c",
+      "96a8c0cd",
+      "e9c9d9a1",
+      "9f41bd9c",
+      "fbf15a0b",
+      "9caba7c3",
+      "c8cbb738",
+      "3906de3d",
+      "a87f7484",
+      "9f8de559",
+      "7d419a02",
+      "2dc579da",
+      "5d588b4d",
+      "e048c9ed",
+      "7f4411dc"
+    ]
+  },
+  "immediate_fresh_gate": {
+    "all_cases_must_pass": true,
+    "case_count": 100,
+    "case_indices": {
+      "first": 0,
+      "last": 99
+    },
+    "generator_attempts_per_case": 1,
+    "independent_runtime": "direct background-preserving foreground recolor",
+    "per_generation_timeout_seconds": 5,
+    "primary_runtime": "frozen v25 eval_ast",
+    "relational_verifier_required": true,
+    "replacement_cases_allowed": false,
+    "runs_only_after_unique_demonstration_match": true,
+    "seed_namespace": "lexigen-v31-fresh"
+  },
+  "motif": {
+    "ast": {
+      "colour": {
+        "name": "c0",
+        "op": "param_color"
+      },
+      "grid": {
+        "op": "input_grid"
+      },
+      "op": "paint",
+      "points": {
+        "op": "non_background_points"
+      }
+    },
+    "candidate_colors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "candidate_order": "ascending color value",
+    "name": "background_preserving_foreground_recolor"
+  },
+  "post_result_edits_allowed": false,
+  "schema": "lexigen-v31-validated-motif-recurrence-precommit-v1",
+  "source": {
+    "commit": "5796d91",
+    "concrete_program_sha256": "5bc7ccf73fa03eee67d7b5b894397ced698720af28d145bca38fe284f7186cb8",
+    "fresh_cases_passed": 1000,
+    "fresh_evidence_sha256": "f87d666d5a1dda22fa7ef179096c90eeed7670834673aecf67ad3007c71e3759",
+    "fresh_precommit_sha256": "e154ee74a55f7105a962f2ff9f6abf307c3c1ba62024b781d8e40552eb7f241e",
+    "fresh_report_sha256": "71bb437f15039c9a4319e4bd81fe87b2ca076c71e7339d430c41a2c5732d6651",
+    "task_id": "9565186b"
+  },
+  "task_replacement_allowed": false
+}
