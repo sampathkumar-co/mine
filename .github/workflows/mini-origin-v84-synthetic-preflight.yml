@@ -1,0 +1,59 @@
+name: Mini-ORIGIN v0.84 Synthetic Preflight
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v84-partition-signature-coverage
+    paths:
+      - "mini-origin/campaigns/v84-partition-signature-coverage.json"
+      - "mini-origin/src/mini_origin/partition_signature_coverage_v84.py"
+      - "mini-origin/tests/test_partition_signature_coverage_v84.py"
+      - ".github/workflows/mini-origin-v84-synthetic-preflight.yml"
+  pull_request:
+    branches:
+      - research/mini-origin-v83-near-small-query-coverage
+    paths:
+      - "mini-origin/campaigns/v84-partition-signature-coverage.json"
+      - "mini-origin/src/mini_origin/partition_signature_coverage_v84.py"
+      - "mini-origin/tests/test_partition_signature_coverage_v84.py"
+      - ".github/workflows/mini-origin-v84-synthetic-preflight.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: mini-origin-v84-synthetic-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-only-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen parent and negative evidence
+        run: |
+          git diff --exit-code 35e5fb5a425731e9f55361a1911fe4e9eb51d617 -- \
+            src/mini_origin/response_cost_pareto_v56.py \
+            src/mini_origin/response_cost_lower_bound_v65.py \
+            compiled/response_cost_lower_bound_v66.rs \
+            src/mini_origin/conditioned_cell_frontier_v60.py \
+            src/mini_origin/numeric_threshold_frontier_v70.py \
+            src/mini_origin/near_small_query_coverage_v83.py \
+            ../research-evidence/mini-origin-v82-pmlb-blind-rejection.json \
+            ../research-evidence/mini-origin-v83-near-small-query-coverage-rejection.json
+      - name: Run synthetic-only preflight
+        run: python -m pytest -q tests/test_partition_signature_coverage_v84.py
