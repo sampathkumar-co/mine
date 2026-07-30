@@ -94,6 +94,34 @@ def test_canonical_candidate_is_equivariant_to_query_permutation():
             assert original == permuted
 
 
+def test_candidate_enumeration_is_deterministic_minimal_and_deduplicated():
+    task, _ = core.compile_task("v85-enumeration", records())
+    first = lattice.enumerate_closure_candidates(task, task.full_mask)
+    second = lattice.enumerate_closure_candidates(task, task.full_mask)
+    assert first == second
+    assert tuple(item.serialized for item in first) == tuple(sorted(item.serialized for item in first))
+    assert len({item.digest for item in first}) == len(first)
+    assert all(item.candidate_queries for item in first)
+    assert all(len(item.generator_atoms) <= 2 for item in first)
+
+    atoms = lattice.outcome_atoms(task, task.full_mask)
+    structures = []
+    for item in first:
+        closed = lattice.implication_closure(atoms, frozenset(item.generator_atoms), task.full_mask)
+        assert lattice.complete_query_projection(atoms, closed) == item.candidate_queries
+        structures.append(lattice._candidate_structure_key(task, task.full_mask, item.candidate_queries, atoms))
+    assert len(structures) == len(set(structures))
+
+
+def test_candidate_enumeration_is_label_independent():
+    first_task, _ = core.compile_task("v85-enumeration-labels", records(0))
+    second_task, _ = core.compile_task("v85-enumeration-labels", records(4))
+    first = lattice.enumerate_closure_candidates(first_task, first_task.full_mask)
+    second = lattice.enumerate_closure_candidates(second_task, second_task.full_mask)
+    assert tuple(item.serialized for item in first) == tuple(item.serialized for item in second)
+    assert tuple(item.digest for item in first) == tuple(item.digest for item in second)
+
+
 def test_nonempty_v84_state_set_and_digest_are_exactly_preserved(monkeypatch):
     task, _ = core.compile_task("v85-preserve-contributor", records())
     expected = [
