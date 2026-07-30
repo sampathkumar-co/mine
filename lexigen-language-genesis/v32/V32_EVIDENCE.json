@@ -1,0 +1,65 @@
+{
+  "authoritative_report_sha256": "2d2c81fd4db7e811736ca02543195e75e952140058a627b0acb095358884a31c",
+  "claims": {
+    "multi_identity_same_motif_recurrence": false,
+    "outside_human_reproduction": false,
+    "repeated_public_task_level_transfer": true,
+    "second_fresh_validated_public_identity": true,
+    "world_level_breakthrough": false
+  },
+  "denominator": {
+    "accepted_examples": 384,
+    "concrete_candidates_tested": 8166144,
+    "exact_demonstration_candidate_count": 1,
+    "fresh_fail_task_count": 0,
+    "fresh_pass_count": 1,
+    "generator_invalid_task_count": 0,
+    "no_program_task_count": 63,
+    "task_count": 64
+  },
+  "environment_note": {
+    "environment_sensitive_task_id": "e681b708",
+    "github_report_authoritative": true,
+    "local_verdict_reproduction": true,
+    "one_environment_sensitive_no_program_report": true,
+    "successful_task_byte_identical": true
+  },
+  "local_audit_sha256": "2f396c0b465a22a9889829bfade2285d3f687b22bf84d3d52aee34033040e7e5",
+  "local_report_sha256": "ffeedae33f076b181a1729b7444fc6fa2baabaff7374e091fe83c125925d0f2a",
+  "precommit_sha256": "555194c0d7d35caab361e81a02bd79002fdb3f1837e4180b644ac1f31ffdbe2e",
+  "prior_fresh_validated_identity": {
+    "fresh_cases_passed": 1000,
+    "fresh_evidence_sha256": "f87d666d5a1dda22fa7ef179096c90eeed7670834673aecf67ad3007c71e3759",
+    "task_id": "9565186b"
+  },
+  "schema": "lexigen-v32-full-grammar-transfer-evidence-v1",
+  "successful_task_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+  "successful_transfer": {
+    "fresh_cases_generated": 100,
+    "fresh_cases_passed": 100,
+    "fresh_cases_requested": 100,
+    "independent_runtime_errors": 0,
+    "primary_runtime_errors": 0,
+    "runtime_disagreements": 0,
+    "selected_candidate": {
+      "ast_sha256": "d630e72d5fdbff4bbd3e3e8295444ac7efc9646f2f63ac002190e3af01fe5dfc",
+      "concrete_program_sha256": "8f2cb9f03e35dd8ad8cb39d32b26caed4e267d3b99a194fd15bd69338e40e701",
+      "depth": 2,
+      "nodes": 8,
+      "parameters": {
+        "c0": 7
+      },
+      "structural_index": 240
+    },
+    "target_mismatches": 0,
+    "task_id": "9caf5b84"
+  },
+  "workflow": {
+    "artifact_digest": "sha256:6e72073dc4918bbd17ee142efdbe247bb7ce982fc963be287794a8425d19a8ec",
+    "artifact_id": 8768073198,
+    "conclusion": "success",
+    "rift_conclusion": "success",
+    "rift_run_id": 30563686030,
+    "run_id": 30563686569
+  }
+}
