@@ -1,0 +1,131 @@
+name: Lexigen v30 Exact Memoized Recovery
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v30-recovery/**"
+      - ".github/workflows/lexigen-v30-memoized-recovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-equivalence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce grammar and test recovery engine
+        run: |
+          python lexigen-language-genesis/v30/grammar_v30.py
+          python -m compileall -q lexigen-language-genesis/v30-recovery
+          python lexigen-language-genesis/v30-recovery/test_v30_recovery.py
+      - name: Reproduce completed equivalence task
+        run: |
+          python lexigen-language-genesis/v30-recovery/scan_one_v30_recovery.py \
+            --arcgen-root arcgen \
+            --task-id 469497ad \
+            --output task-469497ad.json
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = "1b881e32562e7daa3c3ebac5523ce5dad0c6be48b439e33b36c83db01e9ecd11"
+          actual = hashlib.sha256(Path("task-469497ad.json").read_bytes()).hexdigest()
+          assert actual == expected, (actual, expected)
+          print("BYTE_IDENTICAL_EQUIVALENCE")
+          PY
+
+  recover-timeouts:
+    needs: verify-equivalence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 9
+      matrix:
+        task:
+          - "1e81d6f9"
+          - "639f5a19"
+          - "3ee1011a"
+          - "e4075551"
+          - "6ca952ad"
+          - "d94c3b52"
+          - "6d0160f0"
+          - "05f2a901"
+          - "e39e9282"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce frozen grammar
+        run: python lexigen-language-genesis/v30/grammar_v30.py
+      - name: Recover one timed-out identity
+        run: |
+          python lexigen-language-genesis/v30-recovery/scan_one_v30_recovery.py \
+            --arcgen-root arcgen \
+            --task-id "${{ matrix.task }}" \
+            --output "task-${{ matrix.task }}.json"
+      - name: Upload recovered report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v30-recovered-${{ matrix.task }}
+          path: task-${{ matrix.task }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-exact-denominator:
+    needs: recover-timeouts
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download 11 immutable original reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v30-validation-*
+          path: reports
+          merge-multiple: true
+          run-id: 30479425040
+          github-token: ${{ github.token }}
+      - name: Download nine recovered reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v30-recovered-*
+          path: reports
+          merge-multiple: true
+      - name: Require exact 20-task denominator
+        run: |
+          python lexigen-language-genesis/v30/aggregate_validation_v30.py \
+            --reports-root reports \
+            --output lexigen-language-genesis/v30-recovery/V30_RECOVERED_VALIDATION_REPORT.json
+      - name: Upload recovered v30 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v30-recovered-validation-evidence
+          path: |
+            lexigen-language-genesis/v30-recovery/V30_RECOVERED_VALIDATION_REPORT.json
+            reports
+          if-no-files-found: error
+          retention-days: 90
