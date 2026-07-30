@@ -1,0 +1,112 @@
+name: Mini-ORIGIN v0.85 New-State Rust Cross-check
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v85-rust-crosscheck
+    paths:
+      - "mini-origin/research-diagnostics/v85/**"
+      - ".github/workflows/mini-origin-v85-rust-crosscheck.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rust-crosscheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile unchanged independent Rust solver
+        run: |
+          rustc -C opt-level=3 -C debuginfo=0 \
+            compiled/response_cost_lower_bound_v66.rs \
+            -o research-diagnostics/v85/response_cost_lower_bound_v85_crosscheck
+      - name: Replay only the 36 new profiled states
+        run: |
+          research-diagnostics/v85/response_cost_lower_bound_v85_crosscheck \
+            --input research-diagnostics/v85/new-states.txt \
+            --output research-diagnostics/v85/new-rust-results.json
+      - name: Compare Python and Rust exactly
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path("research-diagnostics/v85")
+          python_result = json.loads((root / "new-python-diagnostic.json").read_text())
+          rust_result = json.loads((root / "new-rust-results.json").read_text())
+          expected = {row["state_digest"]: row for row in python_result["rows"]}
+          actual = {row["digest"]: row for row in rust_result["rows"]}
+          mismatches = []
+          fields = (
+              "query_expansions",
+              "calls",
+              "memo_entries",
+              "memo_hits",
+              "raw_queries_considered",
+              "representative_queries_considered",
+              "dominated_queries_removed",
+              "bound_evaluations",
+              "bound_pruned_queries",
+              "impossible_full_diagnosis_prunes",
+          )
+          if set(expected) != set(actual):
+              mismatches.append({
+                  "kind": "digest_set",
+                  "missing": sorted(set(expected) - set(actual)),
+                  "extra": sorted(set(actual) - set(expected)),
+              })
+          for digest in sorted(set(expected) & set(actual)):
+              left = expected[digest]
+              right = actual[digest]
+              if bool(left["bounded_solved"]) != bool(right["solved"]):
+                  mismatches.append({"digest": digest, "kind": "solved"})
+                  continue
+              if left["bounded_solved"] and list(left["bounded_plan"]) != list(right["plan"]):
+                  mismatches.append({"digest": digest, "kind": "plan"})
+              stats = left["bounded_stats"] or {}
+              for field in fields:
+                  if int(stats.get(field, -1)) != int(right.get(field, -1)):
+                      mismatches.append({
+                          "digest": digest,
+                          "kind": "counter",
+                          "field": field,
+                          "python": stats.get(field),
+                          "rust": right.get(field),
+                      })
+          evidence = {
+              "status": "v85_new_state_rust_crosscheck_pass" if not mismatches else "v85_new_state_rust_crosscheck_rejected",
+              "authority": "non-authoritative diagnostic; PR #208 workflow remains the frozen campaign",
+              "source_commit": "db52812a95f6b8cc7eacfd0c1b2d211f25ea9914",
+              "state_count": len(expected),
+              "rust_row_count": len(actual),
+              "mismatch_count": len(mismatches),
+              "mismatches": mismatches,
+              "rust_total_milliseconds": rust_result["total_milliseconds"],
+              "state_file_sha256": hashlib.sha256((root / "new-states.txt").read_bytes()).hexdigest(),
+          }
+          evidence["evidence_digest"] = hashlib.sha256(
+              json.dumps(evidence, sort_keys=True, separators=(",", ":")).encode()
+          ).hexdigest()
+          (root / "rust-crosscheck-evidence.json").write_text(json.dumps(evidence, indent=2))
+          print(json.dumps(evidence, indent=2))
+          if mismatches:
+              raise SystemExit(1)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v85-new-state-rust-crosscheck
+          path: |
+            mini-origin/research-diagnostics/v85/new-states.txt
+            mini-origin/research-diagnostics/v85/new-python-diagnostic.json
+            mini-origin/research-diagnostics/v85/new-rust-results.json
+            mini-origin/research-diagnostics/v85/rust-crosscheck-evidence.json
+          if-no-files-found: error
+          retention-days: 90
