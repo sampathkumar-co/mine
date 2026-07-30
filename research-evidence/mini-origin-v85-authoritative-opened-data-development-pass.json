@@ -1,0 +1,85 @@
+{
+  "campaign": "mini-origin-v85-response-lattice-closure",
+  "record_type": "authoritative_opened_data_development_evidence",
+  "verdict": "development_pass",
+  "claim_boundary": "This is opened-data development evidence only. It is not fresh external validation, independent reproduction, peer review, a world-class result, or a breakthrough.",
+  "authoritative_source": {
+    "repository": "sampathkumar-co/mine",
+    "pull_request": 208,
+    "branch": "research/mini-origin-v85-response-lattice-closure",
+    "commit": "92bff91bca74ec62968048c9b71165075f759c73",
+    "workflow_run": 30571576352,
+    "workflow_name": "Mini-ORIGIN PMLB Development v0.85",
+    "workflow_conclusion": "success",
+    "artifact_id": 8772521349,
+    "artifact_name": "mini-origin-v85-development",
+    "artifact_digest": "sha256:69c42c54dc0babc937732d09216578df5fce020af42f7ca8ff32668323eda4f7"
+  },
+  "artifact_file_sha256": {
+    "states.txt": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+    "python-reference.json": "d8dc102da548c78a7c0c155662958dea47acd4d1f147c23b1ebaa9fd424b6566",
+    "rust-results.json": "c825cabcbcdd6717f5df4f9c72ec276e970b2575cd38f21818d6b1d55eceb111",
+    "evidence.json": "efdf8f8e7dc94fbfa5de690beb3b6af2c12d36c812841bfcadf4099f5c306298"
+  },
+  "evidence_digest": "ca99dd822bc57fca55ffaf6de3614c7403cdbc0c85f3db81e0652dfe0acc0c20",
+  "state_input_sha256": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+  "gate_results": {
+    "development_gate": true,
+    "base_validator_gate": true,
+    "adapter_verification_passed": true,
+    "fresh_dataset_minimum_states_passed": true,
+    "fresh_external_evidence": false,
+    "contributing_dataset_count": 7,
+    "base_state_count": 84,
+    "profiled_state_count": 252,
+    "bounded_solved_count": 252,
+    "both_plain_bounded_count": 141,
+    "bounded_only_count": 111,
+    "plain_bounded_objective_mismatch_count": 0,
+    "current_bounded_plan_mismatch_count": 0,
+    "bounded_expansion_regression_count": 0
+  },
+  "performance_observations": {
+    "current_query_expansions": 804154,
+    "bounded_query_expansions": 367122,
+    "aggregate_bounded_reduction_fraction": 0.5434680421909237,
+    "expansion_ratio_median": 164.57268309039912,
+    "expansion_ratio_p90": 30902.839583333352,
+    "states_with_lower_bound_pruning": 216,
+    "dominated_queries_removed": 3044930,
+    "root_incomparable_classes": 135
+  },
+  "rust_crosscheck": {
+    "exact_match_count": 252,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "total_milliseconds": 2819.876106
+  },
+  "diagnostic_comparison": {
+    "authoritative_solar_flare_state_set_digest": "019db9014e03eb6779eba8c7f4194842f4bddd22632f47494fa6d219fb0f3c4d",
+    "preserved_full_selector_diagnostic_digest": "019db9014e03eb6779eba8c7f4194842f4bddd22632f47494fa6d219fb0f3c4d",
+    "full_selector_diagnostic_matches_authoritative": true,
+    "invalidated_speed_diagnostic_digest": "1c2e235cc73e80cd4f2f716803d38132c1acd67533816d659b99218001f1eb8e",
+    "invalidated_speed_diagnostic_matches_authoritative": false,
+    "interpretation": "The authoritative regenerated selector state set agrees with the preserved full-selector diagnostic and confirms the prior invalidation of the speed-oriented shortcut. The shortcut Rust replay remains valid only for its supplied diagnostic states and is not authoritative v0.85 gate evidence."
+  },
+  "selected_dataset_state_set_digests": {
+    "vowel": "ec4c74b6316eb056edf05d6ee32f3bdc4c6e7cf4008690f1de925a5ac53d916c",
+    "_deprecated_breast_w": "1bfa0e77d259bcfe7df10f341292f8716ec9b573dc6afd250c7680c71ecd25db",
+    "dis": "b5a21209dc294baf0cb25c7e6145256884e657827a1b9c8aa78b63f3aaef891c",
+    "_deprecated_cleveland": "9aa3dd686c144550437030c82eb90e8126bcd0585fb9f998953a6ac77d094fc8",
+    "_deprecated_diabetes": "1057db5357804114e3b1ac0b96fa3d4df698a65ab761e0e487d17499e9652562",
+    "_deprecated_solar_flare_1": "019db9014e03eb6779eba8c7f4194842f4bddd22632f47494fa6d219fb0f3c4d",
+    "_deprecated_house_votes_84": "955013bae02f3d38fecc071b365d751d40d9f02574c23dab9519bd3ce0381f8b"
+  },
+  "scientific_integrity": {
+    "datasets_changed": false,
+    "selector_semantics_changed_after_opened_data": false,
+    "solvers_changed": false,
+    "thresholds_changed": false,
+    "seeds_changed": false,
+    "budgets_changed": false,
+    "acceptance_gates_changed": false,
+    "rerun_required": false
+  }
+}
