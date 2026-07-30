@@ -122,6 +122,26 @@ def test_candidate_enumeration_is_label_independent():
     assert tuple(item.digest for item in first) == tuple(item.digest for item in second)
 
 
+def test_candidate_enumeration_is_equivariant_to_query_and_atom_permutation():
+    task, _ = core.compile_task("v85-enumeration-permutation", records())
+    original = lattice.enumerate_closure_candidates(task, task.full_mask)
+
+    remapped_outcomes = tuple(
+        tuple(reversed(task.outcome_masks[query]))
+        for query in reversed(range(task.query_count))
+    )
+    remapped_task = SimpleNamespace(
+        query_count=task.query_count,
+        full_mask=task.full_mask,
+        outcome_masks=remapped_outcomes,
+    )
+    permuted = lattice.enumerate_closure_candidates(remapped_task, remapped_task.full_mask)
+
+    assert len(original) == len(permuted)
+    assert tuple(item.serialized for item in original) == tuple(item.serialized for item in permuted)
+    assert tuple(item.digest for item in original) == tuple(item.digest for item in permuted)
+
+
 def test_nonempty_v84_state_set_and_digest_are_exactly_preserved(monkeypatch):
     task, _ = core.compile_task("v85-preserve-contributor", records())
     expected = [
