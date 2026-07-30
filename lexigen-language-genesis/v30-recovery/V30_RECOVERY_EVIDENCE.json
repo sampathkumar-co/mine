@@ -1,0 +1,46 @@
+{
+  "aggregate_report_sha256": "37954acab4f93b031665517629ac91499dc4891324c818a020e8be344d17874c",
+  "claims": {
+    "fresh_case_validation_on_one_identity": true,
+    "outside_human_reproduction": false,
+    "public_heldout_synthesis_event": true,
+    "repeated_task_level_transfer": false,
+    "world_level_breakthrough": false
+  },
+  "denominator": {
+    "accepted_examples": 120,
+    "concrete_candidates_tested": 2551920,
+    "exact_candidate_count": 136,
+    "exact_task_count": 1,
+    "generator_invalid_task_count": 0,
+    "no_program_task_count": 19,
+    "task_count": 20
+  },
+  "environment_note": {
+    "e39e9282_environment_sensitive_generation": true,
+    "e39e9282_scientific_verdict_agrees": true,
+    "eight_local_reports_byte_identical": true,
+    "github_aggregate_authoritative": true
+  },
+  "local_recovery_audit_sha256": "caf0afd6f756a931bfc7e0458603f5ef90e430bde2099824c27fde1ab8b51463",
+  "original_workflow_run_id": 30479425040,
+  "recovery_equivalence_sha256": "41cbd42cc26682bb8487d26daecd7b33417e80d2276774fde84106c3b1f4d5bb",
+  "recovery_precommit_sha256": "308921e41dcd473259ffa027d308bce62ee11b1f95730b2c8f9c99f05587428b",
+  "recovery_workflow": {
+    "artifact_digest": "sha256:8f5c0862ba56a2fe2cdf630f473b09c4a9e81fd6260aeafb5df2339d79e33f7b",
+    "artifact_id": 8764885792,
+    "conclusion": "success",
+    "rift_conclusion": "success",
+    "rift_run_id": 30556083783,
+    "run_id": 30556083038
+  },
+  "schema": "lexigen-v30-recovered-full-denominator-evidence-v1",
+  "validated_success": {
+    "fresh_cases_passed": 1000,
+    "fresh_evidence_sha256": "f87d666d5a1dda22fa7ef179096c90eeed7670834673aecf67ad3007c71e3759",
+    "fresh_report_sha256": "71bb437f15039c9a4319e4bd81fe87b2ca076c71e7339d430c41a2c5732d6651",
+    "fresh_workflow_run_id": 30554399664,
+    "selected_concrete_program_sha256": "5bc7ccf73fa03eee67d7b5b894397ced698720af28d145bca38fe284f7186cb8",
+    "task_id": "9565186b"
+  }
+}
