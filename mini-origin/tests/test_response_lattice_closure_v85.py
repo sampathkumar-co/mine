@@ -92,3 +92,28 @@ def test_canonical_candidate_is_equivariant_to_query_permutation():
                 remapped_atoms,
             )
             assert original == permuted
+
+
+def test_nonempty_v84_state_set_and_digest_are_exactly_preserved(monkeypatch):
+    task, _ = core.compile_task("v85-preserve-contributor", records())
+    expected = [
+        (task.full_mask, (1 << task.query_count) - 1, 6),
+        (task.full_mask ^ 1, sum(1 << q for q in range(task.query_count) if q % 2), 3),
+    ]
+    digest = lattice.parent.parent.state_set_digest(task, expected)
+    parent_summary = {
+        "selected_states": len(expected),
+        "selected_state_set_digest": digest,
+        "selector_revision": "partition-signature-coverage-v84",
+        "partition_signature_fallback": False,
+    }
+    monkeypatch.setattr(lattice.parent, "select_states", lambda _task: (expected, parent_summary))
+
+    actual, summary = lattice.select_states(task)
+    assert actual is expected
+    assert summary["selected_state_set_digest"] == digest
+    assert summary["selected_states"] == len(expected)
+    assert summary["selector_revision"] == parent_summary["selector_revision"]
+    assert summary["partition_signature_fallback"] is False
+    assert summary["response_lattice_fallback"] is False
+    assert summary["response_lattice_integration"] == "synthetic-preservation-only"
