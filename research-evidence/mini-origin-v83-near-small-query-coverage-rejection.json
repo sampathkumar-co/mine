@@ -1,0 +1,76 @@
+{
+  "status": "near_small_query_coverage_development_rejected_v83",
+  "recorded_at_utc": "2026-07-30T02:17:32Z",
+  "repository": "sampathkumar-co/mine",
+  "branch": "research/mini-origin-v83-near-small-query-coverage",
+  "evaluated_commit": "c6dd3cf0baa68fcd37137a91a238e1f5582401fe",
+  "workflow": {
+    "name": "Mini-ORIGIN PMLB Development v0.83",
+    "run_id": 30506922625,
+    "run_number": 6,
+    "job_id": 90758598270,
+    "conclusion": "failure",
+    "scientific_interpretation": "opened-data development rejection"
+  },
+  "artifact": {
+    "id": 8746059766,
+    "name": "mini-origin-v83-development",
+    "zip_sha256": "3044df1cd3941d17f9b4477bdeba4e274ff83bca1694ff3ded2a02b155d0e9b4",
+    "files": {
+      "adapted-manifest.json": "7adc025aa74f9a9759deec12834119411c9f01f13c03da9650ab2e7ee0a39ebf",
+      "evidence.json": "0e6341cfb6e02d71b5f750f2f7d1eeff9b81b1ef1d8a4717062e6b7e633a619c",
+      "python-reference.json": "1b6a0004514c5cfe037510f20c6ad8d1bd2cb8eff939ed05911525b91ed1d656",
+      "rust-results.json": "db8471f61e5bd70c0b89d629827963d0676caa8feb8d1ecb0e3d382ca272f884",
+      "states.txt": "fdacc3aeee412a05bd84c31df1ef4c0622125fa4d9110178027e075ed341fc1f"
+    }
+  },
+  "preregistered_change": {
+    "description": "Extend only the unchanged v0.79 adaptive selector boundary from at most 10 compiled queries to at most 12 compiled queries.",
+    "old_limit": 10,
+    "new_limit": 12,
+    "thresholds_weakened": false,
+    "labels_or_costs_used": false,
+    "dataset_specific_condition_added": false
+  },
+  "result": {
+    "gate": false,
+    "contributing_datasets": 6,
+    "required_contributing_datasets": 7,
+    "base_states": 72,
+    "profiled_states": 216,
+    "bounded_solved": 216,
+    "plain_and_bounded_solved": 105,
+    "bounded_only_solved": 111,
+    "python_rust_exact_matches": 216,
+    "python_rust_mismatches": 0,
+    "objective_mismatches": 0,
+    "plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "aggregate_bounded_reduction_fraction": 0.5454301102534714,
+    "median_expansion_ratio": 219.29973886070167,
+    "p90_expansion_ratio": 68440.75
+  },
+  "failed_dataset": {
+    "name": "_deprecated_solar_flare_1",
+    "compiled_queries": 12,
+    "compiler_shape": "12 low-cardinality exact queries and zero threshold queries",
+    "conditioned_cells": 814,
+    "structural_candidates": 0,
+    "selected_states": 0,
+    "adaptive_mode_activated": true,
+    "effective_min_raw_queries": 10,
+    "effective_min_redundancy": 4,
+    "interpretation": "The query-count boundary was not the causal bottleneck. Activating the adaptive path at 12 queries still produced no state satisfying the frozen structural admissibility constraints."
+  },
+  "decision": {
+    "repair_direction": "stop",
+    "reason": "A second opened-data threshold adjustment would be post-hoc tuning against the same exposed dataset and would not constitute stronger scientific evidence.",
+    "next_scientifically_valid_step": "Design a new generic state-generation principle from task-independent structural analysis, preregister it before touching another untouched dataset campaign, and evaluate it on a separately locked source. Do not relax the v0.82 or v0.83 acceptance thresholds retroactively."
+  },
+  "preservation": {
+    "v82_rejection_remains_valid": true,
+    "v83_rejection_is_permanent": true,
+    "negative_results_may_not_be_relabelled": true
+  },
+  "claim_boundary": "This is opened-data development evidence only. It is not an external validation, world-class result, general-AI breakthrough, peer-reviewed result, or outside-human reproduction."
+}
