@@ -1,0 +1,59 @@
+{
+  "case_record_sequence_sha256": "adf89212ecf3ede28b0764377a3f159ebe2a321543d1fd26a2118c67cbd1c95e",
+  "claims": {
+    "fresh_case_validation_on_one_identity": true,
+    "outside_human_reproduction": false,
+    "public_heldout_synthesis_event": true,
+    "repeated_task_level_transfer": false,
+    "world_level_breakthrough": false
+  },
+  "fresh_gate_passed": true,
+  "github_reproduction": {
+    "artifact_digest": "sha256:dc7c62c136d39a98e1bd613fca514edb369b697a440d88147a23162a226f9506",
+    "artifact_id": 8764161444,
+    "report_sha256": "71bb437f15039c9a4319e4bd81fe87b2ca076c71e7339d430c41a2c5732d6651",
+    "rift_conclusion": "success",
+    "rift_run_id": 30554399915,
+    "workflow_run_id": 30554399664
+  },
+  "local_runtime_report_sha256": "71bb437f15039c9a4319e4bd81fe87b2ca076c71e7339d430c41a2c5732d6651",
+  "precommit_sha256": "e154ee74a55f7105a962f2ff9f6abf307c3c1ba62024b781d8e40552eb7f241e",
+  "report_sha256": "71bb437f15039c9a4319e4bd81fe87b2ca076c71e7339d430c41a2c5732d6651",
+  "schema": "lexigen-v30-9565186b-fresh-evidence-v1",
+  "selected_candidate": {
+    "ast": {
+      "colour": {
+        "name": "c0",
+        "op": "param_color"
+      },
+      "grid": {
+        "op": "input_grid"
+      },
+      "op": "paint",
+      "points": {
+        "op": "non_background_points"
+      }
+    },
+    "ast_sha256": "165ddda73ec0467d33928df08b3a115dfd9c93f5f259cb90b13094c04bd7870a",
+    "concrete_program_sha256": "5bc7ccf73fa03eee67d7b5b894397ced698720af28d145bca38fe284f7186cb8",
+    "depth": 1,
+    "nodes": 4,
+    "parameters": {
+      "c0": 5
+    },
+    "structural_index": 4
+  },
+  "task_id": "9565186b",
+  "totals": {
+    "generated_cases": 1000,
+    "generation_errors": 0,
+    "generation_timeouts": 0,
+    "independent_runtime_errors": 0,
+    "passed_cases": 1000,
+    "primary_runtime_errors": 0,
+    "requested_cases": 1000,
+    "runtime_disagreements": 0,
+    "target_mismatches": 0,
+    "verifier_rejections": 0
+  }
+}
