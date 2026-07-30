@@ -86,13 +86,14 @@ def complete_class_masks(
             continue
         candidates[mask] = representatives
 
+    row_count = task.full_mask.bit_count()
     return tuple(
         sorted(
             candidates.items(),
             key=lambda row: (
                 -(row[0].bit_count() - row[1]),
                 -row[0].bit_count(),
-                _structural_hash(task.row_count, task.query_count, allowed, row[0], row[1]),
+                _structural_hash(row_count, task.query_count, allowed, row[0], row[1]),
             ),
         )
     )
@@ -128,12 +129,13 @@ def _signature_fallback_states(task: object):
         (allowed, remaining, representatives)
         for (allowed, remaining), representatives in candidates.items()
     ]
+    row_count = task.full_mask.bit_count()
     rows.sort(
         key=lambda row: (
             -row[0].bit_count(),
             -(row[1].bit_count() - row[2]),
             -row[1].bit_count(),
-            _structural_hash(task.row_count, task.query_count, row[0], row[1], row[2]),
+            _structural_hash(row_count, task.query_count, row[0], row[1], row[2]),
         )
     )
     rows = rows[: conditioned.MAX_STATES_PER_TASK]
