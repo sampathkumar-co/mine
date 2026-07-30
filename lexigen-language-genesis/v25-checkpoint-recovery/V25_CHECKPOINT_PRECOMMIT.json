@@ -1,4 +1,47 @@
 {
+  "checkpoint_protocol": {
+    "candidate_order_key": [
+      "total node count",
+      "canonical AST text"
+    ],
+    "checkpoint_boundary": "after all candidates sharing the current global order key are processed",
+    "checkpoint_format": "single SQLite database with atomic transactions",
+    "checkpoint_interval_processed_candidates": 25000,
+    "checkpoint_write_rule": "commit one synchronous SQLite transaction after a complete candidate order key",
+    "partial_checkpoint_is_scientific_evidence": false,
+    "persisted_state": [
+      "retained expressions in canonical order",
+      "exact seen payloads and semantic signatures",
+      "all counters and statistics",
+      "exact expressions",
+      "current depth and type",
+      "last fully processed candidate order key",
+      "input and protocol hashes"
+    ],
+    "replacement_task_allowed": false,
+    "resume_rule": "rebuild deterministic streams and skip every candidate order key less than or equal to the checkpoint marker",
+    "same_candidate_order": true,
+    "same_report_serialization": true,
+    "same_search_budgets": true,
+    "same_semantic_deduplication": true
+  },
+  "claim_boundary": {
+    "infrastructure_equivalence_only": true,
+    "transfer_claim": false,
+    "v25_scientific_denominator_completed": false,
+    "validation_outputs_opened": false,
+    "world_level_breakthrough": false
+  },
+  "equivalence_gate": {
+    "expected_final_report_sha256": "4d6b326e3f8334aa5d5542cae59344a76a1baa55b1734ddacd3a70c783440091",
+    "forced_interruption_after_processed_candidates": 50000,
+    "forced_interruption_required": true,
+    "required_result": "byte-identical final report after interruption and resume",
+    "resume_required": true,
+    "task_id": "c074846d",
+    "unresolved_task_authorized_only_after_pass": true
+  },
+  "post_result_edits_allowed": false,
   "schema": "lexigen-v25-checkpoint-recovery-precommit-v1",
   "source": {
     "branch_base_commit": "27351e942de4f4b833766b3178766ddd26117907",
@@ -7,45 +50,5 @@
     "equivalence_task_id": "c074846d",
     "equivalence_task_report_sha256": "4d6b326e3f8334aa5d5542cae59344a76a1baa55b1734ddacd3a70c783440091",
     "unresolved_task_id": "0dfd9992"
-  },
-  "checkpoint_protocol": {
-    "checkpoint_format": "atomic zip archive",
-    "checkpoint_boundary": "after all candidates sharing the current global order key are processed",
-    "candidate_order_key": ["total node count", "canonical AST text"],
-    "checkpoint_interval_processed_candidates": 25000,
-    "persisted_state": [
-      "completed and partial depth/type layers",
-      "retained expressions in canonical order",
-      "exact SQLite seen-store snapshot",
-      "all counters and statistics",
-      "exact expressions",
-      "current depth and type",
-      "last fully processed candidate order key",
-      "input examples and protocol hashes"
-    ],
-    "resume_rule": "rebuild deterministic streams and skip every candidate order key less than or equal to the checkpoint marker",
-    "same_candidate_order": true,
-    "same_search_budgets": true,
-    "same_semantic_deduplication": true,
-    "same_report_serialization": true,
-    "partial_checkpoint_is_scientific_evidence": false,
-    "replacement_task_allowed": false
-  },
-  "equivalence_gate": {
-    "task_id": "c074846d",
-    "forced_interruption_required": true,
-    "forced_interruption_after_processed_candidates": 50000,
-    "resume_required": true,
-    "expected_final_report_sha256": "4d6b326e3f8334aa5d5542cae59344a76a1baa55b1734ddacd3a70c783440091",
-    "required_result": "byte-identical final report after interruption and resume",
-    "unresolved_task_authorized_only_after_pass": true
-  },
-  "claim_boundary": {
-    "infrastructure_equivalence_only": true,
-    "v25_scientific_denominator_completed": false,
-    "validation_outputs_opened": false,
-    "transfer_claim": false,
-    "world_level_breakthrough": false
-  },
-  "post_result_edits_allowed": false
+  }
 }
