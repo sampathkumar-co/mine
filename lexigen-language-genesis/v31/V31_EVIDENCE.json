@@ -1,0 +1,44 @@
+{
+  "authoritative_report_sha256": "23d6ad3d55804efa5b33b90d4416d8bd382edb01a5f6180693f8e94c14b9a85f",
+  "claims": {
+    "motif_recurrence_in_fresh_64_identity_sample": false,
+    "multi_identity_motif_recurrence": false,
+    "outside_human_reproduction": false,
+    "repeated_public_task_level_transfer": false,
+    "validated_source_identity": true,
+    "world_level_breakthrough": false
+  },
+  "denominator": {
+    "accepted_examples": 384,
+    "ambiguous_task_count": 0,
+    "candidate_evaluations": 640,
+    "exact_demonstration_candidate_count": 0,
+    "fresh_pass_count": 0,
+    "generator_invalid_task_count": 0,
+    "no_program_task_count": 64,
+    "task_count": 64
+  },
+  "environment_note": {
+    "environment_sensitive_task_id": "0d87d2a6",
+    "github_report_authoritative": true,
+    "local_verdict_reproduction": true,
+    "one_environment_sensitive_report": true
+  },
+  "local_audit_sha256": "adf9b341fa5232c6642796ca8cd97688ffd00938f6c5fabc080bb014e2a52e52",
+  "local_report_sha256": "04ab66e291f660458d0bb389adf90c54fba98a6db7c9a9ec56e2023b6de37c1e",
+  "precommit_sha256": "73a064c3b90b1bab4f7a979fd205482208a41f1377aeb47bb549885ff186b203",
+  "schema": "lexigen-v31-validated-motif-recurrence-evidence-v1",
+  "source": {
+    "fresh_cases_passed": 1000,
+    "fresh_evidence_sha256": "f87d666d5a1dda22fa7ef179096c90eeed7670834673aecf67ad3007c71e3759",
+    "task_id": "9565186b"
+  },
+  "workflow": {
+    "artifact_digest": "sha256:475c7f4cc9556f8910f403ffeadc6c28d6d2203d684b88985c88f5093befcb92",
+    "artifact_id": 8766679109,
+    "conclusion": "success",
+    "rift_conclusion": "success",
+    "rift_run_id": 30560489793,
+    "run_id": 30560489974
+  }
+}
