@@ -1,0 +1,63 @@
+{
+  "schema": "lexigen-v30-exact-memoized-recovery-precommit-v1",
+  "source_branch": "lexigen/language-genesis-v30-source-induced-motif-grammar",
+  "source_commit": "583761542c624010899c0fc1296d63eb907d0bee",
+  "source_workflow_run_id": 30479425040,
+  "scientific_protocol_changes_allowed": false,
+  "candidate_sequence_sha256": "50a604639fef3158bbd2821afdf2f6f2d5562ea5d6eecb7fd5f0e8563661cd25",
+  "grammar_file_sha256": "f1e4ab2f95f7bec0edd374c980c9cbcf48803e2c49fa7372a8128cdd2925c90b",
+  "grammar_manifest_sha256": "e97e6ec6a543077adcb0c05d9a9c3c433e6eebaff4433bc0771d6a958d511dbc",
+  "equivalence_gate": {
+    "task_id": "469497ad",
+    "artifact_id": 8735038540,
+    "artifact_digest": "sha256:780e8ad77761116b231266da70584caeed94549f931fa9b7aa28140eb1353d99",
+    "report_sha256": "1b881e32562e7daa3c3ebac5523ce5dad0c6be48b439e33b36c83db01e9ecd11",
+    "demonstration_sha256": "956a47321961959e79b60e0d67f66621a8536a2326b62c49091213c9ff1f8d56",
+    "byte_identical_report_required": true
+  },
+  "recovery_task_ids": [
+    "1e81d6f9",
+    "639f5a19",
+    "3ee1011a",
+    "e4075551",
+    "6ca952ad",
+    "d94c3b52",
+    "6d0160f0",
+    "05f2a901",
+    "e39e9282"
+  ],
+  "original_timeout_minutes": 20,
+  "optimization": {
+    "name": "exact shared-subtree memoization",
+    "cache_key": "canonical AST subtree plus demonstration index plus complete parameter assignment",
+    "full_runtime_values_retained": true,
+    "hash_only_semantics_forbidden": true,
+    "cache_collisions_possible": false,
+    "candidate_order_unchanged": true,
+    "parameter_order_unchanged": true
+  },
+  "unchanged_rules": [
+    "same six demonstrations and generation seeds",
+    "same 23916 structural ASTs",
+    "same ten color assignments where required",
+    "same 500000 concrete candidate cap",
+    "same runtime error classes",
+    "same identity rejection",
+    "same exact candidate retention",
+    "same minimum candidate selection",
+    "same report schema and serialization"
+  ],
+  "forbidden_changes": [
+    "semantic pruning",
+    "candidate reordering",
+    "early exit after first exact candidate",
+    "task replacement",
+    "generator retries beyond the frozen protocol",
+    "post-result grammar edits"
+  ],
+  "claim_boundary": {
+    "purpose": "infrastructure recovery only",
+    "heldout_results_may_change": false,
+    "world_level_breakthrough": false
+  }
+}

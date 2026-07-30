@@ -1,0 +1,27 @@
+{
+  "accepted_examples": 6,
+  "demonstration_sha256": "9bb186b2c768aa7c9ca60d3b3cc0ce904d0a99b1fc7a938138d52e856cfc86b9",
+  "enumeration": {
+    "candidate_cap_reached": false,
+    "concrete_candidates_tested": 127596,
+    "exact_candidate_count": 0,
+    "exact_candidates": [],
+    "identity_candidates_rejected": 3310,
+    "runtime_invalid_candidates": 67651,
+    "schema": "lexigen-v30-task-enumeration-v1",
+    "selected_candidate": null,
+    "task_nontrivial": true
+  },
+  "generation": {
+    "attempts": 6,
+    "failure_examples": [],
+    "failures": 0,
+    "timeouts": 0
+  },
+  "grammar_manifest_sha256": "e97e6ec6a543077adcb0c05d9a9c3c433e6eebaff4433bc0771d6a958d511dbc",
+  "grammar_sha256": "f1e4ab2f95f7bec0edd374c980c9cbcf48803e2c49fa7372a8128cdd2925c90b",
+  "precommit_sha256": "6969eebfb91c6609aaa076b7ea74d4bb93fb8931e11066f51c5c7f90e00c62a6",
+  "schema": "lexigen-v30-task-scan-v1",
+  "status": "completed",
+  "task_id": "d94c3b52"
+}

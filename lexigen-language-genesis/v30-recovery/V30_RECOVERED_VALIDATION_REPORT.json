@@ -1,0 +1,213 @@
+{
+  "claim_boundary": {
+    "one_exact_heldout_task": "public heldout synthesis event",
+    "two_exact_heldout_tasks": "repeated public heldout transfer",
+    "world_level_breakthrough": "forbidden without fresh-case success, independent runtime agreement, and verifier co-synthesis"
+  },
+  "completed_report_count": 20,
+  "fresh_validation_completed": false,
+  "grammar_manifest_sha256": "e97e6ec6a543077adcb0c05d9a9c3c433e6eebaff4433bc0771d6a958d511dbc",
+  "heldout_synthesis_demonstrated": true,
+  "heldout_synthesis_event_count": 1,
+  "independent_runtime_completed": false,
+  "precommit_sha256": "6969eebfb91c6609aaa076b7ea74d4bb93fb8931e11066f51c5c7f90e00c62a6",
+  "repeated_heldout_transfer_demonstrated": false,
+  "schema": "lexigen-v30-validation-report-v1",
+  "selected_candidates_frozen": true,
+  "status_counts": {
+    "exact_program_found": 1,
+    "generator_invalid": 0,
+    "no_program": 19
+  },
+  "successes": [
+    {
+      "exact_candidate_count": 136,
+      "selected_candidate": {
+        "ast_sha256": "165ddda73ec0467d33928df08b3a115dfd9c93f5f259cb90b13094c04bd7870a",
+        "concrete_program_sha256": "5bc7ccf73fa03eee67d7b5b894397ced698720af28d145bca38fe284f7186cb8",
+        "depth": 1,
+        "nodes": 4,
+        "parameters": {
+          "c0": 5
+        },
+        "structural_index": 4
+      },
+      "task_id": "9565186b"
+    }
+  ],
+  "task_summaries": [
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "1b881e32562e7daa3c3ebac5523ce5dad0c6be48b439e33b36c83db01e9ecd11",
+      "status": "completed",
+      "task_id": "469497ad"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "41fe94d572cf48a3f58df723d9207905c3f9be1770a5043129e14449a1b747a8",
+      "status": "completed",
+      "task_id": "28bf18c6"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "317272dbc3c850ea582aa319271b91486d2346e41d7bd85e8f4cc2a76ea80bba",
+      "status": "completed",
+      "task_id": "46c35fc7"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "6a17ee06927916b82ff6497a89360746fd5790b1a493bb719f1c7b94628ede86",
+      "status": "completed",
+      "task_id": "1bfc4729"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 136,
+      "report_sha256": "d5d915d25c88e5a6dd4571627fc74c6cf048586e0624d7e725902d67254f4b4e",
+      "status": "completed",
+      "task_id": "9565186b"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "8deec578cf92b416e159f4673927d40692e1a121d647af9e21cca6f07ba392e8",
+      "status": "completed",
+      "task_id": "6ca952ad"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "0ff78de6eae06b74ee6f77933638c644ef9a747cf2f0faf9da571d10f18ffbec",
+      "status": "completed",
+      "task_id": "681b3aeb"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "e736c81e3ec3d73c496583ae56bdd2656a0235156247fe5ec7414d20cbc332c8",
+      "status": "completed",
+      "task_id": "465b7d93"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "b7812e0b411ee83c0902f9f11245b0d9d1f7de8d49b61a00e9ec54def9c7ee90",
+      "status": "completed",
+      "task_id": "3ee1011a"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "44c0818b58516e36e4ad2e59c5aba92eaeb1c93b8d19291cb72a60723b22ed9e",
+      "status": "completed",
+      "task_id": "1e81d6f9"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "d8a9c42c78a9932c703414d243175e23fc2548341dfeb08e7f1b0a609aee335d",
+      "status": "completed",
+      "task_id": "b7256dcd"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "c33ee6601f839159b57bdacb4261bc92580e4e264a4a02524baa9bff7e06aac2",
+      "status": "completed",
+      "task_id": "639f5a19"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "a6320447960b97f0b2f72c5a032c6077528125ba8c2712ae4060486bc1bf21e2",
+      "status": "completed",
+      "task_id": "b60334d2"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "ba37b88471f317b10b4ddba46b9ab0607a2a294a8200cdce061eadab9890afe6",
+      "status": "completed",
+      "task_id": "3b4c2228"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "a45e2b5affdd24ec77b52a7371946a78e1127a0e4d8ba3c56a28519ef56ee6ec",
+      "status": "completed",
+      "task_id": "e39e9282"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "6fef476da7233b97bd26e86da582c50b7536d57d81995bd4fa7c3331911fc31b",
+      "status": "completed",
+      "task_id": "d94c3b52"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "73380e977e910b40ffbe4fb2ee8fb6c8c5ce74ff245dbcd34d7272913c77e3b2",
+      "status": "completed",
+      "task_id": "6d0160f0"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "a3f086a47dfe8b97d9e489d1c75f02076821797ee3ea42d334d3fc326f579f6c",
+      "status": "completed",
+      "task_id": "2dee498d"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "cad5fd0025bc1bffb715e3e681d44d1ae8a5fa73e342e718afdd65cdcb5f3e75",
+      "status": "completed",
+      "task_id": "e4075551"
+    },
+    {
+      "accepted_examples": 6,
+      "candidate_cap_reached": false,
+      "exact_candidate_count": 0,
+      "report_sha256": "3d5241e876c9c185c9c696625c41aa1c01c83091b8af54279a68b1d6e07c3f45",
+      "status": "completed",
+      "task_id": "05f2a901"
+    }
+  ],
+  "totals": {
+    "accepted_examples": 120,
+    "concrete_candidates_tested": 2551920,
+    "exact_candidates": 136,
+    "generation_attempts": 120,
+    "generation_failures": 0,
+    "generation_timeouts": 0,
+    "identity_candidates_rejected": 70324,
+    "runtime_invalid_candidates": 1423517
+  },
+  "validation_task_count": 20,
+  "verifier_cosynthesis_completed": false,
+  "world_level_breakthrough": false
+}

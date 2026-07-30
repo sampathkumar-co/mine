@@ -1,0 +1,14 @@
+{
+  "schema": "lexigen-v30-exact-memoized-recovery-equivalence-v1",
+  "task_id": "469497ad",
+  "source_workflow_run_id": 30479425040,
+  "source_artifact_id": 8735038540,
+  "expected_report_sha256": "1b881e32562e7daa3c3ebac5523ce5dad0c6be48b439e33b36c83db01e9ecd11",
+  "recovered_report_sha256": "1b881e32562e7daa3c3ebac5523ce5dad0c6be48b439e33b36c83db01e9ecd11",
+  "byte_identical": true,
+  "observed_runtime_seconds": 9.34,
+  "candidate_sequence_sha256": "50a604639fef3158bbd2821afdf2f6f2d5562ea5d6eecb7fd5f0e8563661cd25",
+  "scientific_protocol_changed": false,
+  "recovery_authorized": true,
+  "world_level_breakthrough": false
+}
