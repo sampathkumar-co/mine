@@ -19,11 +19,24 @@
       "partition_signature_fallback_activated": true
     }
   },
-  "scientific_hypothesis": "The remaining zero-candidate case is not caused by query-count limits or exact duplicate response signatures. It may require candidates defined by compositional relations among query responses. A deterministic closure system built from label-free implication and equivalence relations over allowed-row response vectors can expose structurally redundant remaining-query sets that neither seeded sampling nor exact-signature grouping can generate.",
+  "scientific_hypothesis": "The remaining zero-candidate case is not caused by query-count limits or exact duplicate response signatures. It may require candidates defined by compositional relations among query outcomes. A deterministic closure system built from label-free implication and equivalence relations over outcome-membership atoms can expose structurally redundant remaining-query sets that neither seeded sampling nor exact-signature grouping can generate.",
   "single_allowed_algorithmic_change": {
     "name": "response_lattice_closure_generator",
     "scope": "state generation only",
-    "description": "For each allowed-row set, represent every compiled query by its Boolean response vector. Construct a finite closure system using only exact structural relations: equivalence q_i=q_j, implication q_i=>q_j, incompatibility q_i AND q_j=0, and deterministic intersections of implication-closed generator sets. Emit remaining-query masks only from nontrivial closed sets and their deterministic minimal generators. Rank candidates by a SHA-256 digest of task shape, allowed mask, closed mask, and generator mask.",
+    "response_encoding": {
+      "unit": "For every frozen compiled query q and every outcome token emitted by the frozen compiler for q, create one Boolean atom (q, outcome) whose value on a row is 1 exactly when that row has that emitted outcome for q.",
+      "multi_outcome_rule": "All compiler-emitted outcomes are represented one-vs-rest; no outcome is selected as privileged and no outcome is discarded.",
+      "missing_value_rule": "The compiler-emitted missing token is an ordinary explicit outcome atom, treated identically to le, gt, categorical, and other exact outcome tokens.",
+      "query_projection_rule": "Closure is computed over outcome atoms, but a remaining-query candidate may contain q only when the closed atom set contains the complete atom block for q. Partial outcome blocks are never emitted. Minimal generators are likewise projected to query units only when block-complete.",
+      "frozen_source": "Outcome tokens and row assignments come only from the unchanged compiled task representation; raw features are not re-read or reinterpreted."
+    },
+    "description": "For each allowed-row set, encode compiler-emitted query outcomes as frozen Boolean membership atoms. Construct a finite closure system using only exact structural relations: atom equivalence, implication, incompatibility, and deterministic intersections of implication-closed generator sets. Emit remaining-query masks only from nontrivial block-complete closed sets and block-complete minimal generators.",
+    "canonical_ranking": {
+      "candidate_key": "Serialize the candidate without query indices as: task row count, allowed-row membership vector, sorted multiset of complete query-block signatures, and sorted multiset of generator-block signatures. A query-block signature is the lexicographically sorted tuple of its outcome-atom Boolean vectors over allowed rows. Hash this canonical serialization with SHA-256.",
+      "deduplication": "Candidates with identical canonical serialization are one structural candidate, regardless of query names, query indices, or outcome-token spelling.",
+      "truncation": "Sort unique candidates by the canonical serialization bytes, using SHA-256 only as an integrity digest, and retain the first unchanged maximum-state count. Because neither serialization nor ordering contains query indices, renaming or permuting queries must produce the correspondingly permuted retained set.",
+      "tie_rule": "Canonical-equal candidates are deduplicated before truncation; no index-based tie breaker is permitted."
+    },
     "activation": "Only when the unchanged v0.84 selector returns zero states.",
     "forbidden_inputs": [
       "dataset name or identifier",
@@ -32,11 +45,12 @@
       "solver costs or plans",
       "plain or bounded solver outcomes",
       "previous acceptance verdict",
-      "manually selected dataset-specific constants"
+      "manually selected dataset-specific constants",
+      "query indices or outcome-token spelling in candidate ranking"
     ],
     "unchanged_components": [
       "dataset bytes and adapters",
-      "task compiler",
+      "task compiler and its outcome tokens",
       "conditioned-cell construction",
       "Python exact planners",
       "independent Rust solver",
@@ -53,6 +67,9 @@
     "determinism_mismatches": 0,
     "label_independence_mismatches": 0,
     "permutation_equivariance_mismatches": 0,
+    "outcome_token_renaming_mismatches": 0,
+    "missing_outcome_handling_mismatches": 0,
+    "partial_query_block_emissions": 0,
     "closure_idempotence_mismatches": 0,
     "closure_extensivity_mismatches": 0,
     "closure_monotonicity_mismatches": 0,
@@ -60,9 +77,10 @@
     "solver_or_threshold_changes": 0
   },
   "implementation_order": [
-    "implement pure response-relation and closure helpers",
-    "test closure axioms on exhaustive small Boolean matrices",
-    "test determinism, label independence, and query-permutation equivariance",
+    "implement pure outcome-atom encoding, block projection, response-relation, canonicalization, and closure helpers",
+    "test closure axioms on exhaustive small multi-outcome matrices including explicit missing outcomes",
+    "test determinism, label independence, query-permutation equivariance, and outcome-token-renaming invariance",
+    "test that no partial query outcome block can become an emitted candidate",
     "prove exact preservation of v0.84 state digests on already-contributing tasks",
     "run synthetic-only CI",
     "only after a green synthetic gate, add a separate opened-data development workflow"
@@ -75,6 +93,6 @@
     "bounded_expansion_regressions": 0,
     "threshold_source": "unchanged v0.82 preregistration"
   },
-  "negative_result_policy": "Every failed synthetic invariant, coverage gate, correctness gate, or performance threshold is retained permanently. No threshold or relation definition may be weakened after inspecting opened-data results.",
+  "negative_result_policy": "Every failed synthetic invariant, coverage gate, correctness gate, or performance threshold is retained permanently. No threshold, encoding, projection, relation definition, canonicalization, or truncation rule may be weakened after inspecting opened-data results.",
   "claim_boundary": "This is a preregistered opened-data development hypothesis. Passing it would not constitute untouched external validation, independent reproduction, a world-class result, or a general-AI breakthrough."
 }
