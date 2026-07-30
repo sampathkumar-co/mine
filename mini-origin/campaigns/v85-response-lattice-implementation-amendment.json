@@ -1,0 +1,47 @@
+{
+  "campaign": "mini-origin-v85-response-lattice-closure",
+  "status": "implementation_amendment_before_selector_integration_or_opened_data_evaluation",
+  "parent_commit": "b7f9c6fd997648e8f42dd85af460c606f3d97980",
+  "reason": {
+    "synthetic_only_finding": "The first executable atom-conjunction enumerator can obtain a block-complete closure primarily through incompatible outcome atoms with empty joint support. In the synthetic audit this yielded one trivial candidate containing every query, rather than a useful compositional closure.",
+    "scientific_interpretation": "A remaining-query state is a set of complete multi-outcome queries. Closure must therefore express when the complete responses of generator queries determine the complete response of another query, not when one conjunction of individual outcome atoms is inconsistent.",
+    "opened_dataset_accessed": false,
+    "solver_result_accessed": false
+  },
+  "frozen_correction": {
+    "name": "complete_query_functional_dependency_closure",
+    "definition": "For an allowed-row set, form the joint response partition induced by complete generator-query blocks. A target query is in the closure exactly when every joint generator cell is contained in one target-response cell.",
+    "equivalent_property": "The generator partition refines the target query partition.",
+    "response_encoding": "All compiler-emitted outcomes, including missing, remain represented symmetrically; outcome names and query indices are excluded from canonical ranking.",
+    "minimal_generators": "Enumerate query subsets exactly while the available-query count is within the unchanged maximum partition-class bound, deduplicate equal closures structurally, and retain the smallest index-free canonical generator.",
+    "representative_count": "The inherited structural-partition representative count is the cardinality of the minimal complete-query generator.",
+    "activation": "Synthetic constructor only until every amended invariant passes CI; production selector and PMLB evaluation remain disconnected."
+  },
+  "unchanged_components": [
+    "dataset bytes and adapters",
+    "task compiler and conditioned-cell construction",
+    "certified feature-only record and allowed-row samplers",
+    "Python exact planners and independent Rust solver",
+    "seeds and expansion budgets",
+    "minimum and maximum raw-query thresholds",
+    "minimum redundancy threshold",
+    "minimum and maximum partition-class thresholds",
+    "maximum states per task",
+    "all v0.82 scientific acceptance thresholds",
+    "permanent v0.82, v0.83, and v0.84 negative results"
+  ],
+  "amended_synthetic_gate": {
+    "query_closure_extensivity_mismatches": 0,
+    "query_closure_idempotence_mismatches": 0,
+    "query_closure_monotonicity_mismatches": 0,
+    "label_independence_mismatches": 0,
+    "query_permutation_equivariance_mismatches": 0,
+    "outcome_token_renaming_mismatches": 0,
+    "missing_outcome_handling_mismatches": 0,
+    "normal_contributing_task_state_digest_mismatches": 0,
+    "synthetic_zero_parent_state_construction_failures": 0,
+    "solver_or_threshold_changes": 0
+  },
+  "negative_result_policy": "Any failed amended invariant is retained. No opened-data evaluation may begin until this synthetic gate is green, and no scientific threshold may be weakened afterward.",
+  "claim_boundary": "This amendment corrects an implementation semantics defect found on synthetic data. It is not performance evidence, untouched external validation, independent reproduction, or a breakthrough."
+}
