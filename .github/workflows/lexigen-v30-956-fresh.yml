@@ -1,0 +1,68 @@
+name: Lexigen v30 9565186b Fresh Validation
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v30-956-fresh/**"
+      - ".github/workflows/lexigen-v30-956-fresh.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-frozen-validator:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce grammar and run pre-access tests
+        run: |
+          python lexigen-language-genesis/v30/grammar_v30.py
+          python -m compileall -q lexigen-language-genesis/v30-956-fresh
+          python lexigen-language-genesis/v30-956-fresh/test_fresh_v30_956.py
+
+  run-fresh-validation:
+    needs: test-frozen-validator
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce frozen grammar
+        run: python lexigen-language-genesis/v30/grammar_v30.py
+      - name: Run 1000 fixed fresh cases
+        run: |
+          python lexigen-language-genesis/v30-956-fresh/fresh_validate_v30_956.py \
+            --arcgen-root arcgen \
+            --output lexigen-language-genesis/v30-956-fresh/V30_956_FRESH_REPORT.json
+      - name: Require the frozen fresh gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("lexigen-language-genesis/v30-956-fresh/V30_956_FRESH_REPORT.json").read_text())
+          assert report["case_count"] == 1000
+          assert report["totals"]["passed_cases"] == 1000
+          assert report["fresh_gate_passed"] is True
+          assert report["world_level_breakthrough"] is False
+          print("FRESH_GATE_OK")
+          PY
+      - name: Upload fresh validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v30-9565186b-fresh-evidence
+          path: lexigen-language-genesis/v30-956-fresh/V30_956_FRESH_REPORT.json
+          if-no-files-found: error
+          retention-days: 90

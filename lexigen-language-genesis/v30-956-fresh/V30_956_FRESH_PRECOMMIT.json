@@ -1,0 +1,87 @@
+{
+  "schema": "lexigen-v30-9565186b-fresh-validation-precommit-v1",
+  "source_task_id": "9565186b",
+  "source_workflow_run_id": 30479425040,
+  "source_artifact": {
+    "id": 8734998973,
+    "name": "v30-validation-9565186b",
+    "digest": "sha256:1a2ae84cd5b1f832d8a14575e2b2dd4d2d0fdfbd53c7681c781870d6c44402f8"
+  },
+  "source_report_sha256": "d5d915d25c88e5a6dd4571627fc74c6cf048586e0624d7e725902d67254f4b4e",
+  "source_demonstration_sha256": "2cc959678f94cb2c6ab4fe55d52cdf17758465c5ad1cab09f4cb5771c77aba51",
+  "v30_precommit_sha256": "6969eebfb91c6609aaa076b7ea74d4bb93fb8931e11066f51c5c7f90e00c62a6",
+  "v30_grammar_sha256": "f1e4ab2f95f7bec0edd374c980c9cbcf48803e2c49fa7372a8128cdd2925c90b",
+  "v30_grammar_manifest_sha256": "e97e6ec6a543077adcb0c05d9a9c3c433e6eebaff4433bc0771d6a958d511dbc",
+  "source_enumeration": {
+    "concrete_candidates_tested": 127596,
+    "runtime_invalid_candidates": 79134,
+    "identity_candidates_rejected": 3507,
+    "exact_candidate_count": 136,
+    "candidate_cap_reached": false
+  },
+  "selection_rule": [
+    "maximum_depth",
+    "total_nodes",
+    "canonical_ast",
+    "parameter_assignment"
+  ],
+  "selected_candidate": {
+    "structural_index": 4,
+    "depth": 1,
+    "nodes": 4,
+    "ast_sha256": "165ddda73ec0467d33928df08b3a115dfd9c93f5f259cb90b13094c04bd7870a",
+    "concrete_program_sha256": "5bc7ccf73fa03eee67d7b5b894397ced698720af28d145bca38fe284f7186cb8",
+    "parameters": {"c0": 5},
+    "ast": {
+      "op": "paint",
+      "grid": {"op": "input_grid"},
+      "points": {"op": "non_background_points"},
+      "colour": {"op": "param_color", "name": "c0"}
+    }
+  },
+  "fresh_validation": {
+    "case_count": 1000,
+    "seed_namespace": "lexigen-v30-fresh",
+    "seed_rule": "uint32(first_16_hex(sha256(lexigen-v30-fresh:9565186b:<case_index>)))",
+    "case_indices": {"first": 0, "last": 999},
+    "generator_attempts_per_case": 1,
+    "per_generation_timeout_seconds": 5,
+    "replacement_cases_allowed": false,
+    "post_result_edits_allowed": false,
+    "all_case_indices_required": true
+  },
+  "runtime_agreement": {
+    "primary": "frozen v25 eval_ast runtime",
+    "independent": "direct background-preserving foreground recolor runtime",
+    "agreement_required_on_every_case": true
+  },
+  "independent_background_rule": "most frequent color; smaller color wins ties",
+  "independent_program_rule": "preserve every background cell and replace every non-background cell with color 5",
+  "relational_verifier": {
+    "derived_from_frozen_ast": true,
+    "checks": [
+      "output dimensions equal input dimensions",
+      "cells equal to inferred background are unchanged",
+      "cells not equal to inferred background equal 5",
+      "primary runtime output equals independent runtime output",
+      "both runtime outputs equal the generated target"
+    ],
+    "verifier_cosynthesis_required": true
+  },
+  "success_rule": {
+    "fresh_gate_passes_only_if": "all 1000 fixed case indices generate successfully and satisfy both runtimes and the relational verifier",
+    "fresh_gate_failure_on_any": [
+      "generation timeout",
+      "generation error",
+      "runtime disagreement",
+      "target mismatch",
+      "verifier rejection"
+    ]
+  },
+  "claim_boundary": {
+    "six_demo_fit": "public held-out synthesis event",
+    "fresh_1000_pass": "fresh-case validation on one public held-out identity",
+    "world_level_breakthrough": false,
+    "world_level_reason": "requires repeated task-level transfer and independent outside-human reproduction"
+  }
+}
