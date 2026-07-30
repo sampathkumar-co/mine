@@ -1,0 +1,1746 @@
+{
+  "dataset": "_deprecated_solar_flare_1",
+  "base_states": 12,
+  "profiled_states": 36,
+  "current_solved": 36,
+  "bounded_solved": 36,
+  "plan_mismatches": 0,
+  "bounded_regressions": 0,
+  "current_expansions": 14820,
+  "bounded_expansions": 6520,
+  "rows": [
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "0a180007ce48e06d657f27bd2629472fb482c6808f2713f344e2c09162331313",
+      "base_digest": "e0d002098f8e2074c56bfb1be123bdf46d8c9b1fed96031e6c1278e069006a83",
+      "allowed": 10429626685692532992761919390152510159002327893270089270532644912326913261026191677924174725378,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        251,
+        3431,
+        15,
+        1
+      ],
+      "bounded_plan": [
+        251,
+        3431,
+        15,
+        1
+      ],
+      "current_expansions": 585,
+      "bounded_expansions": 421,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 1238,
+        "memo_entries": 203,
+        "query_expansions": 421,
+        "memo_hits": 1035,
+        "raw_queries_considered": 5285,
+        "representative_queries_considered": 2541,
+        "dominated_queries_removed": 2744,
+        "bound_evaluations": 572,
+        "bound_pruned_queries": 151,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3480,
+      "plain_plan_metrics": [
+        251,
+        3431,
+        15
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 8.26603325415677
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "0ee81aaf87732a9b1c5e1597f0342b178f6c5dc381c91808b9802c1e29f9a002",
+      "base_digest": "cba640a56e2d9c17679cc14d5aa485150d91eee34b8d89df8303a69dafc7fd09",
+      "allowed": 1942680009170923275877342044025674919820219747031822916048636604911645100332273532928,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        458,
+        4462,
+        30,
+        0
+      ],
+      "bounded_plan": [
+        458,
+        4462,
+        30,
+        0
+      ],
+      "current_expansions": 152,
+      "bounded_expansions": 35,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 91,
+        "memo_entries": 39,
+        "query_expansions": 35,
+        "memo_hits": 52,
+        "raw_queries_considered": 326,
+        "representative_queries_considered": 167,
+        "dominated_queries_removed": 159,
+        "bound_evaluations": 75,
+        "bound_pruned_queries": 40,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 530,
+      "plain_plan_metrics": [
+        458,
+        4462,
+        30
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 15.142857142857142
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "182fa045be9cf28b6e2fada1d9c31e4b0c577924e51c2fd3fa8c994036d8b65b",
+      "base_digest": "25a2221bc87520fcece7610455d2c4e6b76ce32c6cac15451a16cb93bc9c79d2",
+      "allowed": 1618243187224088882788970166709228477709748721935227045247554197042364071605672253326336,
+      "remaining": 3967,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        477,
+        5476,
+        26,
+        0
+      ],
+      "bounded_plan": [
+        477,
+        5476,
+        26,
+        0
+      ],
+      "current_expansions": 394,
+      "bounded_expansions": 78,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 216,
+        "memo_entries": 56,
+        "query_expansions": 78,
+        "memo_hits": 160,
+        "raw_queries_considered": 1036,
+        "representative_queries_considered": 449,
+        "dominated_queries_removed": 587,
+        "bound_evaluations": 138,
+        "bound_pruned_queries": 60,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 4298,
+      "plain_plan_metrics": [
+        477,
+        5476,
+        26
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 55.1025641025641
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "19cbdb311f2063327d46da710d744a689787237afc741ab0dd40fe6e56db7614",
+      "base_digest": "3452e63b0d0972bca4d7cea0e14adbb0476f2162a537021a9174b303f9d19221",
+      "allowed": 135973148017057237365725429802520074632886363612430816855351248179163791744538801963286921216,
+      "remaining": 4031,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        506,
+        6873,
+        24,
+        0
+      ],
+      "bounded_plan": [
+        506,
+        6873,
+        24,
+        0
+      ],
+      "current_expansions": 821,
+      "bounded_expansions": 135,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 325,
+        "memo_entries": 95,
+        "query_expansions": 135,
+        "memo_hits": 230,
+        "raw_queries_considered": 1567,
+        "representative_queries_considered": 730,
+        "dominated_queries_removed": 837,
+        "bound_evaluations": 292,
+        "bound_pruned_queries": 157,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3896,
+      "plain_plan_metrics": [
+        506,
+        6873,
+        24
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 28.85925925925926
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "283086aca3941451352f126aaf6fa966a3853964ad0e16b4044881dbfc2d841d",
+      "base_digest": "7981e416c3348f1c3a8e3ad5c06c54b5b51d6c0c25567a3d8f593ffecd29efc8",
+      "allowed": 130370304428076002651535292144194892252645647375582764352754448256261893829948839434338238480,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        418,
+        2827,
+        10,
+        0
+      ],
+      "bounded_plan": [
+        418,
+        2827,
+        10,
+        0
+      ],
+      "current_expansions": 289,
+      "bounded_expansions": 2,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 8,
+        "memo_entries": 8,
+        "query_expansions": 2,
+        "memo_hits": 0,
+        "raw_queries_considered": 51,
+        "representative_queries_considered": 20,
+        "dominated_queries_removed": 31,
+        "bound_evaluations": 10,
+        "bound_pruned_queries": 8,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 1936,
+      "plain_plan_metrics": [
+        418,
+        2827,
+        10
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 968.0
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "2b3765bca15137095629d2e82c8902db022780adce539ec1d6cd60e60895ad21",
+      "base_digest": "e8cbe152dfb0ed402ca03d7ce3f71b7f5710dab2fc28cd528f2e611031b67c73",
+      "allowed": 16752583869382402140256564517846202996703351285568325305314108868536420832815802818309226774784,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        325,
+        6496,
+        46,
+        1
+      ],
+      "bounded_plan": [
+        325,
+        6496,
+        46,
+        1
+      ],
+      "current_expansions": 240,
+      "bounded_expansions": 206,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 591,
+        "memo_entries": 110,
+        "query_expansions": 206,
+        "memo_hits": 481,
+        "raw_queries_considered": 1778,
+        "representative_queries_considered": 857,
+        "dominated_queries_removed": 921,
+        "bound_evaluations": 239,
+        "bound_pruned_queries": 33,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 1265,
+      "plain_plan_metrics": [
+        325,
+        6496,
+        46
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 6.140776699029126
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "3a5223d7f48f1a56a845a629826861e4f7d222fc0f59053c6a51410d6cbb577a",
+      "base_digest": "d07f8ce9a33550413aa50fcece142c1367f4be271af51b3a1af71c654bc47ced",
+      "allowed": 1989293912734675880303990176069888184551732879860755373915812306040080130881130474768392,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        316,
+        5101,
+        27,
+        0
+      ],
+      "bounded_plan": [
+        316,
+        5101,
+        27,
+        0
+      ],
+      "current_expansions": 288,
+      "bounded_expansions": 236,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 620,
+        "memo_entries": 112,
+        "query_expansions": 236,
+        "memo_hits": 508,
+        "raw_queries_considered": 2091,
+        "representative_queries_considered": 1088,
+        "dominated_queries_removed": 1003,
+        "bound_evaluations": 279,
+        "bound_pruned_queries": 43,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 2360,
+      "plain_plan_metrics": [
+        316,
+        5101,
+        27
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 10.0
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "3df8caefb6e57472c1d8ef20b3dfeb21912812962095dcf433424242fe5cf51f",
+      "base_digest": "a64ab12fca84fe4449dad2cba10a146b3ac4f17c754d6af66bd9afb51deae43e",
+      "allowed": 130370304428076928083627807098692241801060848366756505567911623270877056695772855617498284056,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        501,
+        6330,
+        30,
+        0
+      ],
+      "bounded_plan": [
+        501,
+        6330,
+        30,
+        0
+      ],
+      "current_expansions": 97,
+      "bounded_expansions": 47,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 122,
+        "memo_entries": 43,
+        "query_expansions": 47,
+        "memo_hits": 79,
+        "raw_queries_considered": 374,
+        "representative_queries_considered": 200,
+        "dominated_queries_removed": 174,
+        "bound_evaluations": 73,
+        "bound_pruned_queries": 26,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 258,
+      "plain_plan_metrics": [
+        501,
+        6330,
+        30
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 5.48936170212766
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "45b272bd55934c49fb415d2b9abe86ca2226f6745177915c8d21ecabdfcb3650",
+      "base_digest": "4e0f0b74ff82b380aa3182306220de22b568578565685c42c0ef343e95700dd4",
+      "allowed": 248723275176570407205430273604368432234441622600945294722538731789524256547602603966497,
+      "remaining": 4087,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        337,
+        3927,
+        23,
+        0
+      ],
+      "bounded_plan": [
+        337,
+        3927,
+        23,
+        0
+      ],
+      "current_expansions": 429,
+      "bounded_expansions": 21,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 62,
+        "memo_entries": 40,
+        "query_expansions": 21,
+        "memo_hits": 22,
+        "raw_queries_considered": 251,
+        "representative_queries_considered": 80,
+        "dominated_queries_removed": 171,
+        "bound_evaluations": 60,
+        "bound_pruned_queries": 39,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 2848,
+      "plain_plan_metrics": [
+        337,
+        3927,
+        23
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 135.61904761904762
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "51be5810908a9f27a4ac3b09c24c6f303a56bab936616ee052892f1cf9be2415",
+      "base_digest": "fa846e276a758af1e6582f50e8569f3060dfede860bfb271ab066a94d08b1ce0",
+      "allowed": 15191922337626003787323959542421414795355640524489240112578569145751724904486543368,
+      "remaining": 4087,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        407,
+        8378,
+        46,
+        0
+      ],
+      "bounded_plan": [
+        407,
+        8378,
+        46,
+        0
+      ],
+      "current_expansions": 630,
+      "bounded_expansions": 337,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 904,
+        "memo_entries": 168,
+        "query_expansions": 337,
+        "memo_hits": 736,
+        "raw_queries_considered": 3921,
+        "representative_queries_considered": 1823,
+        "dominated_queries_removed": 2098,
+        "bound_evaluations": 553,
+        "bound_pruned_queries": 216,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3606,
+      "plain_plan_metrics": [
+        407,
+        8378,
+        46
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 10.700296735905045
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "535d1c7c8f7fd14e8627685c0e445b4f6be57078a812d3636f2f254417d892fc",
+      "base_digest": "8d5eed70eab4dfe60299306bc9aa145dbb13fc11e7f65ccb46932bd9a97bbd62",
+      "allowed": 2087969863997333070905791981811515166988856091927998926148335851910451456207209922200351015936,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        387,
+        4553,
+        31,
+        0
+      ],
+      "bounded_plan": [
+        387,
+        4553,
+        31,
+        0
+      ],
+      "current_expansions": 224,
+      "bounded_expansions": 43,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 142,
+        "memo_entries": 47,
+        "query_expansions": 43,
+        "memo_hits": 95,
+        "raw_queries_considered": 534,
+        "representative_queries_considered": 256,
+        "dominated_queries_removed": 278,
+        "bound_evaluations": 80,
+        "bound_pruned_queries": 37,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 946,
+      "plain_plan_metrics": [
+        387,
+        4553,
+        31
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 22.0
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "55a5851bb13840de353cd8338925edc007f443920f842b516966f982e5d30563",
+      "base_digest": "8d5eed70eab4dfe60299306bc9aa145dbb13fc11e7f65ccb46932bd9a97bbd62",
+      "allowed": 2087969863997333070905791981811515166988856091927998926148335851910451456207209922200351015936,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        414,
+        7719,
+        35,
+        0
+      ],
+      "bounded_plan": [
+        414,
+        7719,
+        35,
+        0
+      ],
+      "current_expansions": 225,
+      "bounded_expansions": 73,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 244,
+        "memo_entries": 67,
+        "query_expansions": 73,
+        "memo_hits": 177,
+        "raw_queries_considered": 884,
+        "representative_queries_considered": 392,
+        "dominated_queries_removed": 492,
+        "bound_evaluations": 133,
+        "bound_pruned_queries": 60,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 946,
+      "plain_plan_metrics": [
+        414,
+        7719,
+        35
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 12.95890410958904
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "576317ab2bfe36d708edafbb70ffe4c692d6dd8c890395eab70a6889ec057b57",
+      "base_digest": "d07f8ce9a33550413aa50fcece142c1367f4be271af51b3a1af71c654bc47ced",
+      "allowed": 1989293912734675880303990176069888184551732879860755373915812306040080130881130474768392,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        426,
+        8382,
+        39,
+        0
+      ],
+      "bounded_plan": [
+        426,
+        8382,
+        39,
+        0
+      ],
+      "current_expansions": 281,
+      "bounded_expansions": 243,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 628,
+        "memo_entries": 113,
+        "query_expansions": 243,
+        "memo_hits": 515,
+        "raw_queries_considered": 2099,
+        "representative_queries_considered": 1082,
+        "dominated_queries_removed": 1017,
+        "bound_evaluations": 275,
+        "bound_pruned_queries": 32,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 2360,
+      "plain_plan_metrics": [
+        426,
+        8382,
+        39
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 9.7119341563786
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "5d2b62a513ef6ad27b9eff7c8166bb2371dc06759da2bdad22f714452d04b250",
+      "base_digest": "cba640a56e2d9c17679cc14d5aa485150d91eee34b8d89df8303a69dafc7fd09",
+      "allowed": 1942680009170923275877342044025674919820219747031822916048636604911645100332273532928,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        378,
+        3375,
+        18,
+        0
+      ],
+      "bounded_plan": [
+        378,
+        3375,
+        18,
+        0
+      ],
+      "current_expansions": 147,
+      "bounded_expansions": 7,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 17,
+        "memo_entries": 16,
+        "query_expansions": 7,
+        "memo_hits": 1,
+        "raw_queries_considered": 57,
+        "representative_queries_considered": 26,
+        "dominated_queries_removed": 31,
+        "bound_evaluations": 19,
+        "bound_pruned_queries": 12,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 530,
+      "plain_plan_metrics": [
+        378,
+        3375,
+        18
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 75.71428571428571
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "641f80ce1cdda9406d82089e96161beaa4678a9a418c5d6cef241e8a1578b771",
+      "base_digest": "d07f8ce9a33550413aa50fcece142c1367f4be271af51b3a1af71c654bc47ced",
+      "allowed": 1989293912734675880303990176069888184551732879860755373915812306040080130881130474768392,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        423,
+        7862,
+        36,
+        0
+      ],
+      "bounded_plan": [
+        423,
+        7862,
+        36,
+        0
+      ],
+      "current_expansions": 285,
+      "bounded_expansions": 241,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 627,
+        "memo_entries": 114,
+        "query_expansions": 241,
+        "memo_hits": 513,
+        "raw_queries_considered": 2098,
+        "representative_queries_considered": 1086,
+        "dominated_queries_removed": 1012,
+        "bound_evaluations": 281,
+        "bound_pruned_queries": 40,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 2360,
+      "plain_plan_metrics": [
+        423,
+        7862,
+        36
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 9.792531120331951
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "670192c311be6038e0553124a569c9ebcf14e40eb9c0569ea62ad46df99b29bf",
+      "base_digest": "a64ab12fca84fe4449dad2cba10a146b3ac4f17c754d6af66bd9afb51deae43e",
+      "allowed": 130370304428076928083627807098692241801060848366756505567911623270877056695772855617498284056,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        387,
+        5493,
+        33,
+        0
+      ],
+      "bounded_plan": [
+        387,
+        5493,
+        33,
+        0
+      ],
+      "current_expansions": 100,
+      "bounded_expansions": 22,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 65,
+        "memo_entries": 34,
+        "query_expansions": 22,
+        "memo_hits": 31,
+        "raw_queries_considered": 184,
+        "representative_queries_considered": 84,
+        "dominated_queries_removed": 100,
+        "bound_evaluations": 46,
+        "bound_pruned_queries": 24,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 258,
+      "plain_plan_metrics": [
+        387,
+        5493,
+        33
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 11.727272727272727
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "689685ed4fd8428b5522ce93e2337359436de2bac9f4045f68168224cd7c174f",
+      "base_digest": "3452e63b0d0972bca4d7cea0e14adbb0476f2162a537021a9174b303f9d19221",
+      "allowed": 135973148017057237365725429802520074632886363612430816855351248179163791744538801963286921216,
+      "remaining": 4031,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        354,
+        4306,
+        23,
+        0
+      ],
+      "bounded_plan": [
+        354,
+        4306,
+        23,
+        0
+      ],
+      "current_expansions": 833,
+      "bounded_expansions": 86,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 214,
+        "memo_entries": 84,
+        "query_expansions": 86,
+        "memo_hits": 130,
+        "raw_queries_considered": 903,
+        "representative_queries_considered": 396,
+        "dominated_queries_removed": 507,
+        "bound_evaluations": 229,
+        "bound_pruned_queries": 143,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3896,
+      "plain_plan_metrics": [
+        354,
+        4306,
+        23
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 45.30232558139535
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "6febbc863178aa315f82001d1de759657b8cd075a72372221d9951524f61923f",
+      "base_digest": "25a2221bc87520fcece7610455d2c4e6b76ce32c6cac15451a16cb93bc9c79d2",
+      "allowed": 1618243187224088882788970166709228477709748721935227045247554197042364071605672253326336,
+      "remaining": 3967,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        356,
+        3831,
+        19,
+        0
+      ],
+      "bounded_plan": [
+        356,
+        3831,
+        19,
+        0
+      ],
+      "current_expansions": 399,
+      "bounded_expansions": 29,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 84,
+        "memo_entries": 43,
+        "query_expansions": 29,
+        "memo_hits": 41,
+        "raw_queries_considered": 329,
+        "representative_queries_considered": 121,
+        "dominated_queries_removed": 208,
+        "bound_evaluations": 77,
+        "bound_pruned_queries": 48,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 4298,
+      "plain_plan_metrics": [
+        356,
+        3831,
+        19
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 148.20689655172413
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "87dc885595f70f2e2670c0d9beb5075b44c87b6e7db12063d7369b095db09f21",
+      "base_digest": "a64ab12fca84fe4449dad2cba10a146b3ac4f17c754d6af66bd9afb51deae43e",
+      "allowed": 130370304428076928083627807098692241801060848366756505567911623270877056695772855617498284056,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        455,
+        4476,
+        18,
+        0
+      ],
+      "bounded_plan": [
+        455,
+        4476,
+        18,
+        0
+      ],
+      "current_expansions": 101,
+      "bounded_expansions": 22,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 62,
+        "memo_entries": 34,
+        "query_expansions": 22,
+        "memo_hits": 28,
+        "raw_queries_considered": 174,
+        "representative_queries_considered": 79,
+        "dominated_queries_removed": 95,
+        "bound_evaluations": 51,
+        "bound_pruned_queries": 29,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 258,
+      "plain_plan_metrics": [
+        455,
+        4476,
+        18
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 11.727272727272727
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "950894b88428b042ade75851e5fbdbed52e69fe1ea5260aa13d2fa4883eb9fb9",
+      "base_digest": "25a2221bc87520fcece7610455d2c4e6b76ce32c6cac15451a16cb93bc9c79d2",
+      "allowed": 1618243187224088882788970166709228477709748721935227045247554197042364071605672253326336,
+      "remaining": 3967,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        352,
+        6079,
+        31,
+        0
+      ],
+      "bounded_plan": [
+        352,
+        6079,
+        31,
+        0
+      ],
+      "current_expansions": 390,
+      "bounded_expansions": 57,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 155,
+        "memo_entries": 49,
+        "query_expansions": 57,
+        "memo_hits": 106,
+        "raw_queries_considered": 671,
+        "representative_queries_considered": 274,
+        "dominated_queries_removed": 397,
+        "bound_evaluations": 121,
+        "bound_pruned_queries": 64,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 4298,
+      "plain_plan_metrics": [
+        352,
+        6079,
+        31
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 75.40350877192982
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "972bd7933ab1729d3a3e7b896645f7732a2bea80a79d0ba1b0b30d6509345ea4",
+      "base_digest": "7981e416c3348f1c3a8e3ad5c06c54b5b51d6c0c25567a3d8f593ffecd29efc8",
+      "allowed": 130370304428076002651535292144194892252645647375582764352754448256261893829948839434338238480,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        358,
+        3532,
+        16,
+        0
+      ],
+      "bounded_plan": [
+        358,
+        3532,
+        16,
+        0
+      ],
+      "current_expansions": 288,
+      "bounded_expansions": 2,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 8,
+        "memo_entries": 8,
+        "query_expansions": 2,
+        "memo_hits": 0,
+        "raw_queries_considered": 51,
+        "representative_queries_considered": 18,
+        "dominated_queries_removed": 33,
+        "bound_evaluations": 10,
+        "bound_pruned_queries": 8,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 1936,
+      "plain_plan_metrics": [
+        358,
+        3532,
+        16
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 968.0
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "a5bc2225b78346d820b5aea8f07df17d2fa5f7e35b6323235905c6dfa15900de",
+      "base_digest": "4e0f0b74ff82b380aa3182306220de22b568578565685c42c0ef343e95700dd4",
+      "allowed": 248723275176570407205430273604368432234441622600945294722538731789524256547602603966497,
+      "remaining": 4087,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        414,
+        8317,
+        27,
+        0
+      ],
+      "bounded_plan": [
+        414,
+        8317,
+        27,
+        0
+      ],
+      "current_expansions": 434,
+      "bounded_expansions": 114,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 341,
+        "memo_entries": 92,
+        "query_expansions": 114,
+        "memo_hits": 249,
+        "raw_queries_considered": 1551,
+        "representative_queries_considered": 652,
+        "dominated_queries_removed": 899,
+        "bound_evaluations": 253,
+        "bound_pruned_queries": 139,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 2848,
+      "plain_plan_metrics": [
+        414,
+        8317,
+        27
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 24.982456140350877
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "a815660ab7b15c8b997d0e3f43b66110ace04af09fc77e0ca431682c51100d49",
+      "base_digest": "fa846e276a758af1e6582f50e8569f3060dfede860bfb271ab066a94d08b1ce0",
+      "allowed": 15191922337626003787323959542421414795355640524489240112578569145751724904486543368,
+      "remaining": 4087,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        345,
+        4898,
+        32,
+        0
+      ],
+      "bounded_plan": [
+        345,
+        4898,
+        32,
+        0
+      ],
+      "current_expansions": 630,
+      "bounded_expansions": 192,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 521,
+        "memo_entries": 112,
+        "query_expansions": 192,
+        "memo_hits": 409,
+        "raw_queries_considered": 2287,
+        "representative_queries_considered": 1007,
+        "dominated_queries_removed": 1280,
+        "bound_evaluations": 316,
+        "bound_pruned_queries": 124,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3606,
+      "plain_plan_metrics": [
+        345,
+        4898,
+        32
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 18.78125
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "a8d80693fbb8965e0e6be07bf50999db82ba2e88aa6733535d44caf0bbd02c94",
+      "base_digest": "3ec7bb541c6518950c8fdea10ed7dd2d07f22df82c47b86847b783d306c555a7",
+      "allowed": 16818788533252216505348433290915838995627888894914752034684425636376004734105887378038079898242,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        438,
+        5940,
+        25,
+        1
+      ],
+      "bounded_plan": [
+        438,
+        5940,
+        25,
+        1
+      ],
+      "current_expansions": 788,
+      "bounded_expansions": 639,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 1912,
+        "memo_entries": 206,
+        "query_expansions": 639,
+        "memo_hits": 1706,
+        "raw_queries_considered": 9788,
+        "representative_queries_considered": 4360,
+        "dominated_queries_removed": 5428,
+        "bound_evaluations": 788,
+        "bound_pruned_queries": 149,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 6088,
+      "plain_plan_metrics": [
+        438,
+        5940,
+        25
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 9.52738654147105
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "a8eb4fa647a8392a7d03f61de013bf6a017e26ee843d3d97f550cb153211a4b6",
+      "base_digest": "e0d002098f8e2074c56bfb1be123bdf46d8c9b1fed96031e6c1278e069006a83",
+      "allowed": 10429626685692532992761919390152510159002327893270089270532644912326913261026191677924174725378,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        309,
+        3719,
+        19,
+        1
+      ],
+      "bounded_plan": [
+        309,
+        3719,
+        19,
+        1
+      ],
+      "current_expansions": 579,
+      "bounded_expansions": 447,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 1275,
+        "memo_entries": 213,
+        "query_expansions": 447,
+        "memo_hits": 1062,
+        "raw_queries_considered": 5400,
+        "representative_queries_considered": 2585,
+        "dominated_queries_removed": 2815,
+        "bound_evaluations": 573,
+        "bound_pruned_queries": 126,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3480,
+      "plain_plan_metrics": [
+        309,
+        3719,
+        19
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 7.785234899328859
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "b461cca14149d8d81cc68dfbcc78818d7d6ee49f73becd40af374c24b711ca39",
+      "base_digest": "7981e416c3348f1c3a8e3ad5c06c54b5b51d6c0c25567a3d8f593ffecd29efc8",
+      "allowed": 130370304428076002651535292144194892252645647375582764352754448256261893829948839434338238480,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        417,
+        3335,
+        11,
+        0
+      ],
+      "bounded_plan": [
+        417,
+        3335,
+        11,
+        0
+      ],
+      "current_expansions": 287,
+      "bounded_expansions": 8,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 27,
+        "memo_entries": 20,
+        "query_expansions": 8,
+        "memo_hits": 7,
+        "raw_queries_considered": 148,
+        "representative_queries_considered": 50,
+        "dominated_queries_removed": 98,
+        "bound_evaluations": 31,
+        "bound_pruned_queries": 23,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 1936,
+      "plain_plan_metrics": [
+        417,
+        3335,
+        11
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 242.0
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "b8b9a93c90bb2b17cb1eefcdd00d9ed84b572f1941a60114a96e2fb90967975c",
+      "base_digest": "3452e63b0d0972bca4d7cea0e14adbb0476f2162a537021a9174b303f9d19221",
+      "allowed": 135973148017057237365725429802520074632886363612430816855351248179163791744538801963286921216,
+      "remaining": 4031,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        367,
+        8610,
+        44,
+        0
+      ],
+      "bounded_plan": [
+        367,
+        8610,
+        44,
+        0
+      ],
+      "current_expansions": 825,
+      "bounded_expansions": 451,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 1123,
+        "memo_entries": 217,
+        "query_expansions": 451,
+        "memo_hits": 906,
+        "raw_queries_considered": 5041,
+        "representative_queries_considered": 2369,
+        "dominated_queries_removed": 2672,
+        "bound_evaluations": 764,
+        "bound_pruned_queries": 313,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3896,
+      "plain_plan_metrics": [
+        367,
+        8610,
+        44
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 8.638580931263858
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "b8e1c47a4fd6b6130f890a47d542ca7c16aac288787244ee9c0e9d6ab9e6e096",
+      "base_digest": "8d5eed70eab4dfe60299306bc9aa145dbb13fc11e7f65ccb46932bd9a97bbd62",
+      "allowed": 2087969863997333070905791981811515166988856091927998926148335851910451456207209922200351015936,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        389,
+        4457,
+        21,
+        0
+      ],
+      "bounded_plan": [
+        389,
+        4457,
+        21,
+        0
+      ],
+      "current_expansions": 225,
+      "bounded_expansions": 17,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 53,
+        "memo_entries": 35,
+        "query_expansions": 17,
+        "memo_hits": 18,
+        "raw_queries_considered": 175,
+        "representative_queries_considered": 66,
+        "dominated_queries_removed": 109,
+        "bound_evaluations": 41,
+        "bound_pruned_queries": 24,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 946,
+      "plain_plan_metrics": [
+        389,
+        4457,
+        21
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 55.64705882352941
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "bafd76453ac724c8152a9b4c531dc2981e9225ad4e2603901a3d9c14824bea56",
+      "base_digest": "fa846e276a758af1e6582f50e8569f3060dfede860bfb271ab066a94d08b1ce0",
+      "allowed": 15191922337626003787323959542421414795355640524489240112578569145751724904486543368,
+      "remaining": 4087,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        469,
+        6455,
+        25,
+        0
+      ],
+      "bounded_plan": [
+        469,
+        6455,
+        25,
+        0
+      ],
+      "current_expansions": 616,
+      "bounded_expansions": 86,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 222,
+        "memo_entries": 79,
+        "query_expansions": 86,
+        "memo_hits": 143,
+        "raw_queries_considered": 906,
+        "representative_queries_considered": 385,
+        "dominated_queries_removed": 521,
+        "bound_evaluations": 188,
+        "bound_pruned_queries": 102,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3606,
+      "plain_plan_metrics": [
+        469,
+        6455,
+        25
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 41.93023255813954
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "cb3d4b7cd1ea47ec6c6788c98878dc808edf1042dcfef7e3d4e245af22fb7936",
+      "base_digest": "3ec7bb541c6518950c8fdea10ed7dd2d07f22df82c47b86847b783d306c555a7",
+      "allowed": 16818788533252216505348433290915838995627888894914752034684425636376004734105887378038079898242,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        333,
+        4642,
+        26,
+        1
+      ],
+      "bounded_plan": [
+        333,
+        4642,
+        26,
+        1
+      ],
+      "current_expansions": 786,
+      "bounded_expansions": 640,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 1901,
+        "memo_entries": 206,
+        "query_expansions": 640,
+        "memo_hits": 1695,
+        "raw_queries_considered": 9759,
+        "representative_queries_considered": 4414,
+        "dominated_queries_removed": 5345,
+        "bound_evaluations": 786,
+        "bound_pruned_queries": 146,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 6088,
+      "plain_plan_metrics": [
+        333,
+        4642,
+        26
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 9.5125
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6002,
+      "state_digest": "d45331e2c3f3632126221af3570070a8830e134afb65107866a39955f51b2e26",
+      "base_digest": "e8cbe152dfb0ed402ca03d7ce3f71b7f5710dab2fc28cd528f2e611031b67c73",
+      "allowed": 16752583869382402140256564517846202996703351285568325305314108868536420832815802818309226774784,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        305,
+        5244,
+        27,
+        1
+      ],
+      "bounded_plan": [
+        305,
+        5244,
+        27,
+        1
+      ],
+      "current_expansions": 241,
+      "bounded_expansions": 208,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 599,
+        "memo_entries": 111,
+        "query_expansions": 208,
+        "memo_hits": 488,
+        "raw_queries_considered": 1799,
+        "representative_queries_considered": 878,
+        "dominated_queries_removed": 921,
+        "bound_evaluations": 241,
+        "bound_pruned_queries": 33,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 1265,
+      "plain_plan_metrics": [
+        305,
+        5244,
+        27
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 6.081730769230769
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "d61a2dce1742b21f20ca123711652a788e2554014301385c4db684708074d283",
+      "base_digest": "e8cbe152dfb0ed402ca03d7ce3f71b7f5710dab2fc28cd528f2e611031b67c73",
+      "allowed": 16752583869382402140256564517846202996703351285568325305314108868536420832815802818309226774784,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        302,
+        8317,
+        40,
+        1
+      ],
+      "bounded_plan": [
+        302,
+        8317,
+        40,
+        1
+      ],
+      "current_expansions": 242,
+      "bounded_expansions": 210,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 600,
+        "memo_entries": 111,
+        "query_expansions": 210,
+        "memo_hits": 489,
+        "raw_queries_considered": 1810,
+        "representative_queries_considered": 884,
+        "dominated_queries_removed": 926,
+        "bound_evaluations": 242,
+        "bound_pruned_queries": 32,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 1265,
+      "plain_plan_metrics": [
+        302,
+        8317,
+        40
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 6.023809523809524
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "d9a26590fe5473584783bc11265a696d12a27070214a4b97e6c4a563f9eb9664",
+      "base_digest": "e0d002098f8e2074c56bfb1be123bdf46d8c9b1fed96031e6c1278e069006a83",
+      "allowed": 10429626685692532992761919390152510159002327893270089270532644912326913261026191677924174725378,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        352,
+        8814,
+        40,
+        3
+      ],
+      "bounded_plan": [
+        352,
+        8814,
+        40,
+        3
+      ],
+      "current_expansions": 587,
+      "bounded_expansions": 442,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 1281,
+        "memo_entries": 201,
+        "query_expansions": 442,
+        "memo_hits": 1080,
+        "raw_queries_considered": 5458,
+        "representative_queries_considered": 2614,
+        "dominated_queries_removed": 2844,
+        "bound_evaluations": 579,
+        "bound_pruned_queries": 137,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 3480,
+      "plain_plan_metrics": [
+        352,
+        8814,
+        40
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 7.873303167420814
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "db2d10256b13a79b2dc83f7397409c25593102147dda2513a8185b972f0d949f",
+      "base_digest": "3ec7bb541c6518950c8fdea10ed7dd2d07f22df82c47b86847b783d306c555a7",
+      "allowed": 16818788533252216505348433290915838995627888894914752034684425636376004734105887378038079898242,
+      "remaining": 4063,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        395,
+        9580,
+        33,
+        0
+      ],
+      "bounded_plan": [
+        395,
+        9580,
+        33,
+        0
+      ],
+      "current_expansions": 792,
+      "bounded_expansions": 646,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 1905,
+        "memo_entries": 207,
+        "query_expansions": 646,
+        "memo_hits": 1698,
+        "raw_queries_considered": 9805,
+        "representative_queries_considered": 4431,
+        "dominated_queries_removed": 5374,
+        "bound_evaluations": 792,
+        "bound_pruned_queries": 146,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 6088,
+      "plain_plan_metrics": [
+        395,
+        9580,
+        33
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 9.424148606811146
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6003,
+      "state_digest": "e5b85e1724941c06a8eaadbcf58a4872d788dde5cfb7480eb68329256db18585",
+      "base_digest": "cba640a56e2d9c17679cc14d5aa485150d91eee34b8d89df8303a69dafc7fd09",
+      "allowed": 1942680009170923275877342044025674919820219747031822916048636604911645100332273532928,
+      "remaining": 3839,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        401,
+        4931,
+        26,
+        0
+      ],
+      "bounded_plan": [
+        401,
+        4931,
+        26,
+        0
+      ],
+      "current_expansions": 153,
+      "bounded_expansions": 11,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 31,
+        "memo_entries": 19,
+        "query_expansions": 11,
+        "memo_hits": 12,
+        "raw_queries_considered": 139,
+        "representative_queries_considered": 67,
+        "dominated_queries_removed": 72,
+        "bound_evaluations": 35,
+        "bound_pruned_queries": 24,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 530,
+      "plain_plan_metrics": [
+        401,
+        4931,
+        26
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 48.18181818181818
+    },
+    {
+      "task": "_deprecated_solar_flare_1",
+      "profile_seed": 6001,
+      "state_digest": "f3544e3bab60017297bcee947029cbd035ba8e5d093a2e77af1b901771759c2a",
+      "base_digest": "4e0f0b74ff82b380aa3182306220de22b568578565685c42c0ef343e95700dd4",
+      "allowed": 248723275176570407205430273604368432234441622600945294722538731789524256547602603966497,
+      "remaining": 4087,
+      "representatives": 6,
+      "current_solved": true,
+      "bounded_solved": true,
+      "plan_match": true,
+      "current_plan": [
+        347,
+        3841,
+        18,
+        0
+      ],
+      "bounded_plan": [
+        347,
+        3841,
+        18,
+        0
+      ],
+      "current_expansions": 437,
+      "bounded_expansions": 66,
+      "regression": false,
+      "bounded_stats": {
+        "calls": 205,
+        "memo_entries": 72,
+        "query_expansions": 66,
+        "memo_hits": 133,
+        "raw_queries_considered": 889,
+        "representative_queries_considered": 343,
+        "dominated_queries_removed": 546,
+        "bound_evaluations": 161,
+        "bound_pruned_queries": 95,
+        "impossible_full_diagnosis_prunes": 0
+      },
+      "plain_solved": true,
+      "plain_expansions_lower_bound": 2848,
+      "plain_plan_metrics": [
+        347,
+        3841,
+        18
+      ],
+      "plain_bounded_objective_match": true,
+      "plain_over_bounded_ratio": 43.15151515151515
+    }
+  ],
+  "elapsed_seconds": 1.136,
+  "plain_solved": 36,
+  "bounded_only": 0,
+  "plain_objective_mismatches": 0,
+  "plain_elapsed_seconds": 1.086
+}
