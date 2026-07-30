@@ -1,0 +1,66 @@
+{
+  "schema": "lexigen-v25-long-recovery-0dfd9992-precommit-v1",
+  "source_branch": "lexigen/language-genesis-v25-disk-backed-recovery",
+  "source_commit": "862b3b27d42cdb5e08f96d17fdc528b0ad6e3c65",
+  "target_task_id": "0dfd9992",
+  "v25_precommit_sha256": "8eeb6bb9e878d4849cf49cc741e3341fdc246015e3fb0569d7243557e0ec098b",
+  "recovery_precommit_sha256": "a28ffd9d7d2613888a4455292f62f3ffc2181a1594f1c61d427091c3e2de0420",
+  "recovery_equivalence_sha256": "773222037e4bb82bb1209608e87fa19a12a33454126c784947a5f1dcededc613",
+  "equivalence_report_sha256": "4d6b326e3f8334aa5d5542cae59344a76a1baa55b1734ddacd3a70c783440091",
+  "implementation_changes_allowed": false,
+  "scientific_protocol_changes_allowed": false,
+  "job_timeout_minutes": 180,
+  "previous_interruption": {
+    "workflow_run_id": 30473410882,
+    "job_id": 90661918955,
+    "previous_timeout_minutes": 40,
+    "scientific_result_produced": false
+  },
+  "immutable_original_reports": {
+    "workflow_run_id": 30467389946,
+    "expected_report_count": 37,
+    "artifact_pattern": "v25-discovery-*"
+  },
+  "immutable_recovered_reports": {
+    "workflow_run_id": 30473410882,
+    "expected_report_count": 2,
+    "artifact_pattern": "v25-disk-recovery-*",
+    "artifacts": [
+      {
+        "task_id": "6cf79266",
+        "artifact_id": 8733246066,
+        "digest": "sha256:b3ea7fdc4750e238ce1277aaa6cc84d7c722988e182f19f5a1d4e561e797242c"
+      },
+      {
+        "task_id": "319f2597",
+        "artifact_id": 8733079620,
+        "digest": "sha256:84e4fac5fe9bb34e67a8e33edd3a9d1bf57d2fe58fab6ec4c11d0c26812b48f2"
+      }
+    ]
+  },
+  "exact_denominator": {
+    "expected_task_count": 40,
+    "expected_original_report_count": 37,
+    "expected_prior_recovery_report_count": 2,
+    "expected_long_recovery_report_count": 1,
+    "aggregator": "lexigen-language-genesis/v25/aggregate_discovery_v25.py"
+  },
+  "unchanged_rules": [
+    "same task identity and generation seeds",
+    "same six accepted examples",
+    "same maximum depth 5",
+    "same per-type and total semantic-expression limits",
+    "same five-million raw candidate limit",
+    "same candidate ordering",
+    "same SQLite exact deduplication",
+    "same report schema and serialization",
+    "validation remains unopened unless the exact 40-task library is nonempty"
+  ],
+  "replacement_tasks_allowed": false,
+  "post_result_edits_allowed": false,
+  "claim_boundary": {
+    "purpose": "complete frozen v25 discovery denominator",
+    "heldout_validation_opened": false,
+    "world_level_breakthrough": false
+  }
+}

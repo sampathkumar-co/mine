@@ -1,0 +1,142 @@
+name: Lexigen v25 Final Long Recovery
+
+on:
+  pull_request:
+    paths:
+      - "lexigen-language-genesis/v25-long-recovery/**"
+      - ".github/workflows/lexigen-v25-long-recovery-0dfd9992.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-equivalence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and test frozen recovery engine
+        run: |
+          python -m py_compile lexigen-language-genesis/v25-recovery/*.py
+          python lexigen-language-genesis/v25-recovery/test_v25_recovery.py
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - name: Reproduce byte-identical first report
+        run: |
+          python lexigen-language-genesis/v25-recovery/scan_one_v25_recovery.py \
+            --arcgen-root arcgen \
+            --task-id c074846d \
+            --split discovery \
+            --output recovered-first.json
+          python lexigen-language-genesis/v25-recovery/verify_recovery_report.py recovered-first.json
+
+  recover-final-identity:
+    needs: verify-equivalence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned ARC-GEN
+        uses: actions/checkout@v4
+        with:
+          repository: google/ARC-GEN
+          ref: a15cbdb44c776610aeeb9f487a06af875d3d0878
+          path: arcgen
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run unchanged exact disk-backed recovery
+        run: |
+          python lexigen-language-genesis/v25-recovery/scan_one_v25_recovery.py \
+            --arcgen-root arcgen \
+            --task-id 0dfd9992 \
+            --split discovery \
+            --output task-0dfd9992.json
+      - name: Upload final recovered report
+        uses: actions/upload-artifact@v4
+        with:
+          name: v25-long-recovery-0dfd9992
+          path: task-0dfd9992.json
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate-exact-denominator:
+    needs: recover-final-identity
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download 37 immutable original reports
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: sampathkumar-co/mine
+          run-id: 30467389946
+          pattern: v25-discovery-*
+          path: original-reports
+          merge-multiple: true
+      - name: Download two immutable recovered reports
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: sampathkumar-co/mine
+          run-id: 30473410882
+          pattern: v25-disk-recovery-*
+          path: prior-recovery
+          merge-multiple: true
+      - name: Download final recovered report
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v25-long-recovery-*
+          path: final-recovery
+          merge-multiple: true
+      - name: Assemble exact 40-task denominator
+        run: |
+          mkdir combined-reports
+          cp original-reports/task-*.json combined-reports/
+          cp prior-recovery/task-*.json combined-reports/
+          cp final-recovery/task-*.json combined-reports/
+          test "$(find combined-reports -maxdepth 1 -name 'task-*.json' | wc -l)" -eq 40
+      - name: Build frozen v25 discovery report and library
+        run: |
+          python lexigen-language-genesis/v25/aggregate_discovery_v25.py \
+            --reports-root combined-reports \
+            --output V25_DISCOVERY_REPORT.json \
+            --library-output V25_LIBRARY.json \
+            --library-dir library
+      - name: Require validation boundary
+        run: |
+          python - <<'PY'
+          import json
+          report = json.load(open("V25_DISCOVERY_REPORT.json"))
+          library = json.load(open("V25_LIBRARY.json"))
+          assert report["discovery_task_count"] == 40
+          assert report["completed_task_count"] == 40
+          assert report["validation_outputs_opened"] is False
+          assert library["validation_outputs_opened"] is False
+          print({"qualifying_structures": report["qualifying_structure_count"]})
+          PY
+      - name: Upload final v25 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v25-final-recovered-evidence
+          path: |
+            V25_DISCOVERY_REPORT.json
+            V25_LIBRARY.json
+            library
+            combined-reports
+          if-no-files-found: error
+          retention-days: 90
