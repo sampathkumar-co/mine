@@ -1,0 +1,26 @@
+{
+  "status": "v85_new_state_rust_crosscheck_pass",
+  "authority": "non-authoritative diagnostic; PR #208 workflow remains the frozen campaign",
+  "source_commit": "db52812a95f6b8cc7eacfd0c1b2d211f25ea9914",
+  "diagnostic_branch": "research/mini-origin-v85-rust-crosscheck",
+  "diagnostic_pull_request": 214,
+  "workflow_run": 30568896346,
+  "workflow_job": 90960258758,
+  "artifact_id": 8769950544,
+  "artifact_digest": "sha256:5557b65e908fd4293ff7c1be0faf3d7e67c98f8914e5a2c9d2069c28f4c3bb38",
+  "state_count": 36,
+  "rust_row_count": 36,
+  "mismatch_count": 0,
+  "mismatches": [],
+  "rust_total_milliseconds": 31.848929,
+  "state_file_sha256": "aa45a5ac669bce46c730ae123add499b91d961c52c12216f609f348170c8dd3e",
+  "evidence_digest": "1c32f6d5cf6a8797fd34e97fd5e57dea68aad91507fc788ee43df13248bffbce",
+  "preserved_parent_evidence": {
+    "v84_profiled_states": 216,
+    "v84_rust_exact_matches": 216,
+    "v84_rust_mismatches": 0,
+    "v84_artifact_id": 8752816016
+  },
+  "interpretation": "Together with the permanently preserved v0.84 Rust replay, this diagnostic covers all 252 expected v0.85 profiled states. It does not replace the authoritative full v0.85 workflow because the 36-state diagnostic was assembled after opened-data inspection.",
+  "claim_boundary": "This is an independent implementation consistency check on opened development states. It is not fresh external validation, outside-human reproduction, peer review, a world-class result, or a breakthrough."
+}
