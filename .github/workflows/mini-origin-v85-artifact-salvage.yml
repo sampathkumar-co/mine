@@ -7,6 +7,12 @@ on:
     paths:
       - "mini-origin/scripts/salvage_v85_reference.py"
       - ".github/workflows/mini-origin-v85-artifact-salvage.yml"
+  pull_request:
+    branches:
+      - research/mini-origin-v85-response-lattice-closure
+    paths:
+      - "mini-origin/scripts/salvage_v85_reference.py"
+      - ".github/workflows/mini-origin-v85-artifact-salvage.yml"
   workflow_dispatch:
 
 permissions:
