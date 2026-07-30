@@ -4,10 +4,24 @@ from dataclasses import dataclass
 import hashlib
 import itertools
 import json
+from pathlib import Path
 
 from mini_origin import partition_signature_coverage_v84 as parent
 from mini_origin import conditioned_cell_frontier_v60 as conditioned
 from mini_origin import label_free_selector_certificate_v71 as label_free_selector
+
+
+PREREGISTRATION = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v85-response-lattice-closure.json"
+)
+IMPLEMENTATION_AMENDMENT = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v85-response-lattice-implementation-amendment.json"
+)
+compact_state = parent.compact_state
 
 
 @dataclass(frozen=True)
@@ -361,7 +375,7 @@ def _closure_fallback_states(task: object):
         "structural_candidates": len(candidates),
         "selected_states": len(rows),
         "response_lattice_fallback": True,
-        "response_lattice_integration": "synthetic-construction-only",
+        "response_lattice_integration": "zero-parent-functional-dependency-closure",
         "effective_min_raw_queries": minimum_raw,
         "effective_min_redundancy": minimum_redundancy,
         "selected_state_set_digest": parent.parent.state_set_digest(task, rows),
@@ -370,14 +384,42 @@ def _closure_fallback_states(task: object):
 
 
 def select_states(task: object):
-    """Inactive adapter: preserve every nonempty v0.84 result exactly.
-
-    Response-lattice fallback generation is intentionally not connected yet.
-    Empty parent results remain empty until the synthetic construction gate
-    passes in CI.
-    """
+    """Preserve nonempty v0.84 results; repair only exact zero-state cases."""
     states, summary = parent.select_states(task)
-    preserved = dict(summary)
-    preserved["response_lattice_fallback"] = False
-    preserved["response_lattice_integration"] = "synthetic-preservation-only"
-    return states, preserved
+    if states:
+        preserved = dict(summary)
+        preserved["response_lattice_fallback"] = False
+        preserved["response_lattice_integration"] = "parent-state-set-preserved"
+        return states, preserved
+    return _closure_fallback_states(task)
+
+
+def protocol() -> dict[str, object]:
+    result = dict(parent.protocol())
+    result["state_selector"] = (
+        "v0.84 selector unchanged for contributing tasks; complete-query "
+        "functional-dependency closure is used only when v0.84 yields zero states"
+    )
+    result["response_lattice_fallback"] = "zero-state-only"
+    result["response_lattice_closure"] = (
+        "joint generator partition refines each determined query partition"
+    )
+    result["development_data_status"] = "opened-but-not-accessed-by-v0.85-yet"
+    return result
+
+
+def install_v85_components() -> None:
+    parent.configure_module()
+    parent.frontier.protocol = protocol
+    conditioned.select_states = select_states
+
+
+def configure_module() -> None:
+    preregistration = json.loads(PREREGISTRATION.read_text(encoding="utf-8"))
+    amendment = json.loads(IMPLEMENTATION_AMENDMENT.read_text(encoding="utf-8"))
+    if preregistration["status"] != "preregistered_before_implementation_or_dataset_evaluation":
+        raise RuntimeError("v0.85 preregistration status changed")
+    if amendment["status"] != "implementation_amendment_before_selector_integration_or_opened_data_evaluation":
+        raise RuntimeError("v0.85 implementation amendment status changed")
+    install_v85_components()
+    parent.frontier.configure_module = install_v85_components

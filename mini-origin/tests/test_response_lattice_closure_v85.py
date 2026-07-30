@@ -314,7 +314,7 @@ def test_synthetic_zero_parent_fallback_constructs_label_free_state(monkeypatch)
     assert first_summary["response_lattice_fallback"] is True
     assert (
         first_summary["response_lattice_integration"]
-        == "synthetic-construction-only"
+        == "zero-parent-functional-dependency-closure"
     )
 
 
@@ -354,12 +354,13 @@ def test_nonempty_v84_state_set_and_digest_are_exactly_preserved(monkeypatch):
     assert summary["response_lattice_fallback"] is False
     assert (
         summary["response_lattice_integration"]
-        == "synthetic-preservation-only"
+        == "parent-state-set-preserved"
     )
 
 
-def test_empty_parent_result_remains_inactive_until_ci_gate(monkeypatch):
+def test_empty_parent_result_activates_only_preregistered_fallback(monkeypatch):
     task = dependency_task()
+    all_queries = (1 << task.query_count) - 1
     parent_summary = {
         "selected_states": 0,
         "selected_state_set_digest": (
@@ -373,10 +374,17 @@ def test_empty_parent_result_remains_inactive_until_ci_gate(monkeypatch):
         "select_states",
         lambda _task: ([], parent_summary),
     )
+    monkeypatch.setattr(
+        lattice.conditioned,
+        "conditioned_cells",
+        lambda current: [(current.full_mask, all_queries, "root")],
+    )
     rows, summary = lattice.select_states(task)
-    assert rows == []
-    assert summary["response_lattice_fallback"] is False
+    assert rows
+    assert rows[0] == (task.full_mask, all_queries, 6)
+    assert summary["response_lattice_fallback"] is True
     assert (
         summary["response_lattice_integration"]
-        == "synthetic-preservation-only"
+        == "zero-parent-functional-dependency-closure"
     )
+    assert summary["selector_revision"] == "response-lattice-closure-v85"
