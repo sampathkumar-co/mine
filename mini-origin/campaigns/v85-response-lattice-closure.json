@@ -1,0 +1,80 @@
+{
+  "campaign": "mini-origin-v85-response-lattice-closure",
+  "status": "preregistered_before_implementation_or_dataset_evaluation",
+  "parent_commit": "43d3311c15fb6b1dbde8dddafd749f1ef623ded4",
+  "preserved_negative_results": [
+    "research-evidence/mini-origin-v82-pmlb-blind-rejection.json",
+    "research-evidence/mini-origin-v83-near-small-query-coverage-rejection.json",
+    "research-evidence/mini-origin-v84-partition-signature-coverage-rejection.json"
+  ],
+  "parent_result": {
+    "campaign": "mini-origin-v84-partition-signature-coverage",
+    "verdict": "rejected",
+    "reason": "mandatory all-seven-dataset contribution gate failed",
+    "diagnosis": {
+      "compiled_queries": 12,
+      "conditioned_cells": 814,
+      "structural_candidates": 0,
+      "selected_states": 0,
+      "partition_signature_fallback_activated": true
+    }
+  },
+  "scientific_hypothesis": "The remaining zero-candidate case is not caused by query-count limits or exact duplicate response signatures. It may require candidates defined by compositional relations among query responses. A deterministic closure system built from label-free implication and equivalence relations over allowed-row response vectors can expose structurally redundant remaining-query sets that neither seeded sampling nor exact-signature grouping can generate.",
+  "single_allowed_algorithmic_change": {
+    "name": "response_lattice_closure_generator",
+    "scope": "state generation only",
+    "description": "For each allowed-row set, represent every compiled query by its Boolean response vector. Construct a finite closure system using only exact structural relations: equivalence q_i=q_j, implication q_i=>q_j, incompatibility q_i AND q_j=0, and deterministic intersections of implication-closed generator sets. Emit remaining-query masks only from nontrivial closed sets and their deterministic minimal generators. Rank candidates by a SHA-256 digest of task shape, allowed mask, closed mask, and generator mask.",
+    "activation": "Only when the unchanged v0.84 selector returns zero states.",
+    "forbidden_inputs": [
+      "dataset name or identifier",
+      "target or class labels",
+      "objective values",
+      "solver costs or plans",
+      "plain or bounded solver outcomes",
+      "previous acceptance verdict",
+      "manually selected dataset-specific constants"
+    ],
+    "unchanged_components": [
+      "dataset bytes and adapters",
+      "task compiler",
+      "conditioned-cell construction",
+      "Python exact planners",
+      "independent Rust solver",
+      "seeds and expansion budgets",
+      "minimum and maximum raw-query thresholds",
+      "minimum redundancy threshold",
+      "partition-class thresholds",
+      "maximum states per task",
+      "all v0.82 scientific acceptance thresholds"
+    ]
+  },
+  "synthetic_preflight_requirements": {
+    "unit_test_failures": 0,
+    "determinism_mismatches": 0,
+    "label_independence_mismatches": 0,
+    "permutation_equivariance_mismatches": 0,
+    "closure_idempotence_mismatches": 0,
+    "closure_extensivity_mismatches": 0,
+    "closure_monotonicity_mismatches": 0,
+    "normal_contributing_task_state_digest_mismatches": 0,
+    "solver_or_threshold_changes": 0
+  },
+  "implementation_order": [
+    "implement pure response-relation and closure helpers",
+    "test closure axioms on exhaustive small Boolean matrices",
+    "test determinism, label independence, and query-permutation equivariance",
+    "prove exact preservation of v0.84 state digests on already-contributing tasks",
+    "run synthetic-only CI",
+    "only after a green synthetic gate, add a separate opened-data development workflow"
+  ],
+  "opened_data_gate": {
+    "contributing_dataset_count": 7,
+    "python_rust_exact_mismatches": 0,
+    "objective_mismatches": 0,
+    "plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "threshold_source": "unchanged v0.82 preregistration"
+  },
+  "negative_result_policy": "Every failed synthetic invariant, coverage gate, correctness gate, or performance threshold is retained permanently. No threshold or relation definition may be weakened after inspecting opened-data results.",
+  "claim_boundary": "This is a preregistered opened-data development hypothesis. Passing it would not constitute untouched external validation, independent reproduction, a world-class result, or a general-AI breakthrough."
+}
