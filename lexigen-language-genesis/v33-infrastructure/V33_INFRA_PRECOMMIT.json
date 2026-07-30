@@ -1,0 +1,57 @@
+{
+  "schema": "lexigen-v33-infrastructure-hardening-precommit-v1",
+  "source": {
+    "v32_evidence_commit": "09c22a2",
+    "v32_precommit_sha256": "555194c0d7d35caab361e81a02bd79002fdb3f1837e4180b644ac1f31ffdbe2e",
+    "v32_authoritative_report_sha256": "2d2c81fd4db7e811736ca02543195e75e952140058a627b0acb095358884a31c",
+    "v32_success_task_id": "9caf5b84",
+    "v32_success_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+    "v32_success_concrete_program_sha256": "8f2cb9f03e35dd8ad8cb39d32b26caed4e267d3b99a194fd15bd69338e40e701"
+  },
+  "persistent_generator": {
+    "one_worker_process_per_task_scan": true,
+    "worker_protocol": "newline-delimited JSON request and response",
+    "seed_before_task_module_import": true,
+    "task_module_removed_before_each_request": true,
+    "task_module_reimported_for_each_request": true,
+    "stdout_captured_during_import_and_generation": true,
+    "per_request_timeout_seconds": 5,
+    "timeout_action": "terminate worker, start a clean worker, retry the identical seed once",
+    "replacement_seed_allowed": false,
+    "maximum_same_seed_retries": 1
+  },
+  "equivalence_gate": {
+    "task_id": "9caf5b84",
+    "scanner": "frozen v32 scanner with only generate_case injection changed",
+    "demonstration_and_fresh_seed_schedules": "unchanged v32 schedules",
+    "expected_report_sha256": "ab8c1411484ac4cb7516d3a4ec9aa808f5fe7d1f3b2029be923dc78d29ec6f06",
+    "required_result": "byte-identical full task report",
+    "required_timeout_count": 0,
+    "required_restart_count": 0,
+    "required_same_seed_retry_count": 0,
+    "future_use_authorized_only_after_pass": true
+  },
+  "checkpointing": {
+    "scope": "long deterministic enumeration infrastructure",
+    "checkpoint_content": [
+      "completed depth and output-type boundary",
+      "retained expressions in canonical order",
+      "exact seen-store database",
+      "all counters and exact expressions",
+      "input and protocol hashes"
+    ],
+    "checkpoint_write_rule": "atomic temporary file then rename",
+    "resume_rule": "hash-verified exact continuation only",
+    "partial_checkpoint_is_not_scientific_evidence": true,
+    "final_report_must_match_uninterrupted_reference_byte-for-byte": true
+  },
+  "claim_boundary": {
+    "scientific_task_access": false,
+    "infrastructure_equivalence_only": true,
+    "successful_equivalence_claim": "generator and checkpoint infrastructure preserve frozen semantics",
+    "transfer_claim": false,
+    "outside_human_reproduction": false,
+    "world_level_breakthrough": false
+  },
+  "post_result_edits_allowed": false
+}
