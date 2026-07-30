@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from mini_origin import numeric_threshold_frontier_v70 as core
 from mini_origin import response_lattice_closure_v85 as lattice
 
@@ -54,3 +56,39 @@ def test_canonical_candidate_ignores_outcome_token_spelling():
     )
     mask = (1 << task.query_count) - 1
     assert lattice.canonical_candidate(task, task.full_mask, mask, 0, original) == lattice.canonical_candidate(task, task.full_mask, mask, 0, renamed)
+
+
+def test_canonical_candidate_is_equivariant_to_query_permutation():
+    task, _ = core.compile_task("v85-query-permutation", records())
+    atoms = lattice.outcome_atoms(task, task.full_mask)
+    permutation = tuple(reversed(range(task.query_count)))
+    remapped_atoms = tuple(
+        lattice.OutcomeAtom(permutation[atom.query], atom.token, atom.mask)
+        for atom in reversed(atoms)
+    )
+    remapped_task = SimpleNamespace(query_count=task.query_count, full_mask=task.full_mask)
+
+    def remap(mask):
+        result = 0
+        for query, replacement in enumerate(permutation):
+            if mask & (1 << query):
+                result |= 1 << replacement
+        return result
+
+    masks = [
+        0,
+        (1 << task.query_count) - 1,
+        sum(1 << query for query in range(task.query_count) if query % 2 == 0),
+        sum(1 << query for query in range(task.query_count) if query % 3 == 1),
+    ]
+    for candidate in masks:
+        for generators in masks:
+            original = lattice.canonical_candidate(task, task.full_mask, candidate, generators, atoms)
+            permuted = lattice.canonical_candidate(
+                remapped_task,
+                task.full_mask,
+                remap(candidate),
+                remap(generators),
+                remapped_atoms,
+            )
+            assert original == permuted
