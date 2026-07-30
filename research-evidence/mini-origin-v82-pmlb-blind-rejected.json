@@ -4,13 +4,37 @@
   "archive_lock_digest": "424c98761001c268b1f0574c4e82282e2a4d9321073bc27c87589a92e0f61d8e",
   "frozen_external_digest": "8dbf80471de1e3f5adb26c37aaa79b9cf00134ef053bb54e0b2f43951f87bb62",
   "compiler_protocol": {
-    "missing_value_token": "",
-    "numeric_inference": "all non-missing sampled values parse as finite float",
-    "numeric_query_family": "label-free quantile thresholds at 0.10, 0.25, 0.50, 0.75 and 0.90 plus extrema midpoints when distinct; deduplicated by record mask",
-    "categorical_query_family": "one exact-value query per sampled category; deduplicated by record mask",
-    "labels_used_in_query_generation": false,
-    "records_used_for_sampling": 384,
-    "maximum_queries_per_numeric_column": 7
+    "maximum_sampled_records": 384,
+    "sampling": "rank original rows by SHA-256(dataset name, feature vector) with original row index as the duplicate-feature tie-break; labels excluded",
+    "missing_tokens": [
+      "",
+      "?",
+      "na",
+      "nan",
+      "none",
+      "null"
+    ],
+    "numeric_detection": "all nonmissing tokens parse as finite Decimal",
+    "low_cardinality_exact_cutoff": 8,
+    "quantile_denominator": 8,
+    "quantile_numerators": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "quantile_rank_rule": "ceil(k*n/8)-1 on sorted nonmissing sampled values",
+    "numeric_response_values": [
+      "missing",
+      "le",
+      "gt"
+    ],
+    "categorical_response": "preserve exact token",
+    "labels_or_costs_used": false,
+    "query_cap": null
   },
   "contributing_dataset_count": 6,
   "base_state_count": 72,
@@ -22,8 +46,8 @@
   "current_bounded_plan_mismatch_count": 0,
   "bounded_expansion_regression_count": 0,
   "states_with_lower_bound_pruning": 180,
-  "current_query_expansions": 6603450,
-  "bounded_query_expansions": 3002732,
+  "current_query_expansions": 788728,
+  "bounded_query_expansions": 358532,
   "aggregate_bounded_reduction_fraction": 0.5454301102534714,
   "dominated_queries_removed": 2992389,
   "root_incomparable_classes": 135,
@@ -47,7 +71,7 @@
       "plain_solved": 105
     }
   },
-  "rust_total_milliseconds": 295.138935,
+  "rust_total_milliseconds": 2798.812152,
   "rust_exact_match_count": 216,
   "rust_mismatch_count": 0,
   "rust_mismatches": [],
@@ -1160,34 +1184,88 @@
     }
   ],
   "protocol": {
-    "task_compiler": "deterministic label-free numeric-threshold/exact-value compiler",
-    "record_cap": 384,
-    "compiler_quantiles": [
-      0.1,
-      0.25,
-      0.5,
-      0.75,
-      0.9
-    ],
-    "profiles": [
-      "mixed",
-      "diffuse",
-      "spiky"
-    ],
     "profile_seeds": [
-      6701,
-      6702,
-      6703
+      6001,
+      6002,
+      6003
     ],
-    "exact_budget": 500000,
+    "path_seeds": [
+      60101,
+      60102,
+      60103,
+      60104,
+      60105,
+      60106,
+      60107,
+      60108,
+      60109,
+      60110,
+      60111,
+      60112
+    ],
+    "maximum_depth": 3,
+    "maximum_query_choices": 6,
+    "maximum_cells_per_depth": 96,
+    "sample_sizes": [
+      24,
+      20,
+      16,
+      12
+    ],
+    "max_states_per_task": 12,
+    "partition_class_range": [
+      6,
+      16
+    ],
+    "raw_query_range": [
+      10,
+      64
+    ],
+    "minimum_redundancy": 4,
+    "budget": 500000,
     "budget_ladder": [
       10000,
       50000,
       250000,
       500000
     ],
-    "solver": "exact state memo plus compiled label-free lower bound with internal dominance and branch ordering",
+    "query_compiler": {
+      "maximum_sampled_records": 384,
+      "sampling": "rank original rows by SHA-256(dataset name, feature vector) with original row index as the duplicate-feature tie-break; labels excluded",
+      "missing_tokens": [
+        "",
+        "?",
+        "na",
+        "nan",
+        "none",
+        "null"
+      ],
+      "numeric_detection": "all nonmissing tokens parse as finite Decimal",
+      "low_cardinality_exact_cutoff": 8,
+      "quantile_denominator": 8,
+      "quantile_numerators": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "quantile_rank_rule": "ceil(k*n/8)-1 on sorted nonmissing sampled values",
+      "numeric_response_values": [
+        "missing",
+        "le",
+        "gt"
+      ],
+      "categorical_response": "preserve exact token",
+      "labels_or_costs_used": false,
+      "query_cap": null
+    },
     "state_selector": "v0.72 label-free conditioned-cell selector unchanged for tasks with more than 10 compiled queries; query-count-aware raw/redundancy floors and broader label-free allowed-set sampling for tasks with 10 or fewer",
+    "lower_bound_solver": "byte-identical v0.65 planner",
+    "record_sampler": "v0.70 feature-only SHA-256 sampler; labels excluded",
+    "selector_certificate_parent": "5594d601356382e45875d26a82052f300d745fe7",
     "small_query_limit": 10,
     "small_query_sample_sizes": [
       24,
@@ -1212,7 +1290,8 @@
       "dataset_specific_exceptions": false
     },
     "v81_lock_digest": "424c98761001c268b1f0574c4e82282e2a4d9321073bc27c87589a92e0f61d8e",
-    "v81_manifest_sha256": "00b9bc1830659acab2b8010136706ec065c1ebf2a416db3a223909e11d099f2d"
+    "v81_manifest_sha256": "00b9bc1830659acab2b8010136706ec065c1ebf2a416db3a223909e11d099f2d",
+    "frozen_v79_commit": "555c3146111a7726702bb98e0a72f3b214d07190"
   },
   "evidence_digest": "6c5e6e2c48a164c1c38c4cfff205b6ad33e6d44891b6e953ca1623baa6c72863",
   "external_gate": false,
