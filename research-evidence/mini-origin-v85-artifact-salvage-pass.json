@@ -1,0 +1,56 @@
+{
+  "campaign": "mini-origin-v85-artifact-salvage-diagnostic",
+  "status": "diagnostic_pass",
+  "authority": "non-authoritative; PR #208 replacement workflow remains decisive",
+  "source_failure_run": 30566963272,
+  "source_failure_artifact": {
+    "artifact_id": 8770724605,
+    "artifact_digest": "sha256:e5b2a769903b701184d59f12a9e2783e58aa5e0c818ea9bbcd95e2ff70b6f95a",
+    "states_sha256": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+    "python_reference_sha256": "03daea4bf64cf56543a5e81f0319d142781ee87843262e165d45105017120bd1"
+  },
+  "metadata_repair": {
+    "scope": "restore only post-run metadata that the frozen wrapper would attach after opened.run returned",
+    "scientific_components_changed": false,
+    "solvers_changed": false,
+    "selector_changed": false,
+    "thresholds_changed": false,
+    "datasets_changed": false
+  },
+  "successful_runs": [
+    {
+      "run_id": 30572586164,
+      "artifact_id": 8771389738,
+      "artifact_digest": "sha256:b51b00074f209a4fc6fd11d0d929772351d8628dbb03e6df132ae3065d7b5ab2"
+    },
+    {
+      "run_id": 30573213929,
+      "artifact_id": 8771634914,
+      "artifact_digest": "sha256:9d27f7619ae4d3c380ee3dcfaa5232d4302fce7080940472d1ce526e613d2909"
+    }
+  ],
+  "result": {
+    "status": "response_lattice_closure_development_pass_v85",
+    "development_gate": true,
+    "contributing_dataset_count": 7,
+    "base_state_count": 84,
+    "profiled_state_count": 252,
+    "bounded_solved_count": 252,
+    "both_plain_bounded_count": 141,
+    "bounded_only_count": 111,
+    "plain_bounded_objective_mismatch_count": 0,
+    "current_bounded_plan_mismatch_count": 0,
+    "bounded_expansion_regression_count": 0,
+    "states_with_lower_bound_pruning": 216,
+    "aggregate_bounded_reduction_fraction": 0.5434680421909237,
+    "dominated_queries_removed": 3044930,
+    "root_incomparable_classes": 135,
+    "expansion_ratio_median": 164.57268309039912,
+    "expansion_ratio_p90": 30902.839583333352,
+    "rust_mismatch_count": 0,
+    "rust_profiled_state_count": 252,
+    "rust_total_milliseconds": 2640.874787,
+    "validator_evidence_digest": "7f548f104a92665986ed6de3726bd58982e08f5782eeeea7e4c2319c746c7061"
+  },
+  "claim_boundary": "This is a diagnostic replay of an already-opened complete artifact. It is not fresh external validation, outside-human reproduction, peer review, a world-class result, or a breakthrough."
+}
