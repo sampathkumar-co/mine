@@ -6,6 +6,8 @@ import itertools
 import json
 
 from mini_origin import partition_signature_coverage_v84 as parent
+from mini_origin import conditioned_cell_frontier_v60 as conditioned
+from mini_origin import label_free_selector_certificate_v71 as label_free_selector
 
 
 @dataclass(frozen=True)
@@ -19,7 +21,7 @@ class OutcomeAtom:
 class ClosureCandidate:
     candidate_queries: int
     generator_queries: int
-    generator_atoms: tuple[int, ...]
+    representatives: int
     serialized: bytes
     digest: str
 
@@ -33,8 +35,12 @@ def outcome_atoms(task: object, allowed: int) -> tuple[OutcomeAtom, ...]:
     return tuple(atoms)
 
 
-def implication_closure(atoms: tuple[OutcomeAtom, ...], generators: frozenset[int], allowed: int) -> frozenset[int]:
-    """Exact finite closure: include each atom true on every generator-compatible row."""
+def implication_closure(
+    atoms: tuple[OutcomeAtom, ...],
+    generators: frozenset[int],
+    allowed: int,
+) -> frozenset[int]:
+    """Local atom-conjunction closure used by the encoding conformance tests."""
     support = allowed
     for index in generators:
         support &= atoms[index].mask
@@ -44,7 +50,10 @@ def implication_closure(atoms: tuple[OutcomeAtom, ...], generators: frozenset[in
     )
 
 
-def complete_query_projection(atoms: tuple[OutcomeAtom, ...], closed: frozenset[int]) -> int:
+def complete_query_projection(
+    atoms: tuple[OutcomeAtom, ...],
+    closed: frozenset[int],
+) -> int:
     """Project only complete outcome blocks; partial query blocks are forbidden."""
     blocks: dict[int, set[int]] = {}
     for index, atom in enumerate(atoms):
@@ -56,7 +65,11 @@ def complete_query_projection(atoms: tuple[OutcomeAtom, ...], closed: frozenset[
     return result
 
 
-def block_signature(atoms: tuple[OutcomeAtom, ...], query: int, allowed: int) -> tuple[int, ...]:
+def block_signature(
+    atoms: tuple[OutcomeAtom, ...],
+    query: int,
+    allowed: int,
+) -> tuple[int, ...]:
     """Token-independent canonical signature for one complete query block."""
     return tuple(sorted(atom.mask & allowed for atom in atoms if atom.query == query))
 
@@ -73,12 +86,12 @@ def canonical_candidate(
         block_signature(atoms, query, allowed)
         for query in range(task.query_count)
         if candidate & (1 << query)
-    )
+     )
     generator_blocks = sorted(
         block_signature(atoms, query, allowed)
         for query in range(task.query_count)
         if generator_queries & (1 << query)
-    )
+     )
     payload = (
         task.full_mask.bit_count(),
         allowed,
@@ -92,63 +105,168 @@ def candidate_digest(serialized: bytes) -> str:
     return hashlib.sha256(serialized).hexdigest()
 
 
-def _query_mask(atoms: tuple[OutcomeAtom, ...], generator_atoms: tuple[int, ...]) -> int:
+def _query_indices(mask: int) -> tuple[int, ...]:
+    result = []
+    pending = mask
+    while pending:
+        bit = pending & -pending
+        result.append(bit.bit_length() - 1)
+        pending ^= bit
+    return tuple(result)
+
+
+def query_partition(task: object, allowed: int, query: int) -> tuple[int, ...]:
+    """Return the token-independent nonempty response partition for one query."""
+    cells = []
+    seen = 0
+    for _, mask in task.outcome_masks[query]:
+        cell = mask & allowed
+        if not cell:
+            continue
+        if seen & cell:
+            raise ValueError("query outcomes overlap on allowed rows")
+        seen |= cell
+        cells.append(cell)
+    if seen != allowed:
+        raise ValueError("query outcomes do not cover allowed rows")
+    return tuple(sorted(cells))
+
+
+def joint_partition(
+    task: object,
+    allowed: int,
+    generator_queries: int,
+) -> tuple[int, ...]:
+    """Common refinement induced by complete generator-query blocks."""
+    cells = (allowed,)
+    for query in _query_indices(generator_queries):
+        outcomes = query_partition(task, allowed, query)
+        refined = {
+            cell & outcome
+            for cell in cells
+            for outcome in outcomes
+            if cell & outcome
+        }
+        cells = tuple(sorted(refined))
+    return cells
+
+
+def partition_refines(
+    fine: tuple[int, ...],
+    coarse: tuple[int, ...],
+) -> bool:
+    """Whether every fine cell is contained in one coarse response cell."""
+    return all(
+        any(cell & ~block == 0 for block in coarse)
+        for cell in fine
+    )
+
+
+def query_closure(
+    task: object,
+    allowed: int,
+    generator_queries: int,
+    *,
+    available_queries: int | None = None,
+) -> int:
+    """Functional-dependency closure of complete query blocks.
+
+    A query belongs to the closure exactly when the joint response partition of
+    the generators refines that query's response partition. This captures
+    compositional response relations without selecting a privileged outcome.
+    """
+    if allowed & ~task.full_mask:
+        raise ValueError("allowed rows exceed task full mask")
+    all_queries = (1 << task.query_count) - 1
+    available = all_queries if available_queries is None else available_queries
+    if available & ~all_queries:
+        raise ValueError("available queries exceed task query count")
+    if generator_queries & ~available:
+        raise ValueError("generator queries must be available")
+    fine = joint_partition(task, allowed, generator_queries)
     result = 0
-    for index in generator_atoms:
-        result |= 1 << atoms[index].query
+    for query in _query_indices(available):
+        if partition_refines(fine, query_partition(task, allowed, query)):
+            result |= 1 << query
     return result
 
 
-def _candidate_structure_key(task: object, allowed: int, candidate: int, atoms: tuple[OutcomeAtom, ...]) -> bytes:
+def _candidate_structure_key(
+    task: object,
+    allowed: int,
+    candidate: int,
+    atoms: tuple[OutcomeAtom, ...],
+) -> bytes:
     blocks = sorted(
         block_signature(atoms, query, allowed)
         for query in range(task.query_count)
         if candidate & (1 << query)
-    )
-    return json.dumps((task.full_mask.bit_count(), allowed, blocks), separators=(",", ":")).encode("utf-8")
+     )
+    return json.dumps(
+        (task.full_mask.bit_count(), allowed, blocks),
+        separators=(",", ":"),
+    ).encode("utf-8")
 
 
 def enumerate_closure_candidates(
     task: object,
     allowed: int,
     *,
-    max_generator_atoms: int = 2,
+    available_queries: int | None = None,
 ) -> tuple[ClosureCandidate, ...]:
-    """Enumerate deterministic minimal-generator closure candidates.
+    """Enumerate exact minimal generators of query-level response closures.
 
-    This pure helper is synthetic-only. It considers the empty generator and
-    atom generator sets up to the preregistered bounded order, projects only
-    complete query blocks, and keeps the smallest canonical generator for each
-    index-free candidate structure.
+    Exhaustive enumeration is bounded by the unchanged maximum partition-class
+    threshold. Wider available sets are left untouched rather than introducing
+    a new heuristic or index-dependent truncation rule.
     """
-    if max_generator_atoms < 0:
-        raise ValueError("max_generator_atoms must be non-negative")
+    all_queries = (1 << task.query_count) - 1
+    available = all_queries if available_queries is None else available_queries
+    if available & ~all_queries:
+        raise ValueError("available queries exceed task query count")
+    query_ids = _query_indices(available)
+    if len(query_ids) > conditioned.MAX_PARTITION_CLASSES:
+        return ()
+
     atoms = outcome_atoms(task, allowed)
-    best: dict[bytes, tuple[int, bytes, tuple[int, ...], int]] = {}
-    for size in range(min(max_generator_atoms, len(atoms)) + 1):
-        for generator_atoms in itertools.combinations(range(len(atoms)), size):
-            closed = implication_closure(atoms, frozenset(generator_atoms), allowed)
-            candidate = complete_query_projection(atoms, closed)
+    best: dict[bytes, tuple[int, bytes, int, int]] = {}
+    for size in range(len(query_ids) + 1):
+        for selected in itertools.combinations(query_ids, size):
+            generator_queries = sum(1 << query for query in selected)
+            candidate = query_closure(
+                task,
+                allowed,
+                generator_queries,
+                available_queries=available,
+            )
             if candidate == 0:
                 continue
-            generator_queries = _query_mask(atoms, generator_atoms)
-            serialized = canonical_candidate(task, allowed, candidate, generator_queries, atoms)
-            structure = _candidate_structure_key(task, allowed, candidate, atoms)
-            rank = (size, serialized, generator_atoms, generator_queries)
+            serialized = canonical_candidate(
+                task,
+                allowed,
+                candidate,
+                generator_queries,
+                atoms,
+            )
+            structure = _candidate_structure_key(
+                task,
+                allowed,
+                candidate,
+                atoms,
+            )
+            rank = (size, serialized, generator_queries, candidate)
             previous = best.get(structure)
-            if previous is None or rank < previous:
+            if previous is None or rank[:2] < previous[:2]:
                 best[structure] = rank
 
     result = []
     for structure in sorted(best):
-        _, serialized, generator_atoms, generator_queries = best[structure]
-        closed = implication_closure(atoms, frozenset(generator_atoms), allowed)
-        candidate = complete_query_projection(atoms, closed)
+        representatives, serialized, generator_queries, candidate = best[structure]
         result.append(
             ClosureCandidate(
                 candidate_queries=candidate,
                 generator_queries=generator_queries,
-                generator_atoms=generator_atoms,
+                representatives=representatives,
                 serialized=serialized,
                 digest=candidate_digest(serialized),
             )
@@ -156,11 +274,107 @@ def enumerate_closure_candidates(
     return tuple(sorted(result, key=lambda item: item.serialized))
 
 
+def eligible_closure_candidates(
+    task: object,
+    allowed: int,
+    available_queries: int,
+) -> tuple[ClosureCandidate, ...]:
+    """Apply only the inherited raw, redundancy, and partition-class gates."""
+    minimum_raw, minimum_redundancy = parent.parent.parent.effective_limits(task)
+    result = []
+    for item in enumerate_closure_candidates(
+        task,
+        allowed,
+        available_queries=available_queries,
+    ):
+        raw = item.candidate_queries.bit_count()
+        if (
+            conditioned.MIN_PARTITION_CLASSES
+            <= item.representatives
+            <= conditioned.MAX_PARTITION_CLASSES
+            and minimum_raw <= raw <= conditioned.MAX_RAW_QUERIES
+            and raw - item.representatives >= minimum_redundancy
+         ):
+            result.append(item)
+    return tuple(result)
+
+
+def _allowed_variants(task: object, cell: int, path: str) -> tuple[int, ...]:
+    cell_size = cell.bit_count()
+    variants = []
+    if 8 <= cell_size <= 24:
+        variants.append(cell)
+    coverage = parent.parent.parent
+    for size in coverage.SMALL_QUERY_SAMPLE_SIZES:
+        if cell_size < size:
+            continue
+        for seed in conditioned.PATH_SEEDS[: coverage.SMALL_QUERY_ALLOWED_SEEDS]:
+            variants.append(
+                label_free_selector.label_free_sample_allowed(
+                    task,
+                    cell,
+                    size,
+                    f"{path}:{seed}:{size}",
+                )
+            )
+    return tuple(sorted(set(variants)))
+
+
+def _closure_fallback_states(task: object):
+    """Synthetic-preflight constructor; not connected to select_states yet."""
+    cells = conditioned.conditioned_cells(task)
+    candidates: dict[tuple[int, int], tuple[int, bytes]] = {}
+    for cell, path_remaining, path in cells:
+        for allowed in _allowed_variants(task, cell, path):
+            for item in eligible_closure_candidates(
+                task,
+                allowed,
+                path_remaining,
+            ):
+                key = (allowed, item.candidate_queries)
+                rank = (item.representatives, item.serialized)
+                previous = candidates.get(key)
+                if previous is None or rank < previous:
+                    candidates[key] = rank
+
+    ranked = [
+        (allowed, remaining, representatives, serialized)
+        for (allowed, remaining), (representatives, serialized)
+        in candidates.items()
+    ]
+    ranked.sort(
+        key=lambda row: (
+            -row[0].bit_count(),
+            -(row[1].bit_count() - row[2]),
+            -row[1].bit_count(),
+            row[3],
+        )
+    )
+    rows = [
+        (allowed, remaining, representatives)
+        for allowed, remaining, representatives, _
+        in ranked[: conditioned.MAX_STATES_PER_TASK]
+    ]
+    minimum_raw, minimum_redundancy = parent.parent.parent.effective_limits(task)
+    return rows, {
+        "conditioned_cells": len(cells),
+        "structural_candidates": len(candidates),
+        "selected_states": len(rows),
+        "response_lattice_fallback": True,
+        "response_lattice_integration": "synthetic-construction-only",
+        "effective_min_raw_queries": minimum_raw,
+        "effective_min_redundancy": minimum_redundancy,
+        "selected_state_set_digest": parent.parent.state_set_digest(task, rows),
+        "selector_revision": "response-lattice-closure-v85",
+    }
+
+
 def select_states(task: object):
     """Inactive adapter: preserve every nonempty v0.84 result exactly.
 
     Response-lattice fallback generation is intentionally not connected yet.
-    Empty parent results remain empty until the remaining synthetic gates pass.
+    Empty parent results remain empty until the synthetic construction gate
+    passes in CI.
     """
     states, summary = parent.select_states(task)
     preserved = dict(summary)
