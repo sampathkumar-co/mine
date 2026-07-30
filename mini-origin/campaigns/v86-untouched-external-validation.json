@@ -1,0 +1,102 @@
+{
+  "campaign": "mini-origin-v86-untouched-external-validation",
+  "status": "preregistered_before_dataset-content-access_or_evaluation",
+  "parent_commit": "912c3ebd933ae39eb05e10467f1ecad56e326b03",
+  "parent_campaign": "mini-origin-v85-response-lattice-closure",
+  "scientific_purpose": "Test whether the frozen v0.85 compiler, selectors, exact planners, independent Rust replay, seeds, budgets, and v0.82 acceptance thresholds transfer to genuinely untouched external tabular tasks without any post-inspection tuning.",
+  "preserved_evidence": {
+    "negative_results": [
+      "research-evidence/mini-origin-v82-pmlb-blind-rejection.json",
+      "research-evidence/mini-origin-v83-near-small-query-coverage-rejection.json",
+      "research-evidence/mini-origin-v84-partition-signature-coverage-rejection.json"
+    ],
+    "opened_data_development": [
+      "research-evidence/mini-origin-v85-authoritative-opened-data-development-pass.json",
+      "research-evidence/mini-origin-v85-exact-rerun-reproducibility.json"
+    ],
+    "interpretation": "v0.85 is opened-data development evidence only. It is not counted as external validation. All prior rejections remain binding and visible regardless of the v0.86 outcome."
+  },
+  "frozen_system": {
+    "source_commit": "912c3ebd933ae39eb05e10467f1ecad56e326b03",
+    "algorithm_changes_allowed_after_this_file": 0,
+    "threshold_changes_allowed_after_this_file": 0,
+    "dataset_specific_exceptions_allowed": 0,
+    "unchanged_components": [
+      "task compiler and outcome encoding",
+      "v0.84 selector",
+      "v0.85 zero-state response-lattice fallback",
+      "Python exact planners",
+      "independent Rust solver",
+      "state canonicalization and truncation",
+      "seeds",
+      "plain and bounded expansion budgets",
+      "minimum and maximum raw-query thresholds",
+      "minimum redundancy threshold",
+      "partition-class thresholds",
+      "maximum states per task",
+      "all v0.82 scientific acceptance thresholds"
+    ]
+  },
+  "external_source": {
+    "registry": "OpenML",
+    "benchmark_suite": "OpenML-CC18",
+    "selection_basis": "registry metadata and identifiers only; feature values, labels, folds, and task files must not be downloaded or inspected before the immutable task manifest is committed",
+    "exclusions": [
+      "any dataset or byte-identical derivative used in v0.82 through v0.85",
+      "any task previously downloaded, inspected, debugged, or mentioned in Mini-ORIGIN development records",
+      "tasks that cannot be fetched reproducibly by immutable OpenML task and dataset version identifiers",
+      "tasks whose license or availability prevents artifact retention",
+      "tasks unsupported by the already-frozen adapter without changing compiler semantics"
+    ],
+    "manifest_rule": "Construct the eligible OpenML-CC18 task-ID list using metadata only, sort ascending by immutable task ID, serialize as canonical UTF-8 JSON, compute SHA-256, and select the first seven eligible task IDs after ordering candidates by SHA-256('mini-origin-v86:' || task_id). Commit the complete eligible list, exclusion reasons, selected IDs, task versions, metadata snapshot, and manifest digest before downloading task data.",
+    "minimum_selected_tasks": 7,
+    "replacement_rule": "No replacement is allowed after any selected task content is accessed. A pre-access metadata-only exclusion may be made only by committing the exact reason and regenerating the whole manifest deterministically."
+  },
+  "execution_order": [
+    "implement a metadata-only manifest generator and invariant tests",
+    "run it in CI without downloading selected task contents",
+    "commit the immutable selected-task manifest and its SHA-256 digest",
+    "verify all frozen source-file hashes against the parent commit",
+    "download selected tasks exactly once in a dedicated evaluation workflow",
+    "retain raw provenance, adapters' outputs, states, Python results, Rust results, evidence, and all failures",
+    "apply the unchanged v0.82 gate once with no retries and no substitutions",
+    "permanently record pass or rejection"
+  ],
+  "pre_access_invariants": {
+    "selected_task_content_reads": 0,
+    "selected_label_reads": 0,
+    "selected_feature_reads": 0,
+    "manual_task_ordering": 0,
+    "dataset_name_in_scoring_or_selection": 0,
+    "post_manifest_task_substitution": 0,
+    "frozen_source_hash_mismatches": 0,
+    "prior_evidence_file_hash_mismatches": 0
+  },
+  "acceptance_gate": {
+    "source": "unchanged v0.82 preregistration",
+    "contributing_dataset_count": 7,
+    "python_rust_exact_mismatches": 0,
+    "objective_mismatches": 0,
+    "plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "no_threshold_or_budget_changes": true,
+    "no_dataset_specific_code_paths": true,
+    "single_authoritative_run": true
+  },
+  "failure_policy": {
+    "retain_all_negative_results": true,
+    "retain_partial_outputs": true,
+    "no_rerun_after_scientific_failure": true,
+    "infrastructure_failure_rule": "A rerun is permitted only when no selected task result was revealed and the failure is demonstrably external to the scientific computation; the failure and justification must be committed before rerun.",
+    "rejection_conditions": [
+      "fewer than seven selected tasks contribute",
+      "any Python/Rust exact mismatch",
+      "any objective mismatch",
+      "any plan mismatch",
+      "any bounded-expansion regression",
+      "any frozen hash mismatch",
+      "any post-access substitution, threshold change, budget change, or dataset-specific exception"
+    ]
+  },
+  "claim_boundary": "A pass would be first-party untouched external validation under a preregistered protocol. It would still not constitute independent third-party replication, peer review, a world-class result, or a general breakthrough. A rejection remains scientifically informative and must be preserved unchanged."
+}
