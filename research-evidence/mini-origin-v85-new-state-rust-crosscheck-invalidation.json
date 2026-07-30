@@ -1,0 +1,16 @@
+{
+  "status": "diagnostic_interpretation_invalidated",
+  "supersedes": [
+    "research-evidence/mini-origin-v85-new-state-rust-crosscheck.json",
+    "research-evidence/mini-origin-v85-combined-diagnostic-gate.json"
+  ],
+  "reason": "The temporary exact-speed diagnostic used a separately implemented candidate aggregator. Although representative per-cell enumerator comparisons passed, the complete top-12 state set differed from the committed exhaustive selector when evaluated across all conditioned cells and allowed-row variants.",
+  "diagnostic_state_set_digest": "1c2e235cc73e80cd4f2f716803d38132c1acd67533816d659b99218001f1eb8e",
+  "optimized_full_selector_state_set_digest": "019db9014e03eb6779eba8c7f4194842f4bddd22632f47494fa6d219fb0f3c4d",
+  "same_state_set": false,
+  "preserved_valid_fact": "The independent Rust solver exactly matched Python plans and locked counters for the 36 diagnostic profiles that were actually supplied.",
+  "invalidated_claim": "Those 36 profiles cannot be treated as the authoritative v0.85 new-state set or combined with v0.84 to infer the authoritative v0.85 gate.",
+  "authoritative_source": "Only PR #208 workflow run 30566963272 may establish the v0.85 state set and scientific verdict.",
+  "threshold_or_algorithm_change": false,
+  "claim_boundary": "This correction is a preserved diagnostic negative result. No v0.85 scientific pass, external validation, or breakthrough is claimed from the temporary cross-check."
+}
