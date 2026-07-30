@@ -2,6 +2,7 @@
 set -euo pipefail
 
 PARENT=66a100bead80d486591ca9fa16f470ad595f1b2e
+V82_REJECTION_SHA256=69ccc610acb28d7d5881a48ae926ba35226f7dc0523994ad8fe5fcd990468747
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
@@ -19,8 +20,14 @@ git diff --exit-code "$PARENT" -- \
   mini-origin/src/mini_origin/pmlb_blind_v82.py \
   research-evidence/mini-origin-v79-small-query-coverage-pass.json \
   research-evidence/mini-origin-v80-pmlb-preblind-registry.json \
-  research-evidence/mini-origin-v81-pmlb-hash-lock.json \
-  research-evidence/mini-origin-v82-pmlb-blind-rejection.json
+  research-evidence/mini-origin-v81-pmlb-hash-lock.json
+
+# The v0.82 rejection record was committed only after the frozen v0.82 parent.
+# Verify its exact bytes instead of incorrectly requiring it to exist in PARENT.
+test -f research-evidence/mini-origin-v82-pmlb-blind-rejection.json
+printf '%s  %s\n' \
+  "$V82_REJECTION_SHA256" \
+  research-evidence/mini-origin-v82-pmlb-blind-rejection.json | sha256sum --check --strict
 
 cd mini-origin
 python -m pytest -q \
