@@ -7,6 +7,7 @@ from pathlib import Path
 from mini_origin import pmlb_blind_v82 as parent
 from mini_origin import pmlb_development_v85 as development
 
+# Second commit intentionally triggers the diagnostic workflow after its creation.
 SOURCE_RUN_ID = 30566963272
 SOURCE_ARTIFACT_ID = 8770724605
 SOURCE_ARTIFACT_DIGEST = "sha256:e5b2a769903b701184d59f12a9e2783e58aa5e0c818ea9bbcd95e2ff70b6f95a"
