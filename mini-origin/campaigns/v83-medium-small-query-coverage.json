@@ -28,7 +28,7 @@
     "fallback_selector":  {
                               "activation":  "the frozen v0.79 selector returns zero states and 11 \u003c= task.query_count \u003c= 16",
                               "effective_min_raw_queries":  "min(10, max(7, task.query_count - 4))",
-                              "effective_min_redundancy":  "min(4, max(2, effective_min_raw_queries - 6))",
+                              "effective_min_redundancy":  "0 because the fallback targets parent-zero tasks where every retained query may be a distinct partition class",
                               "sample_sizes":  [
                                                    24,
                                                    20,
