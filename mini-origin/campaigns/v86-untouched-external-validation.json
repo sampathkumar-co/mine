@@ -1,9 +1,9 @@
 {
   "campaign": "mini-origin-v86-untouched-external-validation",
-  "status": "preregistered_before_dataset-content-access_or_evaluation",
+  "status": "preregistered_before_dataset-content_access_or_evaluation",
   "parent_commit": "912c3ebd933ae39eb05e10467f1ecad56e326b03",
   "parent_campaign": "mini-origin-v85-response-lattice-closure",
-  "scientific_purpose": "Test whether the frozen v0.85 compiler, selectors, exact planners, independent Rust replay, seeds, budgets, and v0.82 acceptance thresholds transfer to genuinely untouched external tabular tasks without any post-inspection tuning.",
+  "scientific_purpose": "Test whether the frozen v0.85 compiler, selectors, exact planners, independent Rust replay, seeds, budgets, and source-agnostic v0.82 acceptance thresholds transfer to genuinely untouched external tabular tasks without any post-inspection tuning.",
   "preserved_evidence": {
     "negative_results": [
       "research-evidence/mini-origin-v82-pmlb-blind-rejection.json",
@@ -34,7 +34,7 @@
       "minimum redundancy threshold",
       "partition-class thresholds",
       "maximum states per task",
-      "all v0.82 scientific acceptance thresholds"
+      "all source-agnostic scalar v0.82 scientific acceptance thresholds"
     ]
   },
   "external_source": {
@@ -54,12 +54,13 @@
   },
   "execution_order": [
     "implement a metadata-only manifest generator and invariant tests",
-    "run it in CI without downloading selected task contents",
+    "implement and test a source-agnostic v0.86 gate wrapper before task-content access",
+    "run both pre-access components in CI without downloading selected task contents",
     "commit the immutable selected-task manifest and its SHA-256 digest",
     "verify all frozen source-file hashes against the parent commit",
     "download selected tasks exactly once in a dedicated evaluation workflow",
     "retain raw provenance, adapters' outputs, states, Python results, Rust results, evidence, and all failures",
-    "apply the unchanged v0.82 gate once with no retries and no substitutions",
+    "apply the frozen v0.86 transferable gate once with no retries and no substitutions",
     "permanently record pass or rejection"
   ],
   "pre_access_invariants": {
@@ -73,13 +74,22 @@
     "prior_evidence_file_hash_mismatches": 0
   },
   "acceptance_gate": {
-    "source": "unchanged v0.82 preregistration",
+    "source": "v0.82 source-agnostic thresholds, frozen explicitly for v0.86 before task-content access",
+    "transfer_rule": "Preserve every numeric threshold, exactness requirement, budget, and aggregate acceptance condition from v0.82. Do not invoke the PMLB-name-specific previously_zero_datasets clause because its dataset identifiers are not members of the external task set and the legacy validator would otherwise raise KeyError. This omission is a preregistered domain-transfer rule, not a post-result relaxation.",
+    "legacy_nontransferable_clause": {
+      "name": "previously_zero_datasets minimum-state requirement",
+      "reason": "It is keyed to specific PMLB dataset names rather than a source-agnostic scientific quantity and cannot be evaluated on OpenML-CC18 tasks without remapping dataset identities.",
+      "replacement": "Every one of the seven precommitted selected OpenML tasks must contribute at least one valid base state; fewer than seven contributing tasks is an automatic rejection.",
+      "frozen_before_task_content_access": true
+    },
     "contributing_dataset_count": 7,
+    "minimum_base_states_per_selected_task": 1,
     "python_rust_exact_mismatches": 0,
     "objective_mismatches": 0,
     "plan_mismatches": 0,
     "bounded_expansion_regressions": 0,
-    "no_threshold_or_budget_changes": true,
+    "all_v82_numeric_thresholds_unchanged": true,
+    "no_threshold_or_budget_changes_after_content_access": true,
     "no_dataset_specific_code_paths": true,
     "single_authoritative_run": true
   },
@@ -90,6 +100,7 @@
     "infrastructure_failure_rule": "A rerun is permitted only when no selected task result was revealed and the failure is demonstrably external to the scientific computation; the failure and justification must be committed before rerun.",
     "rejection_conditions": [
       "fewer than seven selected tasks contribute",
+      "any selected task contributes zero valid base states",
       "any Python/Rust exact mismatch",
       "any objective mismatch",
       "any plan mismatch",
