@@ -56,7 +56,7 @@ def validate(reference_path: Path, rust_path: Path, output_path: Path):
     result["fresh_external_evidence"] = False
     result["selector_revision"] = "partition-signature-coverage-v84"
     result["claim_scope"] = preregistration["claim_boundary"]
-    result["evidence_digest"] = repair.canonical_digest(result)
+    result["evidence_digest"] = parent.canonical_digest(result)
     output_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
     return result
 
