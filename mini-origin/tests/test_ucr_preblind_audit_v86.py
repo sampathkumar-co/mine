@@ -61,6 +61,10 @@ def test_preregistration_freezes_ucr_preblind_boundary_and_selection_rule():
     assert review["status"] == "review_amendment_before_ucr_catalogue_access"
     assert review["catalogue_access_before_amendment"] is False
     assert review["external_dataset_network_access_before_amendment"] is False
+    second = json.loads(audit.SECOND_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    assert second["status"] == "second_review_amendment_before_ucr_catalogue_access"
+    assert second["catalogue_access_before_amendment"] is False
+    assert second["external_dataset_network_access_before_amendment"] is False
     assert data["parent_v85_commit"] == audit.FROZEN_V85_COMMIT
     assert (
         data["parent_v85_authoritative_evidence_digest"]
@@ -192,21 +196,24 @@ def test_audit_ref_snapshots_include_head_and_immutable_shas(monkeypatch):
     assert {row["sha"] for row in rows} == {"1" * 40, "2" * 40}
 
 
-def test_all_tree_blobs_scans_every_suffix_and_keeps_oversized_entries(monkeypatch):
-    listing = "\n".join([
-        "100644 blob " + "a" * 40 + " 12\tmini-origin/a.sh",
-        "100644 blob " + "b" * 40 + " 13\tmini-origin/b.rs",
-        "100644 blob " + "c" * 40 + " 14\tmini-origin/c.mjs",
-        "100644 blob " + "d" * 40 + " 15\tmini-origin/d.cpp",
-        "100644 blob " + "e" * 40 + " 9999999\tresearch-evidence/archive.bin",
-    ])
-    monkeypatch.setattr(audit.base, "git", lambda *args: listing)
+def test_all_tree_blobs_uses_nul_delimited_unquoted_paths(monkeypatch):
+    entries = [
+        b"100644 blob " + b"a" * 40 + b" 12\tmini-origin/a\tname.sh",
+        b"100644 blob " + b"b" * 40 + b" 13\tmini-origin/new\nline.rs",
+        b"100644 blob " + b"c" * 40 + b" 14\tmini-origin/caf\xc3\xa9.mjs",
+        b"100644 blob " + b"d" * 40 + b" 15\tmini-origin/d.cpp",
+        b"100644 blob " + b"e" * 40 + b" 9999999\tresearch-evidence/archive.bin",
+    ]
+    monkeypatch.setattr(audit, "git_output_bytes", lambda *args: b"\0".join(entries) + b"\0")
     rows = audit.all_tree_blobs("f" * 40)
+    paths = {row["path"] for row in rows}
+    assert "mini-origin/a\tname.sh" in paths
+    assert "mini-origin/new\nline.rs" in paths
+    assert "mini-origin/caf\u00e9.mjs" in paths
     assert {Path(row["path"]).suffix for row in rows} == {
         ".sh", ".rs", ".mjs", ".cpp", ".bin"
     }
     assert max(int(row["size"]) for row in rows) > audit.AUDIT_MAX_FILE_BYTES
-
 
 def test_download_failure_cannot_replace_a_selected_candidate():
     data = json.loads(audit.PREREGISTRATION.read_text(encoding="utf-8"))
@@ -226,3 +233,19 @@ def test_workflow_has_no_path_filter_bypass():
     assert "paths:" not in trigger_prefix
     assert "paths-ignore:" not in trigger_prefix
     assert "pull_request:" in trigger_prefix
+
+def test_endpoint_failure_policy_is_frozen_without_fallback():
+    data = json.loads(audit.PREREGISTRATION.read_text(encoding="utf-8"))
+    source = data["future_source"]
+    assert source["active_endpoint"] == "https://www.timeseriesclassification.com/"
+    assert source["fallback_permitted_in_v87"] is False
+    assert source["endpoint_attempts"] == 3
+    assert source["endpoint_retry_delays_seconds"] == [0, 5, 20]
+    assert source["connect_timeout_seconds"] == 15
+    assert source["read_timeout_seconds"] == 60
+    assert source["maximum_redirects"] == 5
+    assert source["tls_certificate_validation"] is True
+    assert source["all_attempts_failed"] == (
+        "fail v0.87 without accessing the inactive fallback endpoint, "
+        "changing criteria, or selecting datasets"
+    )

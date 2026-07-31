@@ -1,0 +1,18 @@
+{
+  "status": "mini_origin_v86_corrected_registry_run_superseded",
+  "workflow_run": 30602898380,
+  "code_commit": "33400960eccef075741cffdb2af3ed6e75d1898d",
+  "artifact_id": 8782558775,
+  "artifact_digest": "sha256:b6bcc1f43eabe186aec8aecee0c17dc595d8efafe10dce22c3eb202b7f8dbf8b",
+  "registry_file_sha256": "dc1dd26722692776f3f92dc222323e329e09d4bb3834692e10ca969d51fd20ed",
+  "registry_digest": "56185ae011a561cb68aaf5b1f05669068101a633f78629416b694d0f9eeb19d8",
+  "reason": "Second automated review found Git path quoting could skip unusual filenames and endpoint failover semantics remained under-specified.",
+  "review_thread_ids": [
+    "PRRT_kwDOThS6ss6VUHCB",
+    "PRRT_kwDOThS6ss6VUHCC"
+  ],
+  "authority": false,
+  "ucr_candidate_information_accessed": false,
+  "thresholds_changed": false,
+  "next_required_action": "Complete a new repository-only audit after the second review amendment before UCR source access."
+}

@@ -8,7 +8,7 @@
   "objective": "Freeze a repository-wide contamination boundary and a complete deterministic selection rule before any UCR Time Series Classification Archive catalogue, dataset name, metadata row, archive, record, label, or solver output is accessed.",
   "future_source": {
     "name": "UCR Time Series Classification Archive",
-    "source_identity_rule": "Use the first reachable endpoint in official_endpoint_priority. A lower-priority endpoint is permitted only after the higher-priority endpoint failure is recorded before any catalogue metadata is read. Freeze the exact release, metadata endpoint, and selected file URLs returned by that access.",
+    "source_identity_rule": "For v0.87, only active_endpoint may be contacted. Execute exactly endpoint_attempts requests under the frozen retry schedule. If none succeeds, fail the lock; fallback to any other endpoint is forbidden without a new preregistration before source access.",
     "domain_shift": "univariate time-series classification represented as numeric tabular features only after byte locking",
     "catalogue_access_before_audit": false,
     "dataset_bytes_accessed_before_audit": false,
@@ -17,7 +17,30 @@
       "https://www.timeseriesclassification.com/",
       "https://www.cs.ucr.edu/~eamonn/time_series_data_2018/"
     ],
-    "candidate_dataset_names_ids_or_file_urls_committed_before_audit": false
+    "candidate_dataset_names_ids_or_file_urls_committed_before_audit": false,
+    "active_endpoint": "https://www.timeseriesclassification.com/",
+    "inactive_fallback_endpoint": "https://www.cs.ucr.edu/~eamonn/time_series_data_2018/",
+    "fallback_permitted_in_v87": false,
+    "endpoint_attempts": 3,
+    "endpoint_retry_delays_seconds": [
+      0,
+      5,
+      20
+    ],
+    "connect_timeout_seconds": 15,
+    "read_timeout_seconds": 60,
+    "maximum_redirects": 5,
+    "request_method": "GET",
+    "request_headers": {
+      "Accept": "text/html,application/xhtml+xml,application/json,text/csv;q=0.9,*/*;q=0.1",
+      "Accept-Encoding": "identity",
+      "Cache-Control": "no-cache",
+      "User-Agent": "Mini-ORIGIN-v0.87-UCR-byte-lock/1.0"
+    },
+    "tls_certificate_validation": true,
+    "endpoint_success_definition": "HTTP 200 after no more than maximum_redirects, nonempty response bytes, and every redirect/final URL remaining HTTPS on timeseriesclassification.com or www.timeseriesclassification.com",
+    "endpoint_failure_definition": "DNS, connection, TLS, redirect-policy, timeout, empty-body, or non-200 HTTP result; record each attempt outcome without reading candidate records or labels",
+    "all_attempts_failed": "fail v0.87 without accessing the inactive fallback endpoint, changing criteria, or selecting datasets"
   },
   "audit_protocol": {
     "scan_all_remote_refs": true,
@@ -48,7 +71,8 @@
     "scan_all_blob_suffixes": true,
     "blob_decoding": "UTF-8 with replacement for invalid byte sequences; binary and archive blobs are not silently skipped",
     "maximum_blob_bytes": 2000000,
-    "oversized_blob_policy": "fail the audit and record ref, commit SHA, blob SHA, path and byte size"
+    "oversized_blob_policy": "fail the audit and record ref, commit SHA, blob SHA, path and byte size",
+    "git_tree_entry_encoding": "git ls-tree -r --long -z raw bytes; split entries on NUL and metadata/path on the first TAB; decode path bytes with UTF-8 surrogateescape; Git path quoting is forbidden"
   },
   "future_metadata_only_selection": {
     "selection_seed": "mini-origin-v87-ucr-untouched-lock-2026-07-31",
@@ -204,5 +228,6 @@
     "minimum_states_from_each_fresh_holdout_dataset": 6
   },
   "protocol_amendment": "v86-ucr-preblind-protocol-amendment.json",
-  "review_amendment": "v86-ucr-preblind-review-amendment.json"
+  "review_amendment": "v86-ucr-preblind-review-amendment.json",
+  "second_review_amendment": "v86-ucr-preblind-second-review-amendment.json"
 }

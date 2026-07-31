@@ -6,6 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import unicodedata
 
 from . import pmlb_preblind_audit_v80 as prior
@@ -26,6 +27,11 @@ REVIEW_AMENDMENT = (
     Path(__file__).resolve().parents[2]
     / "campaigns"
     / "v86-ucr-preblind-review-amendment.json"
+)
+SECOND_REVIEW_AMENDMENT = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v86-ucr-preblind-second-review-amendment.json"
 )
 V85_EVIDENCE = (
     Path(__file__).resolve().parents[3]
@@ -222,13 +228,38 @@ def audit_ref_snapshots() -> tuple[dict[str, str], ...]:
     return tuple(sorted(rows, key=lambda row: (row["kind"], row["ref"], row["sha"])))
 
 
+def git_output_bytes(*args: str) -> bytes:
+    completed = subprocess.run(
+        ["git", *args],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    return completed.stdout
+
+
 def all_tree_blobs(commit_sha: str) -> tuple[dict[str, object], ...]:
     rows: list[dict[str, object]] = []
-    for line in base.git("ls-tree", "-r", "--long", commit_sha).splitlines():
-        metadata, path = line.split("\t", 1)
-        parts = metadata.split()
+    raw = git_output_bytes(
+        "-c",
+        "core.quotepath=false",
+        "ls-tree",
+        "-r",
+        "--long",
+        "-z",
+        commit_sha,
+    )
+    for entry in raw.split(b"\0"):
+        if not entry:
+            continue
+        try:
+            metadata_bytes, path_bytes = entry.split(b"\t", 1)
+        except ValueError as error:
+            raise RuntimeError("malformed NUL-delimited git tree entry") from error
+        parts = metadata_bytes.decode("ascii", errors="strict").split()
         if len(parts) < 4 or parts[1] != "blob":
             continue
+        path = path_bytes.decode("utf-8", errors="surrogateescape")
         if not path.startswith(AUDIT_ROOTS):
             continue
         rows.append({
@@ -331,6 +362,23 @@ def load_inputs() -> tuple[
     ):
         if review_amendment[key] is not False:
             raise RuntimeError(f"review-amendment boundary violated: {key}")
+    second_review = json.loads(SECOND_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    if preregistration["second_review_amendment"] != SECOND_REVIEW_AMENDMENT.name:
+        raise RuntimeError("v0.86 second review amendment reference changed")
+    if second_review["status"] != "second_review_amendment_before_ucr_catalogue_access":
+        raise RuntimeError("v0.86 second review amendment status changed")
+    for key in (
+        "catalogue_access_before_amendment",
+        "candidate_dataset_metadata_access_before_amendment",
+        "candidate_dataset_names_accessed_before_amendment",
+        "candidate_dataset_file_urls_accessed_before_amendment",
+        "candidate_dataset_bytes_accessed_before_amendment",
+        "records_or_labels_accessed_before_amendment",
+        "solver_execution_before_amendment",
+        "external_dataset_network_access_before_amendment",
+    ):
+        if second_review[key] is not False:
+            raise RuntimeError(f"second-review boundary violated: {key}")
     if preregistration["parent_v85_commit"] != FROZEN_V85_COMMIT:
         raise RuntimeError("frozen v0.85 commit changed")
     if preregistration["parent_v85_authoritative_evidence_digest"] != V85_EVIDENCE_DIGEST:
@@ -370,6 +418,24 @@ def load_inputs() -> tuple[
         raise RuntimeError("audit blob size limit changed")
     if audit_protocol["oversized_blob_policy"] != "fail the audit and record ref, commit SHA, blob SHA, path and byte size":
         raise RuntimeError("oversized blob policy changed")
+    if audit_protocol["git_tree_entry_encoding"] != "git ls-tree -r --long -z raw bytes; split entries on NUL and metadata/path on the first TAB; decode path bytes with UTF-8 surrogateescape; Git path quoting is forbidden":
+        raise RuntimeError("Git tree entry encoding changed")
+    if source["active_endpoint"] != "https://www.timeseriesclassification.com/":
+        raise RuntimeError("active UCR endpoint changed")
+    if source["fallback_permitted_in_v87"] is not False:
+        raise RuntimeError("v0.87 endpoint fallback was enabled")
+    if source["endpoint_attempts"] != 3:
+        raise RuntimeError("endpoint attempt count changed")
+    if source["endpoint_retry_delays_seconds"] != [0, 5, 20]:
+        raise RuntimeError("endpoint retry schedule changed")
+    if source["connect_timeout_seconds"] != 15 or source["read_timeout_seconds"] != 60:
+        raise RuntimeError("endpoint timeout policy changed")
+    if source["maximum_redirects"] != 5:
+        raise RuntimeError("endpoint redirect limit changed")
+    if source["tls_certificate_validation"] is not True:
+        raise RuntimeError("endpoint TLS validation was disabled")
+    if source["all_attempts_failed"] != "fail v0.87 without accessing the inactive fallback endpoint, changing criteria, or selecting datasets":
+        raise RuntimeError("endpoint all-attempts-failed policy changed")
     blind_gate = preregistration["future_blind_gate"]
     if blind_gate["gate_source"] != "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets":
         raise RuntimeError("future blind gate source changed")
@@ -613,7 +679,8 @@ def audit() -> dict[str, object]:
         "scanned_suffixes": sorted(scanned_suffixes),
         "maximum_blob_bytes": AUDIT_MAX_FILE_BYTES,
         "oversized_blob_policy": "fail and record immutable provenance",
-        "blob_decoding": "UTF-8 with replacement for invalid byte sequences",
+        "blob_decoding": "UTF-8 with replacement for invalid blob content byte sequences",
+        "git_tree_entry_encoding": preregistration["audit_protocol"]["git_tree_entry_encoding"],
         "dataset_name_normalization": preregistration["audit_protocol"]["dataset_name_normalization"],
         "ucr_name_patterns": [pattern.pattern for pattern in UCR_NAME_PATTERNS],
         "ucr_source_pattern": UCR_SOURCE_PATTERN.pattern,
