@@ -1,0 +1,22 @@
+{
+  "status": "mini_origin_v86_fifth_registry_run_superseded",
+  "workflow_run": 30606572076,
+  "ordinary_ci_run": 30606572082,
+  "code_commit": "9aeb9071743c035b2a8752232740014d418c5106",
+  "artifact_id": 8783816043,
+  "artifact_digest": "sha256:f3f0d15661b2c61907fd9c5bf27ca164d1566ffe990ca31bacd9f66586ffadd8",
+  "registry_file_sha256": "7a84c6c203ec44a79d1b7777374b0145346316ef74d4498174c6549651912c93",
+  "registry_digest": "8f56b7be5eab840dc264260ce00da20005f90f55550857f7471448643084f921",
+  "reason": "Final automated preaccess review found five remaining deterministic protocol/implementation ambiguities.",
+  "review_thread_ids": [
+    "PRRT_kwDOThS6ss6VU2n7",
+    "PRRT_kwDOThS6ss6VU2n-",
+    "PRRT_kwDOThS6ss6VU2oB",
+    "PRRT_kwDOThS6ss6VU2oE",
+    "PRRT_kwDOThS6ss6VU2oG"
+  ],
+  "authority": false,
+  "ucr_candidate_information_accessed": false,
+  "thresholds_changed": false,
+  "next_required_action": "Complete the fifth preaccess correction and rerun the repository-only audit before any source access."
+}

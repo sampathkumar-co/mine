@@ -44,6 +44,11 @@ FOURTH_REVIEW_AMENDMENT = (
     / "campaigns"
     / "v86-ucr-preblind-fourth-review-amendment.json"
 )
+FIFTH_REVIEW_AMENDMENT = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v86-ucr-preblind-fifth-review-amendment.json"
+)
 V85_EVIDENCE = (
     Path(__file__).resolve().parents[3]
     / "research-evidence"
@@ -424,6 +429,27 @@ def load_inputs() -> tuple[
     ):
         if fourth_review[key] is not False:
             raise RuntimeError(f"fourth-review boundary violated: {key}")
+    fifth_review = json.loads(FIFTH_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    if preregistration["fifth_review_amendment"] != FIFTH_REVIEW_AMENDMENT.name:
+        raise RuntimeError("v0.86 fifth review amendment reference changed")
+    if fifth_review["status"] != "fifth_review_amendment_before_ucr_catalogue_access":
+        raise RuntimeError("v0.86 fifth review amendment status changed")
+    for key in (
+        "catalogue_access_before_amendment",
+        "candidate_dataset_metadata_access_before_amendment",
+        "candidate_dataset_names_accessed_before_amendment",
+        "candidate_dataset_file_urls_accessed_before_amendment",
+        "candidate_dataset_bytes_accessed_before_amendment",
+        "records_or_labels_accessed_before_amendment",
+        "solver_execution_before_amendment",
+        "external_dataset_network_access_before_amendment",
+    ):
+        if fifth_review[key] is not False:
+            raise RuntimeError(f"fifth-review boundary violated: {key}")
+    if fifth_review["superseded_workflow_run"] != 30606572076:
+        raise RuntimeError("fifth-review superseded run changed")
+    if fifth_review["superseded_artifact_id"] != 8783816043:
+        raise RuntimeError("fifth-review superseded artifact changed")
     if preregistration["parent_v85_commit"] != FROZEN_V85_COMMIT:
         raise RuntimeError("frozen v0.85 commit changed")
     if preregistration["parent_v85_authoritative_evidence_digest"] != V85_EVIDENCE_DIGEST:
@@ -489,8 +515,10 @@ def load_inputs() -> tuple[
         raise RuntimeError("minimum endpoint successes changed")
     if source["successful_endpoint_attempt_agreement"] != "collect every successful attempt; require identical lowercase SHA-256 body digest and identical NFC-normalized final URL across all successful attempts; disagreement fails v0.87":
         raise RuntimeError("endpoint successful-attempt agreement changed")
-    if source["authoritative_endpoint_response"] != "after agreement, use the successful attempt with the lowest 1-based attempt index; frozen_source_release is the lowercase SHA-256 of its exact response bytes":
+    if source["authoritative_endpoint_response"] != "after agreement, use the successful attempt with the lowest 1-based attempt index; root_endpoint_body_sha256 is the lowercase SHA-256 of its exact response bytes and is not frozen_source_release":
         raise RuntimeError("authoritative endpoint response changed")
+    if source["source_release_digest_definition"] != "frozen_source_release has exactly one definition: lowercase SHA-256 of the complete canonical source-release manifest covering every authoritative root, traversal, and candidate HTML page; no single-page body digest may be used for ranking":
+        raise RuntimeError("source-release digest definition changed")
     if source["endpoint_body_reading"] != "read at most maximum_endpoint_response_bytes plus one sentinel byte; a sentinel byte proves overflow; never classify or parse an overflowing body as successful":
         raise RuntimeError("endpoint body cap enforcement changed")
     if "body-size overflow" not in source["endpoint_failure_definition"]:
@@ -570,10 +598,20 @@ def load_inputs() -> tuple[
         raise RuntimeError("catalogue parser freeze status changed")
     if parser["root_url"] != catalogue.ROOT_URL:
         raise RuntimeError("catalogue root differs from parser")
+    if "strictly percent-decoded as UTF-8" not in parser["url_canonicalization"]:
+        raise RuntimeError("catalogue URL path decoding rule changed")
+    if "ASCII [a-z0-9]+ tokens only" not in parser["dataset_name_normalization"]:
+        raise RuntimeError("catalogue dataset-name normalization changed")
     if parser["crawl"]["maximum_depth"] != catalogue.MAX_CRAWL_DEPTH:
         raise RuntimeError("catalogue crawl depth differs from parser")
     if parser["crawl"]["maximum_fetched_html_pages"] != catalogue.MAX_HTML_PAGES:
         raise RuntimeError("catalogue page cap differs from parser")
+    if "exact union of authoritative root, traversal" not in parser["crawl"]["page_limit_scope"]:
+        raise RuntimeError("catalogue complete page-cap scope changed")
+    if "authoritative NFC-normalized final URL" not in parser["crawl"]["relative_link_base"]:
+        raise RuntimeError("catalogue relative-link base changed")
+    if "path and query must exactly equal" not in parser["candidate_redirect_identity"]:
+        raise RuntimeError("candidate redirect identity rule changed")
     parser_aliases = {
         key: sorted(values) for key, values in parser["field_aliases"].items()
     }
@@ -592,6 +630,90 @@ def load_inputs() -> tuple[
         raise RuntimeError("catalogue conflict policy changed")
     if parser["duplicate_normalized_name_policy"] != "if more than one distinct candidate description URL yields the same normalized name, reject every row in that name group even when metadata is otherwise identical":
         raise RuntimeError("duplicate-name policy changed")
+    if sorted(parser["non_visible_text_tags"]) != sorted(catalogue.NON_VISIBLE_TEXT_TAGS):
+        raise RuntimeError("non-visible text tag set differs from parser")
+    if "excluded from links, rows, definitions" not in parser["visible_text_rule"]:
+        raise RuntimeError("visible text extraction boundary changed")
+    page_transport = parser["page_transport"]
+    if page_transport["implementation"] != "mini_origin.ucr_catalogue_protocol_v87.authoritative_html_page":
+        raise RuntimeError("HTML page transport implementation changed")
+    if page_transport["attempt_count"] != catalogue.HTML_PAGE_ATTEMPT_COUNT:
+        raise RuntimeError("HTML page attempt count differs from parser")
+    if page_transport["attempt_indices"] != list(catalogue.HTML_PAGE_ATTEMPT_INDICES):
+        raise RuntimeError("HTML page attempt indices differ from parser")
+    if page_transport["maximum_response_bytes"] != catalogue.HTML_PAGE_MAX_RESPONSE_BYTES:
+        raise RuntimeError("HTML page response cap differs from parser")
+    if page_transport["retry_delays_seconds"] != list(catalogue.HTML_PAGE_RETRY_DELAYS_SECONDS):
+        raise RuntimeError("HTML page retry schedule differs from parser")
+    if page_transport["request_method"] != catalogue.HTML_PAGE_REQUEST_METHOD:
+        raise RuntimeError("HTML page request method differs from parser")
+    if tuple(source["request_headers"].items()) != catalogue.HTML_PAGE_REQUEST_HEADERS:
+        raise RuntimeError("HTML page request headers differ from parser")
+    if page_transport["connect_timeout_seconds"] != int(catalogue.HTML_PAGE_CONNECT_TIMEOUT_SECONDS):
+        raise RuntimeError("HTML page connect timeout differs from parser")
+    if page_transport["read_timeout_seconds"] != int(catalogue.HTML_PAGE_READ_TIMEOUT_SECONDS):
+        raise RuntimeError("HTML page read timeout differs from parser")
+    if page_transport["total_attempt_deadline_seconds"] != int(catalogue.HTML_PAGE_TOTAL_DEADLINE_SECONDS):
+        raise RuntimeError("HTML page total deadline differs from parser")
+    if page_transport["maximum_redirects"] != catalogue.HTML_PAGE_MAX_REDIRECTS:
+        raise RuntimeError("HTML page redirect limit differs from parser")
+    if page_transport["tls_certificate_validation"] is not True:
+        raise RuntimeError("HTML page TLS validation was disabled")
+    required_attempt_fields = {
+        "attempt_index", "scheduled_delay_seconds", "request_method",
+        "request_headers", "tls_certificate_validated", "redirect_chain",
+        "connect_elapsed_seconds", "read_elapsed_seconds",
+        "total_elapsed_seconds", "status_code", "final_url", "body", "failure",
+    }
+    if set(page_transport["attempt_record_schema"]) != required_attempt_fields:
+        raise RuntimeError("HTML page attempt evidence schema changed")
+    if "root page, every scheduled traversal page, and every discovered candidate" not in page_transport["scope"]:
+        raise RuntimeError("HTML page transport scope changed")
+    if "identical normalized final URL and exact body bytes" not in page_transport["agreement"]:
+        raise RuntimeError("HTML page agreement rule changed")
+    if "exactly one CandidateParseResult for every canonical discovered candidate URL" not in parser["candidate_result_coverage"]:
+        raise RuntimeError("candidate result coverage rule changed")
+    if "AuthoritativeHTMLPage returned only by authoritative_html_page" not in parser["crawl"]["input_pages"]:
+        raise RuntimeError("catalogue crawl authoritative input rule changed")
+    if not parser["candidate_page_parse_implementation"].startswith(
+        "mini_origin.ucr_catalogue_protocol_v87.parse_authoritative_candidate_page"
+    ):
+        raise RuntimeError("candidate authoritative parse implementation changed")
+    if "missing, extra, or duplicate requested URLs fail" not in parser["source_release_manifest_coverage"]:
+        raise RuntimeError("source manifest exact coverage rule changed")
+    if not parser["metadata_snapshot_implementation"].startswith(
+        "mini_origin.ucr_catalogue_protocol_v87.finalize_metadata_snapshot"
+    ):
+        raise RuntimeError("metadata snapshot implementation changed")
+    if "exact complete union" not in parser["metadata_snapshot_implementation"]:
+        raise RuntimeError("metadata snapshot exact page coverage changed")
+    if "creates the sole source manifest digest" not in parser["metadata_snapshot_implementation"]:
+        raise RuntimeError("metadata snapshot source digest authority changed")
+    if "frozen_source_release is exclusively" not in parser["source_release_manifest"]:
+        raise RuntimeError("source release manifest authority changed")
+    eligibility = selection["eligibility"]
+    if eligibility["implementation"] != "mini_origin.ucr_catalogue_protocol_v87.metadata_eligibility_rejections":
+        raise RuntimeError("metadata eligibility implementation changed")
+    if eligibility["minimum_total_instances"] != catalogue.MIN_TOTAL_INSTANCES:
+        raise RuntimeError("minimum total instances differs from parser")
+    if eligibility["maximum_total_instances"] != catalogue.MAX_TOTAL_INSTANCES:
+        raise RuntimeError("maximum total instances differs from parser")
+    if eligibility["minimum_series_length"] != catalogue.MIN_SERIES_LENGTH:
+        raise RuntimeError("minimum series length differs from parser")
+    if eligibility["maximum_series_length"] != catalogue.MAX_SERIES_LENGTH:
+        raise RuntimeError("maximum series length differs from parser")
+    if eligibility["minimum_classes"] != catalogue.MIN_CLASS_COUNT:
+        raise RuntimeError("minimum class count differs from parser")
+    if eligibility["maximum_classes"] != catalogue.MAX_CLASS_COUNT:
+        raise RuntimeError("maximum class count differs from parser")
+    if eligibility["numeric_series_predicate"] != parser["numeric_series_metadata_predicate"]:
+        raise RuntimeError("numeric-series predicate differs between parser and selection")
+    if "no file bytes, records, or labels are inspected" not in parser["numeric_series_metadata_predicate"]:
+        raise RuntimeError("numeric-series predicate is not metadata-only")
+    if "canonical train_url and test_url are distinct" not in parser["numeric_series_metadata_predicate"]:
+        raise RuntimeError("numeric-series distinct URL rule changed")
+    if "accepted canonical TRAIN and TEST URLs must be distinct" not in parser["train_test_link_rule"]:
+        raise RuntimeError("TRAIN/TEST distinct file rule changed")
     for key in (
         "algorithm_revisions",
         "compiler_revisions",

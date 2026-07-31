@@ -69,6 +69,16 @@ def test_preregistration_freezes_ucr_preblind_boundary_and_selection_rule():
     assert third["status"] == "third_review_amendment_before_ucr_catalogue_access"
     assert third["catalogue_access_before_amendment"] is False
     assert third["external_dataset_network_access_before_amendment"] is False
+    fourth = json.loads(audit.FOURTH_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    assert fourth["status"] == "fourth_review_amendment_before_ucr_catalogue_access"
+    assert fourth["catalogue_access_before_amendment"] is False
+    assert fourth["external_dataset_network_access_before_amendment"] is False
+    fifth = json.loads(audit.FIFTH_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    assert fifth["status"] == "fifth_review_amendment_before_ucr_catalogue_access"
+    assert fifth["catalogue_access_before_amendment"] is False
+    assert fifth["external_dataset_network_access_before_amendment"] is False
+    assert fifth["superseded_workflow_run"] == 30606572076
+    assert fifth["superseded_artifact_id"] == 8783816043
     assert data["parent_v85_commit"] == audit.FROZEN_V85_COMMIT
     assert (
         data["parent_v85_authoritative_evidence_digest"]
@@ -270,8 +280,11 @@ def test_endpoint_success_agreement_and_authority_are_frozen():
     )
     assert source["authoritative_endpoint_response"] == (
         "after agreement, use the successful attempt with the lowest 1-based "
-        "attempt index; frozen_source_release is the lowercase SHA-256 of its "
-        "exact response bytes"
+        "attempt index; root_endpoint_body_sha256 is the lowercase SHA-256 of "
+        "its exact response bytes and is not frozen_source_release"
+    )
+    assert source["source_release_digest_definition"].startswith(
+        "frozen_source_release has exactly one definition"
     )
 
 
@@ -296,4 +309,32 @@ def test_selected_file_transport_and_agreement_are_frozen():
     )
     assert lock["authoritative_selected_file_response"] == (
         "after agreement, use the successful attempt with the lowest 1-based attempt index"
+    )
+
+
+def test_fifth_review_freezes_page_transport_coverage_visibility_and_eligibility():
+    data = json.loads(audit.PREREGISTRATION.read_text(encoding="utf-8"))
+    parser = data["future_catalogue_parser"]
+    transport = parser["page_transport"]
+    assert transport["attempt_count"] == audit.catalogue.HTML_PAGE_ATTEMPT_COUNT
+    assert transport["attempt_indices"] == list(audit.catalogue.HTML_PAGE_ATTEMPT_INDICES)
+    assert transport["maximum_response_bytes"] == audit.catalogue.HTML_PAGE_MAX_RESPONSE_BYTES
+    assert "root page, every scheduled traversal page" in transport["scope"]
+    assert "exactly one CandidateParseResult" in parser["candidate_result_coverage"]
+    assert sorted(parser["non_visible_text_tags"]) == sorted(
+        audit.catalogue.NON_VISIBLE_TEXT_TAGS
+    )
+    assert "frozen_source_release is exclusively" in parser["source_release_manifest"]
+    eligibility = data["future_metadata_only_selection"]["eligibility"]
+    assert eligibility["implementation"] == (
+        "mini_origin.ucr_catalogue_protocol_v87.metadata_eligibility_rejections"
+    )
+    assert eligibility["minimum_total_instances"] == audit.catalogue.MIN_TOTAL_INSTANCES
+    assert eligibility["maximum_total_instances"] == audit.catalogue.MAX_TOTAL_INSTANCES
+    assert eligibility["minimum_series_length"] == audit.catalogue.MIN_SERIES_LENGTH
+    assert eligibility["maximum_series_length"] == audit.catalogue.MAX_SERIES_LENGTH
+    assert eligibility["minimum_classes"] == audit.catalogue.MIN_CLASS_COUNT
+    assert eligibility["maximum_classes"] == audit.catalogue.MAX_CLASS_COUNT
+    assert "no file bytes, records, or labels are inspected" in (
+        eligibility["numeric_series_predicate"]
     )
