@@ -159,3 +159,43 @@ def test_parser_module_has_no_network_client():
     assert "requests" not in source
     assert "httpx" not in source
     assert "aiohttp" not in source
+
+
+def test_field_label_normalization_uses_unicode_alphanumeric_only():
+    assert catalogue.normalize_field_label(" Number_of---Classes ") == "number of classes"
+    assert catalogue.normalize_field_label("Caf\u00e9 / Count") == "caf\u00e9 count"
+
+
+def test_anchor_text_fallback_accepts_generic_data_filenames():
+    url = catalogue.canonical_url(
+        catalogue.ROOT_URL,
+        "/description.php?Dataset=FixtureSeries",
+    )
+    body = candidate_html().replace(
+        b'/data/FixtureSeries_TRAIN.tsv">TRAIN',
+        b'/download/data-a.tsv">Training data',
+    ).replace(
+        b'/data/FixtureSeries_TEST.tsv">TEST',
+        b'/download/data-b.tsv">Testing data',
+    )
+    result = catalogue.parse_candidate_page(url, body)
+    assert result.rejections == ()
+    assert result.metadata is not None
+    assert result.metadata.train_url.endswith("/download/data-a.tsv")
+    assert result.metadata.test_url.endswith("/download/data-b.tsv")
+
+
+def test_candidate_page_failures_are_fatal_but_metadata_rejections_are_not():
+    page_failure = catalogue.CandidateParseResult(
+        "https://www.timeseriesclassification.com/description.php?Dataset=Broken",
+        None,
+        ("page:invalid UTF-8",),
+    )
+    with pytest.raises(RuntimeError):
+        catalogue.require_no_candidate_page_failures((page_failure,))
+    metadata_rejection = catalogue.CandidateParseResult(
+        "https://www.timeseriesclassification.com/description.php?Dataset=Missing",
+        None,
+        ("missing:class_count",),
+    )
+    catalogue.require_no_candidate_page_failures((metadata_rejection,))

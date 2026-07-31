@@ -186,7 +186,17 @@ def normalize_dataset_name(value: str) -> str:
 
 def normalize_field_label(value: str) -> str:
     normalized = unicodedata.normalize("NFC", value).casefold()
-    return " ".join(re.sub(r"[^\w]+", " ", normalized, flags=re.UNICODE).split())
+    pieces: list[str] = []
+    separator_pending = False
+    for character in normalized:
+        if character.isalnum():
+            if separator_pending and pieces:
+                pieces.append(" ")
+            pieces.append(character)
+            separator_pending = False
+        else:
+            separator_pending = True
+    return "".join(pieces).strip()
 
 
 def decode_html(body: bytes) -> str:
@@ -364,24 +374,23 @@ def _one_distinct(
     return next(iter(converted))
 
 
+def _has_data_suffix(path_name: str) -> bool:
+    return bool(re.search(r"\.(?:ts|tsv|txt|csv|arff)(?:\.gz)?$", path_name, re.IGNORECASE))
+
+
 def _data_link_kind(url: str, anchor_text: str, dataset_name: str) -> str | None:
     path_name = PurePosixPath(unquote(urlsplit(url).path)).name
-    match = DATA_SUFFIX_PATTERN.fullmatch(path_name)
-    if match is None:
-        return None
-    if normalize_dataset_name(match.group("prefix")) != dataset_name:
-        return None
-    kind = match.group("kind").casefold()
     text = normalize_field_label(anchor_text)
-    if kind == "train" and (not text or text in TRAIN_ANCHOR_TEXTS):
-        return "train"
-    if kind == "test" and (not text or text in TEST_ANCHOR_TEXTS):
-        return "test"
+    match = DATA_SUFFIX_PATTERN.fullmatch(path_name)
+    if match is not None and normalize_dataset_name(match.group("prefix")) == dataset_name:
+        return match.group("kind").casefold()
+    if not _has_data_suffix(path_name):
+        return None
     if text in TRAIN_ANCHOR_TEXTS:
         return "train"
     if text in TEST_ANCHOR_TEXTS:
         return "test"
-    return kind
+    return None
 
 
 def parse_candidate_page(description_url: str, body: bytes) -> CandidateParseResult:
@@ -441,6 +450,19 @@ def parse_candidate_page(description_url: str, body: bytes) -> CandidateParseRes
         metadata_page_sha256=hashlib.sha256(body).hexdigest(),
     )
     return CandidateParseResult(url, metadata, ())
+
+
+def require_no_candidate_page_failures(
+    results: tuple[CandidateParseResult, ...],
+) -> None:
+    failures = [
+        (result.description_url, rejection)
+        for result in results
+        for rejection in result.rejections
+        if rejection.startswith("page:")
+    ]
+    if failures:
+        raise RuntimeError(f"candidate page failure: {failures!r}")
 
 
 def reject_duplicate_names(
