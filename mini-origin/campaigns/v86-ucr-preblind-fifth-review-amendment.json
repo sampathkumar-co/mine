@@ -1,0 +1,13 @@
+{
+  "status": "preregistered_before_ucr_catalogue_access",
+  "parent_head": "9aeb9071743c035b2a8752232740014d418c5106",
+  "purpose": "Resolve final review ambiguities before UCR access.",
+  "thresholds_changed": false,
+  "budgets_changed": false,
+  "algorithm_changed": false,
+  "negative_results_preserved": true,
+  "ucr_catalogue_accessed": false,
+  "dataset_bytes_accessed": false,
+  "records_or_labels_accessed": false,
+  "solver_executed": false
+}

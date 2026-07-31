@@ -192,10 +192,25 @@ def test_candidate_page_failures_are_fatal_but_metadata_rejections_are_not():
         ("page:invalid UTF-8",),
     )
     with pytest.raises(RuntimeError):
-        catalogue.require_no_candidate_page_failures((page_failure,))
+        catalogue.require_no_candidate_page_failures((page_failure.description_url,), (page_failure,))
     metadata_rejection = catalogue.CandidateParseResult(
         "https://www.timeseriesclassification.com/description.php?Dataset=Missing",
         None,
         ("missing:class_count",),
     )
-    catalogue.require_no_candidate_page_failures((metadata_rejection,))
+    catalogue.require_no_candidate_page_failures((metadata_rejection.description_url,), (metadata_rejection,))
+
+
+def test_hidden_script_and_style_text_is_not_metadata():
+    url=catalogue.canonical_url(catalogue.ROOT_URL, '/description.php?Dataset=FixtureSeries')
+    body=candidate_html().replace(b'<html><body>', b'<html><body><script>Classes: 99</script><style>Length: 999</style>')
+    result=catalogue.parse_candidate_page(url, body)
+    assert result.metadata is not None
+    assert result.metadata.class_count == 3
+    assert result.metadata.series_length == 24
+
+
+def test_candidate_result_coverage_cannot_omit_discovered_url():
+    expected=(catalogue.canonical_url(catalogue.ROOT_URL, '/description.php?Dataset=Missing'),)
+    with pytest.raises(RuntimeError, match='coverage mismatch'):
+        catalogue.require_no_candidate_page_failures(expected, ())

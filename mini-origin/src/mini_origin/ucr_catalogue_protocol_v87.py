@@ -117,6 +117,7 @@ class _ArchiveHTMLParser(HTMLParser):
         self._definition_tag: str | None = None
         self._definition_text: list[str] = []
         self._pending_dt: str | None = None
+        self._hidden_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.casefold()

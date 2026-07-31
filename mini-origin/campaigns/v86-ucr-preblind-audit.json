@@ -44,7 +44,7 @@
     "endpoint_attempt_execution": "execute all three attempts even after an earlier success",
     "maximum_endpoint_response_bytes": 10000000,
     "successful_endpoint_attempt_agreement": "collect every successful attempt; require identical lowercase SHA-256 body digest and identical NFC-normalized final URL across all successful attempts; disagreement fails v0.87",
-    "authoritative_endpoint_response": "after agreement, use the successful attempt with the lowest 1-based attempt index; frozen_source_release is the lowercase SHA-256 of its exact response bytes",
+    "authoritative_endpoint_response": "after agreement, use the lowest-index successful attempt; record its exact response-body SHA-256 separately as authoritative_root_body_sha256; frozen_source_release is exclusively the canonical complete source-release manifest digest",
     "minimum_successful_endpoint_attempts": 1,
     "endpoint_body_reading": "read at most maximum_endpoint_response_bytes plus one sentinel byte; a sentinel byte proves overflow; never classify or parse an overflowing body as successful",
     "endpoint_connect_timeout_clock": "per connection attempt, measured by a monotonic clock from connection initiation until connection establishment; each redirect starts a new connection timeout but remains within endpoint_total_attempt_deadline_seconds",
@@ -96,7 +96,8 @@
       "minimum_classes": 2,
       "maximum_classes": 15,
       "official_train_and_test_files_required": true,
-      "numeric_series_required": true
+      "numeric_series_required": true,
+      "numeric_series_metadata_only_predicate": "true exactly when classification and univariate are true and canonical TRAIN/TEST URL paths end case-sensitively in _TRAIN.tsv or _TRAIN.txt and _TEST.tsv or _TEST.txt; no bytes, records, or labels may be opened"
     },
     "exclusions": {
       "normalized_name_in_v86_registry": true,
@@ -348,6 +349,27 @@
     "duplicate_normalized_name_policy": "if more than one distinct candidate description URL yields the same normalized name, reject every row in that name group even when metadata is otherwise identical",
     "candidate_page_failure": "fail whole v0.87 metadata lock rather than skip a discovered candidate page",
     "source_release_manifest": "canonical JSON array sorted by canonical requested page URL; each element is [requested_url, NFC-normalized final_url, lowercase SHA-256 of exact authoritative body bytes]; ensure_ascii=false, compact separators, UTF-8 no BOM/newline; frozen_source_release is lowercase SHA-256 of these manifest bytes",
-    "record_enumeration": "after the full crawl and all candidate-page parses complete, sort accepted metadata rows by normalized_dataset_name then description_url; apply contamination/eligibility; reject duplicate names; rank only the remaining rows with the frozen ranking bytes"
+    "record_enumeration": "after the full crawl and all candidate-page parses complete, sort accepted metadata rows by normalized_dataset_name then description_url; apply contamination/eligibility; reject duplicate names; rank only the remaining rows with the frozen ranking bytes",
+    "source_release_identity": "frozen_source_release is exclusively lowercase SHA-256 of canonical source_release_manifest bytes covering every fetched root, traversal, and candidate HTML page; root-body digest is separate",
+    "candidate_result_coverage": "exactly one result for every discovered candidate URL, with no omissions, extras, duplicates, or page failures",
+    "all_html_page_transport": {
+      "scope": "root, every traversal page, every candidate page",
+      "attempts_per_url": 3,
+      "retry_delays_seconds": [
+        0,
+        5,
+        20
+      ],
+      "connect_timeout_seconds": 15,
+      "read_timeout_seconds": 60,
+      "total_attempt_deadline_seconds": 90,
+      "maximum_response_bytes": 10000000,
+      "maximum_redirects": 5,
+      "tls_validation": true,
+      "attempt_execution": "all three attempts",
+      "agreement": "all successes for a URL must have identical body SHA-256 and canonical final URL",
+      "authoritative_response": "lowest-index success after agreement",
+      "failure": "any no-success, disagreement, overflow, timeout, non-200, TLS, DNS, connection, or redirect-policy failure rejects the lock"
+    }
   }
 }
