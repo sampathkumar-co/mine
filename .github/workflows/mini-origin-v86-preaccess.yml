@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'mini-origin/v86_transferable_gate.py'
+      - 'mini-origin/v86_manifest_generator.py'
       - 'mini-origin/campaigns/v82-pmlb-blind.json'
       - 'mini-origin/campaigns/v86-untouched-external-validation.json'
       - '.github/workflows/mini-origin-v86-preaccess.yml'
@@ -21,9 +22,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify frozen v0.82 lock and v0.86 gate invariants
+      - name: Verify frozen gate and manifest invariants
         run: |
           python mini-origin/v86_transferable_gate.py --self-test
+          python mini-origin/v86_manifest_generator.py --self-test
           python - <<'PY'
           import importlib.util
           import json
@@ -42,4 +44,4 @@ jobs:
       - name: Assert no external task-content access in pre-access implementation
         run: |
           ! grep -R -E 'openml\.datasets\.get_dataset|openml\.tasks\.get_task|download_data|load_arff' \
-            mini-origin/v86_transferable_gate.py
+            mini-origin/v86_transferable_gate.py mini-origin/v86_manifest_generator.py
