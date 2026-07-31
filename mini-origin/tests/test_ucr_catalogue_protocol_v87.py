@@ -109,6 +109,35 @@ def test_authoritative_page_rejects_unrecorded_final_url_without_redirect():
         catalogue.authoritative_html_page(requested, attempts)
 
 
+def test_authoritative_page_rejects_failed_attempt_with_success_state_fields():
+    requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
+    attempts = (
+        page_attempt(
+            1,
+            requested,
+            None,
+            failure="timeout",
+            final_url=requested,
+            status_code=200,
+        ),
+        page_attempt(2, requested, None, failure="timeout"),
+        page_attempt(3, requested, None, failure="timeout"),
+    )
+    with pytest.raises(ValueError, match="success-state fields"):
+        catalogue.authoritative_html_page(requested, attempts)
+
+
+@pytest.mark.parametrize("failure", ("", "   ", " timeout", "timeout\n"))
+def test_authoritative_page_rejects_noncanonical_failure_text(failure: str):
+    requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
+    attempts = tuple(
+        page_attempt(index, requested, None, failure=failure)
+        for index in catalogue.HTML_PAGE_ATTEMPT_INDICES
+    )
+    with pytest.raises(ValueError, match="normalized non-empty failure text"):
+        catalogue.authoritative_html_page(requested, attempts)
+
+
 def test_html_decoding_is_strict_with_optional_utf8_bom():
     assert catalogue.decode_html(b"\xef\xbb\xbfhello") == "hello"
     with pytest.raises(UnicodeDecodeError):

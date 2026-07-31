@@ -349,6 +349,13 @@ def authoritative_html_page(
         if attempt.failure is not None:
             if attempt.body is not None:
                 raise ValueError("failed HTML page attempts cannot contain accepted body bytes")
+            if attempt.final_url is not None or attempt.status_code is not None:
+                raise ValueError("failed HTML page attempts cannot contain success-state fields")
+            normalized_failure = normalize_visible_text(attempt.failure)
+            if not normalized_failure or normalized_failure != attempt.failure:
+                raise ValueError(
+                    "failed HTML page attempts require normalized non-empty failure text"
+                )
             continue
         if attempt.final_url is None or attempt.body is None:
             raise ValueError("successful HTML page attempts require final URL and body")
