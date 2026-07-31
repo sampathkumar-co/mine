@@ -1,0 +1,112 @@
+{
+  "status": "preregistered_before_ucr_catalogue_access",
+  "parent_v85_commit": "912c3ebd933ae39eb05e10467f1ecad56e326b03",
+  "parent_v85_authoritative_evidence_digest": "ca99dd822bc57fca55ffaf6de3614c7403cdbc0c85f3db81e0652dfe0acc0c20",
+  "parent_v85_state_input_sha256": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+  "parent_v80_registry_digest": "aa6bab47d8d2453b669eee2f7a36720e0eb798a79355b0d2c9a509d81959038c",
+  "parent_v80_registry_sha256": "242a3b4173786ab52435658c959ce6195c3f831c25cf3dff4bba2d784796a3f9",
+  "objective": "Freeze a repository-wide contamination boundary and a complete deterministic selection rule before any UCR Time Series Classification Archive catalogue, dataset name, metadata row, archive, record, label, or solver output is accessed.",
+  "future_source": {
+    "name": "UCR Time Series Classification Archive",
+    "source_identity_rule": "Use only the official UCR time-series classification archive or its official successor endpoint. Freeze the exact release, source commit if applicable, metadata endpoint, and file URLs returned by the first post-audit access.",
+    "domain_shift": "univariate time-series classification represented as numeric tabular features only after byte locking",
+    "catalogue_access_before_audit": false,
+    "dataset_names_ids_or_urls_committed_before_audit": false,
+    "dataset_bytes_accessed_before_audit": false,
+    "records_or_labels_accessed_before_audit": false
+  },
+  "audit_protocol": {
+    "scan_all_remote_refs": true,
+    "scan_roots": [
+      "mini-origin/",
+      "research-evidence/",
+      ".github/workflows/"
+    ],
+    "collect": [
+      "UCI dataset identifiers",
+      "OpenML dataset identifiers",
+      "normalized dataset names",
+      "explicit PMLB dataset names",
+      "explicit UCR archive dataset names and source occurrences"
+    ],
+    "dataset_name_normalization": "lowercase alphanumeric tokens joined by hyphens",
+    "conservative_dataset_name_keys": [
+      "dataset",
+      "dataset_name",
+      "task_name",
+      "benchmark_dataset"
+    ],
+    "network_access": false
+  },
+  "future_metadata_only_selection": {
+    "selection_seed": "mini-origin-v87-ucr-untouched-lock-2026-07-31",
+    "dataset_count": 7,
+    "eligibility": {
+      "classification_only": true,
+      "univariate_only": true,
+      "minimum_total_instances": 300,
+      "maximum_total_instances": 6000,
+      "minimum_series_length": 4,
+      "maximum_series_length": 80,
+      "minimum_classes": 2,
+      "maximum_classes": 15,
+      "official_train_and_test_files_required": true,
+      "numeric_series_required": true
+    },
+    "exclusions": {
+      "normalized_name_in_v86_registry": true,
+      "metadata_or_documentation_mentions_UCI": true,
+      "metadata_or_documentation_mentions_OpenML": true,
+      "metadata_or_documentation_mentions_PMLB": true,
+      "duplicate_normalized_name": true,
+      "missing_or_conflicting_metadata": true,
+      "raw_byte_download_failure": true
+    },
+    "ranking": {
+      "algorithm": "ascending SHA-256",
+      "input": [
+        "selection_seed",
+        "frozen_source_release",
+        "normalized_dataset_name",
+        "canonical_metadata_digest"
+      ],
+      "tie_break": "normalized dataset name ascending"
+    },
+    "byte_lock_only": {
+      "download_only_selected_archives_or_source_files": true,
+      "decompress_before_lock": false,
+      "parse_records_or_labels_before_lock": false,
+      "solver_execution": false,
+      "store_sha256": true,
+      "store_byte_length": true,
+      "store_source_url": true,
+      "store_metadata_digest": true
+    }
+  },
+  "required_parent_checks": {
+    "v85_verdict": "development_pass",
+    "v85_development_gate": true,
+    "v85_contributing_dataset_count": 7,
+    "v85_profiled_state_count": 252,
+    "v85_rust_mismatch_count": 0,
+    "v85_fresh_external_evidence": false,
+    "v85_exact_rerun_verdict": "reproduced"
+  },
+  "failure_policy": {
+    "repository_scan_failure": "fail without relaxing scope",
+    "parent_evidence_mismatch": "fail",
+    "baseline_registry_not_preserved": "fail",
+    "insufficient_future_eligible_candidates": "fail the later lock without relaxing criteria",
+    "source_release_change_during_later_lock": "fail",
+    "solver_execution_during_audit_or_lock": "forbidden"
+  },
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "scientific_threshold_revisions": 0,
+  "acceptance_gate_revisions": 0,
+  "solver_execution_before_audit": false,
+  "claim_boundary": "Repository-only provenance infrastructure and a frozen future selection rule. This audit is not dataset evaluation, fresh external evidence, independent reproduction, peer review, novelty, publication, a world-class result, or a breakthrough.",
+  "next_stage": "Only after the exact v0.86 registry artifact is preserved may a separate branch access official UCR metadata and execute the frozen metadata-only seven-dataset byte lock."
+}
