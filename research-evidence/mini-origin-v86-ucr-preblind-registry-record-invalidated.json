@@ -1,5 +1,5 @@
 {
-  "status": "authoritative_repository_only_preblind_audit_recorded",
+  "status": "superseded_repository_only_preblind_audit_record",
   "version": "Mini-ORIGIN v0.86",
   "recorded_from_commit": "fd7e4f9c8ae806107a8d6adc76ee7a991829cb8e",
   "pull_request": 217,
@@ -68,9 +68,14 @@
     "post_access_task_substitution_permitted": false,
     "threshold_weakening_permitted": false
   },
-  "interpretation": "This record permanently anchors the successful corrected repository-only contamination audit and its exact artifact digests before any UCR catalogue or dataset access. It supports provenance and preregistration integrity only.",
+  "interpretation": "Preserved diagnostic record only. It is not an authoritative v0.86 registry and cannot authorize UCR catalogue access. A fresh audit at or after the parser-freeze commit is required.",
   "fresh_external_evidence": false,
   "independent_replication": false,
   "peer_reviewed": false,
-  "world_class_or_breakthrough_claim": false
+  "world_class_or_breakthrough_claim": false,
+  "authority": false,
+  "superseded_by_commit": "9a85247",
+  "superseding_amendment": "mini-origin/campaigns/v86-ucr-preblind-fourth-review-amendment.json",
+  "superseding_invalidation": "research-evidence/mini-origin-v86-ucr-preblind-fourth-run-invalidation.json",
+  "invalidation_reason": "The fourth review found that catalogue-byte parsing, endpoint overflow handling, and timeout clock semantics were not fully frozen before source access. The parser and transport semantics were subsequently frozen and synthetic-tested."
 }
