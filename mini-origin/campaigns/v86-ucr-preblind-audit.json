@@ -40,7 +40,15 @@
       "task_name",
       "benchmark_dataset"
     ],
-    "network_access": false
+    "repository_git_fetch_allowed": true,
+    "repository_git_fetch_refspec": "+refs/heads/*:refs/remotes/origin/*",
+    "external_dataset_network_access": false,
+    "scan_checked_out_head": true,
+    "record_ref_commit_sha_pairs": true,
+    "scan_all_blob_suffixes": true,
+    "blob_decoding": "UTF-8 with replacement for invalid byte sequences; binary and archive blobs are not silently skipped",
+    "maximum_blob_bytes": 2000000,
+    "oversized_blob_policy": "fail the audit and record ref, commit SHA, blob SHA, path and byte size"
   },
   "future_metadata_only_selection": {
     "selection_seed": "mini-origin-v87-ucr-untouched-lock-2026-07-31",
@@ -64,7 +72,6 @@
       "metadata_or_documentation_mentions_PMLB": true,
       "duplicate_normalized_name": true,
       "missing_or_conflicting_metadata": true,
-      "raw_byte_download_failure": true,
       "provenance_rejection_patterns": {
         "UCI": [
           "\\bUCI\\b",
@@ -88,7 +95,34 @@
         "normalized_dataset_name",
         "canonical_metadata_digest"
       ],
-      "tie_break": "normalized dataset name ascending"
+      "tie_break": "normalized dataset name ascending",
+      "hash": "SHA-256",
+      "unicode_normalization": "NFC",
+      "string_trimming": "strip ASCII whitespace characters U+0009 through U+000D and U+0020 at both ends only",
+      "canonical_metadata_fields": [
+        "normalized_dataset_name",
+        "total_instances",
+        "series_length",
+        "class_count",
+        "classification",
+        "univariate",
+        "train_url",
+        "test_url"
+      ],
+      "canonical_metadata_types": {
+        "normalized_dataset_name": "string already normalized by lowercase alphanumeric tokens joined by hyphens",
+        "total_instances": "base-10 JSON integer, booleans forbidden",
+        "series_length": "base-10 JSON integer, booleans forbidden",
+        "class_count": "base-10 JSON integer, booleans forbidden",
+        "classification": "JSON boolean true",
+        "univariate": "JSON boolean true",
+        "train_url": "NFC string with only edge ASCII whitespace stripped; otherwise exact official source URL",
+        "test_url": "NFC string with only edge ASCII whitespace stripped; otherwise exact official source URL"
+      },
+      "canonical_metadata_serialization": "JSON object containing exactly canonical_metadata_fields; keys sorted lexicographically; ensure_ascii=false; separators comma and colon without spaces; UTF-8 without BOM or trailing newline",
+      "canonical_metadata_digest": "lowercase hexadecimal SHA-256 of canonical metadata serialization bytes",
+      "ranking_serialization": "JSON array [NFC/trimmed selection_seed, NFC/trimmed frozen_source_release, normalized_dataset_name, lowercase canonical_metadata_digest]; ensure_ascii=false; separators comma and colon without spaces; UTF-8 without BOM or trailing newline",
+      "rank": "lowercase hexadecimal SHA-256 of ranking serialization bytes"
     },
     "byte_lock_only": {
       "download_only_selected_archives_or_source_files": true,
@@ -98,7 +132,17 @@
       "store_sha256": true,
       "store_byte_length": true,
       "store_source_url": true,
-      "store_metadata_digest": true
+      "store_metadata_digest": true,
+      "selection_before_download": "deterministically select the top seven metadata-ranked candidates before downloading any candidate bytes",
+      "selected_file_download_attempts": 3,
+      "selected_file_retry_delays_seconds": [
+        0,
+        5,
+        20
+      ],
+      "selected_file_success": "HTTP success with nonempty response bytes for both official train and official test files",
+      "selected_file_unavailability": "fail the entire lock; never substitute a lower-ranked candidate",
+      "redirect_policy": "record every redirect and final URL; a redirect outside the frozen official source hosts fails the lock"
     }
   },
   "required_parent_checks": {
@@ -116,7 +160,9 @@
     "baseline_registry_not_preserved": "fail",
     "insufficient_future_eligible_candidates": "fail the later lock without relaxing criteria",
     "source_release_change_during_later_lock": "fail",
-    "solver_execution_during_audit_or_lock": "forbidden"
+    "solver_execution_during_audit_or_lock": "forbidden",
+    "selected_raw_byte_unavailability": "fail the later lock after the frozen retry schedule; do not replace the selected candidate",
+    "candidate_substitution_after_selection": "forbidden"
   },
   "algorithm_revisions": 0,
   "compiler_revisions": 0,
@@ -125,7 +171,7 @@
   "scientific_threshold_revisions": 0,
   "acceptance_gate_revisions": 0,
   "solver_execution_before_audit": false,
-  "claim_boundary": "Repository-only provenance infrastructure and a frozen future selection rule. This audit is not dataset evaluation, fresh external evidence, independent reproduction, peer review, novelty, publication, a world-class result, or a breakthrough.",
+  "claim_boundary": "Repository-only provenance infrastructure and a frozen future selection/ranking/download/gate protocol. The audit may fetch Git branch objects from the project origin under the frozen refspec, but it must not contact any external dataset source. This is not dataset evaluation, fresh external evidence, independent reproduction, peer review, novelty, publication, a world-class result, or a breakthrough.",
   "next_stage": "Only after the exact v0.86 registry artifact is preserved may a separate branch access official UCR metadata and execute the frozen metadata-only seven-dataset byte lock.",
   "future_blind_gate": {
     "gate_source": "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets",
@@ -157,5 +203,6 @@
     "label_independence_mismatches": 0,
     "minimum_states_from_each_fresh_holdout_dataset": 6
   },
-  "protocol_amendment": "v86-ucr-preblind-protocol-amendment.json"
+  "protocol_amendment": "v86-ucr-preblind-protocol-amendment.json",
+  "review_amendment": "v86-ucr-preblind-review-amendment.json"
 }

@@ -1,8 +1,8 @@
 {
   "campaign": "mini-origin-v86-ucr-preblind-audit",
-  "record_type": "authoritative_repository_only_preblind_registry",
-  "verdict": "provenance_pass",
-  "claim_boundary": "Repository-only provenance infrastructure and a frozen future selection/gate. No UCR candidate catalogue metadata, candidate dataset names, candidate file URLs, bytes, records, labels, or solver outputs were accessed. This is not fresh external evidence, independent reproduction, peer review, a world-class result, or a breakthrough.",
+  "record_type": "superseded_repository_only_preblind_registry",
+  "verdict": "invalidated",
+  "claim_boundary": "Invalidated provenance attempt retained for audit history. It is not an accepted contamination registry or scientific evidence.",
   "authoritative_source": {
     "repository": "sampathkumar-co/mine",
     "pull_request": 217,
@@ -178,5 +178,8 @@
     "v82_gate_weakened": false,
     "v82_v84_negative_results_modified": false
   },
-  "next_step": "Create a separate v0.87 branch from this evidence commit. Access only official UCR metadata under the frozen endpoint priority, deterministically select exactly seven eligible non-contaminated datasets, and byte-lock only their official train/test source files without decompression, record/label parsing, or solver execution."
+  "next_step": "Create a separate v0.87 branch from this evidence commit. Access only official UCR metadata under the frozen endpoint priority, deterministically select exactly seven eligible non-contaminated datasets, and byte-lock only their official train/test source files without decompression, record/label parsing, or solver execution.",
+  "authority": false,
+  "invalidation_file": "mini-origin-v86-ucr-preblind-audit-invalidation.json",
+  "invalidated_registry_file": "mini-origin-v86-ucr-preblind-registry-invalidated.json"
 }

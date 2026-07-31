@@ -1,0 +1,64 @@
+{
+  "status": "review_amendment_before_ucr_catalogue_access",
+  "parent_branch": "research/mini-origin-v86-ucr-preblind-audit",
+  "reviewed_head": "81ef863c9ea5affd577ff0b3d2f8fd00920d336b",
+  "invalidated_evidence_commit": "e8480457ba492688d92bbd5bd1f895b9e5309bf8",
+  "invalidated_workflow_run": 30601865953,
+  "invalidated_artifact_id": 8782227447,
+  "invalidated_registry_digest": "d0fd4893f99f3c34b6008fcbf5d2779d1f45b340d0176fe20632b6a94432dde6",
+  "review_findings": [
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VT3Uq",
+      "title": "Include the checked-out revision in the contamination scan",
+      "repair": "include checked-out HEAD explicitly and record its immutable commit SHA"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VT3Ur",
+      "title": "Scan all repository text formats promised by the audit",
+      "repair": "scan every blob suffix under the declared roots and fail rather than skip oversized blobs"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VT3Uu",
+      "title": "Trigger the preservation check for frozen gate changes",
+      "repair": "include every frozen path guarded by run_v86_ci.sh in workflow triggers"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VT3Uv",
+      "title": "Freeze an exact byte encoding for the ranking hash",
+      "repair": "freeze exact Unicode normalization, JSON serialization, metadata digest and ranking hash bytes"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VT3Uw",
+      "title": "Fail rather than replace candidates after download errors",
+      "repair": "select seven candidates before byte download and fail without substitution after frozen retries"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VT3Uy",
+      "title": "Do not report a network-free audit after fetching origin",
+      "repair": "record repository Git fetch as allowed provenance network access while external dataset network access remains forbidden"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VT3U1",
+      "title": "Record immutable object IDs for every audited ref",
+      "repair": "record immutable ref-to-commit SHA pairs and include them in the registry digest"
+    }
+  ],
+  "catalogue_access_before_amendment": false,
+  "candidate_dataset_metadata_access_before_amendment": false,
+  "candidate_dataset_names_accessed_before_amendment": false,
+  "candidate_dataset_file_urls_accessed_before_amendment": false,
+  "candidate_dataset_bytes_accessed_before_amendment": false,
+  "records_or_labels_accessed_before_amendment": false,
+  "solver_execution_before_amendment": false,
+  "external_dataset_network_access_before_amendment": false,
+  "repository_git_metadata_access_before_amendment": true,
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "eligibility_revisions": 0,
+  "blind_gate_revisions": 0,
+  "scientific_threshold_weakening": false,
+  "authority": "All prior v0.86 registry artifacts and pass summaries are superseded. Only a corrected workflow run after this amendment can become authoritative.",
+  "claim_boundary": "Provenance correction only; no dataset evidence or breakthrough claim."
+}
