@@ -351,6 +351,16 @@ def authoritative_html_page(
                 raise ValueError("failed HTML page attempts cannot contain accepted body bytes")
             if attempt.final_url is not None or attempt.status_code is not None:
                 raise ValueError("failed HTML page attempts cannot contain success-state fields")
+            if (
+                attempt.tls_certificate_validated is not False
+                or attempt.redirect_chain
+                or attempt.connect_elapsed_seconds
+                or attempt.read_elapsed_seconds is not None
+                or attempt.total_elapsed_seconds is not None
+            ):
+                raise ValueError(
+                    "failed HTML page attempts cannot contain transport-success evidence"
+                )
             normalized_failure = normalize_visible_text(attempt.failure)
             if not normalized_failure or normalized_failure != attempt.failure:
                 raise ValueError(

@@ -128,6 +128,25 @@ def test_authoritative_page_rejects_failed_attempt_with_success_state_fields():
 
 
 @pytest.mark.parametrize("failure", ("", "   ", " timeout", "timeout\n"))
+def test_authoritative_page_rejects_failed_attempt_with_transport_success_evidence():
+    requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
+    contradictory_attempts = (
+        page_attempt(1, requested, None, failure="timeout", tls_validated=True),
+        page_attempt(1, requested, None, failure="timeout", redirects=(requested,)),
+        page_attempt(1, requested, None, failure="timeout", connect_times=(0.1,)),
+        page_attempt(1, requested, None, failure="timeout", read_time=0.2),
+        page_attempt(1, requested, None, failure="timeout", total_time=0.4),
+    )
+    for contradictory in contradictory_attempts:
+        attempts = (
+            contradictory,
+            page_attempt(2, requested, None, failure="timeout"),
+            page_attempt(3, requested, None, failure="timeout"),
+        )
+        with pytest.raises(ValueError, match="transport-success evidence"):
+            catalogue.authoritative_html_page(requested, attempts)
+
+
 def test_authoritative_page_rejects_noncanonical_failure_text(failure: str):
     requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
     attempts = tuple(
