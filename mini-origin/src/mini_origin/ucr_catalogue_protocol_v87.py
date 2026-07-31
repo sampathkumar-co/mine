@@ -319,7 +319,9 @@ def canonical_url(base_url: str, href: str) -> str:
     return urlunsplit(("https", netloc, path, query, ""))
 
 
-def _finite_nonnegative(value: float, field: str) -> float:
+def _finite_nonnegative(value: object, field: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{field} must be a genuine numeric value")
     result = float(value)
     if not math.isfinite(result) or result < 0:
         raise ValueError(f"{field} must be finite and nonnegative")

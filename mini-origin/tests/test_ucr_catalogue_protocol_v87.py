@@ -157,6 +157,33 @@ def test_authoritative_page_rejects_noncanonical_failure_text(failure: str):
         catalogue.authoritative_html_page(requested, attempts)
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("connect_times", (True,)),
+        ("connect_times", ("0.1",)),
+        ("read_time", False),
+        ("read_time", "0.2"),
+        ("total_time", True),
+        ("total_time", "0.4"),
+    ),
+)
+def test_authoritative_page_rejects_non_numeric_timing_evidence(
+    field: str,
+    value: object,
+):
+    url = catalogue.ROOT_URL
+    kwargs = {field: value}
+    attempts = (
+        page_attempt(1, url, b"ok", **kwargs),
+        page_attempt(2, url, None, failure="timeout"),
+        page_attempt(3, url, b"ok"),
+    )
+
+    with pytest.raises(ValueError, match="genuine numeric value"):
+        catalogue.authoritative_html_page(url, attempts)
+
+
 def test_authoritative_page_rejects_impossible_total_timing():
     requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
     attempts = tuple(
