@@ -40,7 +40,12 @@
     "tls_certificate_validation": true,
     "endpoint_success_definition": "HTTP 200 after no more than maximum_redirects, nonempty response bytes, and every redirect/final URL remaining HTTPS on timeseriesclassification.com or www.timeseriesclassification.com",
     "endpoint_failure_definition": "DNS, connection, TLS, redirect-policy, timeout, empty-body, or non-200 HTTP result; record each attempt outcome without reading candidate records or labels",
-    "all_attempts_failed": "fail v0.87 without accessing the inactive fallback endpoint, changing criteria, or selecting datasets"
+    "all_attempts_failed": "fail v0.87 without accessing the inactive fallback endpoint, changing criteria, or selecting datasets",
+    "endpoint_attempt_execution": "execute all three attempts even after an earlier success",
+    "maximum_endpoint_response_bytes": 10000000,
+    "successful_endpoint_attempt_agreement": "collect every successful attempt; require identical lowercase SHA-256 body digest and identical NFC-normalized final URL across all successful attempts; disagreement fails v0.87",
+    "authoritative_endpoint_response": "after agreement, use the successful attempt with the lowest 1-based attempt index; frozen_source_release is the lowercase SHA-256 of its exact response bytes",
+    "minimum_successful_endpoint_attempts": 1
   },
   "audit_protocol": {
     "scan_all_remote_refs": true,
@@ -164,9 +169,25 @@
         5,
         20
       ],
-      "selected_file_success": "HTTP success with nonempty response bytes for both official train and official test files",
+      "selected_file_success": "HTTP 200 after no more than selected_file_maximum_redirects, nonempty response bytes not exceeding maximum_selected_file_bytes, and every redirect/final URL remaining HTTPS on timeseriesclassification.com or www.timeseriesclassification.com",
       "selected_file_unavailability": "fail the entire lock; never substitute a lower-ranked candidate",
-      "redirect_policy": "record every redirect and final URL; a redirect outside the frozen official source hosts fails the lock"
+      "redirect_policy": "record every redirect and final URL; a redirect outside the frozen official source hosts fails the lock",
+      "selected_file_connect_timeout_seconds": 15,
+      "selected_file_read_timeout_seconds": 120,
+      "selected_file_maximum_redirects": 5,
+      "selected_file_request_method": "GET",
+      "selected_file_request_headers": {
+        "Accept": "application/octet-stream,text/plain,text/tab-separated-values,*/*;q=0.1",
+        "Accept-Encoding": "identity",
+        "Cache-Control": "no-cache",
+        "User-Agent": "Mini-ORIGIN-v0.87-UCR-byte-lock/1.0"
+      },
+      "selected_file_tls_certificate_validation": true,
+      "maximum_selected_file_bytes": 100000000,
+      "selected_file_attempt_execution": "execute all three attempts for each selected TRAIN or TEST file even after an earlier success",
+      "successful_selected_file_attempt_agreement": "for each file, require every successful attempt to have identical lowercase SHA-256 body digest and identical NFC-normalized final URL; disagreement fails the entire lock",
+      "authoritative_selected_file_response": "after agreement, use the successful attempt with the lowest 1-based attempt index",
+      "minimum_successful_attempts_per_selected_file": 1
     }
   },
   "required_parent_checks": {
@@ -229,5 +250,6 @@
   },
   "protocol_amendment": "v86-ucr-preblind-protocol-amendment.json",
   "review_amendment": "v86-ucr-preblind-review-amendment.json",
-  "second_review_amendment": "v86-ucr-preblind-second-review-amendment.json"
+  "second_review_amendment": "v86-ucr-preblind-second-review-amendment.json",
+  "third_review_amendment": "v86-ucr-preblind-third-review-amendment.json"
 }

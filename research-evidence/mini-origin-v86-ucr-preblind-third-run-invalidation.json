@@ -1,0 +1,18 @@
+{
+  "status": "mini_origin_v86_third_registry_run_superseded",
+  "workflow_run": 30603895185,
+  "code_commit": "18b0b3e76dfcc7c9a1339953044f616bd5d5aec2",
+  "artifact_id": 8782897022,
+  "artifact_digest": "sha256:ff9b76f1b1a48e9af4619c70c578d9d2c909a8ac58b8e8e01f502a0756a0aac6",
+  "registry_file_sha256": "7b2013179a9410c540499916b37646207e3be3a74775636f9ddfe0982a02d7b8",
+  "registry_digest": "f92abf2ed48b217d3a631bfb3cf79fb95b30798a59aef66c18c129bd24024979",
+  "reason": "Third automated review found ambiguous successful endpoint response selection and missing selected-file timeout semantics.",
+  "review_thread_ids": [
+    "PRRT_kwDOThS6ss6VURS8",
+    "PRRT_kwDOThS6ss6VURTA"
+  ],
+  "authority": false,
+  "ucr_candidate_information_accessed": false,
+  "thresholds_changed": false,
+  "next_required_action": "Complete a new repository-only audit after the third review amendment before UCR source access."
+}

@@ -33,6 +33,11 @@ SECOND_REVIEW_AMENDMENT = (
     / "campaigns"
     / "v86-ucr-preblind-second-review-amendment.json"
 )
+THIRD_REVIEW_AMENDMENT = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v86-ucr-preblind-third-review-amendment.json"
+)
 V85_EVIDENCE = (
     Path(__file__).resolve().parents[3]
     / "research-evidence"
@@ -379,6 +384,23 @@ def load_inputs() -> tuple[
     ):
         if second_review[key] is not False:
             raise RuntimeError(f"second-review boundary violated: {key}")
+    third_review = json.loads(THIRD_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    if preregistration["third_review_amendment"] != THIRD_REVIEW_AMENDMENT.name:
+        raise RuntimeError("v0.86 third review amendment reference changed")
+    if third_review["status"] != "third_review_amendment_before_ucr_catalogue_access":
+        raise RuntimeError("v0.86 third review amendment status changed")
+    for key in (
+        "catalogue_access_before_amendment",
+        "candidate_dataset_metadata_access_before_amendment",
+        "candidate_dataset_names_accessed_before_amendment",
+        "candidate_dataset_file_urls_accessed_before_amendment",
+        "candidate_dataset_bytes_accessed_before_amendment",
+        "records_or_labels_accessed_before_amendment",
+        "solver_execution_before_amendment",
+        "external_dataset_network_access_before_amendment",
+    ):
+        if third_review[key] is not False:
+            raise RuntimeError(f"third-review boundary violated: {key}")
     if preregistration["parent_v85_commit"] != FROZEN_V85_COMMIT:
         raise RuntimeError("frozen v0.85 commit changed")
     if preregistration["parent_v85_authoritative_evidence_digest"] != V85_EVIDENCE_DIGEST:
@@ -436,6 +458,16 @@ def load_inputs() -> tuple[
         raise RuntimeError("endpoint TLS validation was disabled")
     if source["all_attempts_failed"] != "fail v0.87 without accessing the inactive fallback endpoint, changing criteria, or selecting datasets":
         raise RuntimeError("endpoint all-attempts-failed policy changed")
+    if source["endpoint_attempt_execution"] != "execute all three attempts even after an earlier success":
+        raise RuntimeError("endpoint attempt execution changed")
+    if source["maximum_endpoint_response_bytes"] != 10_000_000:
+        raise RuntimeError("endpoint response byte limit changed")
+    if source["minimum_successful_endpoint_attempts"] != 1:
+        raise RuntimeError("minimum endpoint successes changed")
+    if source["successful_endpoint_attempt_agreement"] != "collect every successful attempt; require identical lowercase SHA-256 body digest and identical NFC-normalized final URL across all successful attempts; disagreement fails v0.87":
+        raise RuntimeError("endpoint successful-attempt agreement changed")
+    if source["authoritative_endpoint_response"] != "after agreement, use the successful attempt with the lowest 1-based attempt index; frozen_source_release is the lowercase SHA-256 of its exact response bytes":
+        raise RuntimeError("authoritative endpoint response changed")
     blind_gate = preregistration["future_blind_gate"]
     if blind_gate["gate_source"] != "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets":
         raise RuntimeError("future blind gate source changed")
@@ -472,6 +504,26 @@ def load_inputs() -> tuple[
         raise RuntimeError("selected file retry schedule changed")
     if lock["selected_file_unavailability"] != "fail the entire lock; never substitute a lower-ranked candidate":
         raise RuntimeError("selected file failure policy changed")
+    if lock["selected_file_connect_timeout_seconds"] != 15:
+        raise RuntimeError("selected-file connect timeout changed")
+    if lock["selected_file_read_timeout_seconds"] != 120:
+        raise RuntimeError("selected-file read timeout changed")
+    if lock["selected_file_maximum_redirects"] != 5:
+        raise RuntimeError("selected-file redirect limit changed")
+    if lock["selected_file_request_method"] != "GET":
+        raise RuntimeError("selected-file request method changed")
+    if lock["selected_file_tls_certificate_validation"] is not True:
+        raise RuntimeError("selected-file TLS validation was disabled")
+    if lock["maximum_selected_file_bytes"] != 100_000_000:
+        raise RuntimeError("selected-file byte limit changed")
+    if lock["selected_file_attempt_execution"] != "execute all three attempts for each selected TRAIN or TEST file even after an earlier success":
+        raise RuntimeError("selected-file attempt execution changed")
+    if lock["minimum_successful_attempts_per_selected_file"] != 1:
+        raise RuntimeError("minimum selected-file successes changed")
+    if lock["successful_selected_file_attempt_agreement"] != "for each file, require every successful attempt to have identical lowercase SHA-256 body digest and identical NFC-normalized final URL; disagreement fails the entire lock":
+        raise RuntimeError("selected-file successful-attempt agreement changed")
+    if lock["authoritative_selected_file_response"] != "after agreement, use the successful attempt with the lowest 1-based attempt index":
+        raise RuntimeError("authoritative selected-file response changed")
     for key in (
         "algorithm_revisions",
         "compiler_revisions",

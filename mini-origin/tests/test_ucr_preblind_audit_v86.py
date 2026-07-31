@@ -65,6 +65,10 @@ def test_preregistration_freezes_ucr_preblind_boundary_and_selection_rule():
     assert second["status"] == "second_review_amendment_before_ucr_catalogue_access"
     assert second["catalogue_access_before_amendment"] is False
     assert second["external_dataset_network_access_before_amendment"] is False
+    third = json.loads(audit.THIRD_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    assert third["status"] == "third_review_amendment_before_ucr_catalogue_access"
+    assert third["catalogue_access_before_amendment"] is False
+    assert third["external_dataset_network_access_before_amendment"] is False
     assert data["parent_v85_commit"] == audit.FROZEN_V85_COMMIT
     assert (
         data["parent_v85_authoritative_evidence_digest"]
@@ -248,4 +252,48 @@ def test_endpoint_failure_policy_is_frozen_without_fallback():
     assert source["all_attempts_failed"] == (
         "fail v0.87 without accessing the inactive fallback endpoint, "
         "changing criteria, or selecting datasets"
+    )
+
+
+def test_endpoint_success_agreement_and_authority_are_frozen():
+    data = json.loads(audit.PREREGISTRATION.read_text(encoding="utf-8"))
+    source = data["future_source"]
+    assert source["endpoint_attempt_execution"] == (
+        "execute all three attempts even after an earlier success"
+    )
+    assert source["minimum_successful_endpoint_attempts"] == 1
+    assert source["maximum_endpoint_response_bytes"] == 10_000_000
+    assert source["successful_endpoint_attempt_agreement"] == (
+        "collect every successful attempt; require identical lowercase SHA-256 "
+        "body digest and identical NFC-normalized final URL across all successful "
+        "attempts; disagreement fails v0.87"
+    )
+    assert source["authoritative_endpoint_response"] == (
+        "after agreement, use the successful attempt with the lowest 1-based "
+        "attempt index; frozen_source_release is the lowercase SHA-256 of its "
+        "exact response bytes"
+    )
+
+
+def test_selected_file_transport_and_agreement_are_frozen():
+    data = json.loads(audit.PREREGISTRATION.read_text(encoding="utf-8"))
+    lock = data["future_metadata_only_selection"]["byte_lock_only"]
+    assert lock["selected_file_connect_timeout_seconds"] == 15
+    assert lock["selected_file_read_timeout_seconds"] == 120
+    assert lock["selected_file_maximum_redirects"] == 5
+    assert lock["selected_file_request_method"] == "GET"
+    assert lock["selected_file_tls_certificate_validation"] is True
+    assert lock["maximum_selected_file_bytes"] == 100_000_000
+    assert lock["selected_file_attempt_execution"] == (
+        "execute all three attempts for each selected TRAIN or TEST file even "
+        "after an earlier success"
+    )
+    assert lock["minimum_successful_attempts_per_selected_file"] == 1
+    assert lock["successful_selected_file_attempt_agreement"] == (
+        "for each file, require every successful attempt to have identical "
+        "lowercase SHA-256 body digest and identical NFC-normalized final URL; "
+        "disagreement fails the entire lock"
+    )
+    assert lock["authoritative_selected_file_response"] == (
+        "after agreement, use the successful attempt with the lowest 1-based attempt index"
     )
