@@ -39,7 +39,7 @@ jobs:
           module.verify_v82_lock(campaign)
           print('v0.82 transferable threshold lock: PASS')
           PY
-      - name: Assert no external task-content access in pre-access workflow
+      - name: Assert no external task-content access in pre-access implementation
         run: |
           ! grep -R -E 'openml\.datasets\.get_dataset|openml\.tasks\.get_task|download_data|load_arff' \
-            mini-origin/v86_transferable_gate.py .github/workflows/mini-origin-v86-preaccess.yml
+            mini-origin/v86_transferable_gate.py
