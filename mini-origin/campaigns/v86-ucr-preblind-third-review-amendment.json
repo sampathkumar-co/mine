@@ -1,0 +1,40 @@
+{
+  "status": "third_review_amendment_before_ucr_catalogue_access",
+  "reviewed_head": "18b0b3e76dfcc7c9a1339953044f616bd5d5aec2",
+  "superseded_workflow_run": 30603895185,
+  "superseded_artifact_id": 8782897022,
+  "superseded_artifact_digest": "sha256:ff9b76f1b1a48e9af4619c70c578d9d2c909a8ac58b8e8e01f502a0756a0aac6",
+  "superseded_registry_file_sha256": "7b2013179a9410c540499916b37646207e3be3a74775636f9ddfe0982a02d7b8",
+  "superseded_registry_digest": "f92abf2ed48b217d3a631bfb3cf79fb95b30798a59aef66c18c129bd24024979",
+  "review_findings": [
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VURS8",
+      "title": "Specify which successful endpoint response is frozen",
+      "repair": "execute all attempts, fail on successful body/final-URL disagreement, and freeze the lowest-index successful attempt after agreement"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VURTA",
+      "title": "Freeze timeouts for selected-file downloads",
+      "repair": "freeze selected-file connect/read timeouts, redirects, method, headers, TLS, maximum bytes, all-attempt execution, agreement, and authoritative-response semantics"
+    }
+  ],
+  "catalogue_access_before_amendment": false,
+  "candidate_dataset_metadata_access_before_amendment": false,
+  "candidate_dataset_names_accessed_before_amendment": false,
+  "candidate_dataset_file_urls_accessed_before_amendment": false,
+  "candidate_dataset_bytes_accessed_before_amendment": false,
+  "records_or_labels_accessed_before_amendment": false,
+  "solver_execution_before_amendment": false,
+  "external_dataset_network_access_before_amendment": false,
+  "repository_git_metadata_access_before_amendment": true,
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "eligibility_revisions": 0,
+  "ranking_revisions": 0,
+  "blind_gate_revisions": 0,
+  "scientific_threshold_weakening": false,
+  "authority": "Run 30603895185 and artifact 8782897022 are preserved diagnostics only. A later run after this amendment is required.",
+  "claim_boundary": "Preaccess deterministic transport-policy correction only; no UCR dataset evidence or breakthrough claim."
+}

@@ -1,0 +1,54 @@
+{
+  "status": "fifth_review_amendment_before_ucr_catalogue_access",
+  "reviewed_head": "9aeb9071743c035b2a8752232740014d418c5106",
+  "superseded_workflow_run": 30606572076,
+  "superseded_ci_run": 30606572082,
+  "superseded_artifact_id": 8783816043,
+  "superseded_artifact_digest": "sha256:f3f0d15661b2c61907fd9c5bf27ca164d1566ffe990ca31bacd9f66586ffadd8",
+  "superseded_registry_file_sha256": "7a84c6c203ec44a79d1b7777374b0145346316ef74d4498174c6549651912c93",
+  "superseded_registry_digest": "8f56b7be5eab840dc264260ce00da20005f90f55550857f7471448643084f921",
+  "review_findings": [
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VU2n7",
+      "title": "Use one frozen source-release digest definition",
+      "repair": "reserve root body SHA for transport provenance and define frozen_source_release exclusively as the complete source-manifest SHA-256"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VU2n-",
+      "title": "Require results for every discovered candidate",
+      "repair": "validate exact one-to-one coverage between discovered canonical candidate URLs and CandidateParseResult rows before any rejection, eligibility, or ranking"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VU2oB",
+      "title": "Freeze transport for every crawled HTML page",
+      "repair": "apply one executable three-attempt authority contract independently to root, traversal, and candidate pages"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VU2oE",
+      "title": "Define the numeric-series eligibility predicate",
+      "repair": "derive numeric-series eligibility only from classification, univariate metadata, and frozen official URL suffixes without opening bytes"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VU2oG",
+      "title": "Exclude non-visible script and style text from metadata",
+      "repair": "exclude a frozen non-visible tag set from metadata extraction while retaining whole-HTML provenance scanning"
+    }
+  ],
+  "catalogue_access_before_amendment": false,
+  "candidate_dataset_metadata_access_before_amendment": false,
+  "candidate_dataset_names_accessed_before_amendment": false,
+  "candidate_dataset_file_urls_accessed_before_amendment": false,
+  "candidate_dataset_bytes_accessed_before_amendment": false,
+  "records_or_labels_accessed_before_amendment": false,
+  "solver_execution_before_amendment": false,
+  "external_dataset_network_access_before_amendment": false,
+  "repository_git_metadata_access_before_amendment": true,
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "blind_gate_revisions": 0,
+  "scientific_threshold_weakening": false,
+  "authority": "Runs 30606572076 and 30606572082 and artifact 8783816043 remain preserved diagnostics only. A later exact-head audit is required.",
+  "claim_boundary": "Preaccess parser, transport, coverage, and metadata-eligibility determinism only; no UCR dataset evidence or breakthrough claim."
+}

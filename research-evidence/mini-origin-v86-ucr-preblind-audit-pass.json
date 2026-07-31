@@ -1,0 +1,185 @@
+{
+  "campaign": "mini-origin-v86-ucr-preblind-audit",
+  "record_type": "superseded_repository_only_preblind_registry",
+  "verdict": "invalidated",
+  "claim_boundary": "Invalidated provenance attempt retained for audit history. It is not an accepted contamination registry or scientific evidence.",
+  "authoritative_source": {
+    "repository": "sampathkumar-co/mine",
+    "pull_request": 217,
+    "branch": "research/mini-origin-v86-ucr-preblind-audit",
+    "commit": "81ef863c9ea5affd577ff0b3d2f8fd00920d336b",
+    "workflow_run": 30601865953,
+    "workflow_name": "Mini-ORIGIN UCR Preblind Audit v0.86",
+    "workflow_conclusion": "success",
+    "ordinary_ci_run": 30601865968,
+    "ordinary_ci_conclusion": "success",
+    "artifact_id": 8782227447,
+    "artifact_name": "mini-origin-v86-ucr-preblind-registry",
+    "artifact_digest": "sha256:2a43e6a0cea9a9f72122fc8944b360326edaf5a45e65f49581786b7c2ffdf64a",
+    "artifact_zip_sha256": "2a43e6a0cea9a9f72122fc8944b360326edaf5a45e65f49581786b7c2ffdf64a",
+    "registry_file_sha256": "ca0a6f1179d19fb02dc557706b841d576b265f3d40532c18ab3386f8721a4197",
+    "registry_digest": "d0fd4893f99f3c34b6008fcbf5d2779d1f45b340d0176fe20632b6a94432dde6"
+  },
+  "protocol_amendment": {
+    "file": "mini-origin/campaigns/v86-ucr-preblind-protocol-amendment.json",
+    "commit": "1836ed55a77cd0b00e2586fd90985f134d43122e",
+    "status": "protocol_amendment_before_completed_audit_or_ucr_catalogue_access",
+    "final_trigger_commit": "81ef863c9ea5affd577ff0b3d2f8fd00920d336b",
+    "candidate_information_access_before_amendment": false
+  },
+  "superseded_run": {
+    "workflow_run": 30601479582,
+    "commit": "4c16d35de2dc8b7780239b477474eaa873c4af1b",
+    "workflow_conclusion": "success",
+    "artifact_id": 8782091547,
+    "artifact_digest": "sha256:00c00acb51e9a734d565eceba786b88d7b85904b409b03313dc1bbb6eacd47c1",
+    "authority": false,
+    "reason": "Completed before the exact source priority, provenance patterns, and full unchanged v0.82 future blind gate were frozen; retained only as superseded provenance diagnostic."
+  },
+  "parent_v85": {
+    "commit": "912c3ebd933ae39eb05e10467f1ecad56e326b03",
+    "authoritative_evidence_digest": "ca99dd822bc57fca55ffaf6de3614c7403cdbc0c85f3db81e0652dfe0acc0c20",
+    "state_input_sha256": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+    "development_gate": true,
+    "fresh_external_evidence": false
+  },
+  "audit_results": {
+    "ref_count": 237,
+    "files_scanned": 24814,
+    "bytes_scanned": 165866780,
+    "scan_failure_count": 0,
+    "excluded_uci_id_count": 84,
+    "excluded_openml_dataset_id_count": 10,
+    "excluded_dataset_name_count": 87,
+    "explicit_pmlb_name_count": 13,
+    "explicit_ucr_name_count": 5,
+    "known_checks_passed": true,
+    "baseline_registry_preserved": true
+  },
+  "access_boundary": {
+    "network_access": false,
+    "ucr_catalogue_access": false,
+    "candidate_dataset_byte_access": false,
+    "record_or_label_access": false,
+    "solver_execution": false
+  },
+  "frozen_future": {
+    "source": {
+      "name": "UCR Time Series Classification Archive",
+      "source_identity_rule": "Use the first reachable endpoint in official_endpoint_priority. A lower-priority endpoint is permitted only after the higher-priority endpoint failure is recorded before any catalogue metadata is read. Freeze the exact release, metadata endpoint, and selected file URLs returned by that access.",
+      "domain_shift": "univariate time-series classification represented as numeric tabular features only after byte locking",
+      "catalogue_access_before_audit": false,
+      "dataset_bytes_accessed_before_audit": false,
+      "records_or_labels_accessed_before_audit": false,
+      "official_endpoint_priority": [
+        "https://www.timeseriesclassification.com/",
+        "https://www.cs.ucr.edu/~eamonn/time_series_data_2018/"
+      ],
+      "candidate_dataset_names_ids_or_file_urls_committed_before_audit": false
+    },
+    "selection": {
+      "selection_seed": "mini-origin-v87-ucr-untouched-lock-2026-07-31",
+      "dataset_count": 7,
+      "eligibility": {
+        "classification_only": true,
+        "univariate_only": true,
+        "minimum_total_instances": 300,
+        "maximum_total_instances": 6000,
+        "minimum_series_length": 4,
+        "maximum_series_length": 80,
+        "minimum_classes": 2,
+        "maximum_classes": 15,
+        "official_train_and_test_files_required": true,
+        "numeric_series_required": true
+      },
+      "exclusions": {
+        "normalized_name_in_v86_registry": true,
+        "metadata_or_documentation_mentions_UCI": true,
+        "metadata_or_documentation_mentions_OpenML": true,
+        "metadata_or_documentation_mentions_PMLB": true,
+        "duplicate_normalized_name": true,
+        "missing_or_conflicting_metadata": true,
+        "raw_byte_download_failure": true,
+        "provenance_rejection_patterns": {
+          "UCI": [
+            "\\bUCI\\b",
+            "archive\\.ics\\.uci\\.edu"
+          ],
+          "OpenML": [
+            "\\bOpenML\\b",
+            "openml\\.org"
+          ],
+          "PMLB": [
+            "\\bPMLB\\b",
+            "EpistasisLab/pmlb"
+          ]
+        }
+      },
+      "ranking": {
+        "algorithm": "ascending SHA-256",
+        "input": [
+          "selection_seed",
+          "frozen_source_release",
+          "normalized_dataset_name",
+          "canonical_metadata_digest"
+        ],
+        "tie_break": "normalized dataset name ascending"
+      },
+      "byte_lock_only": {
+        "download_only_selected_archives_or_source_files": true,
+        "decompress_before_lock": false,
+        "parse_records_or_labels_before_lock": false,
+        "solver_execution": false,
+        "store_sha256": true,
+        "store_byte_length": true,
+        "store_source_url": true,
+        "store_metadata_digest": true
+      }
+    },
+    "blind_gate": {
+      "gate_source": "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets",
+      "exact_budget": 500000,
+      "budget_ladder": [
+        10000,
+        50000,
+        250000,
+        500000
+      ],
+      "contributing_datasets": 7,
+      "minimum_states_from_each_dataset": 6,
+      "minimum_base_states": 60,
+      "minimum_profiled_states": 180,
+      "minimum_bounded_solve_fraction": 0.9,
+      "minimum_both_plain_bounded": 40,
+      "plain_bounded_objective_mismatches": 0,
+      "minimum_bounded_only": 25,
+      "current_bounded_plan_mismatches": 0,
+      "bounded_expansion_regressions": 0,
+      "minimum_states_with_lower_bound_pruning": 30,
+      "minimum_aggregate_bounded_reduction_fraction": 0.1,
+      "minimum_dominated_queries_removed": 1000,
+      "minimum_root_incomparable_classes": 1,
+      "minimum_median_plain_bounded_ratio": 10.0,
+      "minimum_p90_plain_bounded_ratio": 30.0,
+      "minimum_50k_solve_advantage": 20,
+      "rust_mismatches": 0,
+      "label_independence_mismatches": 0,
+      "minimum_states_from_each_fresh_holdout_dataset": 6
+    }
+  },
+  "scientific_integrity": {
+    "algorithm_revisions": 0,
+    "compiler_revisions": 0,
+    "selector_revisions": 0,
+    "solver_revisions": 0,
+    "selection_ranking_revisions": 0,
+    "scientific_threshold_revisions": 0,
+    "acceptance_gate_revisions": 0,
+    "v82_gate_weakened": false,
+    "v82_v84_negative_results_modified": false
+  },
+  "next_step": "Create a separate v0.87 branch from this evidence commit. Access only official UCR metadata under the frozen endpoint priority, deterministically select exactly seven eligible non-contaminated datasets, and byte-lock only their official train/test source files without decompression, record/label parsing, or solver execution.",
+  "authority": false,
+  "invalidation_file": "mini-origin-v86-ucr-preblind-audit-invalidation.json",
+  "invalidated_registry_file": "mini-origin-v86-ucr-preblind-registry-invalidated.json"
+}

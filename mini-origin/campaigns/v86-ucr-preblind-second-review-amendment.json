@@ -1,0 +1,39 @@
+{
+  "status": "second_review_amendment_before_ucr_catalogue_access",
+  "reviewed_head": "33400960eccef075741cffdb2af3ed6e75d1898d",
+  "superseded_workflow_run": 30602898380,
+  "superseded_artifact_id": 8782558775,
+  "superseded_artifact_digest": "sha256:b6bcc1f43eabe186aec8aecee0c17dc595d8efafe10dce22c3eb202b7f8dbf8b",
+  "superseded_registry_file_sha256": "dc1dd26722692776f3f92dc222323e329e09d4bb3834692e10ca969d51fd20ed",
+  "superseded_registry_digest": "56185ae011a561cb68aaf5b1f05669068101a633f78629416b694d0f9eeb19d8",
+  "review_findings": [
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VUHCB",
+      "title": "Use NUL-delimited tree entries to avoid skipped paths",
+      "repair": "parse raw git ls-tree -z bytes, split at NUL and first TAB, decode paths with surrogateescape"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VUHCC",
+      "title": "Freeze endpoint failure semantics before catalogue access",
+      "repair": "freeze one active endpoint, three attempts, delays, timeouts, redirect/HTTP/TLS semantics, and fail without fallback"
+    }
+  ],
+  "catalogue_access_before_amendment": false,
+  "candidate_dataset_metadata_access_before_amendment": false,
+  "candidate_dataset_names_accessed_before_amendment": false,
+  "candidate_dataset_file_urls_accessed_before_amendment": false,
+  "candidate_dataset_bytes_accessed_before_amendment": false,
+  "records_or_labels_accessed_before_amendment": false,
+  "solver_execution_before_amendment": false,
+  "external_dataset_network_access_before_amendment": false,
+  "repository_git_metadata_access_before_amendment": true,
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "eligibility_revisions": 0,
+  "blind_gate_revisions": 0,
+  "scientific_threshold_weakening": false,
+  "authority": "Run 30602898380 and artifact 8782558775 are preserved diagnostics only. A later run after this amendment is required.",
+  "claim_boundary": "Preaccess provenance correction only; no UCR dataset evidence or breakthrough claim."
+}

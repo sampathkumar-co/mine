@@ -1,0 +1,422 @@
+{
+  "status": "preregistered_before_ucr_catalogue_access",
+  "parent_v85_commit": "912c3ebd933ae39eb05e10467f1ecad56e326b03",
+  "parent_v85_authoritative_evidence_digest": "ca99dd822bc57fca55ffaf6de3614c7403cdbc0c85f3db81e0652dfe0acc0c20",
+  "parent_v85_state_input_sha256": "3e784b85ff4cf38ec4908fa1da4c57b164ab62b6f3885e6e9c57881436f0c7ac",
+  "parent_v80_registry_digest": "aa6bab47d8d2453b669eee2f7a36720e0eb798a79355b0d2c9a509d81959038c",
+  "parent_v80_registry_sha256": "242a3b4173786ab52435658c959ce6195c3f831c25cf3dff4bba2d784796a3f9",
+  "objective": "Freeze a repository-wide contamination boundary and a complete deterministic selection rule before any UCR Time Series Classification Archive catalogue, dataset name, metadata row, archive, record, label, or solver output is accessed.",
+  "future_source": {
+    "name": "UCR Time Series Classification Archive",
+    "source_identity_rule": "For v0.87, only active_endpoint may be contacted. Execute exactly endpoint_attempts requests under the frozen retry schedule. If none succeeds, fail the lock; fallback to any other endpoint is forbidden without a new preregistration before source access.",
+    "domain_shift": "univariate time-series classification represented as numeric tabular features only after byte locking",
+    "catalogue_access_before_audit": false,
+    "dataset_bytes_accessed_before_audit": false,
+    "records_or_labels_accessed_before_audit": false,
+    "official_endpoint_priority": [
+      "https://www.timeseriesclassification.com/",
+      "https://www.cs.ucr.edu/~eamonn/time_series_data_2018/"
+    ],
+    "candidate_dataset_names_ids_or_file_urls_committed_before_audit": false,
+    "active_endpoint": "https://www.timeseriesclassification.com/",
+    "inactive_fallback_endpoint": "https://www.cs.ucr.edu/~eamonn/time_series_data_2018/",
+    "fallback_permitted_in_v87": false,
+    "endpoint_attempts": 3,
+    "endpoint_retry_delays_seconds": [
+      0,
+      5,
+      20
+    ],
+    "connect_timeout_seconds": 15,
+    "read_timeout_seconds": 60,
+    "maximum_redirects": 5,
+    "request_method": "GET",
+    "request_headers": {
+      "Accept": "text/html,application/xhtml+xml,application/json,text/csv;q=0.9,*/*;q=0.1",
+      "Accept-Encoding": "identity",
+      "Cache-Control": "no-cache",
+      "User-Agent": "Mini-ORIGIN-v0.87-UCR-byte-lock/1.0"
+    },
+    "tls_certificate_validation": true,
+    "endpoint_success_definition": "HTTP 200 after no more than maximum_redirects, body length from 1 through maximum_endpoint_response_bytes inclusive, and every redirect/final URL remaining HTTPS on timeseriesclassification.com or www.timeseriesclassification.com",
+    "endpoint_failure_definition": "DNS, connection, TLS, redirect-policy, timeout, empty-body, body-size overflow, or non-200 HTTP result; record each attempt outcome without parsing candidate records or labels",
+    "all_attempts_failed": "fail v0.87 without accessing the inactive fallback endpoint, changing criteria, or selecting datasets",
+    "endpoint_attempt_execution": "execute all three attempts even after an earlier success",
+    "maximum_endpoint_response_bytes": 10000000,
+    "successful_endpoint_attempt_agreement": "collect every successful attempt; require identical lowercase SHA-256 body digest and identical NFC-normalized final URL across all successful attempts; disagreement fails v0.87",
+    "authoritative_endpoint_response": "after agreement, use the successful attempt with the lowest 1-based attempt index; root_endpoint_body_sha256 is the lowercase SHA-256 of its exact response bytes and is not frozen_source_release",
+    "minimum_successful_endpoint_attempts": 1,
+    "endpoint_body_reading": "read at most maximum_endpoint_response_bytes plus one sentinel byte; a sentinel byte proves overflow; never classify or parse an overflowing body as successful",
+    "endpoint_connect_timeout_clock": "per connection attempt, measured by a monotonic clock from connection initiation until connection establishment; each redirect starts a new connection timeout but remains within endpoint_total_attempt_deadline_seconds",
+    "endpoint_read_timeout_clock": "whole final-response body deadline, measured by a monotonic clock from completion of final response headers until the last permitted body byte; chunk receipt does not reset the clock",
+    "endpoint_total_attempt_deadline_seconds": 90,
+    "source_release_digest_definition": "frozen_source_release has exactly one definition: lowercase SHA-256 of the complete canonical source-release manifest covering every authoritative root, traversal, and candidate HTML page; no single-page body digest may be used for ranking"
+  },
+  "audit_protocol": {
+    "scan_all_remote_refs": true,
+    "scan_roots": [
+      "mini-origin/",
+      "research-evidence/",
+      ".github/workflows/"
+    ],
+    "collect": [
+      "UCI dataset identifiers",
+      "OpenML dataset identifiers",
+      "normalized dataset names",
+      "explicit PMLB dataset names",
+      "explicit UCR archive dataset names and source occurrences"
+    ],
+    "dataset_name_normalization": "lowercase alphanumeric tokens joined by hyphens",
+    "conservative_dataset_name_keys": [
+      "dataset",
+      "dataset_name",
+      "task_name",
+      "benchmark_dataset"
+    ],
+    "repository_git_fetch_allowed": true,
+    "repository_git_fetch_refspec": "+refs/heads/*:refs/remotes/origin/*",
+    "external_dataset_network_access": false,
+    "scan_checked_out_head": true,
+    "record_ref_commit_sha_pairs": true,
+    "scan_all_blob_suffixes": true,
+    "blob_decoding": "UTF-8 with replacement for invalid byte sequences; binary and archive blobs are not silently skipped",
+    "maximum_blob_bytes": 2000000,
+    "oversized_blob_policy": "fail the audit and record ref, commit SHA, blob SHA, path and byte size",
+    "git_tree_entry_encoding": "git ls-tree -r --long -z raw bytes; split entries on NUL and metadata/path on the first TAB; decode path bytes with UTF-8 surrogateescape; Git path quoting is forbidden"
+  },
+  "future_metadata_only_selection": {
+    "selection_seed": "mini-origin-v87-ucr-untouched-lock-2026-07-31",
+    "dataset_count": 7,
+    "eligibility": {
+      "classification_only": true,
+      "univariate_only": true,
+      "minimum_total_instances": 300,
+      "maximum_total_instances": 6000,
+      "minimum_series_length": 4,
+      "maximum_series_length": 80,
+      "minimum_classes": 2,
+      "maximum_classes": 15,
+      "official_train_and_test_files_required": true,
+      "numeric_series_required": true,
+      "numeric_series_predicate": "true exactly when classification is JSON true, univariate is JSON true, canonical train_url and test_url are distinct allowed-host HTTPS URLs, and both path basenames end case-insensitively in .ts, .tsv, .txt, .csv, or .arff with optional .gz; no file bytes, records, or labels are inspected",
+      "implementation": "mini_origin.ucr_catalogue_protocol_v87.metadata_eligibility_rejections"
+    },
+    "exclusions": {
+      "normalized_name_in_v86_registry": true,
+      "metadata_or_documentation_mentions_UCI": true,
+      "metadata_or_documentation_mentions_OpenML": true,
+      "metadata_or_documentation_mentions_PMLB": true,
+      "duplicate_normalized_name": true,
+      "missing_or_conflicting_metadata": true,
+      "provenance_rejection_patterns": {
+        "UCI": [
+          "\\bUCI\\b",
+          "archive\\.ics\\.uci\\.edu"
+        ],
+        "OpenML": [
+          "\\bOpenML\\b",
+          "openml\\.org"
+        ],
+        "PMLB": [
+          "\\bPMLB\\b",
+          "EpistasisLab/pmlb"
+        ]
+      }
+    },
+    "ranking": {
+      "algorithm": "ascending SHA-256",
+      "input": [
+        "selection_seed",
+        "frozen_source_release",
+        "normalized_dataset_name",
+        "canonical_metadata_digest"
+      ],
+      "tie_break": "normalized dataset name ascending",
+      "hash": "SHA-256",
+      "unicode_normalization": "NFC",
+      "string_trimming": "strip ASCII whitespace characters U+0009 through U+000D and U+0020 at both ends only",
+      "canonical_metadata_fields": [
+        "normalized_dataset_name",
+        "total_instances",
+        "series_length",
+        "class_count",
+        "classification",
+        "univariate",
+        "train_url",
+        "test_url"
+      ],
+      "canonical_metadata_types": {
+        "normalized_dataset_name": "string already normalized by lowercase alphanumeric tokens joined by hyphens",
+        "total_instances": "base-10 JSON integer, booleans forbidden",
+        "series_length": "base-10 JSON integer, booleans forbidden",
+        "class_count": "base-10 JSON integer, booleans forbidden",
+        "classification": "JSON boolean true",
+        "univariate": "JSON boolean true",
+        "train_url": "NFC string with only edge ASCII whitespace stripped; otherwise exact official source URL",
+        "test_url": "NFC string with only edge ASCII whitespace stripped; otherwise exact official source URL"
+      },
+      "canonical_metadata_serialization": "JSON object containing exactly canonical_metadata_fields; keys sorted lexicographically; ensure_ascii=false; separators comma and colon without spaces; UTF-8 without BOM or trailing newline",
+      "canonical_metadata_digest": "lowercase hexadecimal SHA-256 of canonical metadata serialization bytes",
+      "ranking_serialization": "JSON array [NFC/trimmed selection_seed, NFC/trimmed frozen_source_release, normalized_dataset_name, lowercase canonical_metadata_digest]; ensure_ascii=false; separators comma and colon without spaces; UTF-8 without BOM or trailing newline",
+      "rank": "lowercase hexadecimal SHA-256 of ranking serialization bytes"
+    },
+    "byte_lock_only": {
+      "download_only_selected_archives_or_source_files": true,
+      "decompress_before_lock": false,
+      "parse_records_or_labels_before_lock": false,
+      "solver_execution": false,
+      "store_sha256": true,
+      "store_byte_length": true,
+      "store_source_url": true,
+      "store_metadata_digest": true,
+      "selection_before_download": "deterministically select the top seven metadata-ranked candidates before downloading any candidate bytes",
+      "selected_file_download_attempts": 3,
+      "selected_file_retry_delays_seconds": [
+        0,
+        5,
+        20
+      ],
+      "selected_file_success": "HTTP 200 after no more than selected_file_maximum_redirects, nonempty response bytes not exceeding maximum_selected_file_bytes, and every redirect/final URL remaining HTTPS on timeseriesclassification.com or www.timeseriesclassification.com",
+      "selected_file_unavailability": "fail the entire lock; never substitute a lower-ranked candidate",
+      "redirect_policy": "record every redirect and final URL; a redirect outside the frozen official source hosts fails the lock",
+      "selected_file_connect_timeout_seconds": 15,
+      "selected_file_read_timeout_seconds": 120,
+      "selected_file_maximum_redirects": 5,
+      "selected_file_request_method": "GET",
+      "selected_file_request_headers": {
+        "Accept": "application/octet-stream,text/plain,text/tab-separated-values,*/*;q=0.1",
+        "Accept-Encoding": "identity",
+        "Cache-Control": "no-cache",
+        "User-Agent": "Mini-ORIGIN-v0.87-UCR-byte-lock/1.0"
+      },
+      "selected_file_tls_certificate_validation": true,
+      "maximum_selected_file_bytes": 100000000,
+      "selected_file_attempt_execution": "execute all three attempts for each selected TRAIN or TEST file even after an earlier success",
+      "successful_selected_file_attempt_agreement": "for each file, require every successful attempt to have identical lowercase SHA-256 body digest and identical NFC-normalized final URL; disagreement fails the entire lock",
+      "authoritative_selected_file_response": "after agreement, use the successful attempt with the lowest 1-based attempt index",
+      "minimum_successful_attempts_per_selected_file": 1,
+      "selected_file_connect_timeout_clock": "per connection attempt, monotonic from connection initiation to establishment; each redirect starts a new connect timeout but remains inside selected_file_total_attempt_deadline_seconds",
+      "selected_file_read_timeout_clock": "whole final-response body deadline, monotonic from completion of final response headers to completion of body; chunk receipt does not reset the 120-second clock; redirects do not reset the total-attempt clock",
+      "selected_file_total_attempt_deadline_seconds": 180
+    }
+  },
+  "required_parent_checks": {
+    "v85_verdict": "development_pass",
+    "v85_development_gate": true,
+    "v85_contributing_dataset_count": 7,
+    "v85_profiled_state_count": 252,
+    "v85_rust_mismatch_count": 0,
+    "v85_fresh_external_evidence": false,
+    "v85_exact_rerun_verdict": "reproduced"
+  },
+  "failure_policy": {
+    "repository_scan_failure": "fail without relaxing scope",
+    "parent_evidence_mismatch": "fail",
+    "baseline_registry_not_preserved": "fail",
+    "insufficient_future_eligible_candidates": "fail the later lock without relaxing criteria",
+    "source_release_change_during_later_lock": "fail",
+    "solver_execution_during_audit_or_lock": "forbidden",
+    "selected_raw_byte_unavailability": "fail the later lock after the frozen retry schedule; do not replace the selected candidate",
+    "candidate_substitution_after_selection": "forbidden"
+  },
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "scientific_threshold_revisions": 0,
+  "acceptance_gate_revisions": 0,
+  "solver_execution_before_audit": false,
+  "claim_boundary": "Repository-only provenance infrastructure and a frozen future selection/ranking/download/gate protocol. The audit may fetch Git branch objects from the project origin under the frozen refspec, but it must not contact any external dataset source. This is not dataset evaluation, fresh external evidence, independent reproduction, peer review, novelty, publication, a world-class result, or a breakthrough.",
+  "next_stage": "Only after the exact v0.86 registry artifact is preserved may a separate branch access official UCR metadata and execute the frozen metadata-only seven-dataset byte lock.",
+  "future_blind_gate": {
+    "gate_source": "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets",
+    "exact_budget": 500000,
+    "budget_ladder": [
+      10000,
+      50000,
+      250000,
+      500000
+    ],
+    "contributing_datasets": 7,
+    "minimum_states_from_each_dataset": 6,
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0,
+    "label_independence_mismatches": 0,
+    "minimum_states_from_each_fresh_holdout_dataset": 6
+  },
+  "protocol_amendment": "v86-ucr-preblind-protocol-amendment.json",
+  "review_amendment": "v86-ucr-preblind-review-amendment.json",
+  "second_review_amendment": "v86-ucr-preblind-second-review-amendment.json",
+  "third_review_amendment": "v86-ucr-preblind-third-review-amendment.json",
+  "fourth_review_amendment": "v86-ucr-preblind-fourth-review-amendment.json",
+  "future_catalogue_parser": {
+    "implementation_module": "mini_origin.ucr_catalogue_protocol_v87",
+    "implementation_status": "frozen_and_synthetic_tested_before_source_access",
+    "root_url": "https://www.timeseriesclassification.com/",
+    "html_decoding": "strict UTF-8 after optional UTF-8 BOM removal; decoding failure fails v0.87",
+    "html_parser": "Python standard-library HTMLParser with convert_charrefs=true",
+    "url_canonicalization": "NFC and edge ASCII whitespace strip; urljoin against page URL; HTTPS only; IDNA-lowercase host restricted to timeseriesclassification.com or www.timeseriesclassification.com; no credentials; port absent or 443; fragment removed; path percent triplets must be syntactically valid, are strictly percent-decoded as UTF-8, NFC-normalized, then UTF-8 percent-encoded with uppercase hex while literal slash separators remain; query parse_qsl strict_parsing=true, blank values preserved, pairs sorted by key then value, and re-encoded with UTF-8 percent encoding",
+    "crawl": {
+      "algorithm": "breadth-first by depth; lexicographically sorted canonical URL frontier at every depth; each URL fetched once",
+      "maximum_depth": 2,
+      "maximum_fetched_html_pages": 500,
+      "root_depth": 0,
+      "traversal_link_rule": "same allowed host, HTTPS, no query parameters, and path extension empty, .php, .html, or .htm",
+      "candidate_link_rule": "path casefold ends with /description.php and query contains exactly one pair whose key is Dataset and whose value is nonempty; no additional query pairs",
+      "missing_scheduled_page": "fail the whole v0.87 metadata lock; never skip",
+      "page_limit_exceeded": "fail without changing depth, page limit, or link rules",
+      "input_pages": "mapping from canonical scheduled URL to AuthoritativeHTMLPage returned only by authoritative_html_page; raw byte mappings are forbidden",
+      "relative_link_base": "the authoritative NFC-normalized final URL of the fetched page; HTML base elements are ignored",
+      "page_limit_scope": "maximum_fetched_html_pages counts the exact union of authoritative root, traversal, and discovered candidate description pages"
+    },
+    "candidate_identity": "raw Dataset query value NFC/edge-trimmed, then normalized as lowercase alphanumeric tokens joined by hyphens; empty normalization rejects the candidate",
+    "structured_metadata_sources": [
+      "HTML table rows: first cell is label and remaining cells form value",
+      "HTML definition-list dt/dd pairs",
+      "individual visible text nodes containing one colon: left side label and right side value"
+    ],
+    "field_aliases": {
+      "train_size": [
+        "train size",
+        "training size",
+        "train instances",
+        "training instances",
+        "number of train cases",
+        "number of training cases"
+      ],
+      "test_size": [
+        "test size",
+        "testing size",
+        "test instances",
+        "testing instances",
+        "number of test cases",
+        "number of testing cases"
+      ],
+      "series_length": [
+        "series length",
+        "time series length",
+        "length"
+      ],
+      "class_count": [
+        "class count",
+        "classes",
+        "number of classes",
+        "number classes"
+      ],
+      "archive_type": [
+        "archive type",
+        "data type",
+        "dimension",
+        "dimensions",
+        "type"
+      ]
+    },
+    "field_label_normalization": "NFC, casefold, replace every maximal non-alphanumeric Unicode sequence with one ASCII space, trim and collapse spaces",
+    "integer_conversion": "accept positive ASCII decimal without separators or valid comma thousands groups; remove valid grouping commas; reject signs, decimals, booleans, zero, leading-zero multi-digit values, and values above 999999999",
+    "univariate_values": [
+      "univariate",
+      "univariate time series",
+      "univariate time-series"
+    ],
+    "train_test_link_rule": "canonical same-host HTTPS anchor URL whose path basename casefold matches a dataset prefix followed by _TRAIN or -TRAIN for train, or _TEST or -TEST for test, and then one of .ts, .tsv, .txt, .csv, .arff with optional .gz; alternatively normalized anchor text is exactly train, training data, train file, test, testing data, or test file and the URL has one of those suffixes; the accepted canonical TRAIN and TEST URLs must be distinct",
+    "field_precedence": "none",
+    "missing_field_policy": "reject candidate",
+    "conflict_policy": "collect every recognized normalized value; zero values is missing; more than one distinct value rejects candidate; repeated identical values are permitted",
+    "required_fields": [
+      "train_size",
+      "test_size",
+      "series_length",
+      "class_count",
+      "archive_type",
+      "train_url",
+      "test_url"
+    ],
+    "derived_fields": {
+      "total_instances": "train_size + test_size using exact integers",
+      "classification": true,
+      "univariate": "archive_type must normalize to one of univariate_values",
+      "numeric_series_metadata_eligible": "classification true and univariate true and distinct canonical official TRAIN/TEST URLs satisfying numeric_series_metadata_predicate"
+    },
+    "provenance_scan": "apply frozen UCI/OpenML/PMLB regular expressions case-insensitively to the entire strict-decoded candidate metadata HTML before field extraction; any match rejects candidate",
+    "duplicate_normalized_name_policy": "if more than one distinct candidate description URL yields the same normalized name, reject every row in that name group even when metadata is otherwise identical",
+    "candidate_page_failure": "fail whole v0.87 metadata lock rather than skip a discovered candidate page",
+    "source_release_manifest": "canonical JSON array sorted by canonical requested page URL and containing every authoritative root, traversal, and candidate page; each element is [requested_url, NFC-normalized final_url, lowercase SHA-256 of exact authoritative body bytes]; ensure_ascii=false, compact separators, UTF-8 without BOM or newline; frozen_source_release is exclusively the lowercase SHA-256 of these manifest bytes",
+    "record_enumeration": "after the full crawl, authoritative transport for every scheduled HTML page, exact candidate-result coverage validation, and all candidate-page parses complete, sort accepted metadata rows by normalized_dataset_name then description_url; apply frozen contamination and metadata-only eligibility predicates; reject duplicate names; rank only the remaining rows with the frozen ranking bytes",
+    "non_visible_text_tags": [
+      "canvas",
+      "head",
+      "noscript",
+      "script",
+      "style",
+      "svg",
+      "template"
+    ],
+    "visible_text_rule": "text under any non_visible_text_tags element is excluded from links, rows, definitions, and visible text-node metadata extraction; CSS, hidden attributes, and ARIA state are not interpreted; provenance scanning still examines the complete strict-decoded HTML bytes",
+    "page_transport": {
+      "scope": "apply independently to the root page, every scheduled traversal page, and every discovered candidate description page",
+      "implementation": "mini_origin.ucr_catalogue_protocol_v87.authoritative_html_page",
+      "attempt_count": 3,
+      "attempt_indices": [
+        1,
+        2,
+        3
+      ],
+      "retry_delays_seconds": [
+        0,
+        5,
+        20
+      ],
+      "request_method": "GET",
+      "request_headers_source": "future_source.request_headers",
+      "connect_timeout_seconds": 15,
+      "read_timeout_seconds": 60,
+      "total_attempt_deadline_seconds": 90,
+      "maximum_redirects": 5,
+      "maximum_response_bytes": 10000000,
+      "tls_certificate_validation": true,
+      "attempt_completion": "all three indexed attempts must be represented even after an earlier success",
+      "success": "HTTP 200, same-host HTTPS redirect chain, normalized final URL, and exact body length 1 through maximum_response_bytes",
+      "failure": "DNS, connection, TLS, redirect-policy, timeout, empty body, overflow, or non-200; failed attempts contain no accepted body bytes",
+      "agreement": "at least one success; every successful attempt must have identical normalized final URL and exact body bytes, therefore identical lowercase SHA-256; disagreement fails the whole metadata lock",
+      "authority": "after agreement, the successful attempt with the lowest attempt index is authoritative for that requested page",
+      "missing_page_attempt_record": "fail; never skip or substitute the page",
+      "attempt_record_schema": {
+        "attempt_index": "exactly 1, 2, or 3",
+        "scheduled_delay_seconds": "must match retry_delays_seconds at attempt_index",
+        "request_method": "must equal GET",
+        "request_headers": "must exactly equal future_source.request_headers in frozen insertion order",
+        "tls_certificate_validated": "must be true for success",
+        "redirect_chain": "ordered observed redirect URLs; every success URL canonicalizes to an allowed same-host HTTPS URL; at most maximum_redirects",
+        "connect_elapsed_seconds": "one finite nonnegative monotonic duration per connection, including the final connection; each at most connect_timeout_seconds",
+        "read_elapsed_seconds": "finite nonnegative whole-body duration for success; at most read_timeout_seconds",
+        "total_elapsed_seconds": "finite nonnegative whole-attempt duration for success; at most total_attempt_deadline_seconds",
+        "status_code": "exactly 200 for success",
+        "final_url": "required and canonically same-host HTTPS for success",
+        "body": "exact bytes for success; absent for failure",
+        "failure": "non-null diagnostic for a failed attempt; failed attempts cannot contribute accepted body bytes"
+      }
+    },
+    "candidate_result_coverage": "after candidate discovery, require exactly one CandidateParseResult for every canonical discovered candidate URL and no result for an undiscovered URL; duplicates, omissions, extras, or page-level failures fail the whole metadata lock before eligibility or ranking",
+    "numeric_series_metadata_predicate": "true exactly when classification is JSON true, univariate is JSON true, canonical train_url and test_url are distinct allowed-host HTTPS URLs, and both path basenames end case-insensitively in .ts, .tsv, .txt, .csv, or .arff with optional .gz; no file bytes, records, or labels are inspected",
+    "candidate_page_parse_implementation": "mini_origin.ucr_catalogue_protocol_v87.parse_authoritative_candidate_page; the wrapper verifies the authoritative body digest before low-level field parsing",
+    "source_release_manifest_coverage": "source_release_manifest receives the complete expected canonical page URL set and authoritative page objects; missing, extra, or duplicate requested URLs fail",
+    "metadata_snapshot_implementation": "mini_origin.ucr_catalogue_protocol_v87.finalize_metadata_snapshot; this single entry point derives the crawl and candidate sets, requires authoritative page evidence for the exact complete union, parses every discovered candidate, validates one-to-one result coverage, creates the sole source manifest digest, applies the v0.86 normalized-name exclusion registry and metadata-only eligibility, and returns deterministically sorted eligible rows and rejections",
+    "dataset_name_normalization": "NFC, casefold, collect ASCII [a-z0-9]+ tokens only, join tokens by one hyphen, and reject an empty result",
+    "candidate_redirect_identity": "candidate final URL may switch only between allowed host aliases; path and query must exactly equal the canonical requested description URL or the whole metadata lock fails"
+  },
+  "fifth_review_amendment": "v86-ucr-preblind-fifth-review-amendment.json"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "mini_origin_v86_fourth_registry_run_superseded",
+  "workflow_run": 30604580854,
+  "code_commit": "fd7e4f9c8ae806107a8d6adc76ee7a991829cb8e",
+  "artifact_id": 8783136313,
+  "artifact_digest": "sha256:4fec837efdfc9e6925a4902ed49c4f5d0e8626f137122207116f08c47fe14644",
+  "registry_file_sha256": "17e25f07e07fdaaf2968e0ae60e3fce7c0cbae6f071101ac024472beb283f46b",
+  "registry_digest": "2b863bb289711a18764b75e91615c069d7bd30c20b0de12b6fb8b00984b51b92",
+  "reason": "Fourth automated review found the catalogue parser/conflict policy and two transport boundary semantics were not fully frozen.",
+  "review_thread_ids": [
+    "PRRT_kwDOThS6ss6VUY_q",
+    "PRRT_kwDOThS6ss6VUY_r",
+    "PRRT_kwDOThS6ss6VUY_u"
+  ],
+  "authority": false,
+  "ucr_candidate_information_accessed": false,
+  "thresholds_changed": false,
+  "next_required_action": "Freeze and synthetic-test the catalogue parser, then rerun repository-only v0.86 before source access."
+}

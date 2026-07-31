@@ -1,0 +1,23 @@
+{
+  "status": "mini_origin_v86_preblind_registry_invalidated",
+  "invalidated_commit": "e8480457ba492688d92bbd5bd1f895b9e5309bf8",
+  "invalidated_workflow_run": 30601865953,
+  "invalidated_artifact_id": 8782227447,
+  "invalidated_artifact_digest": "sha256:2a43e6a0cea9a9f72122fc8944b360326edaf5a45e65f49581786b7c2ffdf64a",
+  "invalidated_registry_file_sha256": "ca0a6f1179d19fb02dc557706b841d576b265f3d40532c18ab3386f8721a4197",
+  "invalidated_registry_digest": "d0fd4893f99f3c34b6008fcbf5d2779d1f45b340d0176fe20632b6a94432dde6",
+  "reason": "Automated review found incomplete repository snapshot coverage and under-specified future selection/download semantics. The run is preserved but cannot establish a complete contamination boundary.",
+  "scientific_result": null,
+  "ucr_candidate_information_accessed": false,
+  "thresholds_changed": false,
+  "next_required_action": "Apply the review amendment and complete a new repository-only audit before any UCR source access.",
+  "review_thread_ids": [
+    "PRRT_kwDOThS6ss6VT3Uq",
+    "PRRT_kwDOThS6ss6VT3Ur",
+    "PRRT_kwDOThS6ss6VT3Uu",
+    "PRRT_kwDOThS6ss6VT3Uv",
+    "PRRT_kwDOThS6ss6VT3Uw",
+    "PRRT_kwDOThS6ss6VT3Uy",
+    "PRRT_kwDOThS6ss6VT3U1"
+  ]
+}
