@@ -8,12 +8,16 @@
   "objective": "Freeze a repository-wide contamination boundary and a complete deterministic selection rule before any UCR Time Series Classification Archive catalogue, dataset name, metadata row, archive, record, label, or solver output is accessed.",
   "future_source": {
     "name": "UCR Time Series Classification Archive",
-    "source_identity_rule": "Use only the official UCR time-series classification archive or its official successor endpoint. Freeze the exact release, source commit if applicable, metadata endpoint, and file URLs returned by the first post-audit access.",
+    "source_identity_rule": "Use the first reachable endpoint in official_endpoint_priority. A lower-priority endpoint is permitted only after the higher-priority endpoint failure is recorded before any catalogue metadata is read. Freeze the exact release, metadata endpoint, and selected file URLs returned by that access.",
     "domain_shift": "univariate time-series classification represented as numeric tabular features only after byte locking",
     "catalogue_access_before_audit": false,
-    "dataset_names_ids_or_urls_committed_before_audit": false,
     "dataset_bytes_accessed_before_audit": false,
-    "records_or_labels_accessed_before_audit": false
+    "records_or_labels_accessed_before_audit": false,
+    "official_endpoint_priority": [
+      "https://www.timeseriesclassification.com/",
+      "https://www.cs.ucr.edu/~eamonn/time_series_data_2018/"
+    ],
+    "candidate_dataset_names_ids_or_file_urls_committed_before_audit": false
   },
   "audit_protocol": {
     "scan_all_remote_refs": true,
@@ -60,7 +64,21 @@
       "metadata_or_documentation_mentions_PMLB": true,
       "duplicate_normalized_name": true,
       "missing_or_conflicting_metadata": true,
-      "raw_byte_download_failure": true
+      "raw_byte_download_failure": true,
+      "provenance_rejection_patterns": {
+        "UCI": [
+          "\\bUCI\\b",
+          "archive\\.ics\\.uci\\.edu"
+        ],
+        "OpenML": [
+          "\\bOpenML\\b",
+          "openml\\.org"
+        ],
+        "PMLB": [
+          "\\bPMLB\\b",
+          "EpistasisLab/pmlb"
+        ]
+      }
     },
     "ranking": {
       "algorithm": "ascending SHA-256",
@@ -108,5 +126,36 @@
   "acceptance_gate_revisions": 0,
   "solver_execution_before_audit": false,
   "claim_boundary": "Repository-only provenance infrastructure and a frozen future selection rule. This audit is not dataset evaluation, fresh external evidence, independent reproduction, peer review, novelty, publication, a world-class result, or a breakthrough.",
-  "next_stage": "Only after the exact v0.86 registry artifact is preserved may a separate branch access official UCR metadata and execute the frozen metadata-only seven-dataset byte lock."
+  "next_stage": "Only after the exact v0.86 registry artifact is preserved may a separate branch access official UCR metadata and execute the frozen metadata-only seven-dataset byte lock.",
+  "future_blind_gate": {
+    "gate_source": "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets",
+    "exact_budget": 500000,
+    "budget_ladder": [
+      10000,
+      50000,
+      250000,
+      500000
+    ],
+    "contributing_datasets": 7,
+    "minimum_states_from_each_dataset": 6,
+    "minimum_base_states": 60,
+    "minimum_profiled_states": 180,
+    "minimum_bounded_solve_fraction": 0.9,
+    "minimum_both_plain_bounded": 40,
+    "plain_bounded_objective_mismatches": 0,
+    "minimum_bounded_only": 25,
+    "current_bounded_plan_mismatches": 0,
+    "bounded_expansion_regressions": 0,
+    "minimum_states_with_lower_bound_pruning": 30,
+    "minimum_aggregate_bounded_reduction_fraction": 0.1,
+    "minimum_dominated_queries_removed": 1000,
+    "minimum_root_incomparable_classes": 1,
+    "minimum_median_plain_bounded_ratio": 10.0,
+    "minimum_p90_plain_bounded_ratio": 30.0,
+    "minimum_50k_solve_advantage": 20,
+    "rust_mismatches": 0,
+    "label_independence_mismatches": 0,
+    "minimum_states_from_each_fresh_holdout_dataset": 6
+  },
+  "protocol_amendment": "v86-ucr-preblind-protocol-amendment.json"
 }

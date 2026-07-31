@@ -17,6 +17,7 @@ git diff --exit-code "$PARENT" -- \
   mini-origin/compiled/response_cost_lower_bound_v66.rs \
   mini-origin/campaigns/v85-response-lattice-closure.json \
   mini-origin/campaigns/v85-response-lattice-implementation-amendment.json \
+  mini-origin/campaigns/v82-pmlb-blind.json \
   research-evidence/mini-origin-v82-pmlb-blind-rejection.json \
   research-evidence/mini-origin-v83-near-small-query-coverage-rejection.json \
   research-evidence/mini-origin-v84-partition-signature-coverage-rejection.json \

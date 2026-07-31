@@ -16,6 +16,11 @@ PREREGISTRATION = (
     / "campaigns"
     / "v86-ucr-preblind-audit.json"
 )
+PROTOCOL_AMENDMENT = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v86-ucr-preblind-protocol-amendment.json"
+)
 V85_EVIDENCE = (
     Path(__file__).resolve().parents[3]
     / "research-evidence"
@@ -30,6 +35,11 @@ V80_REGISTRY = (
     Path(__file__).resolve().parents[3]
     / "research-evidence"
     / "mini-origin-v80-pmlb-preblind-registry.json"
+)
+V82_PREREGISTRATION = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v82-pmlb-blind.json"
 )
 FROZEN_V85_COMMIT = "912c3ebd933ae39eb05e10467f1ecad56e326b03"
 V85_EVIDENCE_DIGEST = "ca99dd822bc57fca55ffaf6de3614c7403cdbc0c85f3db81e0652dfe0acc0c20"
@@ -143,6 +153,21 @@ def load_inputs() -> tuple[
     preregistration = json.loads(PREREGISTRATION.read_text(encoding="utf-8-sig"))
     if preregistration["status"] != "preregistered_before_ucr_catalogue_access":
         raise RuntimeError("v0.86 preregistration status changed")
+    amendment = json.loads(PROTOCOL_AMENDMENT.read_text(encoding="utf-8"))
+    if preregistration["protocol_amendment"] != PROTOCOL_AMENDMENT.name:
+        raise RuntimeError("v0.86 amendment reference changed")
+    if amendment["status"] != "protocol_amendment_before_completed_audit_or_ucr_catalogue_access":
+        raise RuntimeError("v0.86 protocol amendment status changed")
+    for key in (
+        "catalogue_access_before_amendment",
+        "candidate_dataset_metadata_access_before_amendment",
+        "candidate_dataset_names_accessed_before_amendment",
+        "candidate_dataset_bytes_accessed_before_amendment",
+        "records_or_labels_accessed_before_amendment",
+        "solver_execution_before_amendment",
+    ):
+        if amendment[key] is not False:
+            raise RuntimeError(f"amendment preaccess boundary violated: {key}")
     if preregistration["parent_v85_commit"] != FROZEN_V85_COMMIT:
         raise RuntimeError("frozen v0.85 commit changed")
     if preregistration["parent_v85_authoritative_evidence_digest"] != V85_EVIDENCE_DIGEST:
@@ -157,7 +182,7 @@ def load_inputs() -> tuple[
     source = preregistration["future_source"]
     for key in (
         "catalogue_access_before_audit",
-        "dataset_names_ids_or_urls_committed_before_audit",
+        "candidate_dataset_names_ids_or_file_urls_committed_before_audit",
         "dataset_bytes_accessed_before_audit",
         "records_or_labels_accessed_before_audit",
     ):
@@ -167,6 +192,25 @@ def load_inputs() -> tuple[
         raise RuntimeError("solver execution occurred before audit")
     if preregistration["audit_protocol"]["network_access"] is not False:
         raise RuntimeError("audit network boundary changed")
+    blind_gate = preregistration["future_blind_gate"]
+    if blind_gate["gate_source"] != "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets":
+        raise RuntimeError("future blind gate source changed")
+    v82 = json.loads(V82_PREREGISTRATION.read_text(encoding="utf-8"))
+    if blind_gate["exact_budget"] != v82["exact_budget"]:
+        raise RuntimeError("future exact budget differs from v0.82")
+    if blind_gate["budget_ladder"] != v82["budget_ladder"]:
+        raise RuntimeError("future budget ladder differs from v0.82")
+    locked = v82["locked_gate"]
+    for key, expected in locked.items():
+        if key in {"previously_zero_datasets", "minimum_states_from_each_previously_zero_dataset"}:
+            continue
+        if blind_gate.get(key) != expected:
+            raise RuntimeError(f"future blind gate differs from v0.82: {key}")
+    if (
+        blind_gate["minimum_states_from_each_fresh_holdout_dataset"]
+        != locked["minimum_states_from_each_previously_zero_dataset"]
+    ):
+        raise RuntimeError("future fresh-dataset minimum differs from v0.82")
     for key in (
         "algorithm_revisions",
         "compiler_revisions",
@@ -349,7 +393,9 @@ def audit() -> dict[str, object]:
         "ucr_source_occurrence_count_capped": len(source_occurrences.get("ucr-archive", [])),
         "uci_occurrences": uci_rows,
         "openml_occurrences": openml_rows,
+        "frozen_future_source": preregistration["future_source"],
         "frozen_future_selection": preregistration["future_metadata_only_selection"],
+        "frozen_future_blind_gate": preregistration["future_blind_gate"],
         "claim_scope": preregistration["claim_boundary"],
     }
     report["registry_digest"] = canonical_digest({
@@ -360,7 +406,9 @@ def audit() -> dict[str, object]:
         "excluded_dataset_names": report["excluded_dataset_names"],
         "explicit_pmlb_names": [row["normalized_name"] for row in pmlb_rows],
         "explicit_ucr_names": [row["normalized_name"] for row in ucr_rows],
+        "frozen_future_source": report["frozen_future_source"],
         "frozen_future_selection": report["frozen_future_selection"],
+        "frozen_future_blind_gate": report["frozen_future_blind_gate"],
     })
     return report
 

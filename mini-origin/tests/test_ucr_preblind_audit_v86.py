@@ -50,12 +50,28 @@ def test_plain_name_without_dataset_context_is_not_collected():
 def test_preregistration_freezes_ucr_preblind_boundary_and_selection_rule():
     data = json.loads(audit.PREREGISTRATION.read_text(encoding="utf-8-sig"))
     assert data["status"] == "preregistered_before_ucr_catalogue_access"
+    amendment = json.loads(audit.PROTOCOL_AMENDMENT.read_text(encoding="utf-8"))
+    assert (
+        amendment["status"]
+        == "protocol_amendment_before_completed_audit_or_ucr_catalogue_access"
+    )
+    assert amendment["catalogue_access_before_amendment"] is False
+    assert amendment["candidate_dataset_names_accessed_before_amendment"] is False
     assert data["parent_v85_commit"] == audit.FROZEN_V85_COMMIT
     assert (
         data["parent_v85_authoritative_evidence_digest"]
         == audit.V85_EVIDENCE_DIGEST
     )
     assert data["future_metadata_only_selection"]["dataset_count"] == 7
+    assert data["future_blind_gate"]["contributing_datasets"] == 7
+    assert data["future_blind_gate"]["rust_mismatches"] == 0
+    assert data["future_blind_gate"]["label_independence_mismatches"] == 0
+    assert (
+        data["future_source"][
+            "candidate_dataset_names_ids_or_file_urls_committed_before_audit"
+        ]
+        is False
+    )
     assert (
         data["future_metadata_only_selection"]["selection_seed"]
         == "mini-origin-v87-ucr-untouched-lock-2026-07-31"

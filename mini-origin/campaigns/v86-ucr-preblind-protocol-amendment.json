@@ -1,0 +1,26 @@
+{
+  "status": "protocol_amendment_before_completed_audit_or_ucr_catalogue_access",
+  "initial_preregistration_commit": "459e88a2e4b741d8bc73d789c0d224ab7f65d5f7",
+  "initial_audit_workflow_run": 30601479582,
+  "reason": [
+    "clarify that the preaccess prohibition applies to candidate dataset names, identifiers and file URLs rather than the public source-root identity",
+    "freeze deterministic official endpoint priority before source access",
+    "freeze exact UCI, OpenML and PMLB provenance rejection patterns before metadata access",
+    "freeze the complete unchanged v0.82 blind acceptance gate before holdout selection"
+  ],
+  "catalogue_access_before_amendment": false,
+  "candidate_dataset_metadata_access_before_amendment": false,
+  "candidate_dataset_names_accessed_before_amendment": false,
+  "candidate_dataset_bytes_accessed_before_amendment": false,
+  "records_or_labels_accessed_before_amendment": false,
+  "solver_execution_before_amendment": false,
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "selection_eligibility_revisions": 0,
+  "selection_ranking_revisions": 0,
+  "scientific_threshold_weakening": false,
+  "old_audit_authority": "superseded provenance-only run; only a run at or after this amendment may become the v0.86 registry evidence",
+  "claim_boundary": "Preaccess protocol clarification only. No dataset evidence, external validation, independent reproduction or breakthrough claim."
+}
