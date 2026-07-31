@@ -80,6 +80,35 @@ def test_canonical_url_is_same_host_https_and_query_sorted():
         catalogue.canonical_url(catalogue.ROOT_URL, "http://example.com/data")
 
 
+def test_authoritative_page_rejects_redirect_chain_final_url_mismatch():
+    requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
+    redirect = catalogue.canonical_url(catalogue.ROOT_URL, "/archive-v2.html?view=all")
+    wrong_final = catalogue.canonical_url(catalogue.ROOT_URL, "/archive-v3.html?view=all")
+    attempts = tuple(
+        page_attempt(
+            index,
+            requested,
+            b"ok",
+            redirects=(redirect,),
+            final_url=wrong_final,
+        )
+        for index in catalogue.HTML_PAGE_ATTEMPT_INDICES
+    )
+    with pytest.raises(ValueError, match="redirect-chain endpoint"):
+        catalogue.authoritative_html_page(requested, attempts)
+
+
+def test_authoritative_page_rejects_unrecorded_final_url_without_redirect():
+    requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
+    wrong_final = catalogue.canonical_url(catalogue.ROOT_URL, "/archive-v2.html?view=all")
+    attempts = tuple(
+        page_attempt(index, requested, b"ok", final_url=wrong_final)
+        for index in catalogue.HTML_PAGE_ATTEMPT_INDICES
+    )
+    with pytest.raises(ValueError, match="redirect-chain endpoint"):
+        catalogue.authoritative_html_page(requested, attempts)
+
+
 def test_html_decoding_is_strict_with_optional_utf8_bom():
     assert catalogue.decode_html(b"\xef\xbb\xbfhello") == "hello"
     with pytest.raises(UnicodeDecodeError):
@@ -520,9 +549,9 @@ def test_crawl_resolves_relative_links_against_authoritative_final_url():
     final_root = catalogue.canonical_url(root, "/base/index.html")
     child = catalogue.canonical_url(final_root, "child.html")
     root_page = catalogue.authoritative_html_page(root, (
-        page_attempt(1, root, b'<a href="child.html">child</a>', final_url=final_root),
+        page_attempt(1, root, b'<a href="child.html">child</a>', redirects=(final_root,), final_url=final_root),
         page_attempt(2, root, None, failure="timeout"),
-        page_attempt(3, root, b'<a href="child.html">child</a>', final_url=final_root),
+        page_attempt(3, root, b'<a href="child.html">child</a>', redirects=(final_root,), final_url=final_root),
     ))
     pages = {
         root: root_page,
@@ -544,9 +573,9 @@ def test_candidate_relative_files_use_final_url_but_identity_cannot_change():
         b'/data/FixtureSeries_TEST.tsv', b'../data/FixtureSeries_TEST.tsv'
     )
     page = catalogue.authoritative_html_page(requested, (
-        page_attempt(1, requested, body, final_url=final),
+        page_attempt(1, requested, body, redirects=(final,), final_url=final),
         page_attempt(2, requested, None, failure="timeout"),
-        page_attempt(3, requested, body, final_url=final),
+        page_attempt(3, requested, body, redirects=(final,), final_url=final),
     ))
     result = catalogue.parse_authoritative_candidate_page(page)
     assert result.metadata is not None
@@ -555,9 +584,9 @@ def test_candidate_relative_files_use_final_url_but_identity_cannot_change():
     )
     changed = final.replace("FixtureSeries", "Other")
     bad = catalogue.authoritative_html_page(requested, (
-        page_attempt(1, requested, body, final_url=changed),
+        page_attempt(1, requested, body, redirects=(changed,), final_url=changed),
         page_attempt(2, requested, None, failure="timeout"),
-        page_attempt(3, requested, body, final_url=changed),
+        page_attempt(3, requested, body, redirects=(changed,), final_url=changed),
     ))
     with pytest.raises(RuntimeError):
         catalogue.parse_authoritative_candidate_page(bad)

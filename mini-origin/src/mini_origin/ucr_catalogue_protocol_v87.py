@@ -358,8 +358,16 @@ def authoritative_html_page(
             raise ValueError("successful HTML page attempts require HTTP 200")
         if len(attempt.redirect_chain) > HTML_PAGE_MAX_REDIRECTS:
             raise ValueError("HTML page redirect limit exceeded")
-        for redirect_url in attempt.redirect_chain:
+        canonical_redirects = tuple(
             canonical_url(requested, redirect_url)
+            for redirect_url in attempt.redirect_chain
+        )
+        final = canonical_url(requested, attempt.final_url)
+        expected_final = canonical_redirects[-1] if canonical_redirects else requested
+        if final != expected_final:
+            raise ValueError(
+                "HTML page final URL differs from the frozen redirect-chain endpoint"
+            )
         expected_connections = len(attempt.redirect_chain) + 1
         if len(attempt.connect_elapsed_seconds) != expected_connections:
             raise ValueError("HTML page connection timing count differs from redirect chain")
@@ -385,7 +393,6 @@ def authoritative_html_page(
             raise TypeError("HTML page body must be bytes")
         if not 1 <= len(attempt.body) <= HTML_PAGE_MAX_RESPONSE_BYTES:
             raise ValueError("HTML page body is empty or exceeds the frozen byte cap")
-        final = canonical_url(requested, attempt.final_url)
         digest = hashlib.sha256(attempt.body).hexdigest()
         successes.append((attempt.attempt_index, final, attempt.body, digest))
 
