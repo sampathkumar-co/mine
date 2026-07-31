@@ -127,7 +127,6 @@ def test_authoritative_page_rejects_failed_attempt_with_success_state_fields():
         catalogue.authoritative_html_page(requested, attempts)
 
 
-@pytest.mark.parametrize("failure", ("", "   ", " timeout", "timeout\n"))
 def test_authoritative_page_rejects_failed_attempt_with_transport_success_evidence():
     requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
     contradictory_attempts = (
@@ -147,6 +146,7 @@ def test_authoritative_page_rejects_failed_attempt_with_transport_success_eviden
             catalogue.authoritative_html_page(requested, attempts)
 
 
+@pytest.mark.parametrize("failure", ("", "   ", " timeout", "timeout\n"))
 def test_authoritative_page_rejects_noncanonical_failure_text(failure: str):
     requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
     attempts = tuple(
