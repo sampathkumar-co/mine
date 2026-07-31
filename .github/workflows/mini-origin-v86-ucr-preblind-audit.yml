@@ -4,21 +4,7 @@ on:
   push:
     branches:
       - research/mini-origin-v86-ucr-preblind-audit
-    paths:
-      - "mini-origin/campaigns/v86-ucr-preblind-audit.json"
-      - "mini-origin/campaigns/v86-ucr-preblind-protocol-amendment.json"
-      - "mini-origin/src/mini_origin/ucr_preblind_audit_v86.py"
-      - "mini-origin/tests/test_ucr_preblind_audit_v86.py"
-      - "mini-origin/scripts/run_v86_ci.sh"
-      - ".github/workflows/mini-origin-v86-ucr-preblind-audit.yml"
   pull_request:
-    paths:
-      - "mini-origin/campaigns/v86-ucr-preblind-audit.json"
-      - "mini-origin/campaigns/v86-ucr-preblind-protocol-amendment.json"
-      - "mini-origin/src/mini_origin/ucr_preblind_audit_v86.py"
-      - "mini-origin/tests/test_ucr_preblind_audit_v86.py"
-      - "mini-origin/scripts/run_v86_ci.sh"
-      - ".github/workflows/mini-origin-v86-ucr-preblind-audit.yml"
   workflow_dispatch:
 
 concurrency:
@@ -46,7 +32,7 @@ jobs:
           cache-dependency-path: mini-origin/pyproject.toml
       - name: Install Mini-ORIGIN
         run: python -m pip install -e ".[dev]"
-      - name: Run repository-only UCR preblind audit
+      - name: Run corrected repository-only UCR preblind audit
         run: bash scripts/run_v86_ci.sh
       - uses: actions/upload-artifact@v4
         if: always()
