@@ -29,6 +29,7 @@ git fetch --force --prune origin '+refs/heads/*:refs/remotes/origin/*'
 
 cd mini-origin
 python -m pytest -q \
+  tests/test_v87_preaccess_evidence_record.py \
   tests/test_ucr_preblind_audit_v86.py \
   tests/test_ucr_catalogue_protocol_v87.py \
   tests/test_pmlb_preblind_audit_v80.py \
