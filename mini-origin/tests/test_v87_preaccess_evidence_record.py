@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RECORD_PATH = REPO_ROOT / "research-evidence" / "mini-origin-v87-ucr-preaccess-evidence.json"
+RECORD_PATH = REPO_ROOT / "research-evidence" / "mini-origin-v87-authoritative-preaccess-record.json"
 EXPECTED_IMPLEMENTATION_COMMIT = "ca90a8cd98a9af6447639deb4424d01e1c09c4cc"
 EXPECTED_FROZEN_PARENT = "912c3ebd933ae39eb05e10467f1ecad56e326b03"
 EXPECTED_ARTIFACT_ZIP_SHA256 = "4a43c35b951c3ff276044fd837bd92d337f370fd6c869dc6f5b2f8fc840b57d3"
