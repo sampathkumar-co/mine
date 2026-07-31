@@ -11,6 +11,7 @@ import unicodedata
 
 from . import pmlb_preblind_audit_v80 as prior
 from . import repository_dataset_audit_v63 as base
+from . import ucr_catalogue_protocol_v87 as catalogue
 
 
 PREREGISTRATION = (
@@ -37,6 +38,11 @@ THIRD_REVIEW_AMENDMENT = (
     Path(__file__).resolve().parents[2]
     / "campaigns"
     / "v86-ucr-preblind-third-review-amendment.json"
+)
+FOURTH_REVIEW_AMENDMENT = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v86-ucr-preblind-fourth-review-amendment.json"
 )
 V85_EVIDENCE = (
     Path(__file__).resolve().parents[3]
@@ -401,6 +407,23 @@ def load_inputs() -> tuple[
     ):
         if third_review[key] is not False:
             raise RuntimeError(f"third-review boundary violated: {key}")
+    fourth_review = json.loads(FOURTH_REVIEW_AMENDMENT.read_text(encoding="utf-8"))
+    if preregistration["fourth_review_amendment"] != FOURTH_REVIEW_AMENDMENT.name:
+        raise RuntimeError("v0.86 fourth review amendment reference changed")
+    if fourth_review["status"] != "fourth_review_amendment_before_ucr_catalogue_access":
+        raise RuntimeError("v0.86 fourth review amendment status changed")
+    for key in (
+        "catalogue_access_before_amendment",
+        "candidate_dataset_metadata_access_before_amendment",
+        "candidate_dataset_names_accessed_before_amendment",
+        "candidate_dataset_file_urls_accessed_before_amendment",
+        "candidate_dataset_bytes_accessed_before_amendment",
+        "records_or_labels_accessed_before_amendment",
+        "solver_execution_before_amendment",
+        "external_dataset_network_access_before_amendment",
+    ):
+        if fourth_review[key] is not False:
+            raise RuntimeError(f"fourth-review boundary violated: {key}")
     if preregistration["parent_v85_commit"] != FROZEN_V85_COMMIT:
         raise RuntimeError("frozen v0.85 commit changed")
     if preregistration["parent_v85_authoritative_evidence_digest"] != V85_EVIDENCE_DIGEST:
@@ -468,6 +491,16 @@ def load_inputs() -> tuple[
         raise RuntimeError("endpoint successful-attempt agreement changed")
     if source["authoritative_endpoint_response"] != "after agreement, use the successful attempt with the lowest 1-based attempt index; frozen_source_release is the lowercase SHA-256 of its exact response bytes":
         raise RuntimeError("authoritative endpoint response changed")
+    if source["endpoint_body_reading"] != "read at most maximum_endpoint_response_bytes plus one sentinel byte; a sentinel byte proves overflow; never classify or parse an overflowing body as successful":
+        raise RuntimeError("endpoint body cap enforcement changed")
+    if "body-size overflow" not in source["endpoint_failure_definition"]:
+        raise RuntimeError("endpoint overflow is not a frozen failure")
+    if "maximum_endpoint_response_bytes inclusive" not in source["endpoint_success_definition"]:
+        raise RuntimeError("endpoint byte cap is absent from success definition")
+    if source["endpoint_total_attempt_deadline_seconds"] != 90:
+        raise RuntimeError("endpoint total deadline changed")
+    if "chunk receipt does not reset" not in source["endpoint_read_timeout_clock"]:
+        raise RuntimeError("endpoint read clock reset semantics changed")
     blind_gate = preregistration["future_blind_gate"]
     if blind_gate["gate_source"] != "exact v0.82 locked gate with future UCR datasets treated as the seven fresh datasets":
         raise RuntimeError("future blind gate source changed")
@@ -524,6 +557,41 @@ def load_inputs() -> tuple[
         raise RuntimeError("selected-file successful-attempt agreement changed")
     if lock["authoritative_selected_file_response"] != "after agreement, use the successful attempt with the lowest 1-based attempt index":
         raise RuntimeError("authoritative selected-file response changed")
+    if lock["selected_file_total_attempt_deadline_seconds"] != 180:
+        raise RuntimeError("selected-file total deadline changed")
+    if "chunk receipt does not reset the 120-second clock" not in lock["selected_file_read_timeout_clock"]:
+        raise RuntimeError("selected-file read clock reset semantics changed")
+    if "each redirect starts a new connect timeout" not in lock["selected_file_connect_timeout_clock"]:
+        raise RuntimeError("selected-file connect clock changed")
+    parser = preregistration["future_catalogue_parser"]
+    if parser["implementation_module"] != "mini_origin.ucr_catalogue_protocol_v87":
+        raise RuntimeError("catalogue parser module changed")
+    if parser["implementation_status"] != "frozen_and_synthetic_tested_before_source_access":
+        raise RuntimeError("catalogue parser freeze status changed")
+    if parser["root_url"] != catalogue.ROOT_URL:
+        raise RuntimeError("catalogue root differs from parser")
+    if parser["crawl"]["maximum_depth"] != catalogue.MAX_CRAWL_DEPTH:
+        raise RuntimeError("catalogue crawl depth differs from parser")
+    if parser["crawl"]["maximum_fetched_html_pages"] != catalogue.MAX_HTML_PAGES:
+        raise RuntimeError("catalogue page cap differs from parser")
+    parser_aliases = {
+        key: sorted(values) for key, values in parser["field_aliases"].items()
+    }
+    implementation_aliases = {
+        key: sorted(values) for key, values in catalogue.FIELD_ALIASES.items()
+    }
+    if parser_aliases != implementation_aliases:
+        raise RuntimeError("catalogue field aliases differ from parser")
+    if sorted(parser["univariate_values"]) != sorted(catalogue.UNIVARIATE_VALUES):
+        raise RuntimeError("catalogue univariate values differ from parser")
+    if parser["field_precedence"] != "none":
+        raise RuntimeError("catalogue field precedence changed")
+    if parser["missing_field_policy"] != "reject candidate":
+        raise RuntimeError("catalogue missing-field policy changed")
+    if "more than one distinct value rejects candidate" not in parser["conflict_policy"]:
+        raise RuntimeError("catalogue conflict policy changed")
+    if parser["duplicate_normalized_name_policy"] != "if more than one distinct candidate description URL yields the same normalized name, reject every row in that name group even when metadata is otherwise identical":
+        raise RuntimeError("duplicate-name policy changed")
     for key in (
         "algorithm_revisions",
         "compiler_revisions",
@@ -775,6 +843,7 @@ def audit() -> dict[str, object]:
         "uci_occurrences": uci_rows,
         "openml_occurrences": openml_rows,
         "frozen_future_source": preregistration["future_source"],
+        "frozen_future_catalogue_parser": preregistration["future_catalogue_parser"],
         "frozen_future_selection": preregistration["future_metadata_only_selection"],
         "frozen_future_blind_gate": preregistration["future_blind_gate"],
         "claim_scope": preregistration["claim_boundary"],
@@ -790,6 +859,7 @@ def audit() -> dict[str, object]:
         "explicit_pmlb_names": [row["normalized_name"] for row in pmlb_rows],
         "explicit_ucr_names": [row["normalized_name"] for row in ucr_rows],
         "frozen_future_source": report["frozen_future_source"],
+        "frozen_future_catalogue_parser": report["frozen_future_catalogue_parser"],
         "frozen_future_selection": report["frozen_future_selection"],
         "frozen_future_blind_gate": report["frozen_future_blind_gate"],
     })

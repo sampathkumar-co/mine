@@ -1,0 +1,44 @@
+{
+  "status": "fourth_review_amendment_before_ucr_catalogue_access",
+  "reviewed_head": "fd7e4f9c8ae806107a8d6adc76ee7a991829cb8e",
+  "superseded_workflow_run": 30604580854,
+  "superseded_artifact_id": 8783136313,
+  "superseded_artifact_digest": "sha256:4fec837efdfc9e6925a4902ed49c4f5d0e8626f137122207116f08c47fe14644",
+  "superseded_registry_file_sha256": "17e25f07e07fdaaf2968e0ae60e3fce7c0cbae6f071101ac024472beb283f46b",
+  "superseded_registry_digest": "2b863bb289711a18764b75e91615c069d7bd30c20b0de12b6fb8b00984b51b92",
+  "review_findings": [
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VUY_q",
+      "title": "Freeze how endpoint bytes become catalogue metadata",
+      "repair": "freeze and implement deterministic HTML decode, URL/crawl, candidate enumeration, field aliases/conversion, no-precedence conflicts, TRAIN/TEST links, duplicate rejection, provenance scan, and source manifest"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VUY_r",
+      "title": "Classify oversized endpoint responses as failures",
+      "repair": "read cap plus sentinel and explicitly classify overflow as endpoint failure"
+    },
+    {
+      "thread_id": "PRRT_kwDOThS6ss6VUY_u",
+      "title": "Define the selected-file read-timeout clock",
+      "repair": "freeze monotonic whole-body and total-attempt clocks with no chunk reset"
+    }
+  ],
+  "catalogue_access_before_amendment": false,
+  "candidate_dataset_metadata_access_before_amendment": false,
+  "candidate_dataset_names_accessed_before_amendment": false,
+  "candidate_dataset_file_urls_accessed_before_amendment": false,
+  "candidate_dataset_bytes_accessed_before_amendment": false,
+  "records_or_labels_accessed_before_amendment": false,
+  "solver_execution_before_amendment": false,
+  "external_dataset_network_access_before_amendment": false,
+  "repository_git_metadata_access_before_amendment": true,
+  "algorithm_revisions": 0,
+  "compiler_revisions": 0,
+  "selector_revisions": 0,
+  "solver_revisions": 0,
+  "eligibility_revisions": 0,
+  "blind_gate_revisions": 0,
+  "scientific_threshold_weakening": false,
+  "authority": "Run 30604580854 and artifact 8783136313 are diagnostics only. A later audit after the frozen parser amendment is required.",
+  "claim_boundary": "Preaccess parser and transport semantics only; no UCR dataset evidence or breakthrough claim."
+}
