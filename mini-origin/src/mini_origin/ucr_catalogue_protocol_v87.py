@@ -401,11 +401,19 @@ def authoritative_html_page(
             > HTML_PAGE_READ_TIMEOUT_SECONDS
         ):
             raise ValueError("HTML page read timeout exceeded")
-        if (
-            _finite_nonnegative(attempt.total_elapsed_seconds, "total elapsed seconds")
-            > HTML_PAGE_TOTAL_DEADLINE_SECONDS
-        ):
+        total_elapsed = _finite_nonnegative(
+            attempt.total_elapsed_seconds, "total elapsed seconds"
+        )
+        if total_elapsed > HTML_PAGE_TOTAL_DEADLINE_SECONDS:
             raise ValueError("HTML page total deadline exceeded")
+        minimum_elapsed = sum(
+            _finite_nonnegative(value, "connect elapsed seconds")
+            for value in attempt.connect_elapsed_seconds
+        ) + _finite_nonnegative(attempt.read_elapsed_seconds, "read elapsed seconds")
+        if total_elapsed < minimum_elapsed:
+            raise ValueError(
+                "HTML page total timing is shorter than recorded transport phases"
+            )
         if not isinstance(attempt.body, bytes):
             raise TypeError("HTML page body must be bytes")
         if not 1 <= len(attempt.body) <= HTML_PAGE_MAX_RESPONSE_BYTES:

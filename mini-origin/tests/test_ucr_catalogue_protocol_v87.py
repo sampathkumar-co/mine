@@ -157,6 +157,23 @@ def test_authoritative_page_rejects_noncanonical_failure_text(failure: str):
         catalogue.authoritative_html_page(requested, attempts)
 
 
+def test_authoritative_page_rejects_impossible_total_timing():
+    requested = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html?view=all")
+    attempts = tuple(
+        page_attempt(
+            index,
+            requested,
+            b"ok",
+            connect_times=(0.2,),
+            read_time=0.3,
+            total_time=0.49,
+        )
+        for index in catalogue.HTML_PAGE_ATTEMPT_INDICES
+    )
+    with pytest.raises(ValueError, match="shorter than recorded transport phases"):
+        catalogue.authoritative_html_page(requested, attempts)
+
+
 def test_html_decoding_is_strict_with_optional_utf8_bom():
     assert catalogue.decode_html(b"\xef\xbb\xbfhello") == "hello"
     with pytest.raises(UnicodeDecodeError):
