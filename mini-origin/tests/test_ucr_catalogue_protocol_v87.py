@@ -410,9 +410,9 @@ def test_candidate_page_failures_are_fatal_but_metadata_rejections_are_not():
 def test_every_html_page_uses_exact_three_attempt_authority_and_agreement():
     url = catalogue.canonical_url(catalogue.ROOT_URL, "/archive.html")
     page = catalogue.authoritative_html_page(url, (
-        page_attempt(3, url, b"same"),
         page_attempt(1, url, b"same"),
         page_attempt(2, url, None, failure="timeout"),
+        page_attempt(3, url, b"same"),
     ))
     assert page.authoritative_attempt_index == 1
     assert page.body == b"same"
