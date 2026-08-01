@@ -335,12 +335,21 @@ def authoritative_html_page(
     requested = canonical_url(ROOT_URL, requested_url)
     if len(attempts) != HTML_PAGE_ATTEMPT_COUNT:
         raise ValueError("every HTML page requires exactly three attempt records")
-    indices = tuple(sorted(attempt.attempt_index for attempt in attempts))
+    indices = tuple(attempt.attempt_index for attempt in attempts)
+    if any(isinstance(index, bool) or not isinstance(index, int) for index in indices):
+        raise ValueError("HTML page attempt indices must be genuine integers")
     if indices != HTML_PAGE_ATTEMPT_INDICES:
-        raise ValueError("HTML page attempt indices must be exactly 1, 2 and 3")
+        raise ValueError(
+            "HTML page attempt indices must appear chronologically as 1, 2 and 3"
+        )
 
     successes: list[tuple[int, str, bytes, str]] = []
     for attempt in attempts:
+        if (
+            isinstance(attempt.scheduled_delay_seconds, bool)
+            or not isinstance(attempt.scheduled_delay_seconds, int)
+        ):
+            raise ValueError("HTML page retry delay must be a genuine integer")
         expected_delay = HTML_PAGE_RETRY_DELAYS_SECONDS[attempt.attempt_index - 1]
         if attempt.scheduled_delay_seconds != expected_delay:
             raise ValueError("HTML page retry delay differs from frozen schedule")

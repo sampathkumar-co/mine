@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -65,6 +66,39 @@ def candidate_html(*, conflict: bool = False, provenance: str = "") -> bytes:
       <a href="/data/FixtureSeries_TRAIN.tsv">TRAIN</a>
       <a href="/data/FixtureSeries_TEST.tsv">TEST</a>
     </body></html>""".encode("utf-8")
+
+
+def test_authoritative_page_rejects_reordered_attempt_evidence():
+    url = catalogue.ROOT_URL
+    attempts = (
+        page_attempt(3, url, b"ok"),
+        page_attempt(1, url, b"ok"),
+        page_attempt(2, url, None, failure="timeout"),
+    )
+    with pytest.raises(ValueError, match="chronologically"):
+        catalogue.authoritative_html_page(url, attempts)
+
+
+def test_authoritative_page_rejects_boolean_attempt_index():
+    url = catalogue.ROOT_URL
+    attempts = (
+        replace(page_attempt(1, url, b"ok"), attempt_index=True),
+        page_attempt(2, url, None, failure="timeout"),
+        page_attempt(3, url, b"ok"),
+    )
+    with pytest.raises(ValueError, match="genuine integers"):
+        catalogue.authoritative_html_page(url, attempts)
+
+
+def test_authoritative_page_rejects_boolean_retry_delay():
+    url = catalogue.ROOT_URL
+    attempts = (
+        replace(page_attempt(1, url, b"ok"), scheduled_delay_seconds=False),
+        page_attempt(2, url, None, failure="timeout"),
+        page_attempt(3, url, b"ok"),
+    )
+    with pytest.raises(ValueError, match="retry delay must be a genuine integer"):
+        catalogue.authoritative_html_page(url, attempts)
 
 
 def test_canonical_url_is_same_host_https_and_query_sorted():
