@@ -1,0 +1,45 @@
+{
+  "status": "authoritative_preaccess_contract_verified",
+  "protocol_version": "v0.87",
+  "implementation_commit": "ca90a8cd98a9af6447639deb4424d01e1c09c4cc",
+  "frozen_parent_v85_commit": "912c3ebd933ae39eb05e10467f1ecad56e326b03",
+  "github_verification": {
+    "ucr_preblind_audit_run": 30609072431,
+    "mini_origin_ci_run": 30609072440,
+    "artifact_id": 8784724372,
+    "artifact_zip_sha256": "4a43c35b951c3ff276044fd837bd92d337f370fd6c869dc6f5b2f8fc840b57d3",
+    "registry_json_sha256": "f1b50e11ce23e4bdfa42e3575c08379dc99d8bd98bc15fd7d581a464865effe0",
+    "internal_registry_digest": "c986710aa38d89bb9bf00df9a5e5817a26c359915c0f028646208cd9bcfe8ec0",
+    "conclusions": {
+      "ucr_preblind_audit": "success",
+      "mini_origin_ci": "success"
+    }
+  },
+  "repository_audit": {
+    "immutable_ref_snapshots": 238,
+    "unique_commits": 237,
+    "tree_entries": 26625,
+    "unique_blob_paths": 716,
+    "bytes_scanned": 7521288,
+    "failures": 0,
+    "oversized_omissions": 0
+  },
+  "preserved_scientific_constraints": {
+    "v082_thresholds_and_budgets_unchanged": true,
+    "v082_v084_negative_results_binding": true,
+    "v085_opened_data_classification_unchanged": true,
+    "compiler_selector_planner_solver_changes": 0,
+    "threshold_relaxation": false,
+    "post_access_substitution_forbidden": true
+  },
+  "access_boundary": {
+    "ucr_catalogue_accessed": false,
+    "candidate_metadata_accessed": false,
+    "dataset_bytes_accessed": false,
+    "records_or_labels_accessed": false,
+    "solver_executed": false,
+    "fresh_external_evidence": false
+  },
+  "next_authorized_step": "Execute the frozen v0.87 transport and metadata lock exactly as preregistered. Any mismatch between the live source and the frozen parser or transport contract rejects the lock rather than permitting adaptation.",
+  "claim_boundary": "Authoritative preregistration and repository-provenance evidence only; not external validation, independent replication, novelty proof, or a breakthrough."
+}

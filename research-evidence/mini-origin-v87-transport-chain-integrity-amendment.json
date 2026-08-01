@@ -1,0 +1,45 @@
+{
+  "status": "preaccess_transport_defect_recorded",
+  "protocol_version": "v0.87",
+  "reviewed_head": "bd4562bb4b616da3c3d1df4881ae1cac80508bc1",
+  "verified_ci": {
+    "ucr_preblind_audit_run": 30625026496,
+    "mini_origin_ci_run": 30625026519,
+    "conclusions": {
+      "ucr_preblind_audit": "success",
+      "mini_origin_ci": "success"
+    }
+  },
+  "finding": {
+    "component": "authoritative_html_page",
+    "severity": "preaccess_fail_closed_required",
+    "description": "Each redirect URL is canonicalized, but the retained redirect chain is not required to terminate at the retained final_url. An empty redirect chain can also retain a final_url different from the requested URL.",
+    "scientific_risk": "The attempt record may not reconstruct which endpoint supplied the authoritative bytes, weakening source provenance before catalogue metadata access."
+  },
+  "required_correction": {
+    "redirected_attempt": "canonical final_url must equal the last canonical redirect_chain URL",
+    "non_redirected_attempt": "canonical final_url must equal the canonical requested URL",
+    "regression_tests": [
+      "reject a nonempty redirect chain whose last URL differs from final_url",
+      "reject an empty redirect chain whose final_url differs from requested_url"
+    ]
+  },
+  "preserved_scientific_constraints": {
+    "v082_thresholds_and_budgets_unchanged": true,
+    "v082_v084_negative_results_binding": true,
+    "v085_opened_data_classification_unchanged": true,
+    "compiler_selector_planner_solver_changes": 0,
+    "threshold_relaxation": false,
+    "post_access_substitution_forbidden": true
+  },
+  "access_boundary": {
+    "ucr_catalogue_accessed": false,
+    "candidate_metadata_accessed": false,
+    "dataset_bytes_accessed": false,
+    "records_or_labels_accessed": false,
+    "solver_executed": false,
+    "fresh_external_evidence": false
+  },
+  "authorization": "Do not execute the frozen transport or access UCR catalogue metadata until the correction and both regression tests are committed and both required workflows pass on that exact head.",
+  "claim_boundary": "Transport-provenance review evidence only; not external validation, independent replication, novelty proof, or a breakthrough."
+}

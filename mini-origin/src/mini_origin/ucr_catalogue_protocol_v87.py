@@ -319,7 +319,9 @@ def canonical_url(base_url: str, href: str) -> str:
     return urlunsplit(("https", netloc, path, query, ""))
 
 
-def _finite_nonnegative(value: float, field: str) -> float:
+def _finite_nonnegative(value: object, field: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{field} must be a genuine numeric value")
     result = float(value)
     if not math.isfinite(result) or result < 0:
         raise ValueError(f"{field} must be finite and nonnegative")
@@ -333,12 +335,21 @@ def authoritative_html_page(
     requested = canonical_url(ROOT_URL, requested_url)
     if len(attempts) != HTML_PAGE_ATTEMPT_COUNT:
         raise ValueError("every HTML page requires exactly three attempt records")
-    indices = tuple(sorted(attempt.attempt_index for attempt in attempts))
+    indices = tuple(attempt.attempt_index for attempt in attempts)
+    if any(isinstance(index, bool) or not isinstance(index, int) for index in indices):
+        raise ValueError("HTML page attempt indices must be genuine integers")
     if indices != HTML_PAGE_ATTEMPT_INDICES:
-        raise ValueError("HTML page attempt indices must be exactly 1, 2 and 3")
+        raise ValueError(
+            "HTML page attempt indices must appear chronologically as 1, 2 and 3"
+        )
 
     successes: list[tuple[int, str, bytes, str]] = []
     for attempt in attempts:
+        if (
+            isinstance(attempt.scheduled_delay_seconds, bool)
+            or not isinstance(attempt.scheduled_delay_seconds, int)
+        ):
+            raise ValueError("HTML page retry delay must be a genuine integer")
         expected_delay = HTML_PAGE_RETRY_DELAYS_SECONDS[attempt.attempt_index - 1]
         if attempt.scheduled_delay_seconds != expected_delay:
             raise ValueError("HTML page retry delay differs from frozen schedule")
@@ -349,6 +360,23 @@ def authoritative_html_page(
         if attempt.failure is not None:
             if attempt.body is not None:
                 raise ValueError("failed HTML page attempts cannot contain accepted body bytes")
+            if attempt.final_url is not None or attempt.status_code is not None:
+                raise ValueError("failed HTML page attempts cannot contain success-state fields")
+            if (
+                attempt.tls_certificate_validated is not False
+                or attempt.redirect_chain
+                or attempt.connect_elapsed_seconds
+                or attempt.read_elapsed_seconds is not None
+                or attempt.total_elapsed_seconds is not None
+            ):
+                raise ValueError(
+                    "failed HTML page attempts cannot contain transport-success evidence"
+                )
+            normalized_failure = normalize_visible_text(attempt.failure)
+            if not normalized_failure or normalized_failure != attempt.failure:
+                raise ValueError(
+                    "failed HTML page attempts require normalized non-empty failure text"
+                )
             continue
         if attempt.final_url is None or attempt.body is None:
             raise ValueError("successful HTML page attempts require final URL and body")
@@ -358,8 +386,16 @@ def authoritative_html_page(
             raise ValueError("successful HTML page attempts require HTTP 200")
         if len(attempt.redirect_chain) > HTML_PAGE_MAX_REDIRECTS:
             raise ValueError("HTML page redirect limit exceeded")
-        for redirect_url in attempt.redirect_chain:
+        canonical_redirects = tuple(
             canonical_url(requested, redirect_url)
+            for redirect_url in attempt.redirect_chain
+        )
+        final = canonical_url(requested, attempt.final_url)
+        expected_final = canonical_redirects[-1] if canonical_redirects else requested
+        if final != expected_final:
+            raise ValueError(
+                "HTML page final URL differs from the frozen redirect-chain endpoint"
+            )
         expected_connections = len(attempt.redirect_chain) + 1
         if len(attempt.connect_elapsed_seconds) != expected_connections:
             raise ValueError("HTML page connection timing count differs from redirect chain")
@@ -376,16 +412,23 @@ def authoritative_html_page(
             > HTML_PAGE_READ_TIMEOUT_SECONDS
         ):
             raise ValueError("HTML page read timeout exceeded")
-        if (
-            _finite_nonnegative(attempt.total_elapsed_seconds, "total elapsed seconds")
-            > HTML_PAGE_TOTAL_DEADLINE_SECONDS
-        ):
+        total_elapsed = _finite_nonnegative(
+            attempt.total_elapsed_seconds, "total elapsed seconds"
+        )
+        if total_elapsed > HTML_PAGE_TOTAL_DEADLINE_SECONDS:
             raise ValueError("HTML page total deadline exceeded")
+        minimum_elapsed = sum(
+            _finite_nonnegative(value, "connect elapsed seconds")
+            for value in attempt.connect_elapsed_seconds
+        ) + _finite_nonnegative(attempt.read_elapsed_seconds, "read elapsed seconds")
+        if total_elapsed < minimum_elapsed:
+            raise ValueError(
+                "HTML page total timing is shorter than recorded transport phases"
+            )
         if not isinstance(attempt.body, bytes):
             raise TypeError("HTML page body must be bytes")
         if not 1 <= len(attempt.body) <= HTML_PAGE_MAX_RESPONSE_BYTES:
             raise ValueError("HTML page body is empty or exceeds the frozen byte cap")
-        final = canonical_url(requested, attempt.final_url)
         digest = hashlib.sha256(attempt.body).hexdigest()
         successes.append((attempt.attempt_index, final, attempt.body, digest))
 
