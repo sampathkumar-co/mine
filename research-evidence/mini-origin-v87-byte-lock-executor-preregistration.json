@@ -1,0 +1,31 @@
+{
+  "status": "executor_frozen_before_first_ucr_access",
+  "protocol_version": "v0.87",
+  "parent_commit": "f90a77bace939036781c57e249d7cc2a85a96d5c",
+  "frozen_parser_commit": "ca90a8cd98a9af6447639deb4424d01e1c09c4cc",
+  "authoritative_registry_artifact_id": 8784724372,
+  "authoritative_registry_zip_sha256": "4a43c35b951c3ff276044fd837bd92d337f370fd6c869dc6f5b2f8fc840b57d3",
+  "authoritative_registry_json_sha256": "f1b50e11ce23e4bdfa42e3575c08379dc99d8bd98bc15fd7d581a464865effe0",
+  "authoritative_registry_digest": "c986710aa38d89bb9bf00df9a5e5817a26c359915c0f028646208cd9bcfe8ec0",
+  "scientific_changes": {
+    "parser": 0,
+    "compiler": 0,
+    "selector": 0,
+    "planner": 0,
+    "solver": 0,
+    "thresholds": 0,
+    "budgets": 0,
+    "acceptance_gate": 0
+  },
+  "executor_scope": "Mechanical execution of the already frozen v0.87 HTTPS transport, catalogue crawl, metadata ranking, and selected TRAIN/TEST byte lock.",
+  "preaccess_boundary": {
+    "ucr_catalogue_accessed": false,
+    "candidate_metadata_accessed": false,
+    "dataset_bytes_accessed": false,
+    "records_or_labels_accessed": false,
+    "solver_executed": false
+  },
+  "live_access_rule": "Do not create mini-origin/.v87-live-lock-trigger until the executor commit passes ordinary Mini-ORIGIN CI. The first trigger commit may change only that sentinel file.",
+  "failure_policy": "Any live-source, parser, selected-file, retry-agreement, or frozen-contract failure rejects this UCR lock. Do not relax criteria or substitute a lower-ranked dataset after access.",
+  "claim_boundary": "Pre-access execution infrastructure only; not fresh external evaluation, independent reproduction, novelty evidence, or a breakthrough."
+}
