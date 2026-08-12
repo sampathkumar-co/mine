@@ -1,0 +1,65 @@
+name: Mini-ORIGIN UCR Byte Lock v0.87
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v87-ucr-byte-lock-execution
+    paths:
+      - "mini-origin/.v87-live-lock-trigger"
+
+concurrency:
+  group: mini-origin-v87-ucr-byte-lock-live
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  untouched-ucr-byte-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: mini-origin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: mini-origin/pyproject.toml
+      - name: Install Mini-ORIGIN
+        run: python -m pip install -e ".[dev]"
+      - name: Verify frozen executor boundary
+        run: bash scripts/run_v87_lock_preflight.sh
+      - name: Download authoritative v0.86 registry artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/v86-registry /tmp/v86-registry.zip
+          mkdir -p /tmp/v86-registry
+          gh api repos/sampathkumar-co/mine/actions/artifacts/8784724372/zip > /tmp/v86-registry.zip
+          echo "4a43c35b951c3ff276044fd837bd92d337f370fd6c869dc6f5b2f8fc840b57d3  /tmp/v86-registry.zip" | sha256sum -c -
+          unzip -q /tmp/v86-registry.zip -d /tmp/v86-registry
+          echo "f1b50e11ce23e4bdfa42e3575c08379dc99d8bd98bc15fd7d581a464865effe0  /tmp/v86-registry/registry.json" | sha256sum -c -
+      - name: Execute frozen untouched UCR byte lock
+        run: |
+          set -o pipefail
+          rm -rf results/v87-lock
+          mkdir -p results
+          python -m mini_origin.ucr_byte_lock_v87 \
+            --registry /tmp/v86-registry/registry.json \
+            --output-dir results/v87-lock \
+            2>&1 | tee results/v87-lock-run.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mini-origin-v87-ucr-byte-lock
+          path: |
+            mini-origin/results/v87-lock
+            mini-origin/results/v87-lock-run.log
+          if-no-files-found: warn
+          retention-days: 90
