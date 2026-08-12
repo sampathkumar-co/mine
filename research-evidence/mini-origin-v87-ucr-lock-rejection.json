@@ -1,0 +1,19 @@
+{
+  "status": "ucr_untouched_lock_rejected_v87",
+  "workflow_run": 31550693413,
+  "workflow_job": 93972572962,
+  "head_commit": "ff35aeb48b9ac269f4713803cec3b790a9b3dd1d",
+  "artifact_id": 9124167631,
+  "artifact_zip_sha256": "7b99df65a69e04ce7e4b4bacf7e87b73920ed11f4c610162335628c624bd29fc",
+  "preflight_tests_passed": 52,
+  "authoritative_v86_registry_verified": true,
+  "live_ucr_access_occurred": true,
+  "solver_executed": false,
+  "records_or_labels_parsed": false,
+  "selected_dataset_bytes_downloaded": false,
+  "failure_stage": "frozen metadata eligibility before dataset selection",
+  "failure": "only 0 eligible untouched UCR datasets; seven required",
+  "scientific_interpretation": "Protocol/source incompatibility. The frozen UCR metadata contract produced zero eligible candidates, so the campaign rejected before any solver evaluation. This is not a solver pass or solver failure and the UCR campaign may not be repaired post-access and relabelled untouched.",
+  "decision": "Preserve this rejection permanently. Do not modify the v0.87 UCR parser or selection after access. One final fresh-dataset external gate may be preregistered on a previously used source only if every previously observed dataset ID/name is excluded before source access and the v0.82 scientific gate remains unchanged.",
+  "claim_boundary": "Negative protocol evidence only; no breakthrough claim."
+}
