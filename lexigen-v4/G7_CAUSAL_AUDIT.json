@@ -1,0 +1,98 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "gate": "G7_causal_evidence",
+  "audit_revision": 1,
+  "status": "completed_negative_transfer_result_with_supported_operator-space_explanation",
+  "question": "What caused the observed Lexigen v4 advantage over the v3-compatible architecture, and did transfer memory cause any of the unseen-task wins?",
+  "built_in_counterfactual_arms": ["v4_full", "v4_no_transfer", "random_search", "template_synthesis", "v3_compatible"],
+  "task_evidence": [
+    {
+      "task_index": 1,
+      "task": "communicability",
+      "v4_clean_win": true,
+      "v4_harmonic_speedup": 142.7742457556241,
+      "v4_rank": 5,
+      "v4_vs_v3_harmonic_delta": -23.4656143211791,
+      "v4_vs_no_transfer_harmonic_delta": -2.65668680556345,
+      "transfer_credit": false,
+      "causal_read": "Unseen competence is demonstrated, but neither transfer nor v4 ranking superiority is supported."
+    },
+    {
+      "task_index": 3,
+      "task": "max_common_subgraph",
+      "v4_clean_win": true,
+      "v4_harmonic_speedup": 44.95902240500498,
+      "no_transfer_harmonic_speedup": 48.642834364574945,
+      "random_harmonic_speedup": 4.64752435394347,
+      "template_harmonic_speedup": 49.16787831024696,
+      "v3_harmonic_speedup": 1.0107592621960344,
+      "v3_passed_blind_gate": false,
+      "transfer_credit": false,
+      "causal_read": "Mechanisms available outside the restricted v3 operator set create the task-win advantage; no-transfer and template outperform v4, rejecting transfer memory and v4 ranking as the cause."
+    },
+    {
+      "task_index": 5,
+      "task": "tensor_completion_3d",
+      "v4_clean_win": true,
+      "v4_harmonic_speedup": 3.8347030418859864,
+      "no_transfer_harmonic_speedup": 3.8646484872339233,
+      "random_harmonic_speedup": 3.8649448236680906,
+      "template_harmonic_speedup": 3.8164569913739976,
+      "v3_harmonic_speedup": 1.004696049747246,
+      "v3_passed_blind_gate": false,
+      "implementation_equivalent_to_no_transfer_and_random": true,
+      "transfer_credit": false,
+      "causal_read": "The newer candidate/mechanism family beats restricted v3, but the winning implementation is reproducible without transfer and by random search."
+    },
+    {
+      "task_index": 6,
+      "task": "unit_simplex_projection",
+      "v4_clean_win": true,
+      "v4_harmonic_speedup": 5.484199555549541,
+      "no_transfer_harmonic_speedup": 5.551172022621588,
+      "random_harmonic_speedup": 5.469083308338254,
+      "template_harmonic_speedup": 5.52079526722419,
+      "v3_harmonic_speedup": 1.017506272418179,
+      "v3_passed_blind_gate": false,
+      "implementation_equivalent_active_set_arms": ["v4_full", "v4_no_transfer", "random_search", "template_synthesis"],
+      "transfer_credit": false,
+      "causal_read": "Active-set decomposition explains the v3 task-win gap, while implementation equivalence rejects transfer memory as the cause."
+    },
+    {
+      "task_index": 7,
+      "task": "ode_fitzhughnagumo",
+      "v4_clean_win": false,
+      "synthetic_checks_passed": 143,
+      "synthetic_checks_total": 162,
+      "failure_cluster": "long-horizon low-parameter case",
+      "unsafe_mechanisms": ["risk_aware_staging", "dtype_specialization"],
+      "causal_read": "The frozen mechanism vocabulary can also select numerically unsafe shortcuts; this is evidence against assuming broader operators monotonically improve reliability."
+    },
+    {
+      "task_index": 8,
+      "task": "dst_type_II_scipy_fftpack",
+      "v4_clean_win": true,
+      "v4_harmonic_speedup": 1.7867544941351303,
+      "no_transfer_harmonic_speedup": 1.7870260386688366,
+      "random_harmonic_speedup": 1.7904519417385865,
+      "template_harmonic_speedup": 1.788003612506649,
+      "v3_harmonic_speedup": 1.7907345252700744,
+      "all_five_arms_passed_blind_gate": true,
+      "implementation_equivalent_modern_float32_arms": ["v4_full", "v4_no_transfer", "random_search"],
+      "transfer_credit": false,
+      "causal_read": "The task is solved by generic dtype specialization available even to v3; there is no architecture-specific advantage."
+    }
+  ],
+  "causal_findings": {
+    "transfer_memory_caused_task_wins": {"supported": false, "causal_transfer_wins": 0, "conclusion": "rejected_by_no_transfer_ablation"},
+    "expanded_operator_mechanism_space_explains_v4_over_v3_task_wins": {"supported": true, "supporting_tasks": [3, 5, 6], "conclusion": "supported_at_mechanism-family level because v4/no-transfer can access winning mechanisms while restricted v3 fails the task gate"},
+    "v4_transfer_weighted_ranking_is_superior_to_simpler_search": {"supported": false, "conclusion": "rejected; no-transfer, template, or random are frequently equal or faster and have the same blind task-win count"},
+    "broader_mechanism_space_is_always_safe": {"supported": false, "counterexample_task": 7, "conclusion": "rejected by the frozen ODE synthetic failure"}
+  },
+  "positive_causal_claim_supported": "The expanded non-v3 mechanism vocabulary is associated with and counterfactually necessary relative to the restricted v3-compatible arm for three blind task wins.",
+  "positive_causal_claim_not_supported": "Transfer memory or transfer-weighted ranking causes improved generalization.",
+  "G7_stage_complete": true,
+  "G7_positive_transfer_breakthrough_gate": false,
+  "next_gate": "G8_independent_validation",
+  "claim_boundary": "G7 explains the internal v4-v3 improvement without rescuing the failed transfer thesis. The strongest supported explanation is broader mechanism availability, not learned cross-domain transfer."
+}

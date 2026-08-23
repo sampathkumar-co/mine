@@ -1,0 +1,28 @@
+{
+  "project": "LEXIGEN v4 Frozen Generalization Experiment",
+  "gate": "G9_final_claim",
+  "classification_revision": 1,
+  "internal_campaign_complete": true,
+  "world_level_ai_breakthrough": false,
+  "candidate_breakthrough": false,
+  "useful_system_partial_success": true,
+  "negative_scientific_result": true,
+  "positive_results": [
+    "5 of 8 preregistered unseen tasks are clean autonomous wins",
+    "wins span 5 unrelated task families",
+    "v4 has a 3-task-win and 37.5 percentage-point success-rate advantage over the restricted v3-compatible architecture",
+    "human task-specific solver contribution remained zero by frozen provenance records"
+  ],
+  "negative_results": [
+    "zero causally credited transfer wins",
+    "v4 has zero task-win margin over random search",
+    "v4 has zero task-win margin over template synthesis",
+    "v4 has zero task-win margin over the no-transfer ablation",
+    "Task 7 exposes a numerical-safety failure mode in the broader mechanism vocabulary"
+  ],
+  "causal_conclusion": "The evidence supports broader non-v3 mechanism availability as the source of the three v4-over-v3 task wins. It rejects learned cross-domain transfer and transfer-weighted ranking as the cause of improved generalization.",
+  "external_validation_status": "G8 protocol prepared; independent external execution remains optional for validating the partial claims but cannot convert the failed preregistered transfer/baseline gates into a v4 breakthrough.",
+  "final_v4_claim": "Lexigen v4 is a useful autonomous unseen-task optimization/discovery system with demonstrable breadth and a real improvement over its restricted predecessor, accompanied by a negative result for its stronger transfer-learning thesis. It is not a world-level AI breakthrough.",
+  "next_scientific_action": "Freeze v4 permanently and create a new preregistered successor architecture where transferred learned mechanisms are causally distinct from no-transfer and simpler baseline arms before selecting fresh untouched holdouts.",
+  "post_hoc_threshold_changes": false
+}
