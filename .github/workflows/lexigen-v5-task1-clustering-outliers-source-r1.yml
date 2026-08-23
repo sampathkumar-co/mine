@@ -1,14 +1,17 @@
-name: LEXIGEN v5 Task 1 Clustering Outliers Source R1
+name: LEXIGEN v5 Task 1 Clustering Outliers Source R1B
 
 on:
   pull_request:
     branches:
       - lexigen/v5-transfer-causal-preregister-r1
     paths:
-      - "lexigen-v5/tasks/01-clustering-outliers/TRIGGER_SOURCE_R1"
+      - "lexigen-v5/tasks/01-clustering-outliers/TRIGGER_SOURCE_R1B"
 
 permissions:
   contents: read
+
+env:
+  PYTHONPATH: .
 
 jobs:
   analyse:
@@ -26,7 +29,6 @@ jobs:
           import hashlib, json
           from pathlib import Path
           lock = json.loads(Path("ENGINE_LOCK.json").read_text())
-          # The selection workflow is intentionally retired after selection; verify the still-present scientific files.
           for key, wanted in lock["git_blob_sha1"].items():
               if key == "workflow":
                   continue
@@ -37,13 +39,13 @@ jobs:
                   raise SystemExit(f"campaign lock mismatch {key}: {actual} != {wanted}")
           print("LEXIGEN_V5_CAMPAIGN_SCIENTIFIC_LOCK_VERIFIED")
           PY
-      - name: Verify Task 1 source lock before source access
+      - name: Verify Task 1 source R1B lock before source access
         working-directory: lexigen-v5
         run: |
           python - <<'PY'
           import hashlib, json
           from pathlib import Path
-          lock = json.loads(Path("tasks/01-clustering-outliers/SOURCE_R1_LOCK.json").read_text())
+          lock = json.loads(Path("tasks/01-clustering-outliers/SOURCE_R1B_LOCK.json").read_text())
           paths = {
               "TASK_START.json": Path("tasks/01-clustering-outliers/TASK_START.json"),
               "prepare_source.py": Path("tasks/01-clustering-outliers/prepare_source.py"),
@@ -53,12 +55,14 @@ jobs:
               data = paths[key].read_bytes()
               actual = hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
               if actual != wanted:
-                  raise SystemExit(f"Task 1 source lock mismatch {key}: {actual} != {wanted}")
+                  raise SystemExit(f"Task 1 source R1B lock mismatch {key}: {actual} != {wanted}")
           if lock["task_source_opened_before_lock"] or lock["task_description_opened_before_lock"]:
-              raise SystemExit("Task 1 source boundary violated before source lock")
+              raise SystemExit("Task 1 source boundary violated before R1B lock")
           if lock["training_manifest_opened_before_lock"] or lock["training_payloads_opened_before_lock"] or lock["test_manifest_opened_before_lock"] or lock["test_payloads_opened_before_lock"]:
-              raise SystemExit("official data boundary violated before source lock")
-          print("LEXIGEN_V5_TASK1_SOURCE_R1_LOCK_VERIFIED_BEFORE_SOURCE_ACCESS")
+              raise SystemExit("official data boundary violated before source R1B lock")
+          if lock["prior_failure_run_id"] != 32656162908 or lock["prior_failure_classification"] != "infrastructure_only_pre_source_import_path_failure":
+              raise SystemExit("preserved R1 failure identity mismatch")
+          print("LEXIGEN_V5_TASK1_SOURCE_R1B_LOCK_VERIFIED_BEFORE_SOURCE_ACCESS")
           PY
       - name: Compile frozen Task 1 source package
         working-directory: lexigen-v5
@@ -69,7 +73,7 @@ jobs:
       - name: Upload immutable Task 1 source-analysis evidence
         uses: actions/upload-artifact@v4
         with:
-          name: lexigen-v5-task1-clustering-outliers-source-r1
+          name: lexigen-v5-task1-clustering-outliers-source-r1b
           path: lexigen-v5/tasks/01-clustering-outliers/source-analysis-evidence/
           if-no-files-found: error
           retention-days: 90
