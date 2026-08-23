@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "stage": "synthetic_revision1",
+  "status": "passed_pretraining_correctness_gate",
+  "workflow_run_id": 32654330463,
+  "workflow_job_id": 97230637256,
+  "artifact_id": 9497037293,
+  "artifact_digest": "sha256:721d8e4a5af5d20ab05af6533a781af48648e65d8e46c43d19641ebbaf3e59c9",
+  "candidate_count": 27,
+  "synthetic_case_count": 6,
+  "candidate_case_checks": 162,
+  "passing_checks": 162,
+  "failing_checks": 0,
+  "maximum_valid_relative_error": 1.1871272661042489e-07,
+  "oracle": "direct separable DST-II formula independent of SciPy FFT implementations",
+  "official_training_manifest_accessed": false,
+  "official_training_payloads_accessed": false,
+  "official_test_manifest_accessed": false,
+  "official_test_payloads_accessed": false,
+  "training_revision_consumed": false
+}
