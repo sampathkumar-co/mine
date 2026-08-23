@@ -1,0 +1,54 @@
+name: Mini-ORIGIN TSPLIB Archive Lock v0.92
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v92-tsplib-external-holdout
+    paths:
+      - 'mini-origin/campaigns/v92-tsplib-external-holdout.json'
+      - 'mini-origin/src/mini_origin/tsplib_hash_lock_v92.py'
+      - '.github/workflows/mini-origin-v92-tsplib-lock.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/mini-origin-v92-tsplib-lock.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[dev]'
+      - name: Run preaccess v0.92 tests
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          pytest -q tests/test_tsplib_external_holdout_v92.py
+      - name: Hash-lock TSPLIB archives without opening
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          mkdir -p results/v92
+          python -m mini_origin.tsplib_hash_lock_v92 \
+            --output results/v92/archive-lock-manifest.json \
+            2>&1 | tee results/v92/archive-lock.log
+      - name: Upload archive lock
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v92-tsplib-lock
+          path: |
+            mini-origin/results/v92/archive-lock-manifest.json
+            mini-origin/results/v92/archive-lock.log
+          if-no-files-found: warn
