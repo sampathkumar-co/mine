@@ -1,0 +1,60 @@
+{
+  "memory_version": "lexigen-v5-transfer-memory-r1",
+  "source_campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "frozen_before_v5_holdout_selection": true,
+  "task_payloads_embedded": false,
+  "solver_source_embedded": false,
+  "holdout_answers_embedded": false,
+  "learned_templates": {
+    "bit_frontier_restriction": {
+      "learned_from_family": "graph_discrete",
+      "source_evidence_task": "max_common_subgraph",
+      "abstract_preconditions": ["discrete", "set_or_boolean_structure", "sparse_or_frontier_search"],
+      "recipe": ["encode candidate state in word-parallel form", "restrict work to a provably relevant frontier", "preserve an exact validity check"],
+      "forbidden_payload": "No graph instance, answer, task-specific constant, or source code is retained.",
+      "causal_id": "TM-BFR-01"
+    },
+    "certified_active_core": {
+      "learned_from_family": "numerical_optimization",
+      "source_evidence_task": "unit_simplex_projection",
+      "abstract_preconditions": ["constraints_or_threshold", "small_active_core_possible", "exact_or_tolerance_certificate"],
+      "recipe": ["identify a candidate active subset", "solve only the active core", "verify the full solution with an independent certificate", "fall back only on certificate failure"],
+      "forbidden_payload": "No simplex values, support sizes, task-specific thresholds, or solver source are retained.",
+      "causal_id": "TM-CAC-01"
+    },
+    "reduced_representation_refinement": {
+      "learned_from_family": "linear_algebra",
+      "source_evidence_task": "tensor_completion_3d",
+      "abstract_preconditions": ["high_dimensional_numeric_structure", "redundant_representation_or_modes", "tolerance_verifier"],
+      "recipe": ["solve a structurally reduced representation first", "lift the result to the required representation", "spend bounded refinement only where the official certificate requires it"],
+      "forbidden_payload": "No tensor shape, mask, coefficients, or task-specific solver code are retained.",
+      "causal_id": "TM-RRR-01"
+    },
+    "precision_backend_error_budget": {
+      "learned_from_family": "signal_processing",
+      "source_evidence_task": "dst_type_II_scipy_fftpack",
+      "abstract_preconditions": ["numeric_array", "approximate_verifier", "native_backend_available", "precision_change_possible"],
+      "recipe": ["evaluate a lower-cost precision/backend representation", "bound or measure numerical error against the frozen verifier budget", "use the lower-cost path only when the error budget is structurally safe"],
+      "forbidden_payload": "No DST matrices, benchmark payloads, task constants, or source implementation are retained.",
+      "causal_id": "TM-PBEB-01"
+    }
+  },
+  "negative_lessons": {
+    "long_horizon_precision_phase_error": {
+      "learned_from_family": "scientific_computing",
+      "source_evidence_task": "ode_fitzhughnagumo",
+      "rule": "Do not accept reduced precision or relaxed numerical staging solely from local error checks when an iterative or dynamical computation can accumulate phase/state error across a long horizon.",
+      "causal_id": "NL-LHP-01"
+    },
+    "implementation_equivalence_is_not_transfer": {
+      "source_evidence_tasks": ["tensor_completion_3d", "unit_simplex_projection", "dst_type_II_scipy_fftpack"],
+      "rule": "If full-transfer and no-transfer candidates execute semantically equivalent implementations, timing differences receive zero transfer credit.",
+      "causal_id": "NL-IE-01"
+    }
+  },
+  "allowed_v5_full_use": "v5_full may instantiate these learned recipes when a name-independent source fingerprint satisfies their frozen preconditions.",
+  "v5_no_transfer_use": "v5_no_transfer may use generic base operators but may not instantiate, imitate, or receive the learned recipe compositions or causal IDs above.",
+  "random_search_use": "random_search samples only from generic base operators and static non-learned compositions.",
+  "static_template_use": "static_template may use only templates committed independently of this transfer memory.",
+  "v4_compatible_use": "v4_compatible uses the frozen v4 architecture and transfer behavior as a predecessor comparator."
+}
