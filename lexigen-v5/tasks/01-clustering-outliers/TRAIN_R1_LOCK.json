@@ -1,0 +1,30 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "stage": "official_training_r1_lock",
+  "git_blob_sha1": {
+    "SYNTHETIC_R1_RESULT.json": "3dad8d1a4dc10103d98c19bade6a1a2bd073a634",
+    "candidates.py": "a5d674cc4a9100acd59441eecbd32aa601a3e674",
+    "requirements.txt": "9595acca33b87e26cbffdb9a3943a5670f89713b",
+    "train_shard.py": "616bb9f8118fef698c140891a2f95959c16b8ab0",
+    "aggregate_train.py": "b21bd9c6a130a3514474699ae38adb549d2db753",
+    "workflow": "7d6a82bcb1fac827161a2e970a59fa689731c844"
+  },
+  "candidate_count": 27,
+  "candidate_count_by_arm": {"v5_full":5,"v5_no_transfer":6,"random_search":5,"static_template":5,"v4_compatible":6},
+  "training_records": 100,
+  "shards": 10,
+  "official_training_revision": 1,
+  "maximum_official_training_revisions": 3,
+  "candidate_repair_after_synthetic": false,
+  "candidate_selection_rule": "within each arm prefer 100/100 valid zero-retry candidates, then maximize harmonic speedup, then minimum speedup, then lexical candidate id; if no fully valid candidate exists preserve failure evidence before considering any permitted generic revision",
+  "default_performance_gate_reported_on_training": {"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup":1.05,"invalid_output_retries":0},
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_contents_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "threshold_change_after_training_permitted": false
+}

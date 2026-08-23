@@ -1,0 +1,41 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "family": "machine_learning",
+  "stage": "blind_r1",
+  "status": "clean_autonomous_unseen_task_win",
+  "workflow_run_id": 32657059514,
+  "artifact_id": 9497720148,
+  "artifact_digest": "sha256:f209d7c07ceedb768201d5970faedc79f044c96817593ea1952fba1f30e419e4",
+  "blind_summary_sha256": "7da2c69f9f035c68eba98798a91251a8a7f37c077997a6a577148712d426692d",
+  "blind_results_sha256": "9cec5d80c01a5b7f3caa8cea6a2af9f338ad3f204a7381a434f37bb8e241b2b6",
+  "test_manifest_name": "clustering_outliers_T100ms_n2457_size100_test.jsonl",
+  "test_manifest_git_blob_sha1": "5ced94f8be055ea42d0278850b9e599cfe293d1e",
+  "test_manifest_sha256": "e21ac28f5099e28fa1e078f73207b4877410654a5de73849eacf952e154af677",
+  "blind_records": 100,
+  "blind_reruns": 0,
+  "arms": {
+    "v5_full": {"candidate":"v5_full_r6_514b3e8a41ba1f8b73a1","implementation":"generic_reduced_representation","valid":100,"harmonic_speedup":2.4719892679655824,"minimum_speedup":2.2264071949386857,"passes_blind_gate":true},
+    "v5_no_transfer": {"candidate":"v5_no_transfer_r6_66c5848a3c8a4f51b562","implementation":"generic_reduced_representation","valid":100,"harmonic_speedup":2.4620507931296527,"minimum_speedup":2.0970223357627384,"passes_blind_gate":true},
+    "random_search": {"candidate":"random_search_r3_38776670db84b717ed92","implementation":"generic_reduced_representation","valid":100,"harmonic_speedup":2.449970226952707,"minimum_speedup":1.930724328841078,"passes_blind_gate":true},
+    "static_template": {"candidate":"static_template_r2_8fd871e046faa7e4d37c","implementation":"generic_reduced_representation","valid":100,"harmonic_speedup":2.457392516860124,"minimum_speedup":1.863294780134798,"passes_blind_gate":true},
+    "v4_compatible": {"candidate":"v4_compatible_r6_0dde88a4a159a3ad0e40","implementation":"generic_active_core","valid":100,"harmonic_speedup":0.9762613247501281,"minimum_speedup":0.7741131889195801,"passes_blind_gate":false}
+  },
+  "architecture_comparison": {
+    "v5_beats_v4_by_task_win": true,
+    "v5_minus_v4_harmonic": 1.4957279432154542,
+    "v5_over_no_transfer_ratio": 1.0040366652319535,
+    "v5_minus_random_harmonic": 0.02201904101287555,
+    "v5_minus_static_harmonic": 0.014596751105458328,
+    "selected_full_no_transfer_random_static_implementation_equivalent": true,
+    "selected_v5_uses_learned_transfer": false
+  },
+  "clean_unseen_task_win": true,
+  "causal_transfer_win": false,
+  "causal_transfer_reason": "The frozen selected v5_full candidate uses no transfer-memory causal ID, and full/no-transfer/random/static selected programs are implementation-equivalent generic reduced-representation paths. Protocol causal-transfer condition 2 fails before considering timing.",
+  "recipe_removal_replay_required": false,
+  "invalid_output_retries": 0,
+  "human_task_specific_solver_design": false,
+  "thresholds_changed": false
+}

@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "stage": "source_r1b_lock",
+  "git_blob_sha1": {
+    "TASK_START.json": "ed4e44039cbef319510d4a4cb251a50f320d6dc1",
+    "prepare_source.py": "f84800d7aa036d519785b35590e13caa772bac41",
+    "workflow": "c1994fe9053bcb1ff198004cdb86a17306d35bf2"
+  },
+  "prior_failure_run_id": 32656162908,
+  "prior_failure_job_id": 97235145292,
+  "prior_failure_classification": "infrastructure_only_pre_source_import_path_failure",
+  "correction": "set PYTHONPATH to lexigen-v5 working directory; no scientific code or proposal logic changed",
+  "task_source_opened_before_lock": false,
+  "task_description_opened_before_lock": false,
+  "training_manifest_opened_before_lock": false,
+  "training_payloads_opened_before_lock": false,
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "proposal_budget_per_arm": 6,
+  "human_task_specific_solver_design": false
+}

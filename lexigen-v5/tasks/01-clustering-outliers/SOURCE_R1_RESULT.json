@@ -1,0 +1,40 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "family": "machine_learning",
+  "stage": "source_analysis",
+  "status": "passed_after_infrastructure_only_r1b_correction",
+  "successful_workflow_run_id": 32656245137,
+  "successful_job_id": 97235338324,
+  "artifact_id": 9497508810,
+  "artifact_digest": "sha256:9afbbec94b802a22bb20dcab3cb8be5900d1e165c9351ea0bcce22b9205a9a30",
+  "preserved_failed_run_id": 32656162908,
+  "preserved_failure_classification": "infrastructure_only_pre_source_import_path_failure",
+  "source_path": "AlgoTuneTasks/clustering_outliers/clustering_outliers.py",
+  "source_git_blob_sha1": "5ada87c1edea9200e4febcb3ccc0604d8b87798f",
+  "source_sha256": "a95edb62f0cb23bbf4730e16308ec4fcbc3324a29257750c46875fb194ef2c2e",
+  "description_git_blob_sha1": "1d57c8f61ac0b4e59b83ef30bfcc54446472f46b",
+  "description_sha256": "e5469f5a65c97d802864a29286f27e68c98dc34e6f2d3dcf40c6608837588f8d",
+  "fingerprint_features": ["approximate_verifier","array","boolean","certificate","discrete","high_dimensional","iterative","numeric","scientific_dynamics","set","tensor","threshold","tolerance"],
+  "applicable_transfer_templates": [
+    {"template":"bit_frontier_restriction","causal_id":"TM-BFR-01","operators":["bit_parallel_representation","sparse_frontier_search","early_certificate_exit"]},
+    {"template":"certified_active_core","causal_id":"TM-CAC-01","operators":["active_set_decomposition","early_certificate_exit","risk_aware_staging"]},
+    {"template":"reduced_representation_refinement","causal_id":"TM-RRR-01","operators":["reduced_representation","bounded_exact_refinement","risk_aware_staging"]}
+  ],
+  "top_proposal_by_arm": {
+    "v5_full": {"proposal_id":"3304c859d463a501bd86","operators":["bit_parallel_representation","sparse_frontier_search","early_certificate_exit"],"transfer_ids":["TM-BFR-01"]},
+    "v5_no_transfer": {"proposal_id":"91e027e622f2d9a98240","operators":["active_set_decomposition","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[]},
+    "random_search": {"proposal_id":"281d4a03f9bc5812f7af","operators":["dtype_specialization","vectorized_batch_kernel","bit_parallel_representation"],"transfer_ids":[]},
+    "static_template": {"proposal_id":"dbfcd2af539b0b2636e7","operators":["bit_parallel_representation","sparse_frontier_search"],"transfer_ids":[]},
+    "v4_compatible": {"proposal_id":"f9f3239b6866512e4f68","operators":["active_set_decomposition","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[]}
+  },
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "human_task_specific_solver_design": false,
+  "engine_or_threshold_changed_after_source": false
+}

@@ -1,0 +1,30 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "stage": "blind_r1_lock",
+  "git_blob_sha1": {
+    "TRAIN_R1_RESULT.json": "cba3ac7695c0700378ac764c645e0969e947cd3d",
+    "BLIND_R1_SELECTION.json": "38535e7b9d2eb92ed28f11ab1b2f7360165c1d5c",
+    "candidates.py": "a5d674cc4a9100acd59441eecbd32aa601a3e674",
+    "requirements.txt": "9595acca33b87e26cbffdb9a3943a5670f89713b",
+    "blind_shard.py": "6a8ad34a1f1fb3185e1229409e5714406ca50477",
+    "aggregate_blind.py": "1f200e40f1b5ad7f50b60450679e3350d56b21f8",
+    "workflow": "d3b29a859eaa503c09b4910f984d4e9d2c1fa475"
+  },
+  "blind_records": 100,
+  "selected_candidate_count": 5,
+  "shards": 10,
+  "expected_test_manifest_name": "clustering_outliers_T100ms_n2457_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "5ced94f8be055ea42d0278850b9e599cfe293d1e",
+  "expected_dataset_shape": [2457,10],
+  "frozen_gate": {"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup":1.05,"invalid_output_retries":0},
+  "test_manifest_contents_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "candidate_implementations_changed_after_training": false,
+  "transfer_credit_possible": false,
+  "transfer_credit_block_reason": "Selected v5_full candidate uses no transfer-memory causal ID. Full/no-transfer/random/static selected programs are also semantically implementation-equivalent generic reduced-representation paths.",
+  "recipe_removal_replay_required": false,
+  "blind_reruns_allowed_for_scientific_failure": false,
+  "threshold_change_after_blind_permitted": false
+}
