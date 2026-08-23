@@ -1,6 +1,6 @@
 {
   "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
-  "audit_revision": 1,
+  "audit_revision": 2,
   "selected_tasks": 8,
   "completed_tasks": 8,
   "clean_unseen_wins": 5,
@@ -46,11 +46,12 @@
     "G4_mechanism_transfer": "failed",
     "G5_baseline_superiority": "failed",
     "G6_broad_generalization": "basic_5_of_8_and_family_thresholds_passed_but_full_preregistered_campaign_gate_failed",
-    "G7_causal_evidence": "audit_in_progress",
-    "G8_independent_validation": "not_started",
-    "G9_final_claim": "not_reached"
+    "G7_causal_evidence": "completed_negative_transfer_result_with_supported_operator-space_explanation",
+    "G8_independent_validation": "prepared_external_execution_required",
+    "G9_final_claim": "internal_classification_ready_external_reproduction_not_required_to_classify_v4_as_non_breakthrough"
   },
-  "scientific_classification_at_G6": "useful_system_partial_success_with_negative_transfer_and_baseline-superiority_result",
-  "claim_boundary": "Lexigen v4 demonstrates autonomous competence on 5 of 8 selected unseen tasks across 5 families and a 3-task-win advantage over the restricted v3-compatible architecture. The preregistered full campaign does not pass because v4 has no task-win advantage over random/template/no-transfer arms and no causally credited cross-family transfer win. This is not a world-level AI breakthrough claim.",
-  "thresholds_changed_after_results": false
+  "scientific_classification": "useful_system_partial_success_plus_negative_scientific_result_for_transfer_and_baseline_superiority",
+  "claim_boundary": "Lexigen v4 demonstrates autonomous competence on 5 of 8 selected unseen tasks across 5 families and a 3-task-win advantage over the restricted v3-compatible architecture. G7 supports expanded mechanism availability as the explanation for those v3 gains while rejecting learned transfer as the cause. The preregistered full campaign does not pass because v4 has no task-win advantage over random/template/no-transfer arms and no causally credited cross-family transfer win. This is not a world-level AI breakthrough claim.",
+  "thresholds_changed_after_results": false,
+  "successor_campaign_required_for_positive_transfer_breakthrough": true
 }
