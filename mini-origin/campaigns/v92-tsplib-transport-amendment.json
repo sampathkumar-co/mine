@@ -1,0 +1,37 @@
+{
+  "status": "transport_only_amendment_after_404_before_archive_bytes",
+  "version": "v0.92",
+  "date": "2026-08-23",
+  "failed_attempt": {
+    "workflow_run_id": 32648619681,
+    "job_id": 97216654614,
+    "ci_child_head": "7fbc2dfc5bcb062632ffcd0efaf3e63847224588",
+    "artifact_id": 9495555367,
+    "artifact_sha256": "4df9508b6ed12ab20d48e146393ac93d72cc8b8365cce82427032a462f078fb3",
+    "failure": "HTTP 404 while requesting the first selected archive gr21 from the exact official catalogue href",
+    "selected_archive_bytes_obtained": false,
+    "zip_opened": false,
+    "xml_parsed": false,
+    "edge_costs_seen": false
+  },
+  "catalogue_reverification": {
+    "official_catalogue": "https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/",
+    "gr21_still_listed": true,
+    "gr24_still_listed": true,
+    "p43_still_listed": true,
+    "href_paths_match_preregistered_paths": true
+  },
+  "transport_change_only": {
+    "selected_instance_names_changed": false,
+    "selected_urls_changed": false,
+    "projection_changed": false,
+    "parser_changed": false,
+    "held_karp_baseline_changed": false,
+    "bruteforce_certificate_changed": false,
+    "frozen_v91_rule_changed": false,
+    "five_percent_gate_changed": false,
+    "kill_rule_changed": false,
+    "change": "Replace the research-specific HTTP User-Agent with a mainstream browser-compatible User-Agent and send the official catalogue URL as Referer. No fallback mirror, alternate instance, alternate archive path, or post-access scientific change is authorized."
+  },
+  "integrity_rule": "If the exact same official URLs still fail before archive bytes are obtained, preserve v0.92 as transport-blocked. Do not substitute different TSPLIB instances or a mirror inside v0.92 without a separately named protocol."
+}
