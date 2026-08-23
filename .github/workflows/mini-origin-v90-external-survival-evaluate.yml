@@ -6,6 +6,9 @@ on:
       - research/mini-origin-v90-external-survival-lock
     paths:
       - 'mini-origin/campaigns/v90-external-survival-lock-manifest.json'
+  pull_request:
+    paths:
+      - '.github/workflows/mini-origin-v90-external-survival-evaluate.yml'
   workflow_dispatch:
 
 permissions:
