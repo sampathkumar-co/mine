@@ -1,0 +1,49 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "stage": "candidate_freeze_revision1",
+  "source_only": true,
+  "official_training_access": false,
+  "official_test_access": false,
+  "implementation_policy": "Candidates are direct instantiations of frozen source-analysis operator compositions. Equal operator compositions across arms share equal implementations; no task-specific rescue rules are permitted before synthetic validation.",
+  "candidates": {
+    "v4_full": [
+      {"proposal_id":"5c612085fd74d0b0b4e3","operators":["zero_copy_representation","vectorized_batch_kernel","risk_aware_staging"],"candidate":"v4_zero_vector_risk","implementation":"modern_guarded"},
+      {"proposal_id":"85017e6e41f0856ccd9f","operators":["dtype_specialization","vectorized_batch_kernel","risk_aware_staging"],"candidate":"v4_dtype_vector_risk","implementation":"modern_float32_guarded"},
+      {"proposal_id":"1dfcfed400e7ae1cc350","operators":["contiguous_layout","vectorized_batch_kernel","risk_aware_staging"],"candidate":"v4_contiguous_vector_risk","implementation":"modern_contiguous_guarded"},
+      {"proposal_id":"64adc76b4328c3c37eb0","operators":["zero_copy_representation","dtype_specialization","vectorized_batch_kernel"],"candidate":"v4_zero_dtype_vector","implementation":"modern_float32"},
+      {"proposal_id":"d5dc5fc2e1823ad763bc","operators":["zero_copy_representation","dtype_specialization","risk_aware_staging"],"candidate":"v4_zero_dtype_risk","implementation":"fftpack_float32_guarded"},
+      {"proposal_id":"e4766635e64167b4b94d","operators":["zero_copy_representation","contiguous_layout","vectorized_batch_kernel"],"candidate":"v4_zero_contiguous_vector","implementation":"modern_contiguous"}
+    ],
+    "v4_no_transfer": [
+      {"proposal_id":"6abf2b411e13d3a08613","operators":["zero_copy_representation","vectorized_batch_kernel","risk_aware_staging"],"candidate":"no_transfer_zero_vector_risk","implementation":"modern_guarded"},
+      {"proposal_id":"dc7241581cd082a0b36d","operators":["dtype_specialization","vectorized_batch_kernel","risk_aware_staging"],"candidate":"no_transfer_dtype_vector_risk","implementation":"modern_float32_guarded"},
+      {"proposal_id":"e298ca9efffc019b53e5","operators":["contiguous_layout","vectorized_batch_kernel","risk_aware_staging"],"candidate":"no_transfer_contiguous_vector_risk","implementation":"modern_contiguous_guarded"},
+      {"proposal_id":"41e38a40b2efc4842422","operators":["zero_copy_representation","dtype_specialization","vectorized_batch_kernel"],"candidate":"no_transfer_zero_dtype_vector","implementation":"modern_float32"},
+      {"proposal_id":"8001dcdf1e7c440ee32e","operators":["zero_copy_representation","dtype_specialization","risk_aware_staging"],"candidate":"no_transfer_zero_dtype_risk","implementation":"fftpack_float32_guarded"},
+      {"proposal_id":"a34d578cc72359026fbf","operators":["contiguous_layout","dtype_specialization","vectorized_batch_kernel"],"candidate":"no_transfer_contiguous_dtype_vector","implementation":"modern_float32"}
+    ],
+    "random_search": [
+      {"proposal_id":"dbaf9599fe087d2ad1c0","operators":["zero_copy_representation","dtype_specialization","risk_aware_staging"],"candidate":"random_zero_dtype_risk","implementation":"fftpack_float32_guarded"},
+      {"proposal_id":"0cfec6a6e38567195f8b","operators":["dtype_specialization"],"candidate":"random_dtype","implementation":"fftpack_float32"},
+      {"proposal_id":"abdfb8ac484e7f80af9c","operators":["dtype_specialization","vectorized_batch_kernel","risk_aware_staging"],"candidate":"random_dtype_vector_risk","implementation":"modern_float32_guarded"},
+      {"proposal_id":"5a708ecab51fa2cf1533","operators":["zero_copy_representation","dtype_specialization","vectorized_batch_kernel"],"candidate":"random_zero_dtype_vector","implementation":"modern_float32"},
+      {"proposal_id":"c1e8b5eff986fa5711f5","operators":["risk_aware_staging"],"candidate":"random_risk","implementation":"fftpack_guarded"},
+      {"proposal_id":"c597e3b23b7e8418a683","operators":["zero_copy_representation","risk_aware_staging"],"candidate":"random_zero_risk","implementation":"fftpack_guarded"}
+    ],
+    "template_synthesis": [
+      {"proposal_id":"378e11b04f4654762feb","operators":["vectorized_batch_kernel"],"candidate":"template_vectorized_batch","implementation":"modern"},
+      {"proposal_id":"ccc0b3953e9256136be4","operators":["risk_aware_staging"],"candidate":"template_risk_stage","implementation":"fftpack_guarded"},
+      {"proposal_id":"35215edb08bba0610425","operators":["zero_copy_representation"],"candidate":"template_zero_copy","implementation":"fftpack"},
+      {"proposal_id":"5c853e818b68f1a22714","operators":["dtype_specialization"],"candidate":"template_dtype","implementation":"fftpack_float32"},
+      {"proposal_id":"8a7cd31bbf3f72558964","operators":["contiguous_layout"],"candidate":"template_contiguous","implementation":"fftpack_contiguous"}
+    ],
+    "v3_compatible": [
+      {"proposal_id":"678199434d542af23152","operators":["vectorized_batch_kernel"],"candidate":"v3_vectorized_batch","implementation":"modern"},
+      {"proposal_id":"14b42264c2b730fa5d1e","operators":["zero_copy_representation"],"candidate":"v3_zero_copy_representation","implementation":"fftpack"},
+      {"proposal_id":"c949ac475cf5e0661ea6","operators":["dtype_specialization"],"candidate":"v3_dtype_specialization","implementation":"fftpack_float32"},
+      {"proposal_id":"3d9e47014defae9ceac3","operators":["contiguous_layout"],"candidate":"v3_contiguous_layout","implementation":"fftpack_contiguous"}
+    ]
+  }
+}
