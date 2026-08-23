@@ -1,0 +1,36 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "revision": 1,
+  "stage": "blind_lock",
+  "blind_records": 100,
+  "selected_candidate_count": 5,
+  "shards": 10,
+  "expected_matrix_shape": [2054, 2054],
+  "expected_matrix_dtype": "float64",
+  "candidate_executions_per_record": 5,
+  "reference_executions_per_record": 1,
+  "invalid_output_retries": 0,
+  "test_manifest_name": "dst_type_II_scipy_fftpack_T100ms_n2054_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "92c05fdab7f07bda70c6462485de69c5eaa7d665",
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": 0,
+  "transfer_credit_possible": false,
+  "transfer_credit_block_reason": "v4_full and v4_no_transfer selected winners use the same modern_float32 implementation; random_search also uses that implementation. Blind timing cannot establish transfer causality.",
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "git_blob_sha1": {
+    "candidates.py": "b7d995db37582c79d60ad382a88166c29d674eef",
+    "requirements.txt": "40693b71107b739e9e9469cb080b32e50828783f",
+    "TRAIN_R1_RESULT.json": "00bd855e4fffe11d7fa810170d0ac9f705ff8df0",
+    "BLIND_R1_SELECTION.json": "feb5e18bd1ca9e8fdcaa06edc2b4452c09adf4c5",
+    "blind_shard.py": "edb0bacd27668219d1c17af4d68d754c2693a219",
+    "aggregate_blind.py": "7134a684ae05bc97ffcec42e6f578e8ce40e8d69",
+    "workflow": "706a18dedaec33da60640aff971521347175bea6"
+  }
+}

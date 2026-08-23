@@ -1,0 +1,36 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "revision": 1,
+  "stage": "official_training_lock",
+  "candidate_count": 27,
+  "training_records": 100,
+  "shards": 10,
+  "candidate_executions_per_record": 27,
+  "reference_executions_per_record": 1,
+  "invalid_output_retries": 0,
+  "manifest_discovery": "deterministic suffix discovery within frozen dataset revision; exactly one _train.jsonl and one _test.jsonl required",
+  "git_blob_sha1": {
+    "candidates.py": "b7d995db37582c79d60ad382a88166c29d674eef",
+    "CANDIDATE_PROVENANCE.json": "b535bac3c1bb723245f233c3afc37794c5fdd3ba",
+    "SYNTHETIC_R1_RESULT.json": "5f60feecc201df31d1f19409778ec5ed88f19dd3",
+    "requirements.txt": "40693b71107b739e9e9469cb080b32e50828783f",
+    "train_shard.py": "4190aaf923c00517acb9f832e37d6baa2e596f38",
+    "aggregate_train.py": "bcc8f70989235f52fce5b6fc2788e54516c06bce",
+    "workflow": "1bebc21635bd0bedb16f787629e86be797a2c3c1"
+  },
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": 0,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": 0,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "candidate_family_frozen": true,
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  }
+}

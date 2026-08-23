@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "revision": 1,
+  "stage": "blind_selection",
+  "selection_source": "TRAIN_R1_RESULT.json",
+  "selected": {
+    "v4_full": {"candidate": "v4_zero_dtype_vector", "implementation": "modern_float32"},
+    "v4_no_transfer": {"candidate": "no_transfer_contiguous_dtype_vector", "implementation": "modern_float32"},
+    "random_search": {"candidate": "random_zero_dtype_vector", "implementation": "modern_float32"},
+    "template_synthesis": {"candidate": "template_dtype", "implementation": "fftpack_float32"},
+    "v3_compatible": {"candidate": "v3_dtype_specialization", "implementation": "fftpack_float32"}
+  },
+  "selected_candidate_count": 5,
+  "test_manifest_name": "dst_type_II_scipy_fftpack_T100ms_n2054_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "92c05fdab7f07bda70c6462485de69c5eaa7d665",
+  "expected_matrix_shape": [2054, 2054],
+  "expected_matrix_dtype": "float64",
+  "test_manifest_opened_before_selection": false,
+  "test_payloads_opened_before_selection": 0,
+  "candidate_family_changed_after_training": false,
+  "transfer_credit_possible": false,
+  "transfer_credit_block_reason": "v4_full and v4_no_transfer selected winners share the same modern_float32 implementation; random_search also selected that implementation. Blind timing cannot establish transfer causality."
+}

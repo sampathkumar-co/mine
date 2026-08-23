@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "classification": "procedural_inert_trigger_commit",
+  "trigger_commit_sha": "83b3285668f8f65fb211c34a6aea41277cd58798",
+  "trigger_removed_commit_sha": "dc55170d5a52d5a6ed62789e637745b5434b78b0",
+  "pull_request_existed_during_trigger_commit": false,
+  "workflow_event": "pull_request only",
+  "workflow_could_execute": false,
+  "task_source_opened": false,
+  "description_opened": false,
+  "training_manifest_opened": false,
+  "training_payloads_opened": false,
+  "test_manifest_opened": false,
+  "test_payloads_opened": false,
+  "scientific_rules_changed": false,
+  "resolution": "Trigger removed before PR creation; PR must be opened trigger-absent and trigger re-added only afterward."
+}

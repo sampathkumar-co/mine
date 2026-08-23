@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "revision": 1,
+  "stage": "synthetic_pretraining_lock",
+  "candidate_count": 27,
+  "synthetic_cases": 6,
+  "expected_checks": 162,
+  "oracle": "direct_separable_DST_II_formula_independent_of_SciPy_FFT_implementation",
+  "git_blob_sha1": {
+    "TASK_START.json": "96bcf1d97d870fe446e90d64d5ccf29ab308be73",
+    "SOURCE_ANALYSIS_RESULT.json": "221e4a2ea2d1c81debd5fe88811241bc8e9c95db",
+    "CANDIDATE_PROVENANCE.json": "b535bac3c1bb723245f233c3afc37794c5fdd3ba",
+    "candidates.py": "b7d995db37582c79d60ad382a88166c29d674eef",
+    "requirements.txt": "40693b71107b739e9e9469cb080b32e50828783f",
+    "synthetic_validate.py": "a5376c8b33712bcd7549aa1cb743e89157ef4ace",
+    "workflow": "3f9a6a3f34e946e070f8b8c4e85658028671f277"
+  },
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_family_frozen": true,
+  "gate": {
+    "required_valid_checks": 162,
+    "relative_error_maximum": 1e-6
+  }
+}

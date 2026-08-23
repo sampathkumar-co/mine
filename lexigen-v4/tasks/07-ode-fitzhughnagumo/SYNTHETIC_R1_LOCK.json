@@ -1,0 +1,31 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 7,
+  "task": "ode_fitzhughnagumo",
+  "revision": 1,
+  "stage": "synthetic_pretraining_lock",
+  "candidate_count": 27,
+  "synthetic_cases": 6,
+  "expected_checks": 162,
+  "oracle": "DOP853_rtol1e-12_crosschecked_with_RK45_rtol1e-11",
+  "git_blob_sha1": {
+    "TASK_START.json": "78fcb708272e3aa5f959215a9c195d9513f32ab9",
+    "SOURCE_ANALYSIS_RESULT.json": "1014d95a1614c8b15d84e564ca7a47d5fa3828be",
+    "CANDIDATE_PROVENANCE.json": "36f49c25eff2a7db05131b92909ee03cb7be0ce1",
+    "candidates.py": "f36197426de3da117d21b55af73143faeb3dacd6",
+    "requirements.txt": "40693b71107b739e9e9469cb080b32e50828783f",
+    "synthetic_validate.py": "bf642e34aebd741c8367bd04489cc89dcecc26d5"
+  },
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_family_frozen": true,
+  "gate": {
+    "required_valid_checks": 162,
+    "verifier_rtol": 1e-5,
+    "verifier_atol": 1e-8,
+    "oracle_crosscheck_rtol": 2e-9,
+    "oracle_crosscheck_atol": 2e-10
+  }
+}
