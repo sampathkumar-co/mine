@@ -1,0 +1,51 @@
+name: Mini-ORIGIN External Survival Evaluate v0.90
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v90-external-survival-lock
+    paths:
+      - 'mini-origin/campaigns/v90-external-survival-lock-manifest.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-survival:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[dev]'
+      - name: Run frozen synthetic evaluator certificates
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          pytest -q \
+            tests/test_external_survival_hash_lock_v90.py \
+            tests/test_external_survival_evaluate_v90.py
+      - name: Reverify locked bytes and evaluate frozen quotient
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          mkdir -p results/v90
+          python -m mini_origin.external_survival_evaluate_v90 \
+            --output results/v90/external-survival-evidence.json \
+            2>&1 | tee results/v90/external-survival.log
+      - name: Upload v0.90 evaluation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v90-external-survival-evaluate
+          path: |
+            mini-origin/results/v90/external-survival-evidence.json
+            mini-origin/results/v90/external-survival.log
+          if-no-files-found: warn
