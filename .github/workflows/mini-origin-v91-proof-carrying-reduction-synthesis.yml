@@ -1,3 +1,4 @@
+# CI-only trigger; v0.91 preregistration, grammar, synthesis code, and withheld gate unchanged.
 name: Mini-ORIGIN Proof-Carrying Reduction Synthesis v0.91
 
 on:
