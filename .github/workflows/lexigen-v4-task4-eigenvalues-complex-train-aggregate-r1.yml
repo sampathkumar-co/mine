@@ -37,7 +37,7 @@ jobs:
               "candidates.py": "efea5bda4bfbfa620fd65f551792d48bd619979e",
               "requirements.txt": "2c04913adbf4e70b866f8fb7bb603abef158bbda",
               "train_shard.py": "3ccfe9fa0c5a70475d71273c2396d972b8d34ab1",
-              "aggregate_train.py": "0117d2e75e0ee7063816558f52fbef42a7ea880e",
+              "aggregate_train.py": "99d03f7677405ef3bfb746bff9ea25735ae1cd1b",
               "METADATA_R1_RESULT.json": "9cece8aa58b8134edc1a7a921879a4f7e0cf20f4",
           }
           for name, wanted in expected.items():
