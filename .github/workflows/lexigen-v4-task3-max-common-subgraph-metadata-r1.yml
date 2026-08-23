@@ -1,0 +1,57 @@
+name: LEXIGEN v4 Task 3 Max Common Subgraph Metadata R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/03-max-common-subgraph/TRIGGER_METADATA_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify immutable engine and selection locks
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+      - name: Verify frozen Task 3 pretraining package
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              "TASK_START.json": "18330b288c1d8850cd02bacf859157177dcea245",
+              "SOURCE_ANALYSIS_RESULT.json": "e4e5e33050665efa994e4f7f0e70bb9891624745",
+              "candidates.py": "a975a48ef3cef23728caa39650f2db5159fe9328",
+              "requirements.txt": "6b6bc893815835562a66a5a98c79e0c087978969",
+              "validate_candidates.py": "4c73ca3e15441b4bf9cd6ec78cf666465357c316",
+              "SYNTHETIC_R1_RESULT.json": "23a4ff18332ff8dd98afed7de05d893fe217a9a3",
+              "inspect_training_metadata.py": "fa798a741482efa62fc3c4c8a254ac61d4b52ea4",
+          }
+          for name, wanted in expected.items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
+          print("LEXIGEN_V4_TASK3_METADATA_R1_PACKAGE_FROZEN")
+          PY
+      - name: Inspect official training manifest and test object identity only
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: python -u inspect_training_metadata.py
+      - name: Upload immutable metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task3-max-common-subgraph-metadata-r1
+          path: lexigen-v4/tasks/03-max-common-subgraph/metadata-evidence/
+          if-no-files-found: error
+          retention-days: 90
