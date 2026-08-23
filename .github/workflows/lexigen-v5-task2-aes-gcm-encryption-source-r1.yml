@@ -1,0 +1,71 @@
+name: LEXIGEN v5 Task 2 AES GCM Encryption Source R1
+
+on:
+  pull_request:
+    branches:
+      - lexigen/v5-task1-clustering-outliers-result-r1
+    paths:
+      - "lexigen-v5/tasks/02-aes-gcm-encryption/TRIGGER_SOURCE_R1"
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: .
+
+jobs:
+  analyse:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen campaign scientific files
+        working-directory: lexigen-v5
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          lock=json.loads(Path('ENGINE_LOCK.json').read_text())
+          for key,wanted in lock['git_blob_sha1'].items():
+              if key=='workflow':
+                  continue
+              data=Path(key).read_bytes(); actual=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+              if actual!=wanted:
+                  raise SystemExit(f'campaign lock mismatch {key}: {actual} != {wanted}')
+          print('LEXIGEN_V5_CAMPAIGN_SCIENTIFIC_LOCK_VERIFIED')
+          PY
+      - name: Verify Task 2 source lock before source access
+        working-directory: lexigen-v5
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          lock=json.loads(Path('tasks/02-aes-gcm-encryption/SOURCE_R1_LOCK.json').read_text())
+          paths={
+            'TASK_START.json':Path('tasks/02-aes-gcm-encryption/TASK_START.json'),
+            'prepare_source.py':Path('tasks/02-aes-gcm-encryption/prepare_source.py'),
+            'workflow':Path('../.github/workflows/lexigen-v5-task2-aes-gcm-encryption-source-r1.yml')}
+          for key,wanted in lock['git_blob_sha1'].items():
+              data=paths[key].read_bytes(); actual=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+              if actual!=wanted:
+                  raise SystemExit(f'Task 2 source lock mismatch {key}: {actual} != {wanted}')
+          if any(lock[k] for k in ('task_source_opened_before_lock','task_description_opened_before_lock','training_manifest_opened_before_lock','training_payloads_opened_before_lock','test_manifest_opened_before_lock','test_payloads_opened_before_lock')):
+              raise SystemExit('Task 2 staged boundary violated before source lock')
+          print('LEXIGEN_V5_TASK2_SOURCE_R1_LOCK_VERIFIED_BEFORE_SOURCE_ACCESS')
+          PY
+      - name: Compile frozen Task 2 source package
+        working-directory: lexigen-v5
+        run: python -m compileall -q engine.py tasks/02-aes-gcm-encryption/prepare_source.py
+      - name: Generate all-arm proposals from permitted Task 2 source only
+        working-directory: lexigen-v5
+        run: python -u tasks/02-aes-gcm-encryption/prepare_source.py --task-start tasks/02-aes-gcm-encryption/TASK_START.json --output tasks/02-aes-gcm-encryption/source-analysis-evidence
+      - name: Upload immutable Task 2 source-analysis evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task2-aes-gcm-encryption-source-r1
+          path: lexigen-v5/tasks/02-aes-gcm-encryption/source-analysis-evidence/
+          if-no-files-found: error
+          retention-days: 90
