@@ -1,3 +1,4 @@
+# CI-only trigger; v0.92 sources, parser, evaluator, projection and gates unchanged.
 name: Mini-ORIGIN TSPLIB Archive Lock v0.92
 
 on:
