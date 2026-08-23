@@ -1,0 +1,72 @@
+{
+  "status": "preregistered_before_v91_implementation_or_evaluation",
+  "version": "v0.91",
+  "date": "2026-08-23",
+  "purpose": "Test whether Mini-ORIGIN can select a stronger exact Bellman reduction from a frozen generic relation grammar, rather than receiving a domain-specific reduction by hand, and transfer the selected proof-carrying rule to a withheld synthetic problem family.",
+  "claim_boundary": {
+    "autonomous_reduction_synthesis_precursor": true,
+    "synthetic_only": true,
+    "novel_theorem_claim": false,
+    "reason": "Simulation/bisimulation-style state dominance and state aggregation are established prior art. v0.91 tests synthesis/transfer behavior, not mathematical novelty.",
+    "external_generalization_claim": false,
+    "breakthrough_claim": false
+  },
+  "bellman_scope": {
+    "objective": "minimum total nonnegative additive cost to a terminal state",
+    "transition_model": "finite deterministic acyclic state graph",
+    "baseline": "exact memoized Bellman recursion over every action"
+  },
+  "frozen_relation_grammar": {
+    "left_terminal_modes": ["true", "both_terminal_only"],
+    "action_quantifiers": [
+      "forall_right_exists_left",
+      "exists_left_forall_right",
+      "exists_right_exists_left",
+      "forall_left_exists_right"
+    ],
+    "cost_relations": ["le", "eq", "ignore"],
+    "successor_relations": ["recursive_left_le_right", "recursive_right_le_left", "equal_state"],
+    "candidate_count": 72,
+    "candidate_order": "lexicographic tuple of grammar fields",
+    "state_relation_base": "equal states always relate; nonterminal left never relates to terminal right unless equal",
+    "action_prune_rule": "At one Bellman state, action A may remove B only when cost(A) <= cost(B) and the selected synthesized state relation declares successor(A) <= successor(B).",
+    "forbidden": [
+      "domain name or adapter type as a grammar input",
+      "set inclusion predicates",
+      "graph-specific shortest-path rules",
+      "set-cover subset dominance code",
+      "manually selecting a grammar candidate after evaluation",
+      "changing grammar after seeing withheld-family results"
+    ]
+  },
+  "selection_protocol": {
+    "semantic_audit": {
+      "seed_start": 91001,
+      "instances": 96,
+      "family": "generic random acyclic Bellman graphs",
+      "criterion": "A candidate is eligible only if every related state pair satisfies exact V(left) <= V(right), and candidate action pruning preserves the exact initial objective on every audit instance."
+    },
+    "training": {
+      "families": ["random_dag", "weighted_cover_dp"],
+      "seed_start": 92001,
+      "instances_per_family": 48,
+      "criterion": "Among semantically eligible candidates, maximize total action-expansion reduction across both training families; ties choose fewer declared state pairs, then lexicographic grammar order."
+    },
+    "freeze": "Hash the selected grammar tuple and its semantic-audit/training summary before constructing or evaluating the withheld family."
+  },
+  "withheld_transfer": {
+    "family": "resource_reduction_dp",
+    "seed_start": 93001,
+    "instances": 48,
+    "construction_rule": "The withheld family is generated only after the selected grammar tuple and digest are fixed in memory by the evaluator.",
+    "pass_gate": {
+      "exact_objective_mismatches": 0,
+      "instances_with_positive_action_reduction_min": 1,
+      "aggregate_action_expansion_reduction_strictly_positive": true,
+      "all_pruned_actions_have_local_relation_certificate": true
+    }
+  },
+  "kill_rule": "If no grammar candidate survives semantic audit, or the selected rule does not preserve all withheld exact objectives, or the withheld family has zero aggregate reduction, preserve v0.91 as rejected. Do not hand-add a new relation rule to repair this version.",
+  "interpretation_if_pass": "Evidence that the project can select and freeze a stronger exact reduction from a domain-agnostic grammar and transfer it to a withheld synthetic family with exact certificates. This is a systems/discovery result only, not a new simulation theorem.",
+  "next_if_pass": "Preregister a v0.92 external holdout whose problem family and raw instances are not used during grammar selection, and compare against a family-native preprocessing baseline."
+}
