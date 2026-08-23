@@ -1,3 +1,4 @@
+# CI-only trigger; v0.90 preregistration, source list, and lock code unchanged.
 name: Mini-ORIGIN External Survival Hash Lock v0.90
 
 on:
