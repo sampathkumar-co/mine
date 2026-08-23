@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 3,
+  "task": "max_common_subgraph",
+  "stage": "blind_aggregation",
+  "classification": "infrastructure_only_post_measurement_dependency_omission",
+  "blind_workflow_run_id": 32640922659,
+  "failed_aggregate_job_id": 97197822693,
+  "blind_shards_completed_successfully": 10,
+  "blind_records_measured": 100,
+  "selected_arms_per_record": 5,
+  "successful_record_reruns": 0,
+  "failure": "ModuleNotFoundError: No module named 'numpy' while aggregate_blind.py imported selected_solvers -> candidates; aggregate job had not installed frozen requirements",
+  "scientific_measurements_affected": false,
+  "candidate_or_reference_rerun_permitted": false,
+  "repair_policy": "Run aggregation only against the ten immutable shard artifacts from workflow run 32640922659, using the unchanged aggregate_blind.py and frozen requirements. Do not execute blind_shard.py, candidates, or the reference again.",
+  "original_aggregate_blind_git_blob_sha1": "2629f2850974f7e9b378b7ee334254169606cc83",
+  "original_blind_lock_preserved": true
+}
