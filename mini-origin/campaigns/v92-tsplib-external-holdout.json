@@ -1,0 +1,94 @@
+{
+  "status": "preregistered_before_selected_archive_access",
+  "version": "v0.92",
+  "date": "2026-08-23",
+  "purpose": "Apply the frozen v0.91 synthesized recursive state-dominance rule, without retraining, to a fresh external travelling-salesman family already represented by a strong native Held-Karp dynamic program.",
+  "claim_boundary": {
+    "fresh_external_family_holdout": true,
+    "raw_selected_archives_opened_before_preregistration": false,
+    "catalogue_and_xml_format_metadata_seen_before_preregistration": true,
+    "novel_simulation_theorem_claim": false,
+    "state_of_the_art_tsp_claim": false,
+    "world_first_claim": false,
+    "breakthrough_claim": false
+  },
+  "frozen_v91_rule": {
+    "left_terminal_mode": "true",
+    "action_quantifier": "forall_right_exists_left",
+    "cost_relation": "le",
+    "successor_relation": "recursive_left_le_right",
+    "selected_spec_digest": "7f0f6d05c27c2021055e9b110a0e789ecb0a9e9326ab64f15cb61cd726601375",
+    "v91_freeze_digest": "450c2911ed499890178b88db5451d2ae8ef16a637072758704b671b3151dee75",
+    "retraining_allowed": false,
+    "grammar_reselection_allowed": false
+  },
+  "source": {
+    "catalogue": "https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/",
+    "format_description": "https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/Description.pdf",
+    "selected_archives": [
+      {
+        "name": "gr21",
+        "url": "https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/gr21.xml.zip"
+      },
+      {
+        "name": "gr24",
+        "url": "https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/gr24.xml.zip"
+      },
+      {
+        "name": "p43",
+        "url": "https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/p43.xml.zip"
+      }
+    ],
+    "selection_rule": "Three catalogue-listed TSPLIB XML archives whose raw graph contents were not opened during v0.91 synthesis or the v0.92 preregistration research."
+  },
+  "projection": {
+    "rule": "After archive hash lock and re-verification, parse the TSPLIB XML graph and retain vertices with relative XML identifiers 0 through 8 inclusive. Retain the exact directed edge cost between every ordered pair of those nine vertices. Ignore all remaining vertices.",
+    "projected_city_count": 9,
+    "start_vertex": 0,
+    "reason": "Nine cities keep an independent full-tour enumeration certificate feasible while still exercising a complete Held-Karp state space."
+  },
+  "two_stage_access_protocol": {
+    "stage_1": "Download and hash the three archive byte streams only. Do not unzip, parse XML, inspect edge costs, construct TSP states, or compute reductions.",
+    "stage_2": "May run only after the exact stage-1 manifest is committed. Re-download and verify final URL, byte count and SHA-256 before unzipping/parsing."
+  },
+  "native_baseline": {
+    "algorithm": "Held-Karp subset dynamic programming with state (visited_mask,last_vertex), start fixed to vertex 0, and exact return-to-start terminal action.",
+    "independent_certificate": "Enumerate all 8! tours over vertices 1..8 and require the minimum tour cost to equal the Held-Karp optimum.",
+    "cost_requirement": "All selected projected edge costs must be finite, nonnegative and integral after parsing the official XML costs."
+  },
+  "candidate": {
+    "algorithm": "The exact same Held-Karp state graph with only the frozen v0.91 synthesized state relation used for local action elimination.",
+    "forbidden": [
+      "TSP-specific dominance rules",
+      "triangle-inequality pruning",
+      "branch-and-bound lower bounds",
+      "nearest-neighbor ordering",
+      "Concorde-derived information",
+      "changing the nine-city projection after raw access",
+      "retraining or reselecting the v0.91 grammar rule"
+    ]
+  },
+  "record": [
+    "archive byte lock and re-verification",
+    "projected nine-city matrix digest",
+    "brute-force optimum",
+    "raw Held-Karp optimum",
+    "candidate optimum",
+    "raw action expansions",
+    "candidate action expansions",
+    "actions pruned by v0.91 relation",
+    "relation certificate count",
+    "objective mismatches"
+  ],
+  "pass_gate": {
+    "all_three_archives_hash_locked_and_reverified": true,
+    "all_three_bruteforce_optima_equal_raw_held_karp": true,
+    "all_three_candidate_optima_equal_raw_held_karp": true,
+    "all_relation_certificate_counts_equal_actions_pruned": true,
+    "instances_with_positive_action_expansion_reduction_min": 2,
+    "aggregate_action_expansion_reduction_fraction_min": 0.05
+  },
+  "kill_rule": "If any exact objective certificate disagrees, or fewer than two projected TSPLIB instances have positive expansion reduction, or aggregate reduction is below 5%, preserve v0.92 as rejected. Do not retrain v0.91, change the selected archives, change the nine-city projection, or add TSP-specific pruning to repair v0.92.",
+  "interpretation_if_pass": "Strong external transfer evidence: a rule synthesized without TSP data provides meaningful exact pruning on top of a native Held-Karp representation and independently certified tour optima. It remains a systems/discovery result, not a new simulation theorem or TSP state of the art.",
+  "interpretation_if_fail": "The v0.91 synthesized simulation relation does not transfer meaningfully to a canonical external TSP dynamic program. Preserve the boundary and move toward richer generic reduction synthesis rather than fitting TSP."
+}
