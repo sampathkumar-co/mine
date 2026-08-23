@@ -1,0 +1,24 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 4,
+  "task": "eigenvalues_complex",
+  "revision": 1,
+  "candidate_count": 28,
+  "mapping_rule": "candidate implementations are frozen interpretations of the pre-data source-analysis operator proposals",
+  "v4_full_operator_sequences": [
+    ["mixed_precision_with_local_refinement", "sort_partition_reduction", "risk_aware_staging"],
+    ["mixed_precision_with_local_refinement", "closed_form_reduction", "risk_aware_staging"],
+    ["mixed_precision_with_local_refinement", "vectorized_batch_kernel", "risk_aware_staging"],
+    ["mixed_precision_with_local_refinement", "risk_aware_staging", "early_certificate_exit"],
+    ["mixed_precision_with_local_refinement", "symmetric_decomposition", "risk_aware_staging"],
+    ["zero_copy_representation", "mixed_precision_with_local_refinement", "risk_aware_staging"]
+  ],
+  "no_transfer_top_five_identical_to_v4_full": true,
+  "transfer_changes_rank_six_only": true,
+  "closed_form_interpretation": "use np.linalg.eigvals when eigenvectors are not part of the required output",
+  "mixed_precision_interpretation": "try float32 eigenvalues only under conservative spectral-risk checks; otherwise fall back to float64 eigvals",
+  "risk_checks": ["near-zero eigenvalue relative to matrix scale", "eigenvalue clustering", "trace invariant", "trace(A^2) invariant"],
+  "official_training_opened": false,
+  "official_test_opened": false,
+  "public_solver_or_report_access": false
+}

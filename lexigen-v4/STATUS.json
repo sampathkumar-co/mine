@@ -1,0 +1,12 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "phase": "engine_validation",
+  "engine_frozen_before_holdout_inventory": true,
+  "holdout_inventory_accessed": false,
+  "holdout_names_known": false,
+  "task_contents_opened": false,
+  "v3_campaigns_modified": false,
+  "covering_design_branches_modified": false,
+  "language_genesis_branch_modified": false,
+  "local_compute_used": false
+}
