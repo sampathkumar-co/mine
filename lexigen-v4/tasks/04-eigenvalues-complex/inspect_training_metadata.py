@@ -47,9 +47,7 @@ def _direct_matrix(value: object) -> list[list[float]] | None:
         matrix = [[float(x) for x in row] for row in value]
     except (TypeError, ValueError):
         return None
-    if len(matrix) != width:
-        return None
-    return matrix
+    return matrix if len(matrix) == width else None
 
 
 def _shape_data_matrix(value: object) -> list[list[float]] | None:
@@ -69,6 +67,20 @@ def _shape_data_matrix(value: object) -> list[list[float]] | None:
     return [flat[i * n : (i + 1) * n] for i in range(n)]
 
 
+def _schema(value: object, depth: int = 0) -> object:
+    if depth >= 4:
+        return type(value).__name__
+    if isinstance(value, dict):
+        return {str(k): _schema(v, depth + 1) for k, v in value.items()}
+    if isinstance(value, list):
+        if not value:
+            return {"type": "list", "len": 0}
+        return {"type": "list", "len": len(value), "item0": _schema(value[0], depth + 1)}
+    if isinstance(value, str):
+        return {"type": "str", "len": len(value), "prefix": value[:32]}
+    return type(value).__name__
+
+
 def numeric_matrix(problem: object) -> list[list[float]]:
     found: list[list[list[float]]] = []
 
@@ -81,12 +93,20 @@ def numeric_matrix(problem: object) -> list[list[float]]:
         if shaped is not None:
             found.append(shaped)
             return
+        if isinstance(value, str):
+            text = value.strip()
+            if text.startswith("[") or text.startswith("{"):
+                try:
+                    walk(json.loads(text))
+                except json.JSONDecodeError:
+                    pass
+            return
         if isinstance(value, dict):
             for child in value.values():
                 walk(child)
         elif isinstance(value, list):
             for child in value:
-                if isinstance(child, (dict, list)):
+                if isinstance(child, (dict, list, str)):
                     walk(child)
 
     walk(problem)
@@ -100,8 +120,8 @@ def numeric_matrix(problem: object) -> list[list[float]]:
     if len(unique) == 1:
         return unique[0]
     raise RuntimeError(
-        f"unable to identify exactly one inline square numeric matrix from problem type "
-        f"{type(problem).__name__}; found={len(unique)}"
+        "unable to identify exactly one inline square numeric matrix; "
+        f"found={len(unique)} schema={json.dumps(_schema(problem), sort_keys=True)}"
     )
 
 
