@@ -35,17 +35,74 @@ def git_blob(data: bytes) -> str:
     return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
 
 
+def _direct_matrix(value: object) -> list[list[float]] | None:
+    if not isinstance(value, list) or not value:
+        return None
+    if not all(isinstance(row, list) and row for row in value):
+        return None
+    width = len(value[0])
+    if width == 0 or any(len(row) != width for row in value):
+        return None
+    try:
+        matrix = [[float(x) for x in row] for row in value]
+    except (TypeError, ValueError):
+        return None
+    if len(matrix) != width:
+        return None
+    return matrix
+
+
+def _shape_data_matrix(value: object) -> list[list[float]] | None:
+    if not isinstance(value, dict):
+        return None
+    shape = value.get("shape")
+    data = value.get("data")
+    if not (isinstance(shape, list) and len(shape) == 2 and all(isinstance(x, int) for x in shape)):
+        return None
+    n, m = shape
+    if n <= 0 or n != m or not isinstance(data, list) or len(data) != n * m:
+        return None
+    try:
+        flat = [float(x) for x in data]
+    except (TypeError, ValueError):
+        return None
+    return [flat[i * n : (i + 1) * n] for i in range(n)]
+
+
 def numeric_matrix(problem: object) -> list[list[float]]:
-    if isinstance(problem, list) and problem and all(isinstance(row, list) for row in problem):
-        return [[float(x) for x in row] for row in problem]
-    if isinstance(problem, dict):
-        candidates = []
-        for value in problem.values():
-            if isinstance(value, list) and value and all(isinstance(row, list) for row in value):
-                candidates.append(value)
-        if len(candidates) == 1:
-            return [[float(x) for x in row] for row in candidates[0]]
-    raise RuntimeError(f"unable to identify one inline numeric matrix from problem type {type(problem).__name__}")
+    found: list[list[list[float]]] = []
+
+    def walk(value: object) -> None:
+        direct = _direct_matrix(value)
+        if direct is not None:
+            found.append(direct)
+            return
+        shaped = _shape_data_matrix(value)
+        if shaped is not None:
+            found.append(shaped)
+            return
+        if isinstance(value, dict):
+            for child in value.values():
+                walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                if isinstance(child, (dict, list)):
+                    walk(child)
+
+    walk(problem)
+    unique: list[list[list[float]]] = []
+    signatures: set[tuple[int, tuple[float, ...]]] = set()
+    for matrix in found:
+        sig = (len(matrix), tuple(x for row in matrix for x in row))
+        if sig not in signatures:
+            signatures.add(sig)
+            unique.append(matrix)
+    if len(unique) == 1:
+        return unique[0]
+    raise RuntimeError(
+        f"unable to identify exactly one inline square numeric matrix from problem type "
+        f"{type(problem).__name__}; found={len(unique)}"
+    )
 
 
 def main() -> None:
