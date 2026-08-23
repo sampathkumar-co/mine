@@ -1,0 +1,77 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 2,
+  "task": "min_dominating_set",
+  "stage": "official_training_revision1b",
+  "status": "failed_training_gate",
+  "workflow_run_id": 32639503673,
+  "aggregate_job_id": 97194361964,
+  "artifact_id": 9493223522,
+  "artifact_digest": "sha256:c35c78301cbf5da340656fe385d71bf278bcd5a84b45b01e28a532b2763fbfa5",
+  "all_28_candidates_valid_100_of_100": true,
+  "selected_by_arm": {
+    "v4_full": {
+      "candidate": "v4_bit_sparse_early",
+      "valid": 100,
+      "harmonic_speedup": 1.0126666752785793,
+      "median_speedup": 0.9966315891876174,
+      "minimum_speedup": 0.5743687535107089,
+      "maximum_speedup": 2.8917831419783266,
+      "passes_training_gate": false
+    },
+    "v4_no_transfer": {
+      "candidate": "no_transfer_bit_sparse_early",
+      "valid": 100,
+      "harmonic_speedup": 1.0215434789908306,
+      "median_speedup": 0.9945294070231578,
+      "minimum_speedup": 0.7150223021472311,
+      "maximum_speedup": 2.717688543776185,
+      "passes_training_gate": false
+    },
+    "random_search": {
+      "candidate": "random_zero_sparse_closed",
+      "valid": 100,
+      "harmonic_speedup": 0.9489359301257787,
+      "median_speedup": 0.9603574027903433,
+      "minimum_speedup": 0.5640462739721821,
+      "maximum_speedup": 1.5476276556708988,
+      "passes_training_gate": false
+    },
+    "template_synthesis": {
+      "candidate": "template_bit_parallel",
+      "valid": 100,
+      "harmonic_speedup": 0.9718943148223814,
+      "median_speedup": 0.9822402957971504,
+      "minimum_speedup": 0.5890945826252306,
+      "maximum_speedup": 1.568328416919138,
+      "passes_training_gate": false
+    },
+    "v3_compatible": {
+      "candidate": "v3_dtype_specialization",
+      "valid": 100,
+      "harmonic_speedup": 0.9849267115053605,
+      "median_speedup": 0.9868116429366229,
+      "minimum_speedup": 0.6432359261144903,
+      "maximum_speedup": 1.6192645728881156,
+      "passes_training_gate": false
+    }
+  },
+  "architecture_comparison": {
+    "v4_minus_v3_harmonic": 0.027739963773218856,
+    "v4_minus_no_transfer_harmonic": -0.008876803712251302,
+    "v4_beats_v3_as_task_win": false,
+    "transfer_advantage_observed": false
+  },
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "revision_consumed": true,
+  "blind_opened": false,
+  "test_manifest_downloaded": false,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "scientific_interpretation": "All frozen candidate families are approximately reference-speed. Full v4 is slightly faster than v3-compatible, random-search and template-synthesis on harmonic speed, but fails the absolute training gate and is slower than its no-transfer ablation. No clean v4 task win is awarded."
+}

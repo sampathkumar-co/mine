@@ -1,0 +1,43 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "lock_status": "selection_sealed_before_task_source_access",
+  "selection_run_id": 30373619382,
+  "selection_artifact": {
+    "id": 8693959259,
+    "name": "lexigen-v4-holdout-selection-layout-v2",
+    "digest": "sha256:1404960c27e7befe1a5e62878cea63208be8659bc8c897f2df8e600f630910e9"
+  },
+  "selection_runner_commit": "07e5e211803d71e8324361396b55a8ba3c306f99",
+  "selection_result": {
+    "path": "lexigen-v4/SELECTION_RESULT.json",
+    "git_blob_sha1": "fb16af4331882292c6bc8f76e4531f5bd340d33e",
+    "sha256": "41ebced702b26dac11fab625374ae0ec4a4b281c84c540c3b1c4942b993e5870"
+  },
+  "inventory_sha256": "6c1d81a4c068251bc2f437e3e9b19a8b37bdaea17b98c09317f2fe88d59baf99",
+  "selected_tasks": [
+    "communicability",
+    "min_dominating_set",
+    "max_common_subgraph",
+    "eigenvalues_complex",
+    "tensor_completion_3d",
+    "unit_simplex_projection",
+    "ode_fitzhughnagumo",
+    "dst_type_II_scipy_fftpack"
+  ],
+  "selected_families": [
+    "miscellaneous",
+    "miscellaneous",
+    "graph_discrete",
+    "linear_algebra",
+    "linear_algebra",
+    "numerical_optimization",
+    "scientific_computing",
+    "signal_processing"
+  ],
+  "task_source_contents_opened_before_lock": false,
+  "data_manifests_opened_before_lock": false,
+  "data_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "task_order_mutable_after_lock": false
+}
