@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "stage": "synthetic_r1_lock",
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "e3b19ce4e44f6717a3797ef822b9db95691c0a12",
+    "candidates.py": "a5d674cc4a9100acd59441eecbd32aa601a3e674",
+    "CANDIDATE_PROVENANCE.json": "c590e4c5da6032da960bea73282ff418a741fd05",
+    "requirements.txt": "9595acca33b87e26cbffdb9a3943a5670f89713b",
+    "synthetic_validate.py": "dc8694d08a737b7beff29613a69b22a0fa9e1d9f",
+    "workflow": "1b6d4dc675b95731fbc789bc00ef900fae8702cc"
+  },
+  "candidate_count": 30,
+  "synthetic_cases": 6,
+  "expected_checks": 180,
+  "candidate_eligibility_rule": "candidate must pass all six source-derived verifier-equivalent cases; failures are preserved and candidates are not repaired after results",
+  "task_progression_rule": "Task 1 may proceed to official training only if v5_full has at least one synthetic-eligible candidate",
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_repair_after_synthetic_permitted": false,
+  "threshold_change_after_synthetic_permitted": false
+}
