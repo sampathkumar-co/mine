@@ -1,0 +1,30 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 4,
+  "task": "eigenvalues_complex",
+  "stage": "metadata_revision1",
+  "status": "passed_metadata_gate",
+  "successful_workflow_run_id": 32642862905,
+  "artifact_id": 9494084280,
+  "artifact_digest": "sha256:051a4c78ed3dba6c85c95fb4fe9c393edd11b63dd1d33fc61d3f1b45bcff4a52",
+  "prior_metadata_attempts": [
+    {"run_id": 32642346298, "status": "infrastructure_failure", "reason": "inline-matrix parser did not handle ndarray_ref serialization"},
+    {"run_id": 32642652153, "status": "infrastructure_failure", "reason": "recursive parser still did not resolve ndarray_ref payload"},
+    {"run_id": 32642775222, "status": "diagnostic_only", "reason": "identified ndarray_ref/npy_path schema without candidate or reference execution"}
+  ],
+  "train_manifest_name": "eigenvalues_complex_T100ms_n474_size100_train.jsonl",
+  "train_manifest_tree_oid": "9e1372505b483e1ecdd24179d5577c710dfec4dd",
+  "train_manifest_sha256": "4d1eb81b05e772d1238cd693dcb5c2463cac3521b3a4a79f5d9b3e2139c09270",
+  "test_manifest_name": "eigenvalues_complex_T100ms_n474_size100_test.jsonl",
+  "test_manifest_tree_oid": "2587b20b27c657ac64a952bb991c0e07db462858",
+  "training_records": 100,
+  "matrix_size_values": [474],
+  "exact_symmetric_records": 0,
+  "finite_entry_fraction": 1.0,
+  "test_manifest_downloaded": false,
+  "test_payloads_downloaded": 0,
+  "candidate_execution_count": 0,
+  "reference_execution_count": 0,
+  "eigensolver_execution_count": 0,
+  "training_revision_consumed": false
+}

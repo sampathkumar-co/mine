@@ -1,0 +1,59 @@
+name: LEXIGEN v4 Task 4 Eigenvalues Complex Metadata R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/04-eigenvalues-complex/TRIGGER_METADATA_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify immutable engine and selection locks
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+      - name: Verify frozen Task 4 pretraining package
+        working-directory: lexigen-v4/tasks/04-eigenvalues-complex
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              "TASK_START.json": "826fac27294bef020af36c5b48f793172753b455",
+              "SOURCE_ANALYSIS_RESULT.json": "0b2bbc40f0443282ad74f8ef7fa3570c0f45f0d4",
+              "candidates.py": "efea5bda4bfbfa620fd65f551792d48bd619979e",
+              "requirements.txt": "2c04913adbf4e70b866f8fb7bb603abef158bbda",
+              "SYNTHETIC_R1_RESULT.json": "648f17b1d131f08af801ea7a158d776bc6ca9245",
+              "inspect_training_metadata.py": "cca88e5611ca9e3ba6bfcef531d9e1399201f0dc",
+          }
+          for name, wanted in expected.items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
+          print("LEXIGEN_V4_TASK4_METADATA_R1_PACKAGE_FROZEN")
+          PY
+      - name: Install frozen metadata dependency
+        working-directory: lexigen-v4/tasks/04-eigenvalues-complex
+        run: pip install -r requirements.txt
+      - name: Inspect official training manifest and training payload structure; test identity only
+        working-directory: lexigen-v4/tasks/04-eigenvalues-complex
+        run: python -u inspect_training_metadata.py
+      - name: Upload immutable metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task4-eigenvalues-complex-metadata-r1
+          path: lexigen-v4/tasks/04-eigenvalues-complex/metadata-evidence/
+          if-no-files-found: error
+          retention-days: 90

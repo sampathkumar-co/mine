@@ -1,0 +1,35 @@
+{
+  "task": "communicability",
+  "revision": 1,
+  "status": "passed_synthetic_infrastructure_gate",
+  "workflow_run_id": 30374792446,
+  "artifact_id": 8694447243,
+  "artifact_name": "lexigen-v4-task1-communicability-synthetic-r1",
+  "artifact_digest": "sha256:9d3eebaed7b43947d25fdf8f49f9bb17ab35e51d968e61397d758a056a7efe83",
+  "public_pull_request": 93,
+  "public_head_sha": "d640f5e3e8f873a2b1e73da2cf0dc214697d98b1",
+  "candidate_source_git_blob_sha1": "805b5d6631899f802ba89dd252ab88177ca360ab",
+  "candidate_source_sha256": "21728a0a3ebdb13aa6f68e58e5ab8c7810f99ae2dcafb6eb4b0492e82cb78c96",
+  "requirements_git_blob_sha1": "2a015e538bd65ce7964090d3a55c00cc1633823e",
+  "requirements_sha256": "be56ae436faaa2bc6bf0b6c8e7406eaf15bc3f1f5461eda758d96c632ec79c72",
+  "candidate_count": 28,
+  "synthetic_case_count": 8,
+  "exact_candidates_required": 26,
+  "exact_candidates_passing": 26,
+  "candidate_exceptions": 0,
+  "reduced_precision_risk_candidates": {
+    "random_float32_sparse": "6/8 valid; maximum absolute error approximately 4.50e-4",
+    "v3_dtype_specialization": "6/8 valid; maximum absolute error approximately 4.50e-4"
+  },
+  "diagnostic_observations": {
+    "v4_best_erdos64_seconds": 0.001233,
+    "v4_no_transfer_best_erdos64_seconds": 0.001220,
+    "random_vectorized_erdos64_seconds": 0.001037,
+    "template_vectorized_erdos64_seconds": 0.001054,
+    "v3_vectorized_erdos64_seconds": 0.001069,
+    "interpretation": "Component and bitset staging is exact, but on a connected synthetic graph plain dense vectorisation is slightly faster. v4 and no-transfer remain mechanism-identical on this task. Synthetic timing is diagnostic only."
+  },
+  "official_training_data_accessed": false,
+  "official_test_data_accessed": false,
+  "training_revision_consumed": false
+}
