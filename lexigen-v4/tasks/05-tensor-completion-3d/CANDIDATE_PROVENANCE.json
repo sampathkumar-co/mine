@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 5,
+  "task": "tensor_completion_3d",
+  "revision": 1,
+  "candidate_count": 28,
+  "source_only_design": true,
+  "official_training_seen": false,
+  "official_test_seen": false,
+  "source_semantic_observation": "The official solve objective is additively separable across X1, X2 and X3, the three variables have no coupling constraints, and only X1 is folded and returned. Therefore solving the X1 nuclear-norm subproblem alone preserves the returned optimization target while avoiding the independent X2/X3 work.",
+  "implementation_rules": [
+    "v4_full maps structure-aware initialization, bounded exact refinement and active-set decomposition to the exact X1 subproblem, observed-index constraints and safe warm starts/fast paths",
+    "v4_no_transfer receives the same permitted source semantics but follows its separately frozen proposal ordering",
+    "random_search includes both one-mode and full-reference-shape implementations according to its frozen operator samples",
+    "template_synthesis includes strong one-mode active/closed-form controls rather than a deliberately weakened baseline",
+    "v3_compatible retains the original three-independent-variable formulation with representation/vectorization-only changes"
+  ],
+  "correctness_boundary": "Candidates must preserve observed entries within 1e-5 and must not exceed 1.01 times the official reference returned-tensor sum of three unfolding nuclear norms on every synthetic case.",
+  "candidate_source_git_blob_sha1": "d979e8da1ef85f2b91b8db90941418c6ced9a006",
+  "requirements_git_blob_sha1": "c2de4ad80fe973e7e89443033f32d0f3174eba1e",
+  "synthetic_validator_git_blob_sha1": "2f57682bfdde5cb4ae907e82ef8b366ee2c4fa44",
+  "human_task_specific_solver_design": false
+}
