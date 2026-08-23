@@ -1,0 +1,63 @@
+{
+  "status": "preregistered_before_v89_implementation_or_evaluation",
+  "version": "v0.89",
+  "date": "2026-08-23",
+  "purpose": "Extract the exact same action-equivalence and componentwise immediate-cost dominance rule used by the Mini-ORIGIN response-cost quotient into a domain-independent Bellman search transformation, then test it without external data on three structurally different exact-search families before any later fresh external transfer gate.",
+  "claim_boundary": {
+    "synthetic_transfer_certificate_only": true,
+    "external_generalization_claim": false,
+    "novel_theorem_claim": false,
+    "world_first_claim": false,
+    "breakthrough_claim": false
+  },
+  "frozen_transformation": {
+    "equivalence": "Actions are comparable only when their canonical outcome signatures are identical: same successor states in canonical order with the same branch weights.",
+    "dominance": "Within one equivalent-outcome class, action A removes action B iff every aligned immediate outcome cost of A is <= B and at least one is strictly smaller.",
+    "tie_break": "If aligned cost vectors are exactly equal, retain the action with the lower deterministic tie rank, then lexical action id.",
+    "continuation_assumption": "Continuation value depends only on successor state; path aggregation is monotone in nonnegative immediate costs.",
+    "forbidden": [
+      "domain-specific dominance predicates inside the quotient engine",
+      "family-specific threshold changes after evaluation",
+      "using external benchmark data in v0.89",
+      "changing the quotient after seeing one family's evaluation results"
+    ]
+  },
+  "families": [
+    {
+      "name": "adaptive_diagnosis",
+      "description": "Finite hypotheses, adaptive multi-outcome tests, hypothesis masses and outcome-dependent nonnegative test costs; terminal when a single hypothesis remains. State includes remaining tests."
+    },
+    {
+      "name": "weighted_set_cover",
+      "description": "Deterministic exact weighted set cover; state is uncovered universe and selecting a set transitions to the remaining uncovered elements."
+    },
+    {
+      "name": "acyclic_shortest_path",
+      "description": "Deterministic weighted shortest path on a generated layered DAG; state is the current node and an edge transitions to its head."
+    }
+  ],
+  "evaluation": {
+    "seed_start": 89001,
+    "seeds_per_family": 48,
+    "instance_count": 144,
+    "baseline": "exact memoized Bellman recursion over all available actions",
+    "candidate": "the identical recursion after the frozen generic quotient is applied independently at every state",
+    "record": [
+      "raw exact objective",
+      "quotient exact objective",
+      "raw action expansions",
+      "quotient action expansions",
+      "actions removed by the quotient",
+      "equivalence classes"
+    ]
+  },
+  "pass_gate": {
+    "all_instances_solved_by_both": true,
+    "objective_mismatches": 0,
+    "each_family_instances_with_nonzero_quotient_reduction_min": 1,
+    "each_family_aggregate_action_expansion_reduction_strictly_positive": true,
+    "negative_immediate_costs_allowed": false
+  },
+  "interpretation_if_pass": "Evidence that the frozen quotient is implemented as a domain-independent exact search transformation and transfers mechanically across three synthetic families. It is not evidence that the rule itself is novel and is not yet a fresh external Stage-5 success.",
+  "interpretation_if_fail": "The generic-transfer abstraction is rejected as implemented. Preserve the failure; do not retune this v0.89 gate after observing family results."
+}
