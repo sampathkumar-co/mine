@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import math
 import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+
+import numpy as np
 
 REVISION = "bb02811fa47ca1c833baaa344949bcd8fb307ac8"
 TASK = "eigenvalues_complex"
@@ -35,94 +38,19 @@ def git_blob(data: bytes) -> str:
     return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
 
 
-def _direct_matrix(value: object) -> list[list[float]] | None:
-    if not isinstance(value, list) or not value:
-        return None
-    if not all(isinstance(row, list) and row for row in value):
-        return None
-    width = len(value[0])
-    if width == 0 or any(len(row) != width for row in value):
-        return None
-    try:
-        matrix = [[float(x) for x in row] for row in value]
-    except (TypeError, ValueError):
-        return None
-    return matrix if len(matrix) == width else None
-
-
-def _shape_data_matrix(value: object) -> list[list[float]] | None:
-    if not isinstance(value, dict):
-        return None
-    shape = value.get("shape")
-    data = value.get("data")
-    if not (isinstance(shape, list) and len(shape) == 2 and all(isinstance(x, int) for x in shape)):
-        return None
-    n, m = shape
-    if n <= 0 or n != m or not isinstance(data, list) or len(data) != n * m:
-        return None
-    try:
-        flat = [float(x) for x in data]
-    except (TypeError, ValueError):
-        return None
-    return [flat[i * n : (i + 1) * n] for i in range(n)]
-
-
-def _schema(value: object, depth: int = 0) -> object:
-    if depth >= 4:
-        return type(value).__name__
-    if isinstance(value, dict):
-        return {str(k): _schema(v, depth + 1) for k, v in value.items()}
-    if isinstance(value, list):
-        if not value:
-            return {"type": "list", "len": 0}
-        return {"type": "list", "len": len(value), "item0": _schema(value[0], depth + 1)}
-    if isinstance(value, str):
-        return {"type": "str", "len": len(value), "prefix": value[:32]}
-    return type(value).__name__
-
-
-def numeric_matrix(problem: object) -> list[list[float]]:
-    found: list[list[list[float]]] = []
-
-    def walk(value: object) -> None:
-        direct = _direct_matrix(value)
-        if direct is not None:
-            found.append(direct)
-            return
-        shaped = _shape_data_matrix(value)
-        if shaped is not None:
-            found.append(shaped)
-            return
-        if isinstance(value, str):
-            text = value.strip()
-            if text.startswith("[") or text.startswith("{"):
-                try:
-                    walk(json.loads(text))
-                except json.JSONDecodeError:
-                    pass
-            return
-        if isinstance(value, dict):
-            for child in value.values():
-                walk(child)
-        elif isinstance(value, list):
-            for child in value:
-                if isinstance(child, (dict, list, str)):
-                    walk(child)
-
-    walk(problem)
-    unique: list[list[list[float]]] = []
-    signatures: set[tuple[int, tuple[float, ...]]] = set()
-    for matrix in found:
-        sig = (len(matrix), tuple(x for row in matrix for x in row))
-        if sig not in signatures:
-            signatures.add(sig)
-            unique.append(matrix)
-    if len(unique) == 1:
-        return unique[0]
-    raise RuntimeError(
-        "unable to identify exactly one inline square numeric matrix; "
-        f"found={len(unique)} schema={json.dumps(_schema(problem), sort_keys=True)}"
-    )
+def load_training_matrix(problem: object) -> list[list[float]]:
+    if not isinstance(problem, dict) or problem.get("__type__") != "ndarray_ref":
+        raise RuntimeError(f"unexpected training problem serialization: {type(problem).__name__}")
+    rel = problem.get("npy_path")
+    if not isinstance(rel, str) or not rel.startswith("_npy_data/") or ".." in rel:
+        raise RuntimeError("invalid training ndarray_ref path")
+    raw = fetch(f"{BASE}/{rel}?download=true")
+    arr = np.load(io.BytesIO(raw), allow_pickle=False)
+    if arr.ndim != 2 or arr.shape[0] == 0 or arr.shape[0] != arr.shape[1]:
+        raise RuntimeError(f"training matrix is not nonempty square: shape={arr.shape}")
+    if not np.issubdtype(arr.dtype, np.number):
+        raise RuntimeError(f"training matrix dtype is nonnumeric: {arr.dtype}")
+    return np.asarray(arr, dtype=np.float64).tolist()
 
 
 def main() -> None:
@@ -147,15 +75,10 @@ def main() -> None:
     exact_symmetric = 0
     finite_entries = 0
     total_entries = 0
-    problem_type_counts: dict[str, int] = {}
 
     for row in rows:
-        problem = row.get("problem")
-        problem_type_counts[type(problem).__name__] = problem_type_counts.get(type(problem).__name__, 0) + 1
-        matrix = numeric_matrix(problem)
+        matrix = load_training_matrix(row.get("problem"))
         n = len(matrix)
-        if n == 0 or any(len(r) != n for r in matrix):
-            raise RuntimeError("training matrix is not nonempty and square")
         sizes.append(n)
         flat = [float(x) for r in matrix for x in r]
         finite_entries += sum(math.isfinite(x) for x in flat)
@@ -176,7 +99,7 @@ def main() -> None:
         "test_manifest_name": test_name,
         "test_manifest_tree_oid": test_entry.get("oid"),
         "training_records": len(rows),
-        "problem_type_counts": problem_type_counts,
+        "training_npy_payloads_downloaded": len(rows),
         "matrix_size_min": min(sizes),
         "matrix_size_max": max(sizes),
         "matrix_size_values": sorted(set(sizes)),
