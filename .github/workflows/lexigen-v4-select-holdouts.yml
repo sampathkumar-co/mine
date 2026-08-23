@@ -1,0 +1,36 @@
+name: LEXIGEN v4 Locked Holdout Selection
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/TRIGGER_SELECT_HOLDOUTS"
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile locked engine and selectors
+        working-directory: lexigen-v4
+        run: python -m compileall -q engine.py engine_v2.py engine_v3.py engine_v4.py selector.py select_holdouts.py verify_engine_lock.py
+      - name: Verify immutable engine and selection lock
+        working-directory: lexigen-v4
+        run: python -u verify_engine_lock.py
+      - name: Select holdouts from name and directory metadata only
+        working-directory: lexigen-v4
+        run: python -u select_holdouts.py
+      - name: Upload immutable selection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-holdout-selection
+          path: lexigen-v4/selection-evidence/
+          if-no-files-found: error
+          retention-days: 90

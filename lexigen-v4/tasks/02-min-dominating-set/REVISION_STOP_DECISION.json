@@ -1,0 +1,19 @@
+{
+  "task": "min_dominating_set",
+  "decision": "stop_task_without_revision2",
+  "reason": "The frozen failure taxonomy promotes harmonic/speed operators already represented in the complete 28-candidate revision-1b family. The best v4 candidate already combines bit-parallel representation, sparse-frontier restriction and early-certificate logic. A materially different revision would require a new task-specific exact dominating-set solver or new operator semantics after training feedback, which would be a conceptual rescue outside the frozen discovery architecture.",
+  "failure_classes": ["harmonic_speed_failure", "speed_floor_failure"],
+  "frozen_promoted_operators": [
+    "vectorized_batch_kernel",
+    "sort_partition_reduction",
+    "sparse_frontier_search",
+    "zero_copy_representation",
+    "closed_form_reduction",
+    "structure_aware_initialization"
+  ],
+  "remaining_revision_budget_not_spent": 2,
+  "blind_opened": false,
+  "threshold_changed": false,
+  "task_replaced": false,
+  "human_rescue_declined": true
+}
