@@ -1,0 +1,13 @@
+{
+  "task": "eigenvalues_complex",
+  "stage": "training_aggregation",
+  "training_workflow_run_id": 32643221594,
+  "training_shards_completed": 10,
+  "training_shards_succeeded": 10,
+  "candidate_or_reference_reruns_required": false,
+  "aggregate_job_id": 97203568375,
+  "failure_class": "infrastructure_only_missing_dependency",
+  "failure": "aggregate_train.py imported candidates.py which imports numpy, but the aggregate job environment in the executed workflow did not install the already-frozen requirements",
+  "scientific_measurements_complete": true,
+  "recovery_rule": "download original ten immutable shard artifacts, install unchanged pinned requirements, execute unchanged aggregate_train.py only; never execute train_shard.py, candidates, or reference"
+}
