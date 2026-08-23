@@ -9,6 +9,9 @@ on:
       - 'mini-origin/src/mini_origin/external_survival_hash_lock_v90.py'
       - 'mini-origin/tests/test_external_survival_hash_lock_v90.py'
       - '.github/workflows/mini-origin-v90-external-survival-lock.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/mini-origin-v90-external-survival-lock.yml'
   workflow_dispatch:
 
 permissions:
