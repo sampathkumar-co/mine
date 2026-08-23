@@ -1,0 +1,108 @@
+{
+  "status": "preregistered_before_raw_instance_access",
+  "version": "v0.90",
+  "date": "2026-08-23",
+  "purpose": "Test whether the frozen v0.89 exact action quotient removes naturally occurring dominated duplicate actions in established external benchmark data, without changing objective semantics or adding family-specific dominance predicates.",
+  "claim_boundary": {
+    "external_survival_gate": true,
+    "blind_structural_discovery": false,
+    "reason_not_blind": "Public catalogue metadata was inspected before preregistration. In particular, SuiteSparse metadata states that original DIMACS9 road data contains duplicate arc entries. Raw selected instance bytes have not been downloaded or parsed before this preregistration.",
+    "novel_theorem_claim": false,
+    "state_of_the_art_claim": false,
+    "world_first_claim": false,
+    "breakthrough_claim": false
+  },
+  "frozen_transformation": {
+    "source": "v0.89 generic Bellman quotient",
+    "equivalence": "Actions are comparable only when they have the same canonical successor semantics.",
+    "dominance": "Within an equivalent-successor class retain an action whose immediate cost is minimum; deterministic lower source index breaks equal-cost ties.",
+    "set_cover_adapter": "A column action is represented by its complete external coverage row set. Columns with identical coverage have identical successor semantics for every uncovered-row state; retain minimum cost then minimum source index.",
+    "shortest_path_adapter": "An outgoing arc action is represented by its head node. Parallel arcs from the same tail to the same head have identical successor semantics; retain minimum nonnegative arc length then minimum source order.",
+    "forbidden": [
+      "subset/superset set-cover dominance",
+      "row reductions",
+      "shortest-path contraction",
+      "landmarks or A* heuristics",
+      "family-specific post-access thresholds",
+      "changing selected instance names after raw access",
+      "changing the quotient after observing external data"
+    ]
+  },
+  "external_sources": {
+    "or_library": {
+      "catalogue": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/scpinfo.html",
+      "selected_instances": [
+        {
+          "name": "rail507",
+          "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail507.txt"
+        },
+        {
+          "name": "rail516",
+          "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail516.txt"
+        },
+        {
+          "name": "rail582",
+          "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail582.txt"
+        }
+      ],
+      "selection_rule": "All three real-world railway instances in the catalogue with fewer than 100000 columns; selection made from catalogue metadata only before raw access."
+    },
+    "dimacs9": {
+      "catalogue": "https://www.diag.uniroma1.it/~challenge9/download.shtml",
+      "selected_instances": [
+        {
+          "name": "NY-distance",
+          "url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.NY.gr.gz"
+        },
+        {
+          "name": "BAY-distance",
+          "url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.BAY.gr.gz"
+        },
+        {
+          "name": "COL-distance",
+          "url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.COL.gr.gz"
+        }
+      ],
+      "selection_rule": "The three smallest published DIMACS9 core USA road distance graphs by node count; selection made from catalogue metadata only before raw access."
+    }
+  },
+  "two_stage_access_protocol": {
+    "stage_1_hash_lock": "Download selected raw bytes only, record final URL, byte count and SHA-256. Do not decompress, tokenize, parse records, inspect edge/column content, or compute quotient statistics.",
+    "stage_2_evaluation": "May begin only after the stage-1 manifest values are committed back to the repository. Every downloaded byte stream must match the committed byte count and SHA-256 before parsing."
+  },
+  "evaluation": {
+    "set_cover": {
+      "record": [
+        "raw_columns",
+        "distinct_coverage_signatures",
+        "columns_removed_by_frozen_quotient",
+        "equal_cost_tie_removals",
+        "strict_cost_dominance_removals",
+        "local_certificate_failures"
+      ],
+      "exact_certificate": "For every removed column, verify a kept column has exactly identical coverage, cost <= removed cost, and deterministic tie ordering when costs are equal."
+    },
+    "shortest_path": {
+      "record": [
+        "nodes",
+        "raw_arcs",
+        "quotient_arcs",
+        "arcs_removed_by_frozen_quotient",
+        "parallel_endpoint_classes",
+        "strict_cost_dominance_removals",
+        "equal_cost_tie_removals"
+      ],
+      "distance_certificate": "Run deterministic Dijkstra from three preregistered source indices derived only from the declared node count: source 1, floor(n/2), and n. Compare complete finite-distance-vector SHA-256 digests and reachable counts before versus after quotienting."
+    }
+  },
+  "pass_gate": {
+    "all_six_raw_byte_streams_hash_locked_and_reverified": true,
+    "all_local_dominance_certificates_valid": true,
+    "shortest_path_all_distance_certificates_match": true,
+    "or_library_aggregate_removed_columns_strictly_positive": true,
+    "dimacs9_aggregate_removed_arcs_strictly_positive": true
+  },
+  "kill_rule": "If either external family has zero aggregate reduction under the frozen quotient, preserve v0.90 as a rejection and stop treating simple identical-successor immediate-cost dominance as the primary Mini-ORIGIN breakthrough route. Do not repair v0.90 by adding stronger family-specific reductions.",
+  "interpretation_if_pass": "The v0.89 quotient survives contact with two established external benchmark families and removes real external redundancy while preserving exact semantics. This is still not a novelty or breakthrough claim because the benchmark families were selected with public structural metadata available.",
+  "interpretation_if_fail": "The synthetic v0.89 transfer was structurally narrow. Preserve the failure and move the project toward a stronger generic equivalence/canonicalization mechanism rather than retuning this quotient."
+}
