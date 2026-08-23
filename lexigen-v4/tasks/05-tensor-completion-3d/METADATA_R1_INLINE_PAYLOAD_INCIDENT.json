@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 5,
+  "task": "tensor_completion_3d",
+  "stage": "metadata_revision1_infrastructure_incident",
+  "workflow_run_id": 32645357278,
+  "workflow_job_id": 97208681576,
+  "status": "failed_safely_after_detecting_inline_training_payload",
+  "failure": "record 1 tensor is not an ndarray_ref; strict metadata inspector refused numerical training payload access",
+  "what_happened": "The permitted training JSONL manifest was downloaded and JSON-decoded. Unlike Task 4, Task 5 embeds tensor data in the manifest rather than storing it only in external NumPy sidecars. Therefore numerical training values were technically fetched into the isolated metadata process before the inspector aborted.",
+  "candidate_execution_count": 0,
+  "reference_execution_count": 0,
+  "cvxpy_solve_count": 0,
+  "test_manifest_downloaded": false,
+  "test_payloads_opened": 0,
+  "human_inspection_of_training_values": false,
+  "training_values_used_for_candidate_design_or_adaptation": false,
+  "candidate_family_changed_after_incident": false,
+  "training_revision_consumed": false,
+  "protocol_handling": "Preserve the incident. Keep the already-frozen 28-candidate family unchanged. A corrected metadata pass may extract only structural properties such as JSON nesting shape and scalar type category from the same permitted training manifest. No statistical summaries or value-dependent adaptation are allowed before the frozen training run."
+}

@@ -1,0 +1,50 @@
+{
+  "task": "communicability",
+  "revision": 1,
+  "source_analysis_artifact": 8694127505,
+  "human_task_specific_solver_design": false,
+  "research_agent_contribution": "Mapped each frozen mechanism composition to executable code after permitted source access. No training or test examples, reports, public benchmark solvers, leaderboard values or human task-specific ideas were used.",
+  "shared_semantic_kernel": "Undirected communicability equals exp(A). Candidate kernels reconstruct the adjacency matrix directly and use the same spectral identity as the permitted reference specification; arm differences determine representation, component staging, ordering, precision, vectorisation and certificate controls.",
+  "mappings": {
+    "v4_full": [
+      ["4641aba7c6e2fa04ea92", "v4_bit_sparse_risk", ["bit_parallel_representation", "sparse_frontier_search", "risk_aware_staging"]],
+      ["18b1cc8c0278fe076d52", "v4_sort_bit_sparse", ["sort_partition_reduction", "bit_parallel_representation", "sparse_frontier_search"]],
+      ["7d3a1ae1474420a91a91", "v4_bit_sparse_vector", ["bit_parallel_representation", "sparse_frontier_search", "vectorized_batch_kernel"]],
+      ["08ad0108b1be88f6b8a0", "v4_sort_bit_risk", ["sort_partition_reduction", "bit_parallel_representation", "risk_aware_staging"]],
+      ["8ed63eee67b2e4e93977", "v4_bit_sparse_early", ["bit_parallel_representation", "sparse_frontier_search", "early_certificate_exit"]],
+      ["9c2ab9a4bab2af4bbbf6", "v4_bit_vector_risk", ["bit_parallel_representation", "vectorized_batch_kernel", "risk_aware_staging"]]
+    ],
+    "v4_no_transfer": [
+      ["a0b532543996a4a8acdf", "no_transfer_bit_sparse_risk"],
+      ["d73b52ae9259d2b1f9f0", "no_transfer_sort_bit_sparse"],
+      ["7624390673105948f13c", "no_transfer_bit_sparse_vector"],
+      ["0506fded990ab3944164", "no_transfer_sort_bit_risk"],
+      ["759cb5c5ea51604fc736", "no_transfer_bit_sparse_early"],
+      ["3f7c020af8cbf785e94f", "no_transfer_bit_vector_risk"]
+    ],
+    "random_search": [
+      ["c5411c86333276963140", "random_bit_sparse_risk"],
+      ["18c9f577609af0b9d907", "random_contiguous_vector_risk"],
+      ["0ee99c40ec00fa3f6d13", "random_float32_sparse"],
+      ["14b34d9b69bc1bce89e9", "random_bit_sparse"],
+      ["56c2f3f9700d1fd45790", "random_contiguous_bit"],
+      ["619a655dd6ae15652b3a", "random_contiguous"]
+    ],
+    "template_synthesis": [
+      ["5bdfd885287afafb81d9", "template_bit_parallel"],
+      ["6ac77c7bfe6882cc7787", "template_sparse_frontier"],
+      ["cd958aa786a44cce7107", "template_risk_stage"],
+      ["0bc81f21075b3c94d17d", "template_sort_partition"],
+      ["98b6afa8258b4ad68a57", "template_vectorized_batch"],
+      ["cd9e335f99a9f91056bf", "template_early_certificate"]
+    ],
+    "v3_compatible": [
+      ["5b2b040d7c797697c4a1", "v3_vectorized_batch"],
+      ["eb55efd05b28d9ed4002", "v3_zero_copy_representation"],
+      ["9cfd7084677f528947cd", "v3_dtype_specialization"],
+      ["b93134dd5debf2fd8a24", "v3_contiguous_layout"]
+    ]
+  },
+  "ablation_note": "v4_full and v4_no_transfer produced the same ordered mechanisms on Task 1. Their implementation aliases are intentionally identical, so this task cannot provide positive transfer-memory evidence.",
+  "strong_baseline_note": "The v3-compatible vectorised spectral reconstruction directly removes the reference Python triple loop and is expected to be difficult for v4 to beat. This is retained rather than weakened."
+}

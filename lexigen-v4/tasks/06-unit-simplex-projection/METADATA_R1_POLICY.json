@@ -1,0 +1,12 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 6,
+  "task": "unit_simplex_projection",
+  "stage": "metadata_revision1_policy",
+  "synthetic_gate_required": true,
+  "candidate_family_must_remain_unchanged": true,
+  "permitted_training_access": "training manifest only for record count, vector dimensions, serialization category and manifest hash/object identity",
+  "forbidden_pretraining_analysis": ["value statistics", "candidate timing", "reference timing", "candidate adaptation", "parameter tuning"],
+  "test_access": "tree object identity only; test manifest contents and payload remain unopened",
+  "training_revision_consumed": false
+}

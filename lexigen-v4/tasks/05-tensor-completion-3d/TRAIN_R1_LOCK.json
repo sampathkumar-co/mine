@@ -1,0 +1,45 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 5,
+  "task": "tensor_completion_3d",
+  "revision": 1,
+  "status": "training_package_locked_before_execution",
+  "candidate_count": 28,
+  "training_records": 100,
+  "shards": 10,
+  "candidate_executions_per_record": 28,
+  "reference_executions_per_record": 1,
+  "invalid_output_retries": 0,
+  "training_manifest_name": "tensor_completion_3d_T100ms_n6_size100_train.jsonl",
+  "training_manifest_tree_oid": "8f36df19891d34fbf93454a16adb95d54e87b944",
+  "training_manifest_sha256": "9116ae1beb04139892ea8711f4f4bd7d58b66f555a23a5ba6fac4104e8ab1548",
+  "test_manifest_name": "tensor_completion_3d_T100ms_n6_size100_test.jsonl",
+  "test_manifest_tree_oid": "0bdbf8d4e6dd3897d50143dbf3778ca3e4e02f56",
+  "test_manifest_opened_before_training": false,
+  "test_payloads_opened_before_training": 0,
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "timing_design": {
+    "candidate_order_rotated_by_record": true,
+    "reference_vs_candidates_order_alternates_by_record": true,
+    "single_thread_blas_controls": true,
+    "successful_shards_must_not_be_rerun": true
+  },
+  "metadata_incident_preserved": true,
+  "metadata_incident_run_id": 32645357278,
+  "candidate_family_changed_after_metadata_incident": false,
+  "git_blob_sha1": {
+    "candidates.py": "d979e8da1ef85f2b91b8db90941418c6ced9a006",
+    "requirements.txt": "c2de4ad80fe973e7e89443033f32d0f3174eba1e",
+    "train_shard.py": "46ebaf649d5df4039f8d842d1f7fba4c12ad9a67",
+    "aggregate_train.py": "35b31c57006f9a3f3329672bf1ba09f202a9073e",
+    "METADATA_R1B_RESULT.json": "09a8b450d44f479f83adf6136a696a00d4c42d95",
+    "SYNTHETIC_R1_RESULT.json": "10449e6c06c344d3ea4be09d074f27989fc84cf4",
+    "METADATA_R1_INLINE_PAYLOAD_INCIDENT.json": "2bff7396fc4a57e7e187bfd80ca1edfdb3d09513",
+    "workflow": "dade9ee0c75e29468534fd3cb3ea72a9cce379f9"
+  }
+}

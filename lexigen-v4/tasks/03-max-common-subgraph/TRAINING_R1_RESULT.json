@@ -1,0 +1,70 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 3,
+  "task": "max_common_subgraph",
+  "revision": 1,
+  "status": "passed_training_gate",
+  "workflow_run_id": 32640629057,
+  "aggregate_job_id": 97197118513,
+  "artifact_id": 9493504973,
+  "artifact_digest": "sha256:bd57be5d5272cfa123155fa16d72e60da30826db35b664ead07bb9637b66a466",
+  "selected_by_arm": {
+    "v4_full": {
+      "candidate": "v4_bit_frontier_closed",
+      "valid": 100,
+      "harmonic_speedup": 50.72569814744272,
+      "median_speedup": 53.5388152957611,
+      "minimum_speedup": 29.16641593981252
+    },
+    "v4_no_transfer": {
+      "candidate": "no_transfer_bit_frontier_risk",
+      "valid": 100,
+      "harmonic_speedup": 51.47108406767852,
+      "median_speedup": 55.36789743084486,
+      "minimum_speedup": 28.45708090270989
+    },
+    "random_search": {
+      "candidate": "random_sparse_early",
+      "valid": 100,
+      "harmonic_speedup": 4.8073569506982246,
+      "median_speedup": 4.811907307348119,
+      "minimum_speedup": 2.22772586147695
+    },
+    "template_synthesis": {
+      "candidate": "template_bit_parallel",
+      "valid": 100,
+      "harmonic_speedup": 51.75984056386283,
+      "median_speedup": 54.61629886373424,
+      "minimum_speedup": 28.511778520065956
+    },
+    "v3_compatible": {
+      "candidate": "v3_dtype_specialization",
+      "valid": 100,
+      "harmonic_speedup": 1.0344970162258424,
+      "median_speedup": 1.0302666112041066,
+      "minimum_speedup": 0.8194104583292507
+    }
+  },
+  "architecture_comparison": {
+    "v4_beats_v3_on_training": true,
+    "v4_beats_template_on_training": false,
+    "transfer_advantage_observed": false,
+    "v4_minus_v3_harmonic": 49.69120113121688,
+    "v4_minus_template_harmonic": -1.03414241642011,
+    "v4_minus_no_transfer_harmonic": -0.7453859202357975
+  },
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "test_manifest_name": "max_common_subgraph_T100ms_n4_size100_test.jsonl",
+  "test_manifest_tree_oid": "cee4dc02b968ffeac9fbfcd8d5157521ead9d3dc",
+  "test_manifest_opened": false,
+  "test_payloads_opened": 0,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "training_revision_consumed": true,
+  "human_task_specific_solver_design": false
+}
