@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import math
@@ -7,6 +8,8 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+
+import numpy as np
 
 REVISION = "bb02811fa47ca1c833baaa344949bcd8fb307ac8"
 TASK = "eigenvalues_complex"
@@ -18,7 +21,7 @@ def fetch(url: str) -> bytes:
     last: Exception | None = None
     for attempt in range(8):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "LEXIGEN-v4-task4-training-metadata"})
+            req = urllib.request.Request(url, headers={"User-Agent": "LEXIGEN-v4-task4-training-metadata-r1b"})
             with urllib.request.urlopen(req, timeout=240) as response:
                 return response.read()
         except urllib.error.HTTPError as exc:
@@ -35,17 +38,51 @@ def git_blob(data: bytes) -> str:
     return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
 
 
-def numeric_matrix(problem: object) -> list[list[float]]:
-    if isinstance(problem, list) and problem and all(isinstance(row, list) for row in problem):
-        return [[float(x) for x in row] for row in problem]
+def decode_ndarray_wrapper(value: object) -> np.ndarray | None:
+    if isinstance(value, list):
+        try:
+            arr = np.asarray(value, dtype=np.float64)
+        except Exception:
+            return None
+        return arr if arr.ndim == 2 else None
+    if not isinstance(value, dict):
+        return None
+    kind = value.get("__type__")
+    if kind == "ndarray_b64":
+        dtype = np.dtype(str(value["dtype"]))
+        shape = tuple(int(x) for x in value["shape"])
+        payload = base64.b64decode(str(value["data_b64"]).encode("ascii"), validate=True)
+        expected_bytes = int(np.prod(shape, dtype=np.int64)) * dtype.itemsize
+        if len(payload) != expected_bytes:
+            raise RuntimeError(f"ndarray_b64 byte length mismatch: {len(payload)} != {expected_bytes}")
+        arr = np.frombuffer(payload, dtype=dtype).reshape(shape)
+        return np.asarray(arr, dtype=np.float64)
+    if kind == "ndarray":
+        arr = np.asarray(value.get("data"), dtype=np.float64)
+        shape = tuple(int(x) for x in value.get("shape", arr.shape))
+        if tuple(arr.shape) != shape:
+            raise RuntimeError(f"inline ndarray shape mismatch: {arr.shape} != {shape}")
+        return arr
+    if kind == "ndarray_ref":
+        raise RuntimeError("metadata stage refuses external ndarray_ref sidecar downloads")
+    return None
+
+
+def numeric_matrix(problem: object) -> tuple[np.ndarray, str]:
+    direct = decode_ndarray_wrapper(problem)
+    if direct is not None:
+        return direct, "direct"
     if isinstance(problem, dict):
-        candidates = []
-        for value in problem.values():
-            if isinstance(value, list) and value and all(isinstance(row, list) for row in value):
-                candidates.append(value)
-        if len(candidates) == 1:
-            return [[float(x) for x in row] for row in candidates[0]]
-    raise RuntimeError(f"unable to identify one inline numeric matrix from problem type {type(problem).__name__}")
+        decoded: list[tuple[str, np.ndarray]] = []
+        for key, value in problem.items():
+            arr = decode_ndarray_wrapper(value)
+            if arr is not None:
+                decoded.append((str(key), arr))
+        if len(decoded) == 1:
+            key, arr = decoded[0]
+            return arr, f"dict_key:{key}"
+        raise RuntimeError(f"expected exactly one matrix field in problem dict; found {[key for key, _ in decoded]}")
+    raise RuntimeError(f"unable to identify one numeric matrix from problem type {type(problem).__name__}")
 
 
 def main() -> None:
@@ -66,26 +103,30 @@ def main() -> None:
 
     sizes: list[int] = []
     abs_max: list[float] = []
-    frob_sq: list[float] = []
+    frob_norms: list[float] = []
     exact_symmetric = 0
     finite_entries = 0
     total_entries = 0
     problem_type_counts: dict[str, int] = {}
+    encoding_counts: dict[str, int] = {}
 
     for row in rows:
         problem = row.get("problem")
         problem_type_counts[type(problem).__name__] = problem_type_counts.get(type(problem).__name__, 0) + 1
-        matrix = numeric_matrix(problem)
-        n = len(matrix)
-        if n == 0 or any(len(r) != n for r in matrix):
-            raise RuntimeError("training matrix is not nonempty and square")
+        matrix, location = numeric_matrix(problem)
+        encoding_counts[location] = encoding_counts.get(location, 0) + 1
+        if matrix.ndim != 2 or matrix.shape[0] == 0 or matrix.shape[0] != matrix.shape[1]:
+            raise RuntimeError(f"training matrix is not nonempty and square: {matrix.shape}")
+        n = int(matrix.shape[0])
         sizes.append(n)
-        flat = [float(x) for r in matrix for x in r]
-        finite_entries += sum(math.isfinite(x) for x in flat)
-        total_entries += len(flat)
-        abs_max.append(max(abs(x) for x in flat))
-        frob_sq.append(sum(x * x for x in flat))
-        if all(matrix[i][j] == matrix[j][i] for i in range(n) for j in range(n)):
+        finite = np.isfinite(matrix)
+        finite_entries += int(np.count_nonzero(finite))
+        total_entries += int(matrix.size)
+        if not bool(np.all(finite)):
+            raise RuntimeError("training matrix contains a nonfinite value")
+        abs_max.append(float(np.max(np.abs(matrix))))
+        frob_norms.append(float(np.linalg.norm(matrix, ord="fro")))
+        if bool(np.array_equal(matrix, matrix.T)):
             exact_symmetric += 1
 
     report = {
@@ -100,6 +141,7 @@ def main() -> None:
         "test_manifest_tree_oid": test_entry.get("oid"),
         "training_records": len(rows),
         "problem_type_counts": problem_type_counts,
+        "matrix_encoding_location_counts": encoding_counts,
         "matrix_size_min": min(sizes),
         "matrix_size_max": max(sizes),
         "matrix_size_values": sorted(set(sizes)),
@@ -107,14 +149,15 @@ def main() -> None:
         "finite_entry_fraction": finite_entries / total_entries,
         "entry_abs_max_min": min(abs_max),
         "entry_abs_max_max": max(abs_max),
-        "frob_norm_min": math.sqrt(min(frob_sq)),
-        "frob_norm_max": math.sqrt(max(frob_sq)),
+        "frob_norm_min": min(frob_norms),
+        "frob_norm_max": max(frob_norms),
         "test_manifest_downloaded": False,
         "test_payloads_downloaded": 0,
         "candidate_execution_count": 0,
         "reference_execution_count": 0,
         "eigensolver_execution_count": 0,
         "training_revision_consumed": False,
+        "parser_correction": "supports AlgoTune ndarray_b64/ndarray wrappers; explicitly refuses ndarray_ref sidecars",
     }
     out = Path("metadata-evidence")
     out.mkdir(parents=True, exist_ok=True)
