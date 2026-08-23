@@ -1,3 +1,4 @@
+# CI-only trigger; frozen v0.90 evaluator and committed byte lock unchanged.
 name: Mini-ORIGIN External Survival Evaluate v0.90
 
 on:
