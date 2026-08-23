@@ -14,7 +14,7 @@ REVISION = "bb02811fa47ca1c833baaa344949bcd8fb307ac8"
 TASK = "tensor_completion_3d"
 TREE_URL = f"https://huggingface.co/api/datasets/oripress/AlgoTune/tree/{REVISION}/data/{TASK}"
 BASE = f"https://huggingface.co/datasets/oripress/AlgoTune/resolve/{REVISION}/data/{TASK}"
-USER_AGENT = "LEXIGEN-v4-task5-training-metadata-r1"
+USER_AGENT = "LEXIGEN-v4-task5-training-metadata-r1b"
 
 
 def fetch(url: str, *, range_header: str | None = None) -> tuple[bytes, int | None, str | None]:
@@ -71,12 +71,49 @@ def npy_header_only(relative_path: str) -> tuple[tuple[int, ...], str, bool, int
     return shape, descr, fortran, total_header
 
 
-def ref_meta(value: object, label: str) -> tuple[tuple[int, ...], str, bool, int, str]:
-    if not isinstance(value, dict) or value.get("__type__") != "ndarray_ref":
-        raise RuntimeError(f"{label} is not an ndarray_ref; refusing numerical training payload access")
-    relative = str(value.get("npy_path", ""))
-    shape, descr, fortran, header_bytes = npy_header_only(relative)
-    return shape, descr, fortran, header_bytes, relative
+def nested_shape(value: object, label: str) -> tuple[int, ...]:
+    if not isinstance(value, list):
+        return ()
+    if not value:
+        return (0,)
+    first_shape = nested_shape(value[0], label)
+    for item in value[1:]:
+        if nested_shape(item, label) != first_shape:
+            raise RuntimeError(f"{label} is ragged; structural metadata is ambiguous")
+    return (len(value),) + first_shape
+
+
+def first_leaf(value: object) -> object:
+    current = value
+    while isinstance(current, list):
+        if not current:
+            return None
+        current = current[0]
+    return current
+
+
+def scalar_category(value: object) -> str:
+    if isinstance(value, bool):
+        return "json_bool"
+    if isinstance(value, int):
+        return "json_int"
+    if isinstance(value, float):
+        return "json_number"
+    if value is None:
+        return "json_null"
+    return f"json_{type(value).__name__}"
+
+
+def structural_meta(value: object, label: str) -> tuple[tuple[int, ...], str, str, int]:
+    if isinstance(value, list):
+        shape = nested_shape(value, label)
+        leaf = first_leaf(value)
+        return shape, scalar_category(leaf), "inline_json_list", 0
+    if isinstance(value, dict) and value.get("__type__") == "ndarray_ref":
+        relative = str(value.get("npy_path", ""))
+        shape, descr, fortran, header_bytes = npy_header_only(relative)
+        return shape, f"npy:{descr}:fortran={fortran}", "ndarray_ref_header_only", header_bytes
+    raise RuntimeError(f"{label} has unsupported structural encoding {type(value).__name__}; refusing value-dependent inspection")
 
 
 def main() -> None:
@@ -97,34 +134,33 @@ def main() -> None:
         raise RuntimeError(f"expected 100 training rows, received {len(rows)}")
 
     tensor_shapes: Counter[tuple[int, ...]] = Counter()
-    tensor_dtypes: Counter[str] = Counter()
-    mask_dtypes: Counter[str] = Counter()
-    fortran_counts: Counter[str] = Counter()
+    tensor_categories: Counter[str] = Counter()
+    tensor_encodings: Counter[str] = Counter()
+    mask_categories: Counter[str] = Counter()
+    mask_encodings: Counter[str] = Counter()
     header_bytes_total = 0
-    tensor_ref_paths: set[str] = set()
-    mask_ref_paths: set[str] = set()
 
     for index, row in enumerate(rows, start=1):
         problem = row.get("problem")
         if not isinstance(problem, dict) or "tensor" not in problem or "mask" not in problem:
             raise RuntimeError(f"record {index} has unexpected problem schema")
-        tshape, tdtype, tfortran, tbytes, tpath = ref_meta(problem["tensor"], f"record {index} tensor")
-        mshape, mdtype, mfortran, mbytes, mpath = ref_meta(problem["mask"], f"record {index} mask")
+        tshape, tcategory, tencoding, tbytes = structural_meta(problem["tensor"], f"record {index} tensor")
+        mshape, mcategory, mencoding, mbytes = structural_meta(problem["mask"], f"record {index} mask")
         if tshape != mshape or len(tshape) != 3 or any(d <= 0 for d in tshape):
             raise RuntimeError(f"record {index} tensor/mask shape mismatch: {tshape} vs {mshape}")
         tensor_shapes[tshape] += 1
-        tensor_dtypes[tdtype] += 1
-        mask_dtypes[mdtype] += 1
-        fortran_counts[f"tensor={tfortran},mask={mfortran}"] += 1
+        tensor_categories[tcategory] += 1
+        tensor_encodings[tencoding] += 1
+        mask_categories[mcategory] += 1
+        mask_encodings[mencoding] += 1
         header_bytes_total += tbytes + mbytes
-        tensor_ref_paths.add(tpath)
-        mask_ref_paths.add(mpath)
 
+    inline_present = any(name == "inline_json_list" for name in tensor_encodings) or any(name == "inline_json_list" for name in mask_encodings)
     report = {
         "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
         "task_index": 5,
         "task": TASK,
-        "stage": "metadata_revision1",
+        "stage": "metadata_revision1b",
         "dataset_revision": REVISION,
         "train_manifest_name": train_name,
         "train_manifest_tree_oid": train_entry.get("oid"),
@@ -135,20 +171,23 @@ def main() -> None:
         "test_manifest_tree_oid": test_entry.get("oid"),
         "training_records": len(rows),
         "tensor_shape_counts": {"x".join(map(str, k)): v for k, v in sorted(tensor_shapes.items())},
-        "tensor_dtype_counts": dict(tensor_dtypes),
-        "mask_dtype_counts": dict(mask_dtypes),
-        "fortran_order_counts": dict(fortran_counts),
-        "unique_tensor_sidecars": len(tensor_ref_paths),
-        "unique_mask_sidecars": len(mask_ref_paths),
-        "training_sidecar_access": "NumPy header byte ranges only; numerical payload not read",
-        "training_sidecar_header_bytes_read_total": header_bytes_total,
-        "training_numerical_payload_read": False,
+        "tensor_scalar_category_counts": dict(tensor_categories),
+        "tensor_encoding_counts": dict(tensor_encodings),
+        "mask_scalar_category_counts": dict(mask_categories),
+        "mask_encoding_counts": dict(mask_encodings),
+        "external_sidecar_header_bytes_read_total": header_bytes_total,
+        "training_manifest_contains_inline_payload": inline_present,
+        "training_numerical_payload_downloaded_due_inline_manifest": inline_present,
+        "training_values_statistically_summarized": False,
+        "training_values_used_for_candidate_design_or_adaptation": False,
+        "candidate_family_changed_after_metadata_incident": False,
         "test_manifest_downloaded": False,
         "test_sidecars_accessed": 0,
         "candidate_execution_count": 0,
         "reference_execution_count": 0,
         "cvxpy_solve_count": 0,
         "training_revision_consumed": False,
+        "preserved_metadata_incident_run_id": 32645357278,
     }
     out = Path("metadata-evidence")
     out.mkdir(parents=True, exist_ok=True)
