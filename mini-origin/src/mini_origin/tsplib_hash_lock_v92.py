@@ -15,14 +15,47 @@ PREREGISTRATION = (
     / "campaigns"
     / "v92-tsplib-external-holdout.json"
 )
+TRANSPORT_AMENDMENT = (
+    Path(__file__).resolve().parents[2]
+    / "campaigns"
+    / "v92-tsplib-transport-amendment.json"
+)
 ALLOWED_HOST = "comopt.ifi.uni-heidelberg.de"
-USER_AGENT = "Mini-ORIGIN-v0.92-tsplib-lock/1.0"
+CATALOGUE_URL = "https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/"
+USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+)
 TIMEOUT_SECONDS = 90
 RETRY_DELAYS_SECONDS = (0, 2, 8)
 MAX_ARCHIVE_BYTES = 16 * 1024 * 1024
 
 
+def _verify_transport_amendment() -> None:
+    payload = json.loads(TRANSPORT_AMENDMENT.read_text(encoding="utf-8"))
+    if payload["status"] != "transport_only_amendment_after_404_before_archive_bytes":
+        raise RuntimeError("v0.92 transport amendment status changed")
+    failed = payload["failed_attempt"]
+    if bool(failed["selected_archive_bytes_obtained"]):
+        raise RuntimeError("v0.92 amendment incorrectly claims prior archive access")
+    change = payload["transport_change_only"]
+    protected = (
+        "selected_instance_names_changed",
+        "selected_urls_changed",
+        "projection_changed",
+        "parser_changed",
+        "held_karp_baseline_changed",
+        "bruteforce_certificate_changed",
+        "frozen_v91_rule_changed",
+        "five_percent_gate_changed",
+        "kill_rule_changed",
+    )
+    if any(bool(change[key]) for key in protected):
+        raise RuntimeError("v0.92 transport amendment changed scientific protocol")
+
+
 def selected_sources() -> list[dict[str, str]]:
+    _verify_transport_amendment()
     payload = json.loads(PREREGISTRATION.read_text(encoding="utf-8"))
     if payload["status"] != "preregistered_before_selected_archive_access":
         raise RuntimeError("v0.92 preregistration status changed")
@@ -49,6 +82,7 @@ def download_raw(url: str) -> tuple[bytes, str, dict[str, str]]:
                 url,
                 headers={
                     "User-Agent": USER_AGENT,
+                    "Referer": CATALOGUE_URL,
                     "Accept": "application/zip,application/octet-stream,*/*;q=0.1",
                     "Accept-Encoding": "identity",
                 },
