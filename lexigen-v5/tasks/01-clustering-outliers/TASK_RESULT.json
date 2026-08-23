@@ -1,0 +1,31 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "family": "machine_learning",
+  "status_label": "clean autonomous unseen-task win",
+  "v5_full_passed_blind_gate": true,
+  "causal_transfer_win": false,
+  "v5_over_v4_task_win": true,
+  "blind_v5_harmonic_speedup": 2.4719892679655824,
+  "blind_v5_minimum_speedup": 2.2264071949386857,
+  "blind_v5_valid": 100,
+  "blind_v4_harmonic_speedup": 0.9762613247501281,
+  "blind_no_transfer_harmonic_speedup": 2.4620507931296527,
+  "blind_random_harmonic_speedup": 2.449970226952707,
+  "blind_static_harmonic_speedup": 2.457392516860124,
+  "selected_v5_uses_learned_transfer": false,
+  "human_task_specific_solver_design": false,
+  "campaign_progress_after_task": {
+    "completed_tasks": 1,
+    "clean_unseen_wins": 1,
+    "clean_unseen_win_families": ["machine_learning"],
+    "v5_over_v4_task_win_margin": 1,
+    "v5_over_no_transfer_task_win_margin": 0,
+    "v5_over_random_task_win_margin": 0,
+    "v5_over_static_task_win_margin": 0,
+    "causal_transfer_wins": 0
+  },
+  "claim_boundary": "Task 1 establishes one clean autonomous unseen v5 win and one v5-over-v4-compatible task-win advantage. It does not support causal transfer because the selected v5 candidate used no learned transfer recipe and the leading full/no-transfer/random/static programs were implementation-equivalent.",
+  "thresholds_changed": false
+}
