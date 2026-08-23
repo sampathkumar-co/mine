@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 6,
+  "task": "unit_simplex_projection",
+  "revision": 1,
+  "status": "blind_selection_frozen_before_test_access",
+  "training_run_id": 32649875889,
+  "training_artifact_id": 9495882218,
+  "selected": {
+    "v4_full": "v4_active_partition_vector",
+    "v4_no_transfer": "no_transfer_zero_active_vector",
+    "random_search": "random_zero_active",
+    "template_synthesis": "template_active_set",
+    "v3_compatible": "v3_vectorized_batch"
+  },
+  "implementation_equivalence_note": "The selected v4_full, v4_no_transfer, random_search and template_synthesis winners all execute the same finite active-set projection core modulo wrapper naming/default argument spelling. Therefore no Task 6 blind timing difference among these four arms can establish transfer or architecture-ranking credit.",
+  "transfer_credit_possible_on_task6": false,
+  "test_manifest_name": "unit_simplex_projection_T100ms_n982958_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "33358f9cad20ab1d145ccf51f63caaad091cc35f",
+  "test_manifest_opened": false,
+  "test_payloads_opened": 0,
+  "frozen_gate": {"valid_required": 100, "harmonic_speedup_minimum": 1.5, "minimum_speedup": 1.05, "invalid_output_retries": 0},
+  "blind_records": 100,
+  "candidate_executions_per_record": 5,
+  "reference_executions_per_record": 1,
+  "invalid_output_retries": 0
+}
