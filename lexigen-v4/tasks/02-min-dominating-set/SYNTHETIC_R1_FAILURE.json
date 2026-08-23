@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 2,
+  "task": "min_dominating_set",
+  "stage": "synthetic_revision1",
+  "status": "failed_pretraining_correctness_gate",
+  "workflow_run_id": 32638885328,
+  "workflow_job_id": 97192763703,
+  "artifact_id": 9493056654,
+  "artifact_digest": "sha256:28c95e72d1772f6097852a57c8576872a25a6f25b9c1e40b3aa5ecad3f77c775",
+  "candidate_source_git_blob_sha1": "cc020a9733e9c55aa5524e84a3b6201fcefbb6fb",
+  "candidate_count": 28,
+  "synthetic_case_count": 10,
+  "passing_candidates": 27,
+  "failing_candidates": 1,
+  "failure": {
+    "arm": "random_search",
+    "candidate": "random_vector_closed_risk",
+    "valid_cases": 9,
+    "total_cases": 10,
+    "case": "empty",
+    "exception": "ValueError: min() iterable argument is empty",
+    "root_cause": "generic empty-input handling defect in _dominance_reduced: active or [min(vertices)] is evaluated for an empty vertex sequence"
+  },
+  "official_training_manifest_accessed": false,
+  "official_test_manifest_accessed": false,
+  "training_revision_consumed": false,
+  "correction_policy": "Only a task-independent empty-input guard may be added before rerunning the complete unchanged 28-candidate synthetic oracle. The failed r1 evidence remains binding and must not be deleted or relabeled."
+}
