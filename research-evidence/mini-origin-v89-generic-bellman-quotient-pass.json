@@ -1,0 +1,79 @@
+{
+  "status": "generic_bellman_quotient_transfer_pass",
+  "version": "v0.89",
+  "preserved_on": "2026-08-23",
+  "scientific_branch": "research/mini-origin-v89-generic-bellman-quotient",
+  "scientific_head_before_certificate": "79840545e86f4922506767467646bb4d03849bc5",
+  "ci_child_branch": "research/mini-origin-v89-ci-run",
+  "ci_child_head": "7e502fa92f60afe52a24db4749b2373e6287228d",
+  "workflow_run": {
+    "id": 32643565880,
+    "job_id": 97204260521,
+    "conclusion": "success",
+    "python": "3.11.16",
+    "runner_os": "Ubuntu 24.04.4 LTS",
+    "tests": {
+      "passed": 7,
+      "failed": 0
+    }
+  },
+  "artifact": {
+    "id": 9494310638,
+    "name": "mini-origin-v89-generic-bellman-quotient",
+    "size_bytes": 3318,
+    "sha256": "62c1b3864e74feb3b9f8687f9982e877fcd6af42eff8c0c7129418198e90a7dc"
+  },
+  "certificate": {
+    "instance_count": 144,
+    "seeds_per_family": 48,
+    "objective_mismatches": 0,
+    "families": {
+      "adaptive_diagnosis": {
+        "instances": 48,
+        "instances_with_nonzero_quotient_reduction": 48,
+        "raw_action_expansions": 7680,
+        "quotient_action_expansions": 3756,
+        "aggregate_action_expansion_reduction": 3924,
+        "aggregate_action_expansion_reduction_fraction": 0.5109375,
+        "objective_mismatches": 0
+      },
+      "weighted_set_cover": {
+        "instances": 48,
+        "instances_with_nonzero_quotient_reduction": 48,
+        "raw_action_expansions": 442368,
+        "quotient_action_expansions": 145408,
+        "aggregate_action_expansion_reduction": 296960,
+        "aggregate_action_expansion_reduction_fraction": 0.6712962962962963,
+        "objective_mismatches": 0
+      },
+      "acyclic_shortest_path": {
+        "instances": 48,
+        "instances_with_nonzero_quotient_reduction": 48,
+        "raw_action_expansions": 3168,
+        "quotient_action_expansions": 1584,
+        "aggregate_action_expansion_reduction": 1584,
+        "aggregate_action_expansion_reduction_fraction": 0.5,
+        "objective_mismatches": 0
+      }
+    }
+  },
+  "integrity": {
+    "preregistered_before_v89_implementation_or_evaluation": true,
+    "scientific_source_changed_in_ci_child_pr": false,
+    "scientific_thresholds_changed_in_ci_child_pr": false,
+    "seeds_changed_in_ci_child_pr": false,
+    "ci_child_diff": "workflow comment only",
+    "all_preregistered_pass_conditions_met": true
+  },
+  "claim_boundary": {
+    "synthetic_transfer_certificate_only": true,
+    "domain_independent_exact_transformation_supported": true,
+    "external_generalization_claim": false,
+    "novel_theorem_claim": false,
+    "state_of_the_art_claim": false,
+    "world_first_claim": false,
+    "breakthrough_claim": false,
+    "independent_external_reproduction": false
+  },
+  "next_gate": "v0.90 must be separately preregistered before accessing fresh external cross-family instances and must compare against family-native baselines."
+}
