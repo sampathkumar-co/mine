@@ -1,0 +1,32 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "stage": "holdout_selection",
+  "status": "passed",
+  "workflow_run_id": 32656011911,
+  "artifact_id": 9497451063,
+  "artifact_digest": "sha256:15470cb94e8411b80c6f84c0b42f1d57eada32b30f0dc6eba05cfff2d8e62bf0",
+  "selection_json_sha256": "b2adb0c5b6b7db3b0b87c30b124fb6faf56fa924628d3433692b9702a8a8fba2",
+  "inventory_sha256": "92fcc8467a436991cd1f9620dd0be2bf1327c001b840653626c6a78070194c98",
+  "eligible_common_task_count": 131,
+  "selected_task_count": 10,
+  "selected_family_count": 8,
+  "selected": [
+    {"index":1,"task":"clustering_outliers","family":"machine_learning","score":"04bfda63c0bc4165871219c525b72dff3753f5bb67e173d3b924076446803c68"},
+    {"index":2,"task":"aes_gcm_encryption","family":"cryptography_encoding","score":"06eb08df67ec02af2430ad4043de98e1764eed4b4d74fa4a1675d13c57d3e679"},
+    {"index":3,"task":"spectral_clustering","family":"signal_processing","score":"0a6e0a24d25b3e446dd38b8daec53e97ece37b5ca97762611639ba6743c204c9"},
+    {"index":4,"task":"quantile_regression","family":"statistics","score":"0ae190c740bddeb202f67c2f7737cf14dfd6cfc1df433ec1fadd24e3212b8c0e"},
+    {"index":5,"task":"earth_movers_distance","family":"geometry","score":"0b81a36115ba0ffe82634b1250026c5cae6ab9979f131782266c7c8d0da6b8a2"},
+    {"index":6,"task":"gzip_compression","family":"cryptography_encoding","score":"0d01660d154bcdcdea6f5363a9cda76925698e9ab79b829c3af01cf807eaebdc"},
+    {"index":7,"task":"aircraft_wing_design","family":"miscellaneous","score":"0f0a01b2be06004a2f30f5a6dd1bb16db87aa3942d54ba52a25493ca78084685"},
+    {"index":8,"task":"kernel_density_estimation","family":"miscellaneous","score":"143780780111d778561335458e3d8c95558ee6dfbbc769ee3dba837409e41a9d"},
+    {"index":9,"task":"least_squares","family":"linear_algebra","score":"28a21db2edb1a226ba9e863bf22fd278fcd8f124bd377d6221a8eabf3a5704fd"},
+    {"index":10,"task":"vertex_cover","family":"combinatorial","score":"299f83f50a77e96a89ecf764cd6aa4969e1d79bb5ae1906a6558dcaba328afd2"}
+  ],
+  "task_contents_opened_during_selection": false,
+  "data_manifests_opened_during_selection": false,
+  "data_payloads_opened_during_selection": false,
+  "public_solvers_opened_during_selection": false,
+  "reports_opened_during_selection": false,
+  "causal_separation_selftest_passed_before_selection": true,
+  "thresholds_changed_after_selection": false
+}
