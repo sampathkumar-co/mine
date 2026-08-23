@@ -1,0 +1,26 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 5,
+  "task": "tensor_completion_3d",
+  "revision": 1,
+  "status": "blind_selection_frozen_before_test_access",
+  "training_run_id": 32647636908,
+  "training_artifact_id": 9495308168,
+  "selected": {
+    "v4_full": "v4_structure_refine_closed",
+    "v4_no_transfer": "no_transfer_structure_refine_closed",
+    "random_search": "random_zero_closed",
+    "template_synthesis": "template_active_set",
+    "v3_compatible": "v3_zero_copy_representation"
+  },
+  "implementation_equivalence_note": "The selected v4_full, v4_no_transfer and random_search candidates all map to the same exact one-mode multiply-constraint solver implementation. Therefore a blind win by v4_full cannot establish transfer or architecture-ranking advantage over those arms.",
+  "test_manifest_name": "tensor_completion_3d_T100ms_n6_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "0bdbf8d4e6dd3897d50143dbf3778ca3e4e02f56",
+  "test_manifest_opened": false,
+  "test_payloads_opened": 0,
+  "frozen_gate": {"valid_required": 100, "harmonic_speedup_minimum": 1.5, "minimum_speedup": 1.05, "invalid_output_retries": 0},
+  "blind_records": 100,
+  "candidate_executions_per_record": 5,
+  "reference_executions_per_record": 1,
+  "invalid_output_retries": 0
+}

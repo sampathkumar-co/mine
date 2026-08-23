@@ -1,0 +1,19 @@
+{
+  "task": "communicability",
+  "task_index": 1,
+  "status_label": "clean autonomous unseen-task win",
+  "architecture_label": "failed gate",
+  "v4_passed_blind_gate": true,
+  "architecture_winner": "template_synthesis",
+  "v4_rank": 5,
+  "arm_count": 5,
+  "v4_harmonic_speedup": 142.7742457556241,
+  "v4_minimum_speedup": 73.34265078773723,
+  "v4_valid": 100,
+  "v4_vs_v3_harmonic_delta": -23.4656143211791,
+  "v4_vs_no_transfer_harmonic_delta": -2.65668680556345,
+  "transfer_advantage": false,
+  "human_task_specific_solver_design": false,
+  "what_it_proves": "The frozen v4 engine can produce a correct and highly competitive solver on an unseen task.",
+  "what_it_does_not_prove": "It does not show v4 is better than v3-compatible search, random search, template synthesis, or its no-transfer ablation."
+}
