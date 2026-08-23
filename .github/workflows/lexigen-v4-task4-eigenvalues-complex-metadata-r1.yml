@@ -35,7 +35,7 @@ jobs:
               "candidates.py": "efea5bda4bfbfa620fd65f551792d48bd619979e",
               "requirements.txt": "2c04913adbf4e70b866f8fb7bb603abef158bbda",
               "SYNTHETIC_R1_RESULT.json": "648f17b1d131f08af801ea7a158d776bc6ca9245",
-              "inspect_training_metadata.py": "b46402126625e86265e55d1be952ebbdc18ed3fb",
+              "inspect_training_metadata.py": "e977f6f9797aede090514b37803f30f4a36fba3a",
           }
           for name, wanted in expected.items():
               data = Path(name).read_bytes()
