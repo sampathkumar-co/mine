@@ -1,0 +1,33 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "stage": "candidate_freeze_before_synthetic_and_official_training",
+  "source_result": "SOURCE_R1_RESULT.json",
+  "candidate_source": "candidates.py",
+  "candidate_count": 30,
+  "candidate_count_by_arm": {"v5_full":6,"v5_no_transfer":6,"random_search":6,"static_template":6,"v4_compatible":6},
+  "learned_transfer_candidates": [
+    {"candidate":"v5_full_r1_3304c859d463a501bd86","proposal_id":"3304c859d463a501bd86","causal_id":"TM-BFR-01","learned_template":"bit_frontier_restriction","learned_from_family":"graph_discrete"},
+    {"candidate":"v5_full_r2_41510e43e8fafb598496","proposal_id":"41510e43e8fafb598496","causal_id":"TM-RRR-01","learned_template":"reduced_representation_refinement","learned_from_family":"linear_algebra"},
+    {"candidate":"v5_full_r3_a6102573c9f355414229","proposal_id":"a6102573c9f355414229","causal_id":"TM-CAC-01","learned_template":"certified_active_core","learned_from_family":"numerical_optimization"}
+  ],
+  "current_holdout_family": "machine_learning",
+  "all_learned_transfer_candidates_cross_family": true,
+  "implementation_policy": {
+    "generic_same_operator_tuple": "identical generic operator tuples across arms resolve through the same cached implementation function and are semantically equivalent by construction",
+    "learned_template_separation": "learned-template candidates use distinct frozen recipe implementations keyed by transfer-memory template name; v5_no_transfer contains no learned template or causal ID",
+    "bit_frontier_restriction": "sparse k-nearest-neighbour frontier connected components plus structural certificate; certificate failure falls back to exact HDBSCAN",
+    "certified_active_core": "density-selected core subset clustered and lifted; structural certificate failure falls back to exact HDBSCAN",
+    "reduced_representation_refinement": "deterministic reduced subset clustered and lifted; structural certificate failure falls back to exact HDBSCAN",
+    "generic_decomposition": "base-operator compositions use deterministic active-core/reduced/frontier primitives without learned-template certificate semantics",
+    "exact_path": "otherwise use frozen-reference HDBSCAN semantics with only representation/dtype transformations requested by operators"
+  },
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "human_task_specific_solver_design": false,
+  "post_source_engine_change": false,
+  "post_source_threshold_change": false
+}
