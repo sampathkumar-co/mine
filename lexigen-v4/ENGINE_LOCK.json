@@ -1,0 +1,50 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "lock_status": "frozen_before_holdout_inventory",
+  "active_engine": "lexigen-v4/engine_v4.py",
+  "engine_version": "lexigen-v4.0.3-prelock",
+  "validated_engine_commit": "97f49363c6a4086717d0d9489730e8518117a049",
+  "validation_run_id": 30372247872,
+  "validation_artifact": {
+    "id": 8693385636,
+    "name": "lexigen-v4-engine-validation-r4",
+    "digest": "sha256:d6e286d00c9a2cdf4417a0393b5520d5bc14131be5da0b238b61791fae3033b7",
+    "validation_report_sha256": "43771e4307f2399bc91de8c733945b1834a38bbb31adf314f7ec1565b2b79a2a"
+  },
+  "source_snapshot": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "dataset_snapshot": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "selection_seed": "LEXIGEN-V4-GENERALIZATION-2026-07-28-A",
+  "task_count": 8,
+  "minimum_distinct_families": 6,
+  "maximum_per_family": 2,
+  "proposal_limit_per_arm_per_revision": 6,
+  "training_revision_budget_per_task": 3,
+  "arms": [
+    "v4_full",
+    "v4_no_transfer",
+    "random_search",
+    "template_synthesis",
+    "v3_compatible"
+  ],
+  "files": {
+    "lexigen-v4/engine.py": "24045dc82af30f8f4856678188f8d64ba55da3ee",
+    "lexigen-v4/engine_v2.py": "eb98983c09ef93dcc3bf240eeb2a7804514911f3",
+    "lexigen-v4/engine_v3.py": "ef5b52e6860e0427613465765f3a57f23aba522f",
+    "lexigen-v4/engine_v4.py": "1e434561c1f7799f15bc5267db6940a8375cf6e1",
+    "lexigen-v4/selector.py": "88027d132b3ef58178be67151083bb32a4cc6838",
+    "lexigen-v4/select_holdouts.py": "9e512c7adee3320dbf918ed053c145c7b94ddc66",
+    "lexigen-v4/PROTOCOL.md": "fbddcdbc4dca9ad28dc72e2bafc0acf338664865",
+    "lexigen-v4/BASELINES.md": "c431e8bd443427e542b132a4998e94ccc2c4c73b",
+    "lexigen-v4/verify_engine_lock.py": "35f293f417c444a506669109921ea5cd8a93fb82",
+    ".github/workflows/lexigen-v4-select-holdouts.yml": "d3a014fdb0f7dd89b2ed56e348e2078e2f723ca3"
+  },
+  "holdout_inventory_accessed_before_lock": false,
+  "holdout_names_known_before_lock": false,
+  "task_contents_accessed_before_lock": false,
+  "data_manifests_accessed_before_lock": false,
+  "data_payloads_accessed_before_lock": false,
+  "reports_accessed_before_lock": false,
+  "public_solvers_accessed_before_lock": false,
+  "selection_trigger_present_at_lock": false,
+  "scientific_rules_mutable_after_lock": false
+}

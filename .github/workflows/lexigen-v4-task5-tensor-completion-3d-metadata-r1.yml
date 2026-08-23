@@ -1,0 +1,60 @@
+name: LEXIGEN v4 Task 5 Tensor Completion 3D Metadata R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/05-tensor-completion-3d/TRIGGER_METADATA_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify immutable campaign locks
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+      - name: Verify frozen Task 5 metadata package
+        working-directory: lexigen-v4/tasks/05-tensor-completion-3d
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              "TASK_START.json": "dabf4ce6a6bbe0f702fd6b72ee3a85ec051a26eb",
+              "SOURCE_ANALYSIS_RESULT.json": "214e4501d2c070326aaa3a68b74929082e76a076",
+              "CANDIDATE_PROVENANCE.json": "1d288c6cef0a04d843a6c2879c3c74f3e73af42d",
+              "candidates.py": "d979e8da1ef85f2b91b8db90941418c6ced9a006",
+              "requirements.txt": "c2de4ad80fe973e7e89443033f32d0f3174eba1e",
+              "SYNTHETIC_R1_RESULT.json": "10449e6c06c344d3ea4be09d074f27989fc84cf4",
+              "inspect_training_metadata.py": "6d12e23472634e3b00a1a8a1cbf3dd7c0190fef6",
+          }
+          for name, wanted in expected.items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
+          print("LEXIGEN_V4_TASK5_METADATA_R1_PACKAGE_FROZEN")
+          PY
+      - name: Compile metadata inspector only
+        working-directory: lexigen-v4/tasks/05-tensor-completion-3d
+        run: python -m py_compile inspect_training_metadata.py
+      - name: Inspect training manifest and training NumPy headers only
+        working-directory: lexigen-v4/tasks/05-tensor-completion-3d
+        run: python -u inspect_training_metadata.py
+      - name: Upload immutable metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task5-tensor-completion-3d-metadata-r1
+          path: lexigen-v4/tasks/05-tensor-completion-3d/metadata-evidence/
+          if-no-files-found: error
+          retention-days: 90
