@@ -1,0 +1,55 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 3,
+  "task": "max_common_subgraph",
+  "revision": 1,
+  "lock_status": "frozen_before_test_manifest_access",
+  "training_run_id": 32640629057,
+  "training_artifact": {
+    "id": 9493504973,
+    "name": "lexigen-v4-task3-max-common-subgraph-training-r1",
+    "digest": "sha256:bd57be5d5272cfa123155fa16d72e60da30826db35b664ead07bb9637b66a466"
+  },
+  "selected_by_arm": {
+    "v4_full": "v4_bit_frontier_closed",
+    "v4_no_transfer": "no_transfer_bit_frontier_risk",
+    "random_search": "random_sparse_early",
+    "template_synthesis": "template_bit_parallel",
+    "v3_compatible": "v3_dtype_specialization"
+  },
+  "test_manifest_name": "max_common_subgraph_T100ms_n4_size100_test.jsonl",
+  "test_manifest_tree_oid": "cee4dc02b968ffeac9fbfcd8d5157521ead9d3dc",
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "execution_budget": {
+    "records": 100,
+    "shards": 10,
+    "selected_candidates_per_record": 5,
+    "candidate_executions_per_arm_per_record": 1,
+    "reference_executions_per_record": 1,
+    "invalid_output_retries": 0,
+    "successful_record_reruns": 0
+  },
+  "files": {
+    "candidates.py": "a975a48ef3cef23728caa39650f2db5159fe9328",
+    "requirements.txt": "6b6bc893815835562a66a5a98c79e0c087978969",
+    "TRAIN_R1_LOCK.json": "9b41b92687f0971e13e93d6bcdb41e0cbafdce1a",
+    "TRAINING_R1_RESULT.json": "d7e6f8d07662629c4665a6981c5933633e3280e0",
+    "selected_solvers.py": "ee162f263114d1103d31c0a8affbfe4254334050",
+    "blind_shard.py": "d2a99113c10a94c3f4074721ac1f305b2e2002b9",
+    "aggregate_blind.py": "2629f2850974f7e9b378b7ee334254169606cc83"
+  },
+  "workflow_git_blob_sha1": "fefff9c679052813b93fb9beb218aa49ea1f4e3c",
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "candidate_changed_after_training": false,
+  "thresholds_changed_after_training": false,
+  "human_task_specific_solver_design": false,
+  "trigger_present_at_lock": false
+}
