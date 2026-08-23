@@ -1,0 +1,38 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "stage": "synthetic_correctness_r1",
+  "status": "passed",
+  "workflow_run_id": 32656544928,
+  "job_id": 97236058300,
+  "artifact_id": 9497582180,
+  "artifact_digest": "sha256:d6747d271da28d2658cc36dba54ac79d216c3ef8668cd9715ff1ffe7f4bb3f55",
+  "synthetic_summary_sha256": "dc598d371f133f1b3e36b0f209b8f939fab8612a07713e58cb1f2c430b16355a",
+  "synthetic_results_sha256": "be75e9b0d18f51712474e46c18785fd086d0e9c3c24ab5a8689bfc3adbcb7a82",
+  "synthetic_cases": 6,
+  "candidate_count": 30,
+  "checks": 180,
+  "passed_checks": 177,
+  "failed_checks": 3,
+  "failed_candidates": [
+    {"arm":"v5_full","candidate":"v5_full_r1_3304c859d463a501bd86","transfer_id":"TM-BFR-01","learned_template":"bit_frontier_restriction","failed_case":"small_n150","failure_reason":"cluster_count_deviation","observed_deviation":0.3333333333333333,"allowed_maximum":0.3},
+    {"arm":"random_search","candidate":"random_search_r6_5fef7c7ae40af62d92e4","failed_case":"small_n150","failure_reason":"cluster_count_deviation","observed_deviation":0.3333333333333333,"allowed_maximum":0.3},
+    {"arm":"static_template","candidate":"static_template_r1_dbfcd2af539b0b2636e7","failed_case":"small_n150","failure_reason":"cluster_count_deviation","observed_deviation":0.3333333333333333,"allowed_maximum":0.3}
+  ],
+  "eligible_candidate_counts": {"v5_full":5,"v5_no_transfer":6,"random_search":5,"static_template":5,"v4_compatible":6},
+  "eligible_learned_transfer_candidates": [
+    {"candidate":"v5_full_r2_41510e43e8fafb598496","causal_id":"TM-RRR-01","learned_template":"reduced_representation_refinement","checks_passed":6},
+    {"candidate":"v5_full_r3_a6102573c9f355414229","causal_id":"TM-CAC-01","learned_template":"certified_active_core","checks_passed":6}
+  ],
+  "disqualified_learned_transfer_candidates": [
+    {"candidate":"v5_full_r1_3304c859d463a501bd86","causal_id":"TM-BFR-01","learned_template":"bit_frontier_restriction","checks_passed":5}
+  ],
+  "task_may_proceed_to_official_training": true,
+  "candidate_repair_after_synthetic": false,
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "thresholds_changed": false
+}
