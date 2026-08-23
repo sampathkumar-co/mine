@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 3,
+  "task": "max_common_subgraph",
+  "stage": "source_analysis_revision1",
+  "status": "passed",
+  "workflow_run_id": 32639837666,
+  "workflow_job_id": 97195115414,
+  "artifact_id": 9493297301,
+  "artifact_digest": "sha256:049e3d55a2cb35788d0f9e2ad53e166600af0ce65faf3b72b6f4d76852ff5096",
+  "source_git_blob_sha1": "ddd28a93def4502d1c41e3e9cac4cf33430f114d",
+  "source_sha256": "a3369e7d6cb05f1f8981715a502ea4890d7ed08a0a83668680d08614c3ae2ecf",
+  "description_git_blob_sha1": "61ce0c61c13041ef4dbcca9a7e3b47a693907135",
+  "description_sha256": "36591d1568502529c8e51d7d051e79e207e9651e95a64b799bb8b7ac4613450f",
+  "fingerprint_features": ["approximate_verifier", "boolean", "certificate", "discrete", "graph", "iterative", "linear", "matrix", "numeric", "set", "tolerance", "verifier"],
+  "v4_and_no_transfer_proposals_identical": true,
+  "top_v4_operators": ["bit_parallel_representation", "sparse_frontier_search", "risk_aware_staging"],
+  "training_manifest_opened": false,
+  "test_manifest_opened": false,
+  "reports_opened": false,
+  "public_solvers_opened": false
+}

@@ -1,0 +1,49 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 6,
+  "task": "unit_simplex_projection",
+  "revision": 1,
+  "stage": "blind",
+  "status": "passed_clean_unseen_win",
+  "workflow_run_id": 32650267754,
+  "artifact_id": 9495980096,
+  "artifact_digest": "sha256:6332ebc8fb5dad43a1c1bfb8f0a99f9297317a19f2615a64bd89b7df50477da4",
+  "blind_shards_succeeded": 10,
+  "blind_shard_reruns": 0,
+  "blind_records": 100,
+  "raw_measurement_rows": 500,
+  "test_manifest_git_blob_sha1": "33358f9cad20ab1d145ccf51f63caaad091cc35f",
+  "test_manifest_sha256": "523367fec87582ff859f5e8264f75d8ffbcec74a941f97a32bba94ea4bc33d73",
+  "arms": {
+    "v4_full": {"candidate": "v4_active_partition_vector", "valid": 100, "harmonic_speedup": 5.484199555549541, "median_speedup": 8.363213477023018, "minimum_speedup": 1.2075849854722938, "passes_blind_gate": true},
+    "v4_no_transfer": {"candidate": "no_transfer_zero_active_vector", "valid": 100, "harmonic_speedup": 5.551172022621588, "median_speedup": 8.370879706431424, "minimum_speedup": 1.322399030834881, "passes_blind_gate": true},
+    "random_search": {"candidate": "random_zero_active", "valid": 100, "harmonic_speedup": 5.469083308338254, "median_speedup": 8.196997499762187, "minimum_speedup": 1.3315667279640824, "passes_blind_gate": true},
+    "template_synthesis": {"candidate": "template_active_set", "valid": 100, "harmonic_speedup": 5.52079526722419, "median_speedup": 8.308022365663923, "minimum_speedup": 1.3765343812418716, "passes_blind_gate": true},
+    "v3_compatible": {"candidate": "v3_vectorized_batch", "valid": 100, "harmonic_speedup": 1.017506272418179, "median_speedup": 1.0157877025232676, "minimum_speedup": 0.8545789730844642, "passes_blind_gate": false}
+  },
+  "architecture_comparison": {
+    "v4_minus_v3_harmonic": 4.466693283131362,
+    "v4_minus_template_harmonic": -0.036595711674649145,
+    "v4_minus_random_harmonic": 0.015116247211286904,
+    "v4_minus_no_transfer_harmonic": -0.06697246707204751,
+    "v4_over_no_transfer_ratio": 0.9879354365530147,
+    "v4_beats_v3_blind": true,
+    "v4_beats_template_blind_raw_timing": false,
+    "raw_timing_transfer_threshold_crossed": false,
+    "causal_transfer_credit": false,
+    "causal_transfer_credit_reason": "v4_full, v4_no_transfer, random_search and template_synthesis selected winners are implementation-equivalent finite active-set solvers; timing differences cannot establish transfer causality.",
+    "implementation_equivalent_active_set_arms": ["v4_full", "v4_no_transfer", "random_search", "template_synthesis"]
+  },
+  "clean_unseen_task_win": true,
+  "transfer_credit": false,
+  "campaign_after_task": {
+    "completed_tasks": 6,
+    "clean_unseen_wins": 4,
+    "v4_over_v3_strong_wins": 3,
+    "transfer_wins": 0,
+    "roadmap_G3_better_than_old_lexigen": "passed",
+    "roadmap_G4_mechanism_transfer": "not_passed",
+    "roadmap_G5_baseline_superiority": "not_passed",
+    "roadmap_G6_broad_generalization": "in_progress"
+  }
+}

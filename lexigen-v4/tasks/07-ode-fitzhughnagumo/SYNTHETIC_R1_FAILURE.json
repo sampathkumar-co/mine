@@ -1,0 +1,40 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 7,
+  "task": "ode_fitzhughnagumo",
+  "stage": "synthetic_revision1",
+  "status": "failed_pretraining_correctness_gate",
+  "workflow_run_id": 32653757438,
+  "workflow_job_id": 97229222865,
+  "artifact_id": null,
+  "artifact_upload_skipped_due_gate_exit": true,
+  "candidate_source_git_blob_sha1": "f36197426de3da117d21b55af73143faeb3dacd6",
+  "validator_git_blob_sha1": "bf642e34aebd741c8367bd04489cc89dcecc26d5",
+  "candidate_count": 27,
+  "synthetic_case_count": 6,
+  "candidate_case_checks": 162,
+  "passing_checks": 143,
+  "failing_checks": 19,
+  "failure_concentration": {
+    "case": "low_corner_n2",
+    "t1": 200.0,
+    "failing_checks": 19,
+    "other_cases_failing_checks": 0,
+    "maximum_observed_verifier_scaled_error": 4.202
+  },
+  "failing_candidates": {
+    "v4_full": ["v4_zero_vector_risk", "v4_dtype_vector_risk", "v4_contiguous_vector_risk", "v4_zero_dtype_vector", "v4_zero_dtype_risk"],
+    "v4_no_transfer": ["no_transfer_zero_vector_risk", "no_transfer_dtype_vector_risk", "no_transfer_contiguous_vector_risk", "no_transfer_zero_dtype_vector", "no_transfer_zero_dtype_risk", "no_transfer_vector_risk"],
+    "random_search": ["random_risk", "random_dtype", "random_dtype_vector_risk", "random_contiguous_vector_risk", "random_dtype_risk"],
+    "template_synthesis": ["template_risk_stage", "template_dtype"],
+    "v3_compatible": ["v3_dtype_specialization"]
+  },
+  "root_cause_classification": "substantive_mechanism_correctness_failure",
+  "root_cause": "Source-derived risk-aware tolerance relaxation and/or float32 derivative specialization can accumulate excessive phase/final-state error over the longer FitzHugh-Nagumo trajectory. This is not an infrastructure failure and is not eligible for a post-hoc implementation rescue under the frozen synthetic gate.",
+  "official_training_manifest_accessed": false,
+  "official_training_payloads_accessed": false,
+  "official_test_manifest_accessed": false,
+  "official_test_payloads_accessed": false,
+  "training_revision_consumed": false,
+  "decision": "Preserve Task 7 as a selected-task failure in the campaign denominator; do not alter candidate mechanisms or gate after observing this result."
+}

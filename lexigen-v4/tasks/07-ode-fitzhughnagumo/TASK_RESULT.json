@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 7,
+  "task": "ode_fitzhughnagumo",
+  "status_label": "failed_pretraining_correctness_gate",
+  "architecture_label": "failed selected task",
+  "v4_passed_blind_gate": false,
+  "blind_not_run": true,
+  "reason": "The frozen Task 7 candidate family failed its preregistered synthetic correctness gate: 143/162 candidate-case checks passed and 19 failed on the low-parameter t1=200 source-shaped case. The failure is mechanism-level numerical error, not infrastructure, so no post-hoc rescue is allowed.",
+  "training_manifest_opened": false,
+  "training_payloads_opened": false,
+  "test_manifest_opened": false,
+  "test_payloads_opened": false,
+  "human_task_specific_solver_design": false,
+  "campaign_after_task": {
+    "completed_tasks": 7,
+    "clean_unseen_wins": 4,
+    "v4_over_v3_strong_wins": 3,
+    "transfer_wins": 0,
+    "roadmap_G3_better_than_old_lexigen": "passed",
+    "roadmap_G4_mechanism_transfer": "not_passed",
+    "roadmap_G5_baseline_superiority": "not_passed",
+    "roadmap_G6_broad_generalization": "in_progress_one_task_remaining",
+    "full_campaign_success_still_possible": false,
+    "impossibility_reason": "With zero causal transfer wins after seven selected tasks and only one family/task remaining, the preregistered requirement that one pre-campaign abstract mechanism succeed in two different families can no longer be satisfied in this campaign."
+  }
+}

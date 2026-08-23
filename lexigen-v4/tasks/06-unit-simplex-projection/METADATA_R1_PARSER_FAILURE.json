@@ -1,0 +1,18 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 6,
+  "task": "unit_simplex_projection",
+  "stage": "metadata_revision1_infrastructure_failure",
+  "workflow_run_id": 32649263787,
+  "workflow_job_id": 97218206603,
+  "status": "failed_safely_on_ndarray_ref_schema",
+  "failure": "strict r1 inspector expected an inline y list; official training manifest stores y using ndarray_ref sidecars",
+  "candidate_execution_count": 0,
+  "reference_execution_count": 0,
+  "training_revision_consumed": false,
+  "test_manifest_downloaded": false,
+  "test_payloads_opened": 0,
+  "candidate_family_changed_after_failure": false,
+  "scientific_change_allowed": false,
+  "correction_scope": "metadata parser only: read training ndarray_ref NumPy header byte ranges to recover vector shape/dtype; do not read numerical sidecar payloads"
+}

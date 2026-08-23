@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 6,
+  "task": "unit_simplex_projection",
+  "revision": 1,
+  "stage": "synthetic_pretraining_lock",
+  "candidate_count": 28,
+  "synthetic_cases": 10,
+  "expected_checks": 280,
+  "oracle": "exhaustive_KKT_support_enumeration_independent_of_reference_sort",
+  "git_blob_sha1": {
+    "TASK_START.json": "6b5942713d7b1e113cc5cf525d109fed519a6895",
+    "SOURCE_ANALYSIS_RESULT.json": "5ca25894b2af6097f5b14813e961a8cacb44f135",
+    "CANDIDATE_PROVENANCE.json": "f0736ae5e496becbc1e6f72bcf663d631353553f",
+    "candidates.py": "0b7cfb79bb7857b86ef7fd59a97b5f55ef2a9565",
+    "requirements.txt": "2c04913adbf4e70b866f8fb7bb603abef158bbda",
+    "synthetic_validate.py": "bfef21c32abda5bec9aa1c505f044bbb94217557"
+  },
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_family_frozen": true,
+  "gate": {
+    "required_valid_checks": 280,
+    "max_abs_error_to_oracle": 2e-10,
+    "simplex_sum_error": 2e-10
+  }
+}
