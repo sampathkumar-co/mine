@@ -1,0 +1,35 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 6,
+  "task": "unit_simplex_projection",
+  "revision": 1,
+  "stage": "blind_lock",
+  "blind_records": 100,
+  "selected_candidate_count": 5,
+  "shards": 10,
+  "vector_length": 982958,
+  "candidate_executions_per_record": 5,
+  "reference_executions_per_record": 1,
+  "invalid_output_retries": 0,
+  "test_manifest_name": "unit_simplex_projection_T100ms_n982958_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "33358f9cad20ab1d145ccf51f63caaad091cc35f",
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": 0,
+  "transfer_credit_possible": false,
+  "transfer_credit_block_reason": "v4_full, v4_no_transfer, random_search and template_synthesis selected winners are implementation-equivalent finite active-set solvers",
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "git_blob_sha1": {
+    "candidates.py": "0b7cfb79bb7857b86ef7fd59a97b5f55ef2a9565",
+    "requirements.txt": "2c04913adbf4e70b866f8fb7bb603abef158bbda",
+    "TRAIN_R1_RESULT.json": "7f87c2fe2f6921ade99883fa8a69af32720fa62f",
+    "BLIND_R1_SELECTION.json": "f00fa44fa0987d56be9430d5c170447b3901ebf1",
+    "blind_shard.py": "3782122d4f8b9315604902d939346004f1243cf1",
+    "aggregate_blind.py": "4088a5ad133d176a8fc78ab6be15b39f7780c9fd",
+    "workflow": "605a9705607d9679f76a23107e39e356f5a1012d"
+  }
+}
