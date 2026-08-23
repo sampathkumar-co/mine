@@ -1,0 +1,61 @@
+name: LEXIGEN v4 Task 3 Max Common Subgraph Synthetic R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/03-max-common-subgraph/TRIGGER_SYNTHETIC_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v4/tasks/03-max-common-subgraph/requirements.txt
+      - name: Verify immutable engine and selection locks
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+      - name: Verify frozen Task 3 candidate and oracle package
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              "TASK_START.json": "18330b288c1d8850cd02bacf859157177dcea245",
+              "SOURCE_ANALYSIS_RESULT.json": "e4e5e33050665efa994e4f7f0e70bb9891624745",
+              "candidates.py": "a975a48ef3cef23728caa39650f2db5159fe9328",
+              "requirements.txt": "6b6bc893815835562a66a5a98c79e0c087978969",
+              "validate_candidates.py": "4c73ca3e15441b4bf9cd6ec78cf666465357c316",
+          }
+          for name, wanted in expected.items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
+          print("LEXIGEN_V4_TASK3_SYNTHETIC_R1_PACKAGE_FROZEN")
+          PY
+      - name: Install frozen dependencies
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Validate all candidates against independent exhaustive oracle
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: python -u validate_candidates.py
+      - name: Upload complete synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task3-max-common-subgraph-synthetic-r1
+          path: lexigen-v4/tasks/03-max-common-subgraph/synthetic-evidence/
+          if-no-files-found: error
+          retention-days: 90

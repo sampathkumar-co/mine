@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "completed_tasks": 2,
+  "total_tasks": 8,
+  "v4_clean_task_wins": 1,
+  "v4_failed_tasks": 1,
+  "v4_architecture_task_wins_over_v3": 0,
+  "v4_architecture_task_wins_over_random": 0,
+  "v4_architecture_task_wins_over_template": 0,
+  "transfer_advantage_task_wins": 0,
+  "task_results": [
+    {
+      "task": "communicability",
+      "v4_task_status": "clean_autonomous_unseen_task_win",
+      "architecture_status": "failed_architecture_comparison"
+    },
+    {
+      "task": "min_dominating_set",
+      "v4_task_status": "failed_training_gate",
+      "architecture_status": "no_task_win",
+      "blind_opened": false
+    }
+  ],
+  "campaign_gate_passed": false,
+  "campaign_still_mathematically_possible": true,
+  "remaining_tasks": 6
+}
