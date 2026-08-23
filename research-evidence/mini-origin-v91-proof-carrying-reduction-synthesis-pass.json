@@ -1,0 +1,82 @@
+{
+  "status": "proof_carrying_reduction_synthesis_pass_v91",
+  "version": "v0.91",
+  "preserved_on": "2026-08-23",
+  "scientific_branch": "research/mini-origin-v91-proof-carrying-reduction-synthesis",
+  "preregistration_commit": "1578dfd8d77df1e932d9274c43037967ef3eab90",
+  "frozen_scientific_head": "0f13dfbf76ce7dd757649d4acc2dfad7a39b0d10",
+  "ci_child_branch": "research/mini-origin-v91-ci-run",
+  "ci_child_head": "e735db314ed930e1e1b7b0d0271c58e0763dd764",
+  "workflow": {
+    "run_id": 32648312403,
+    "job_id": 97215904306,
+    "conclusion": "success",
+    "unit_certificate_tests_passed": 5,
+    "artifact_id": 9495473812,
+    "artifact_sha256": "62a7e3b9b69fd0636df7393d761b65d18c24108a512a191225dd812ddbe879cc",
+    "artifact_size_bytes": 4326
+  },
+  "synthesis": {
+    "grammar_candidates": 72,
+    "eligible_candidates": 18,
+    "selected_spec": {
+      "left_terminal_mode": "true",
+      "action_quantifier": "forall_right_exists_left",
+      "cost_relation": "le",
+      "successor_relation": "recursive_left_le_right"
+    },
+    "selected_spec_digest": "7f0f6d05c27c2021055e9b110a0e789ecb0a9e9326ab64f15cb61cd726601375",
+    "freeze_digest": "450c2911ed499890178b88db5451d2ae8ef16a637072758704b671b3151dee75",
+    "semantic_audit": {
+      "instances": 96,
+      "semantic_violations": 0,
+      "objective_mismatches": 0,
+      "relation_pairs": 2248,
+      "actions_pruned": 606
+    },
+    "training": {
+      "objective_mismatches": 0,
+      "total_action_expansion_reduction": 10988,
+      "random_dag": {
+        "instances": 48,
+        "raw_action_expansions": 984,
+        "candidate_action_expansions": 313,
+        "action_expansion_reduction": 671,
+        "actions_pruned": 376,
+        "declared_relation_pairs": 1620,
+        "objective_mismatches": 0
+      },
+      "weighted_cover_dp": {
+        "instances": 48,
+        "raw_action_expansions": 12896,
+        "candidate_action_expansions": 2579,
+        "action_expansion_reduction": 10317,
+        "actions_pruned": 4291,
+        "declared_relation_pairs": 18767,
+        "objective_mismatches": 0
+      }
+    }
+  },
+  "withheld_transfer": {
+    "family": "resource_reduction_dp",
+    "instances": 48,
+    "instances_with_positive_action_reduction": 48,
+    "raw_action_expansions": 15997,
+    "candidate_action_expansions": 2731,
+    "aggregate_action_expansion_reduction": 13266,
+    "aggregate_action_expansion_reduction_fraction": 0.8292804900918922,
+    "actions_pruned": 4923,
+    "objective_mismatches": 0,
+    "local_certificate_failures": 0,
+    "passed": true
+  },
+  "claim_boundary": {
+    "autonomous_reduction_synthesis_precursor": true,
+    "synthetic_only": true,
+    "novel_theorem": false,
+    "external_generalization": false,
+    "breakthrough": false,
+    "interpretation": "The engine selected and froze a recursive simulation-style exact reduction from a domain-agnostic grammar and transferred it to a withheld synthetic family. Simulation-style dominance is established prior art; the research value here is automated selection, proof-carrying exactness, and transfer, not theorem novelty."
+  },
+  "next_gate": "Use the frozen selected-spec digest unchanged on a fresh external problem family with a strong family-native exact dynamic-programming baseline. Preserve zero-reduction or mismatch as a rejection; do not retrain v0.91 on the external family."
+}
