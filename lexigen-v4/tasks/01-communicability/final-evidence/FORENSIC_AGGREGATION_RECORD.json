@@ -1,0 +1,35 @@
+{
+  "classification": "forensic_aggregation_of_immutable_original_blind_records",
+  "original_blind_run_id": 30376286181,
+  "original_shard_artifacts": [
+    {"id": 8695064028, "digest": "sha256:8c40e3f0000e032424ab3db6e2600d6507efec448954836c426b4bb5a118efde"},
+    {"id": 8695059749, "digest": "sha256:8587a126e7c5b704c9ea4876a0334d1770b081252b9f7fdd35760e0476b81678"},
+    {"id": 8695068569, "digest": "sha256:4ed95e5d3e333e30a445bf0ab2e509188f1e41e670174dec93922590eb2f1c1f"},
+    {"id": 8695062091, "digest": "sha256:ed5808e7d8fbad2d41e983e790b71fea5826ea548dc212f6b4f8f40655c87e0e"},
+    {"id": 8695066935, "digest": "sha256:2c37bbcd7d28e8eef85788d149e5d36c8b258f865458249912f33d46e2947058"},
+    {"id": 8695077384, "digest": "sha256:ab5000a65ce3ee9e449c2679db87b96d8cf797c11911ed2c8336c957bc870869"},
+    {"id": 8695075479, "digest": "sha256:a454f333b0b04f5f6684c94b2fc02b9c8b9b4b995dea337d7d339467bb295cb9"},
+    {"id": 8695079692, "digest": "sha256:f840f000912d327de64aa3f51407a49dc5feb5b1f5c14ab5528eb7264b44c2d1"},
+    {"id": 8695079660, "digest": "sha256:eed99b0b54d479839d9dc813e4dbe08d3d40a1c011ac3b3b95c6e4dab6f02726"},
+    {"id": 8695085879, "digest": "sha256:b97d866c030b69bd7d895d5af8c83d4d2b540281cb2d4001ee8ed7e991dbe875"}
+  ],
+  "raw_shard_file_count": 10,
+  "raw_record_count": 500,
+  "records_per_arm": 100,
+  "raw_results_sha256": "ca0d6289165afb10388910dc1c65ea717d7cef9663bfb044b5609320739a1381",
+  "blind_summary_sha256": "f1c93463b371d7b9e777c04e111ee513670139a62a71699e596fa4b38032680b",
+  "aggregation_failures": [
+    {"run_id": 30376286181, "reason": "Report-only Python file used JSON literals false; all ten blind shards succeeded."},
+    {"run_id": 30376686382, "reason": "Aggregation recovery packaging failure after original artifact download."},
+    {"run_id": 30377052181, "reason": "Diagnostic wrapper failed before evidence upload."},
+    {"run_id": 30377302110, "reason": "Runner-side recovery packaging failure; original artifacts remained unchanged."}
+  ],
+  "aggregation_method": "Parse all JSONL records; assert ten shards, 500 rows, 100 unique records per arm, one frozen candidate identity per arm, and consistent manifest identities; compute harmonic, median, minimum and maximum speedups using Python standard-library arithmetic.",
+  "candidate_executions": 0,
+  "reference_executions": 0,
+  "blind_records_rerun": 0,
+  "scientific_rules_changed": false,
+  "candidates_changed": false,
+  "thresholds_changed": false,
+  "source_data": "The ten GitHub Actions artifact IDs listed above were downloaded and parsed without benchmark or solver re-execution."
+}

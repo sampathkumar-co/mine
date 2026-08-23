@@ -1,0 +1,13 @@
+{
+  "lock_stage": "before_engine_validation",
+  "engine_version": "lexigen-v4.0.0-frozen",
+  "source_snapshot": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "dataset_snapshot": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "selection_seed": "LEXIGEN-V4-GENERALIZATION-2026-07-28-A",
+  "task_count": 8,
+  "minimum_families": 6,
+  "maximum_per_family": 2,
+  "revision_budget_per_task": 3,
+  "holdout_inventory_accessed": false,
+  "task_contents_accessed": false
+}
