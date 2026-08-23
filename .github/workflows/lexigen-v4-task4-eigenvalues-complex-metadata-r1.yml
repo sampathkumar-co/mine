@@ -35,7 +35,7 @@ jobs:
               "candidates.py": "efea5bda4bfbfa620fd65f551792d48bd619979e",
               "requirements.txt": "2c04913adbf4e70b866f8fb7bb603abef158bbda",
               "SYNTHETIC_R1_RESULT.json": "648f17b1d131f08af801ea7a158d776bc6ca9245",
-              "inspect_training_metadata.py": "8390254d8db015eadfd4bc10619109140eda0f0e",
+              "inspect_training_metadata.py": "cca88e5611ca9e3ba6bfcef531d9e1399201f0dc",
           }
           for name, wanted in expected.items():
               data = Path(name).read_bytes()
@@ -44,7 +44,10 @@ jobs:
                   raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
           print("LEXIGEN_V4_TASK4_METADATA_R1_PACKAGE_FROZEN")
           PY
-      - name: Inspect official training manifest and test identity only
+      - name: Install frozen metadata dependency
+        working-directory: lexigen-v4/tasks/04-eigenvalues-complex
+        run: pip install -r requirements.txt
+      - name: Inspect official training manifest and training payload structure; test identity only
         working-directory: lexigen-v4/tasks/04-eigenvalues-complex
         run: python -u inspect_training_metadata.py
       - name: Upload immutable metadata evidence
