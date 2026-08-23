@@ -1,0 +1,120 @@
+{
+  "status": "external_survival_pass_v90",
+  "version": "v0.90",
+  "preserved_on": "2026-08-23",
+  "scientific_branch": "research/mini-origin-v90-external-survival-lock",
+  "preregistration_commit": "3fc7b8537b628899aa83310860d7cda25ea08701",
+  "lock_manifest_commit": "6b9368881eed311248002d946345600b0e7ae8db",
+  "frozen_evaluator_commit_before_lock_manifest": "cd71ee5f8ba805a2e950ef513817ed45009aef3d",
+  "evaluation_parent_head": "f30942570e439ffb0370573629753638d53303cd",
+  "ci_child_branch": "research/mini-origin-v90-eval-ci-run",
+  "ci_child_head": "2e2c424ee3a00cb84ee57cbc92d0c2906d703a91",
+  "byte_lock": {
+    "workflow_run_id": 32647749791,
+    "job_id": 97214518666,
+    "artifact_id": 9495332107,
+    "artifact_sha256": "01ed4b906608aab5facd1a7275d18f0acedd7137392bb2a007403f9fff5bf33b",
+    "records_digest": "401aaee261a3249268e1672acf74988b34b7671f6eb7c8e2e6894066e7d59ef0",
+    "raw_stream_count": 6,
+    "decompression_or_parsing_before_manifest_commit": false
+  },
+  "evaluation": {
+    "workflow_run_id": 32647941517,
+    "job_id": 97215000545,
+    "conclusion": "success",
+    "artifact_id": 9495392283,
+    "artifact_sha256": "469531c5b36c4eee27fb9a5314a67073f863bb4a93373e279ecadb6d809894c2",
+    "synthetic_certificate_tests_passed": 7,
+    "all_six_raw_byte_streams_reverified": true,
+    "local_certificate_failures": 0,
+    "all_distance_certificates_match": true
+  },
+  "set_cover": {
+    "aggregate_removed_columns": 2018,
+    "instances": [
+      {
+        "name": "rail507",
+        "raw_columns": 63009,
+        "distinct_coverage_signatures": 62182,
+        "duplicate_coverage_classes": 806,
+        "columns_removed_by_frozen_quotient": 827,
+        "equal_cost_tie_removals": 827,
+        "strict_cost_dominance_removals": 0,
+        "local_certificate_failures": 0
+      },
+      {
+        "name": "rail516",
+        "raw_columns": 47311,
+        "distinct_coverage_signatures": 47311,
+        "duplicate_coverage_classes": 0,
+        "columns_removed_by_frozen_quotient": 0,
+        "equal_cost_tie_removals": 0,
+        "strict_cost_dominance_removals": 0,
+        "local_certificate_failures": 0
+      },
+      {
+        "name": "rail582",
+        "raw_columns": 55515,
+        "distinct_coverage_signatures": 54324,
+        "duplicate_coverage_classes": 1153,
+        "columns_removed_by_frozen_quotient": 1191,
+        "equal_cost_tie_removals": 1172,
+        "strict_cost_dominance_removals": 19,
+        "local_certificate_failures": 0
+      }
+    ]
+  },
+  "shortest_path": {
+    "aggregate_removed_arcs": 23754,
+    "all_distance_certificates_match": true,
+    "instances": [
+      {
+        "name": "NY-distance",
+        "nodes": 264346,
+        "raw_arcs": 733846,
+        "quotient_arcs": 730100,
+        "arcs_removed_by_frozen_quotient": 3746,
+        "parallel_endpoint_classes": 3724,
+        "equal_cost_tie_removals": 3746,
+        "strict_cost_dominance_removals": 0,
+        "distance_sources": [1, 132173, 264346],
+        "distance_certificates_match": true
+      },
+      {
+        "name": "BAY-distance",
+        "nodes": 321270,
+        "raw_arcs": 800172,
+        "quotient_arcs": 794830,
+        "arcs_removed_by_frozen_quotient": 5342,
+        "parallel_endpoint_classes": 5264,
+        "equal_cost_tie_removals": 5342,
+        "strict_cost_dominance_removals": 0,
+        "distance_sources": [1, 160635, 321270],
+        "distance_certificates_match": true
+      },
+      {
+        "name": "COL-distance",
+        "nodes": 435666,
+        "raw_arcs": 1057066,
+        "quotient_arcs": 1042400,
+        "arcs_removed_by_frozen_quotient": 14666,
+        "parallel_endpoint_classes": 14562,
+        "equal_cost_tie_removals": 14666,
+        "strict_cost_dominance_removals": 0,
+        "distance_sources": [1, 217833, 435666],
+        "distance_certificates_match": true
+      }
+    ]
+  },
+  "scientific_interpretation": {
+    "external_survival_supported": true,
+    "synthetic_only_concern_reduced": true,
+    "blind_structural_discovery": false,
+    "novel_theorem": false,
+    "state_of_the_art": false,
+    "world_first": false,
+    "breakthrough": false,
+    "important_limitation": "Most external reductions are exact equal-cost duplicate actions. rail516 has zero removable columns and all three road graphs have zero strict-cost parallel-arc dominance. This makes the simple identical-successor quotient a useful exact preprocessing primitive but not a credible endpoint for the Mini-ORIGIN breakthrough claim."
+  },
+  "next_gate": "Move beyond literal duplicate-action elimination. The next mechanism must be preregistered and must either derive a stronger exact reduction generically from Bellman semantics or demonstrate autonomous transfer/discovery on an untouched problem family. Plain bisimulation/state aggregation is not sufficient because it is established prior art."
+}
