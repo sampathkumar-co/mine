@@ -80,7 +80,10 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     rows: list[dict[str, object]] = []
-    for path in sorted(args.input.rglob("train-shard-*.jsonl")):
+    shard_paths = sorted(args.input.rglob("*.jsonl"))
+    if len(shard_paths) != 10:
+        raise RuntimeError(f"expected exactly 10 JSONL shard files, received {len(shard_paths)}")
+    for path in shard_paths:
         rows.extend(json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
     expected_candidates = sum(len(items) for items in CANDIDATES_BY_ARM.values())
     if len(rows) != expected_candidates * 100:
