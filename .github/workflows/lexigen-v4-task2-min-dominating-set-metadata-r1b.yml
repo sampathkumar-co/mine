@@ -1,0 +1,56 @@
+name: LEXIGEN v4 Task 2 Min Dominating Set Metadata R1B
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/02-min-dominating-set/TRIGGER_METADATA_R1B"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify immutable engine and selection locks
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+      - name: Verify frozen Task 2 pretraining package
+        working-directory: lexigen-v4/tasks/02-min-dominating-set
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              "candidates.py": "cc020a9733e9c55aa5524e84a3b6201fcefbb6fb",
+              "candidates_r1b.py": "bd41002d82e9725193df7235fa1ac4140900bb2a",
+              "requirements.txt": "6b6bc893815835562a66a5a98c79e0c087978969",
+              "SYNTHETIC_R1_FAILURE.json": "dafc2d3fb718118471de81ed45a564c2fe60d290",
+              "SYNTHETIC_R1B_RESULT.json": "48aafbe34cde50dd8cc891b50de9b82db101ad89",
+              "inspect_training_metadata.py": "74d225a42cbb5d073fcff76b652ed3e39b36bf70",
+          }
+          for name, wanted in expected.items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
+          print("LEXIGEN_V4_TASK2_METADATA_R1B_PACKAGE_FROZEN")
+          PY
+      - name: Inspect official training manifest and test object identity only
+        working-directory: lexigen-v4/tasks/02-min-dominating-set
+        run: python -u inspect_training_metadata.py
+      - name: Upload immutable metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task2-min-dominating-set-metadata-r1b
+          path: lexigen-v4/tasks/02-min-dominating-set/metadata-evidence/
+          if-no-files-found: error
+          retention-days: 90
