@@ -1,0 +1,57 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 1,
+  "task": "communicability",
+  "revision": 1,
+  "lock_status": "frozen_before_test_manifest_access",
+  "training_run_id": 30375546627,
+  "training_artifact": {
+    "id": 8694809272,
+    "name": "lexigen-v4-task1-communicability-training-r1",
+    "digest": "sha256:4d4b0e8be1cdbbb02727685469ec64b856a020c49297b0344fafcd750784f5e9",
+    "summary_sha256": "d3481f2a3b6bfefca293903b0a4601546bed74b59bb1afcc40e2a247a8772537",
+    "results_sha256": "ca826f244cd7a9f7395b2b61aab4719d7602f17c665b3d22f4266b20a1329cc2"
+  },
+  "selected_by_arm": {
+    "v4_full": "v4_sort_bit_risk",
+    "v4_no_transfer": "no_transfer_sort_bit_risk",
+    "random_search": "random_contiguous_vector_risk",
+    "template_synthesis": "template_vectorized_batch",
+    "v3_compatible": "v3_dtype_specialization"
+  },
+  "test_manifest_name": "communicability_T100ms_n61_size100_test.jsonl",
+  "test_manifest_tree_oid": "48efda1a3b334b13efb874355985d9f1d87291f2",
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "execution_budget": {
+    "records": 100,
+    "shards": 10,
+    "selected_candidates_per_record": 5,
+    "candidate_executions_per_arm_per_record": 1,
+    "reference_executions_per_record": 1,
+    "invalid_output_retries": 0,
+    "successful_record_reruns": 0,
+    "threads": 1
+  },
+  "files": {
+    "candidates.py": "805b5d6631899f802ba89dd252ab88177ca360ab",
+    "requirements.txt": "2a015e538bd65ce7964090d3a55c00cc1633823e",
+    "selected_solvers.py": "3ddfb121e2540347d66718c34f9d2464aefffe49",
+    "blind_shard.py": "f4e14a6eef19f998350ec4f5018bb8a5a85322a7",
+    "aggregate_blind.py": "a735115437d99c4eb4c8d42a894b077c88354547",
+    "TRAINING_RESULT.json": "116df49f328e60517a6a020cf7bde7840f0c43da"
+  },
+  "workflow_git_blob_sha1": "fd7c1fb87c1bcfc64d4fde33397d6192ec85dc83",
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "candidate_changed_after_training": false,
+  "thresholds_changed_after_training": false,
+  "human_task_specific_solver_design": false,
+  "trigger_present_at_lock": false
+}

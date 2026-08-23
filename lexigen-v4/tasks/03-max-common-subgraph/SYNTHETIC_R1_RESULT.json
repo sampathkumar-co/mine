@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 3,
+  "task": "max_common_subgraph",
+  "stage": "synthetic_revision1",
+  "status": "passed_pretraining_correctness_gate",
+  "workflow_run_id": 32640323113,
+  "workflow_job_id": 97196307583,
+  "artifact_id": 9493420533,
+  "artifact_digest": "sha256:71a0897a41e41a326a38a2dfbfa801abe288f75825a6a9a45df8e4fff10ec336",
+  "candidate_source_git_blob_sha1": "a975a48ef3cef23728caa39650f2db5159fe9328",
+  "validator_git_blob_sha1": "4c73ca3e15441b4bf9cd6ec78cf666465357c316",
+  "candidate_count": 28,
+  "synthetic_case_count": 10,
+  "candidate_case_checks": 280,
+  "passing_checks": 280,
+  "failing_checks": 0,
+  "oracle": "independent exhaustive subset/injection enumeration; no OR-Tools and no candidate helpers",
+  "official_training_manifest_accessed": false,
+  "official_test_manifest_accessed": false,
+  "training_revision_consumed": false
+}

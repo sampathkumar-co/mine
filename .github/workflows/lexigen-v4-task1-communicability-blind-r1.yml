@@ -1,0 +1,97 @@
+name: LEXIGEN v4 Task 1 Communicability Blind R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/01-communicability/TRIGGER_BLIND_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  blind-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v4/tasks/01-communicability/requirements.txt
+      - name: Verify immutable campaign locks
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+      - name: Verify one-shot blind package
+        working-directory: lexigen-v4/tasks/01-communicability
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          lock = json.loads(Path("BLIND_LOCK.json").read_text())
+          for name, wanted in lock["files"].items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
+          if Path("TRIGGER_BLIND_R1").read_text().strip() != "LEXIGEN_V4_TASK1_COMMUNICABILITY_BLIND_R1_ONCE":
+              raise SystemExit("blind trigger content mismatch")
+          print("LEXIGEN_V4_TASK1_BLIND_PACKAGE_FROZEN")
+          PY
+      - name: Install frozen dependencies
+        working-directory: lexigen-v4/tasks/01-communicability
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Execute untouched blind shard once
+        working-directory: lexigen-v4/tasks/01-communicability
+        env:
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+          NUMEXPR_NUM_THREADS: "1"
+        run: python -u blind_shard.py --shard ${{ matrix.shard }} --output blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+      - name: Upload immutable blind shard
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task1-communicability-blind-r1-shard-${{ matrix.shard }}
+          path: lexigen-v4/tasks/01-communicability/blind-artifacts/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: blind-shards
+    if: always() && needs.blind-shards.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v4/tasks/01-communicability/requirements.txt
+      - name: Install frozen dependencies
+        working-directory: lexigen-v4/tasks/01-communicability
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v4-task1-communicability-blind-r1-shard-*
+          path: lexigen-v4/tasks/01-communicability/blind-downloaded
+      - name: Aggregate frozen blind gate and architecture comparison
+        working-directory: lexigen-v4/tasks/01-communicability
+        run: python -u aggregate_blind.py --input blind-downloaded --output blind-evidence
+      - name: Upload complete blind evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task1-communicability-blind-r1
+          path: lexigen-v4/tasks/01-communicability/blind-evidence/
+          if-no-files-found: error
+          retention-days: 90
