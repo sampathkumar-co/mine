@@ -1,0 +1,51 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 8,
+  "task": "dst_type_II_scipy_fftpack",
+  "revision": 1,
+  "stage": "blind",
+  "status": "passed_clean_unseen_win",
+  "workflow_run_id": 32654841237,
+  "artifact_id": 9497178072,
+  "artifact_digest": "sha256:a95f74d1259786408a9597f08cd2385a6369ba27582b5a76f16ff34a07fa1650",
+  "blind_shards_succeeded": 10,
+  "blind_shard_reruns": 0,
+  "blind_records": 100,
+  "raw_measurement_rows": 500,
+  "test_manifest_git_blob_sha1": "92c05fdab7f07bda70c6462485de69c5eaa7d665",
+  "test_manifest_sha256": "05ff6c199e58dbdc25787d7d497c7dc4901be75d390de1c5d620ecaed88be497",
+  "arms": {
+    "v4_full": {"candidate": "v4_zero_dtype_vector", "valid": 100, "harmonic_speedup": 1.7867544941351303, "median_speedup": 1.7818079103239848, "minimum_speedup": 1.5644660752458748, "passes_blind_gate": true},
+    "v4_no_transfer": {"candidate": "no_transfer_contiguous_dtype_vector", "valid": 100, "harmonic_speedup": 1.7870260386688366, "median_speedup": 1.7871818450124701, "minimum_speedup": 1.5585690314140046, "passes_blind_gate": true},
+    "random_search": {"candidate": "random_zero_dtype_vector", "valid": 100, "harmonic_speedup": 1.7904519417385865, "median_speedup": 1.7978891777431667, "minimum_speedup": 1.6185740786878942, "passes_blind_gate": true},
+    "template_synthesis": {"candidate": "template_dtype", "valid": 100, "harmonic_speedup": 1.788003612506649, "median_speedup": 1.7883294100604115, "minimum_speedup": 1.6105152367462432, "passes_blind_gate": true},
+    "v3_compatible": {"candidate": "v3_dtype_specialization", "valid": 100, "harmonic_speedup": 1.7907345252700744, "median_speedup": 1.7900559158342069, "minimum_speedup": 1.456867118677045, "passes_blind_gate": true}
+  },
+  "architecture_comparison": {
+    "v4_minus_v3_harmonic": -0.003980031134944051,
+    "v4_minus_template_harmonic": -0.0012491183715186427,
+    "v4_minus_random_harmonic": -0.0036974476034561388,
+    "v4_minus_no_transfer_harmonic": -0.0002715445337062583,
+    "v4_beats_v3_blind_raw_timing": false,
+    "v4_beats_template_blind_raw_timing": false,
+    "raw_timing_transfer_threshold_crossed": false,
+    "causal_transfer_credit": false,
+    "causal_transfer_credit_reason": "v4_full and v4_no_transfer selected winners use the same modern_float32 implementation; random_search also uses that implementation. Blind timing differences cannot establish transfer causality."
+  },
+  "clean_unseen_task_win": true,
+  "transfer_credit": false,
+  "invalid_output_retries": 0,
+  "campaign_after_task": {
+    "completed_tasks": 8,
+    "clean_unseen_wins": 5,
+    "v4_over_v3_strong_wins": 3,
+    "transfer_wins": 0,
+    "clean_win_families": ["miscellaneous", "graph_discrete", "linear_algebra", "numerical_optimization", "signal_processing"],
+    "basic_5_of_8_generalization_threshold": "passed",
+    "minimum_4_win_families_threshold": "passed",
+    "roadmap_G3_better_than_old_lexigen": "passed",
+    "roadmap_G4_mechanism_transfer": "failed",
+    "roadmap_G5_baseline_superiority": "not_passed",
+    "roadmap_G6_broad_generalization": "basic_threshold_passed_full_campaign_gate_failed"
+  }
+}
