@@ -13,6 +13,7 @@ env:
   OMP_NUM_THREADS: "1"
   OPENBLAS_NUM_THREADS: "1"
   MKL_NUM_THREADS: "1"
+  VECLIB_MAXIMUM_THREADS: "1"
   NUMEXPR_NUM_THREADS: "1"
 
 jobs:
@@ -50,6 +51,7 @@ jobs:
               "METADATA_R1_RESULT.json": "9cece8aa58b8134edc1a7a921879a4f7e0cf20f4",
               "train_shard.py": "3ccfe9fa0c5a70475d71273c2396d972b8d34ab1",
               "aggregate_train.py": "0117d2e75e0ee7063816558f52fbef42a7ea880e",
+              "TRAIN_R1_LOCK.json": "40187cb2197a471b8e0ea4249105c5a40a653d4b",
           }
           for name, wanted in expected.items():
               data = Path(name).read_bytes()
@@ -57,7 +59,7 @@ jobs:
               if actual != wanted:
                   raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
           lock = json.loads(Path("TRAIN_R1_LOCK.json").read_text())
-          if lock["candidate_count"] != 28 or lock["training_record_count"] != 100 or lock["test_payloads_opened"] != 0:
+          if lock["candidate_count"] != 28 or lock["training_record_count"] != 100 or lock["test_payloads_opened"] != 0 or lock["training_revision_consumed"]:
               raise SystemExit("training lock invariant mismatch")
           print("LEXIGEN_V4_TASK4_TRAIN_R1_PACKAGE_FROZEN")
           PY
@@ -66,12 +68,12 @@ jobs:
         run: pip install -r requirements.txt
       - name: Execute official training shard once
         working-directory: lexigen-v4/tasks/04-eigenvalues-complex
-        run: python -u train_shard.py --shard ${{ matrix.shard }} --output training-evidence/shard-${{ matrix.shard }}.jsonl
+        run: python -u train_shard.py --shard ${{ matrix.shard }} --output training-evidence/train-shard-${{ matrix.shard }}.jsonl
       - name: Upload immutable training shard
         uses: actions/upload-artifact@v4
         with:
           name: lexigen-v4-task4-eigenvalues-complex-train-r1-shard-${{ matrix.shard }}
-          path: lexigen-v4/tasks/04-eigenvalues-complex/training-evidence/shard-${{ matrix.shard }}.jsonl
+          path: lexigen-v4/tasks/04-eigenvalues-complex/training-evidence/train-shard-${{ matrix.shard }}.jsonl
           if-no-files-found: error
           retention-days: 90
 
@@ -84,6 +86,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v4/tasks/04-eigenvalues-complex/requirements.txt
+      - name: Install frozen dependencies needed by aggregator imports
+        working-directory: lexigen-v4/tasks/04-eigenvalues-complex
+        run: pip install -r requirements.txt
       - uses: actions/download-artifact@v4
         with:
           pattern: lexigen-v4-task4-eigenvalues-complex-train-r1-shard-*
