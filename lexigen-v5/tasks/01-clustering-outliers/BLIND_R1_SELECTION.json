@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 1,
+  "task": "clustering_outliers",
+  "stage": "blind_selection",
+  "selection_source": "TRAIN_R1_RESULT.json",
+  "selected": {
+    "v5_full": {"candidate":"v5_full_r6_514b3e8a41ba1f8b73a1","implementation":"generic_reduced_representation","learned_transfer":null},
+    "v5_no_transfer": {"candidate":"v5_no_transfer_r6_66c5848a3c8a4f51b562","implementation":"generic_reduced_representation"},
+    "random_search": {"candidate":"random_search_r3_38776670db84b717ed92","implementation":"generic_reduced_representation"},
+    "static_template": {"candidate":"static_template_r2_8fd871e046faa7e4d37c","implementation":"generic_reduced_representation"},
+    "v4_compatible": {"candidate":"v4_compatible_r6_0dde88a4a159a3ad0e40","implementation":"generic_active_core"}
+  },
+  "selected_candidate_count": 5,
+  "test_manifest_name": "clustering_outliers_T100ms_n2457_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "5ced94f8be055ea42d0278850b9e599cfe293d1e",
+  "expected_dataset_shape": [2457,10],
+  "test_manifest_contents_opened_before_selection": false,
+  "test_payloads_opened_before_selection": 0,
+  "candidate_implementations_changed_after_training": false,
+  "transfer_credit_possible": false,
+  "transfer_credit_block_reason": "Selected v5_full candidate contains no learned transfer causal ID. Protocol condition 2 for causal transfer is therefore impossible on Task 1. Additionally v5_full, v5_no_transfer, random_search and static_template selected programs are implementation-equivalent generic reduced-representation paths.",
+  "recipe_removal_replay_required": false,
+  "recipe_removal_replay_reason": "No learned transfer recipe is present in the selected v5_full candidate, so Task 1 is ineligible for causal transfer credit before blind access."
+}
