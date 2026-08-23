@@ -1,0 +1,52 @@
+name: Mini-ORIGIN TSPLIB External Holdout v0.92
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v92-tsplib-external-holdout
+    paths:
+      - 'mini-origin/campaigns/v92-tsplib-archive-lock-manifest.json'
+  pull_request:
+    paths:
+      - '.github/workflows/mini-origin-v92-tsplib-evaluate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[dev]'
+      - name: Run frozen v0.92 certificates
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          pytest -q tests/test_tsplib_external_holdout_v92.py
+      - name: Reverify archives and run hostile external holdout
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          mkdir -p results/v92
+          python -m mini_origin.tsplib_external_holdout_v92 \
+            --output results/v92/tsplib-external-holdout.json \
+            2>&1 | tee results/v92/tsplib-external-holdout.log
+      - name: Upload v0.92 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v92-tsplib-external-holdout
+          path: |
+            mini-origin/results/v92/tsplib-external-holdout.json
+            mini-origin/results/v92/tsplib-external-holdout.log
+          if-no-files-found: warn
