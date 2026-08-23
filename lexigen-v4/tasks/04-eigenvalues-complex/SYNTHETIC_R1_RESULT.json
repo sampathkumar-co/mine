@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 4,
+  "task": "eigenvalues_complex",
+  "revision": 1,
+  "status": "passed_independent_synthetic_gate",
+  "workflow_run_id": 32642132819,
+  "workflow_job_id": 97200740392,
+  "artifact_id": 9493880381,
+  "artifact_digest": "sha256:96a1097d456e12721c34d399e94c57ae9b4c8b9da581e40358b31418027aa823",
+  "summary_sha256": "a8f2d60deac3f74aede56a6d267973928f28dc2f5f0f07d1daa707c0315cf1b5",
+  "oracle": "mpmath.eig at 80 decimal digits",
+  "candidate_count": 28,
+  "case_count": 10,
+  "checks_passed": 280,
+  "checks_total": 280,
+  "v4_mixed_worst_relative_error": 1.2372148861971926e-7,
+  "official_training_opened": false,
+  "official_test_opened": false,
+  "training_revision_consumed": false
+}

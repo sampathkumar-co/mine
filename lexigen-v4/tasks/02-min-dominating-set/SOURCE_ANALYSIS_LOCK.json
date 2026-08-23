@@ -1,0 +1,32 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 2,
+  "task": "min_dominating_set",
+  "revision": 1,
+  "authoritative_source_analysis": {
+    "workflow_run_id": 30377853794,
+    "artifact_id": 8695691046,
+    "artifact_name": "lexigen-v4-task2-min-dominating-set-source-r1",
+    "artifact_digest": "sha256:13fc31a05d34754b577eb437b6e2f52f2af895c84a48eeb64341c4a019fa66a8",
+    "public_pull_request": 105,
+    "public_head_sha": "917c3a670145ddee6e3a9034121f74ecb6ff2949"
+  },
+  "source_git_blob_sha1": "09fb1538525165ee26fc3ae5f97f55f5936a2a1a",
+  "source_sha256": "42b577e1a7f839e7a09abbf3c440148bc9c913d84ec6af0f818b08f79cf116f4",
+  "analysis_sha256": "0ec7cdf1babcb73b31f95a5a9b54f18b6cc5bbf8a47ff00d2d857c50caa98aeb",
+  "proposal_ids": {
+    "v4_full": ["e68f7374b2766faca94e", "3974464c891314006ce1", "52ba04b8566bc8396228", "7a5feb0a513608d519cf", "23a6d32d54918634c50f", "d78be1df6da543bc6ca0"],
+    "v4_no_transfer": ["b563db5e067959439c56", "5af41e44e52633edd1ef", "4ce2e5c5a068217d34db", "72dee67ce4731f83170e", "231ceacee74544920489", "7f40f694bec919971df6"],
+    "random_search": ["f876c64091e95a581f02", "1f0e2bd6255af11806fd", "029d5515bdf7487eda5c", "a821129821b5319f50e5", "eff611d59e65323c38c4", "730d107ab03015fee0b3"],
+    "template_synthesis": ["4aee9e84d29f993a79cf", "5d6248e75eb272091e59", "85a5639e8d3d0d079ebc", "8c776313815dc08172c4", "47c10c8bba21e4fb8c3b", "cd5a9388a67f28884b74"],
+    "v3_compatible": ["a028ee55caef1edd4003", "10637b163fbe6bbda23f", "104bff4dd67bf0543afa", "4b16db8aec5d8777f5da"]
+  },
+  "ablation_note": "v4_full and v4_no_transfer produced identical mechanism sequences on Task 2; positive transfer evidence is impossible unless discovery cost differs later.",
+  "training_manifest_opened": false,
+  "training_payloads_opened": false,
+  "test_manifest_opened": false,
+  "test_payloads_opened": false,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "human_task_specific_solver_design": false
+}

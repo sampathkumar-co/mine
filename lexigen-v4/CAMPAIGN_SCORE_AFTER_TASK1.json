@@ -1,0 +1,17 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "completed_tasks": 1,
+  "total_tasks": 8,
+  "v4_clean_blind_wins": 1,
+  "v4_failed_tasks": 0,
+  "families_with_v4_wins": ["miscellaneous"],
+  "architecture_comparison_wins": {
+    "v4_over_v3": 0,
+    "v4_over_random_search": 0,
+    "v4_over_template_synthesis": 0,
+    "v4_over_no_transfer": 0
+  },
+  "campaign_gate_passed": false,
+  "current_assessment": "v4 can win tasks but has not improved the discovery architecture. Task 1 evidence points to unchanged or worse architecture.",
+  "next_task": "min_dominating_set"
+}
