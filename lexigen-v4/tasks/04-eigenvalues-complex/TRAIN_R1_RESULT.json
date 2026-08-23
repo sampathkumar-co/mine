@@ -1,0 +1,72 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 4,
+  "task": "eigenvalues_complex",
+  "stage": "training_revision1",
+  "status": "failed_frozen_training_gate_no_blind_opened",
+  "authoritative_training_run_id": 32643221594,
+  "authoritative_aggregate_recovery_run_id": 32643617901,
+  "aggregate_artifact_id": 9494325109,
+  "aggregate_artifact_digest": "sha256:915778533a93e1267d55e6b90d2d1b66a9eeb14ef16f4d94a70acd23e8b67fc9",
+  "training_summary_sha256": "e7ea321cfdde5070a3d66c7037c95639a428792642588194ac06843decabd041",
+  "training_results_sha256": "ad0d68d0e73182b668eeb46b97fc2346242b91356203a44a27439a5f7eddb7b1",
+  "raw_record_count": 2800,
+  "candidate_count": 28,
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup_minimum": 1.05,
+    "invalid_output_retries": 0
+  },
+  "selected_by_arm": {
+    "v4_full": {
+      "candidate": "v4_mixed_symmetric_risk",
+      "valid": 100,
+      "harmonic_speedup": 1.4505102136301409,
+      "minimum_speedup": 1.0285598467870491,
+      "passes_training_gate": false
+    },
+    "v4_no_transfer": {
+      "candidate": "no_transfer_mixed_symmetric_risk",
+      "valid": 100,
+      "harmonic_speedup": 1.4554987775092068,
+      "minimum_speedup": 1.31094916412765,
+      "passes_training_gate": false
+    },
+    "random_search": {
+      "candidate": "random_zero_contiguous_closed",
+      "valid": 100,
+      "harmonic_speedup": 1.4617534643482093,
+      "minimum_speedup": 1.3892986540421255,
+      "passes_training_gate": false
+    },
+    "template_synthesis": {
+      "candidate": "template_vectorized_batch",
+      "valid": 100,
+      "harmonic_speedup": 1.4638163556795767,
+      "minimum_speedup": 1.3874143191099952,
+      "passes_training_gate": false
+    },
+    "v3_compatible": {
+      "candidate": "v3_zero_copy_representation",
+      "valid": 100,
+      "harmonic_speedup": 1.009619485058643,
+      "minimum_speedup": 0.9597278598937125,
+      "passes_training_gate": false
+    }
+  },
+  "architecture_comparison": {
+    "v4_minus_v3_harmonic": 0.4408907285714978,
+    "v4_minus_template_harmonic": -0.01330614204943581,
+    "v4_minus_random_harmonic": -0.01124325071806842,
+    "v4_minus_no_transfer_harmonic": -0.004988563879065877,
+    "v4_beats_v3_on_training": false,
+    "v4_beats_template_on_training": false,
+    "transfer_advantage_observed": false
+  },
+  "test_manifest_opened": false,
+  "test_payloads_opened": 0,
+  "blind_execution_count": 0,
+  "training_revision_consumed": true,
+  "protocol_decision": "stop Task 4 at training; do not execute blind evaluation"
+}
