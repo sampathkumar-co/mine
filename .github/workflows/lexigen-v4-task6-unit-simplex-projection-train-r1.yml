@@ -1,0 +1,99 @@
+name: LEXIGEN v4 Task 6 Unit Simplex Projection Train R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/06-unit-simplex-projection/TRIGGER_TRAIN_R1"
+
+permissions:
+  contents: read
+
+env:
+  OMP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+  NUMEXPR_NUM_THREADS: "1"
+
+jobs:
+  train:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v4/tasks/06-unit-simplex-projection/requirements.txt
+      - name: Verify immutable campaign locks
+        working-directory: lexigen-v4
+        run: |
+          python -u verify_engine_lock.py
+          python -u verify_selection_lock.py
+      - name: Verify frozen Task 6 training package
+        working-directory: lexigen-v4/tasks/06-unit-simplex-projection
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          lock = json.loads(Path("TRAIN_R1_LOCK.json").read_text())
+          paths = {
+              "candidates.py": "candidates.py",
+              "requirements.txt": "requirements.txt",
+              "SYNTHETIC_R1_RESULT.json": "SYNTHETIC_R1_RESULT.json",
+              "METADATA_R1B_RESULT.json": "METADATA_R1B_RESULT.json",
+              "train_shard.py": "train_shard.py",
+              "aggregate_train.py": "aggregate_train.py",
+          }
+          for key, rel in paths.items():
+              data = Path(rel).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
+              wanted = lock["git_blob_sha1"][key]
+              if actual != wanted:
+                  raise SystemExit(f"{key} blob mismatch: {actual} != {wanted}")
+          if lock["candidate_count"] != 28 or lock["training_records"] != 100 or lock["shards"] != 10 or lock["vector_length"] != 982958:
+              raise SystemExit("training budget/regime lock mismatch")
+          if lock["test_manifest_opened_before_training"] or lock["test_payloads_opened_before_training"] != 0:
+              raise SystemExit("blind boundary lock mismatch")
+          print("LEXIGEN_V4_TASK6_TRAIN_R1_PACKAGE_FROZEN")
+          PY
+      - name: Install frozen dependency
+        working-directory: lexigen-v4/tasks/06-unit-simplex-projection
+        run: pip install -r requirements.txt
+      - name: Execute authoritative training shard
+        working-directory: lexigen-v4/tasks/06-unit-simplex-projection
+        run: python -u train_shard.py --shard ${{ matrix.shard }} --output training-evidence/train-shard-${{ matrix.shard }}.jsonl
+      - name: Upload immutable training shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task6-unit-simplex-projection-train-r1-shard-${{ matrix.shard }}
+          path: lexigen-v4/tasks/06-unit-simplex-projection/training-evidence/train-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: train
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v4-task6-unit-simplex-projection-train-r1-shard-*
+          path: lexigen-v4/tasks/06-unit-simplex-projection/training-downloaded
+          merge-multiple: false
+      - name: Aggregate exactly the authoritative shard artifacts
+        working-directory: lexigen-v4/tasks/06-unit-simplex-projection
+        run: python -u aggregate_train.py --input training-downloaded --output training-complete-evidence
+      - name: Upload complete training evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task6-unit-simplex-projection-training-r1-complete
+          path: lexigen-v4/tasks/06-unit-simplex-projection/training-complete-evidence/
+          if-no-files-found: error
+          retention-days: 90
