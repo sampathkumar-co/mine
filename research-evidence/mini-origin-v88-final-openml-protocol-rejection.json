@@ -1,0 +1,72 @@
+{
+  "status": "final_openml_protocol_rejected_v88",
+  "preserved_on": "2026-08-23",
+  "execution": {
+    "branch": "research/mini-origin-v88-final-openml-gate",
+    "head_commit": "49a55a7f7dc9c86786ea3417452eb5b70e276974",
+    "workflow": "Mini-ORIGIN Final Fresh OpenML Gate v0.88",
+    "workflow_run_id": 31551503748,
+    "workflow_job_id": 93974972096,
+    "workflow_conclusion": "failure",
+    "artifact_id": 9124581753,
+    "artifact_zip_sha256": "ec8ecd1d07c7a95146a86f7ad80af5824c58de754ff03790e4e7b299fb96099a",
+    "artifact_size_bytes": 1208443
+  },
+  "frozen_boundary": {
+    "preflight_tests_passed": 28,
+    "authoritative_v86_exclusion_registry_verified": true,
+    "scientific_algorithm_changed_before_run": false,
+    "selection_thresholds_changed_before_run": false,
+    "kill_gate_changed_before_run": false
+  },
+  "observed_execution": {
+    "openml_access_occurred": true,
+    "raw_dataset_byte_downloads_occurred": true,
+    "hash_locked_eligible_dataset_count": 5,
+    "required_dataset_count": 7,
+    "manifest_created": false,
+    "states_created": false,
+    "records_or_labels_parsed_by_blind_adapter": false,
+    "mini_origin_reference_solver_executed_on_v88_states": false,
+    "rust_replay_executed_on_v88_states": false,
+    "final_scientific_kill_gate_executed": false
+  },
+  "primary_failure": {
+    "stage": "frozen OpenML metadata eligibility and raw-byte hash lock before blind record parsing",
+    "error": "only 5 eligible hash-locked OpenML datasets; required 7",
+    "classification": "protocol/source incompatibility before the preregistered seven-dataset suite could be formed"
+  },
+  "workflow_postmortem": {
+    "hash_lock_step_was_reported_success_despite_python_failure": true,
+    "reference_step_was_reported_success_despite_python_failure": true,
+    "cause": "the hash-lock and reference shell pipelines used tee without pipefail, so the pipeline exit code came from tee rather than Python",
+    "downstream_rust_failure": "the compiled Rust replay then attempted to open results/v88/states.txt, which did not exist, and panicked with a missing-file error",
+    "interpretation": "the Rust failure is downstream infrastructure fallout and is not evidence against the frozen Mini-ORIGIN solver"
+  },
+  "artifact_contents": [
+    "hash-lock.log",
+    "reference.log",
+    "response_cost_lower_bound_v88"
+  ],
+  "missing_expected_scientific_artifacts": [
+    "manifest.json",
+    "states.txt",
+    "python-reference.json",
+    "rust-results.json",
+    "evidence.json"
+  ],
+  "claim_boundary": {
+    "solver_pass": false,
+    "solver_fail": false,
+    "fresh_external_generalization_proven": false,
+    "world_level_breakthrough": false,
+    "independent_reproduction": false,
+    "allowed_interpretation": "negative protocol evidence only: the frozen v0.88 OpenML selection/byte-lock contract could not produce the preregistered seven-dataset suite, so the scientific blind gate was never reached"
+  },
+  "integrity_decision": {
+    "rerun_v88_after_relaxing_or_retuning_selection": false,
+    "reinterpret_downstream_missing_file_failure_as_solver_failure": false,
+    "preserve_this_rejection_permanently": true,
+    "future_work_rule": "Any further external experiment must be a newly named and preregistered protocol with an explicit new claim boundary. It must not be presented as an untouched repair or successful completion of this v0.88 gate."
+  }
+}
