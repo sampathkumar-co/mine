@@ -1,0 +1,116 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "selection_seed": "LEXIGEN-V4-GENERALIZATION-2026-07-28-A",
+  "source_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "source_metadata": {
+    "url": "https://api.github.com/repos/oripress/AlgoTune/git/trees/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906?recursive=1",
+    "commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+    "tree_sha": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+    "response_sha256": "978026ee182615aece81a9eb4f2f6752a72a0076ccd040eddf4b60818fc51495",
+    "etag": "W/\"29da93cbe6d9dc941578e79f0c18b2ae974f26d96b96e4e7ac3190fca3119f91\"",
+    "layout_rule": "AlgoTuneTasks/<task>/<task>.py",
+    "matched_path_count": 154,
+    "matched_paths_sha256": "9ebf5a97fd88675bd6dad4a5c7186c0605338e305cbefb61b0f09c1676f40d36",
+    "task_contents_opened": false
+  },
+  "dataset_metadata": {
+    "url": "https://huggingface.co/api/datasets/oripress/AlgoTune/tree/bb02811fa47ca1c833baaa344949bcd8fb307ac8/data?recursive=false&expand=false&limit=1000",
+    "revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+    "response_sha256": "be7c291f4f27f3a4c12761ee560aa91ea227349ec4202b88e129c1b0e2b859a5",
+    "etag": "W/\"426c-szqfr6HLdp4EZVk2X0UwEKcxofQ\"",
+    "directory_count": 154,
+    "directory_identity_sha256": "c64e110fa60f5501d5b697e4ad30881dc404010b052efa359b85e2de8a34b1ed",
+    "manifest_contents_opened": false,
+    "payloads_opened": false
+  },
+  "source_task_count": 154,
+  "dataset_task_count": 154,
+  "eligible_common_task_count": 142,
+  "inventory_sha256": "6c1d81a4c068251bc2f437e3e9b19a8b37bdaea17b98c09317f2fe88d59baf99",
+  "excluded_tasks": [
+    "articulation_points",
+    "base64_encoding",
+    "chacha_encryption",
+    "cvar_projection",
+    "integer_factorization",
+    "kmeans",
+    "numerical_integration",
+    "outer_product",
+    "polynomial_mixed",
+    "procrustes",
+    "sha256_hashing",
+    "vector_quantization",
+    "water_filling"
+  ],
+  "task_count": 8,
+  "minimum_distinct_families": 6,
+  "maximum_per_family": 2,
+  "selected": [
+    {
+      "task": "communicability",
+      "family": "miscellaneous",
+      "score": "0108e091fb626c73b1c33448e74accf34f2d2c99e68683cab21b8d2c751eb8ed"
+    },
+    {
+      "task": "min_dominating_set",
+      "family": "miscellaneous",
+      "score": "0141916addef18afb3757b45e0c0687a7d67b373eb0a7022f78f736b79aaa452"
+    },
+    {
+      "task": "max_common_subgraph",
+      "family": "graph_discrete",
+      "score": "0169f11f790e55a04f50fcc95088aa8d14af2ce92d5015598e2ef18c55eb17c9"
+    },
+    {
+      "task": "eigenvalues_complex",
+      "family": "linear_algebra",
+      "score": "036c4a1363dc4db01fc17acdc46909caa603d90363a34c38b13ccc958a55260d"
+    },
+    {
+      "task": "tensor_completion_3d",
+      "family": "linear_algebra",
+      "score": "0634a70310926b0cd8d01653d6dde905cf123505cb934e70d868ad01d3b055ea"
+    },
+    {
+      "task": "unit_simplex_projection",
+      "family": "numerical_optimization",
+      "score": "07a8dd6a58e019c3213a67da79d3812e93ef10cd323e50945c058aefd10652fb"
+    },
+    {
+      "task": "ode_fitzhughnagumo",
+      "family": "scientific_computing",
+      "score": "0acad895f8e06616869a599847ec4d1f0f1348fe6d9529fd7570f804fed5f398"
+    },
+    {
+      "task": "dst_type_II_scipy_fftpack",
+      "family": "signal_processing",
+      "score": "21e78883fa3cfb2148c595bacdd71e533b475b8bd1fb803d2d50527bb4873f60"
+    }
+  ],
+  "selected_family_counts": {
+    "graph_discrete": 1,
+    "linear_algebra": 2,
+    "miscellaneous": 2,
+    "numerical_optimization": 1,
+    "scientific_computing": 1,
+    "signal_processing": 1
+  },
+  "enumerator_amendment": {
+    "classification": "infrastructure_only_frozen_snapshot_layout_fix",
+    "original_run_id": 30372778744,
+    "diagnostic_run_ids": [
+      30373004021,
+      30373226269,
+      30373399055
+    ],
+    "source_path_diagnostic_artifact": 8693791651,
+    "source_layout_diagnostic_artifact": 8693867527,
+    "scientific_rules_changed": false
+  },
+  "task_contents_opened": false,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "data_manifests_opened": false,
+  "data_payloads_opened": false
+}

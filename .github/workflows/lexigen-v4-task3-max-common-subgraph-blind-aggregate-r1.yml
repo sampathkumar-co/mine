@@ -1,0 +1,71 @@
+name: LEXIGEN v4 Task 3 Max Common Subgraph Blind Aggregate R1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lexigen-v4/tasks/03-max-common-subgraph/TRIGGER_BLIND_AGGREGATE_R1"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  aggregate-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v4/tasks/03-max-common-subgraph/requirements.txt
+      - name: Verify immutable blind evidence package
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          expected = {
+              "candidates.py": "a975a48ef3cef23728caa39650f2db5159fe9328",
+              "requirements.txt": "6b6bc893815835562a66a5a98c79e0c087978969",
+              "TRAINING_R1_RESULT.json": "d7e6f8d07662629c4665a6981c5933633e3280e0",
+              "selected_solvers.py": "ee162f263114d1103d31c0a8affbfe4254334050",
+              "blind_shard.py": "d2a99113c10a94c3f4074721ac1f305b2e2002b9",
+              "aggregate_blind.py": "2629f2850974f7e9b378b7ee334254169606cc83",
+          }
+          for name, wanted in expected.items():
+              data = Path(name).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"{name} blob mismatch: {actual} != {wanted}")
+          failure = json.loads(Path("BLIND_AGGREGATION_FAILURE_R1.json").read_text())
+          if failure["blind_workflow_run_id"] != 32640922659 or failure["blind_records_measured"] != 100:
+              raise SystemExit("aggregation failure provenance mismatch")
+          lock = json.loads(Path("BLIND_LOCK.json").read_text())
+          if lock["test_manifest_tree_oid"] != "cee4dc02b968ffeac9fbfcd8d5157521ead9d3dc":
+              raise SystemExit("blind lock identity mismatch")
+          print("LEXIGEN_V4_TASK3_AGGREGATE_ONLY_R1_FROZEN")
+          PY
+      - name: Install unchanged frozen dependencies needed by aggregator imports
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          repository: sampathkumar-co/mine
+          run-id: 32640922659
+          github-token: ${{ github.token }}
+          pattern: lexigen-v4-task3-max-common-subgraph-blind-r1-shard-*
+          path: lexigen-v4/tasks/03-max-common-subgraph/blind-downloaded
+          merge-multiple: false
+      - name: Aggregate the original immutable blind shards only
+        working-directory: lexigen-v4/tasks/03-max-common-subgraph
+        run: python -u aggregate_blind.py --input blind-downloaded --output blind-complete-evidence
+      - name: Upload recovered complete blind evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v4-task3-max-common-subgraph-blind-r1-aggregate-recovered
+          path: lexigen-v4/tasks/03-max-common-subgraph/blind-complete-evidence/
+          if-no-files-found: error
+          retention-days: 90
