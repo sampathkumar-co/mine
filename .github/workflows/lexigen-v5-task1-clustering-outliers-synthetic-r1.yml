@@ -1,0 +1,88 @@
+name: LEXIGEN v5 Task 1 Clustering Outliers Synthetic R1
+
+on:
+  pull_request:
+    branches:
+      - lexigen/v5-transfer-causal-preregister-r1
+    paths:
+      - "lexigen-v5/tasks/01-clustering-outliers/TRIGGER_SYNTHETIC_R1"
+
+permissions:
+  contents: read
+
+env:
+  OMP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+  NUMEXPR_NUM_THREADS: "1"
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lexigen-v5/tasks/01-clustering-outliers/requirements.txt
+      - name: Verify frozen campaign scientific files
+        working-directory: lexigen-v5
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          lock = json.loads(Path("ENGINE_LOCK.json").read_text())
+          for key, wanted in lock["git_blob_sha1"].items():
+              if key == "workflow":
+                  continue
+              data = Path(key).read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"campaign lock mismatch {key}: {actual} != {wanted}")
+          print("LEXIGEN_V5_CAMPAIGN_SCIENTIFIC_LOCK_VERIFIED")
+          PY
+      - name: Verify Task 1 synthetic lock before execution
+        working-directory: lexigen-v5/tasks/01-clustering-outliers
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          lock = json.loads(Path("SYNTHETIC_R1_LOCK.json").read_text())
+          paths = {
+              "SOURCE_R1_RESULT.json": Path("SOURCE_R1_RESULT.json"),
+              "candidates.py": Path("candidates.py"),
+              "CANDIDATE_PROVENANCE.json": Path("CANDIDATE_PROVENANCE.json"),
+              "requirements.txt": Path("requirements.txt"),
+              "synthetic_validate.py": Path("synthetic_validate.py"),
+              "workflow": Path("../../../.github/workflows/lexigen-v5-task1-clustering-outliers-synthetic-r1.yml"),
+          }
+          for key, wanted in lock["git_blob_sha1"].items():
+              data = paths[key].read_bytes()
+              actual = hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
+              if actual != wanted:
+                  raise SystemExit(f"Task 1 synthetic lock mismatch {key}: {actual} != {wanted}")
+          if lock["candidate_count"] != 30 or lock["synthetic_cases"] != 6 or lock["expected_checks"] != 180:
+              raise SystemExit("Task 1 synthetic budget mismatch")
+          if lock["official_training_manifest_opened_before_lock"] or lock["official_training_payloads_opened_before_lock"] or lock["official_test_manifest_opened_before_lock"] or lock["official_test_payloads_opened_before_lock"]:
+              raise SystemExit("official data boundary violated before Task 1 synthetic lock")
+          print("LEXIGEN_V5_TASK1_SYNTHETIC_R1_LOCK_VERIFIED")
+          PY
+      - name: Compile frozen Task 1 candidate package
+        working-directory: lexigen-v5/tasks/01-clustering-outliers
+        run: python -m compileall -q candidates.py synthetic_validate.py
+      - name: Install frozen benchmark dependencies
+        working-directory: lexigen-v5/tasks/01-clustering-outliers
+        run: pip install -r requirements.txt
+      - name: Run source-derived verifier-equivalent synthetic gate
+        working-directory: lexigen-v5/tasks/01-clustering-outliers
+        run: python -u synthetic_validate.py --output synthetic-evidence
+      - name: Upload immutable synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task1-clustering-outliers-synthetic-r1
+          path: lexigen-v5/tasks/01-clustering-outliers/synthetic-evidence/
+          if-no-files-found: error
+          retention-days: 90
