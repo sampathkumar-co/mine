@@ -1,0 +1,39 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 5,
+  "task": "tensor_completion_3d",
+  "revision": 1,
+  "stage": "official_training",
+  "status": "passed",
+  "workflow_run_id": 32647636908,
+  "artifact_id": 9495308168,
+  "artifact_digest": "sha256:a8f9486b2d8b7a4ecfe3ae7934af017aa3ba496d58d4d824c126466e23917df1",
+  "training_shards_succeeded": 10,
+  "training_shard_reruns": 0,
+  "raw_measurement_rows": 2800,
+  "candidate_count": 28,
+  "training_records": 100,
+  "selected_by_arm": {
+    "v4_full": {"candidate": "v4_structure_refine_closed", "valid": 100, "harmonic_speedup": 3.8066500477342733, "median_speedup": 3.687986035781325, "minimum_speedup": 2.288396635915793, "passes_training_gate": true},
+    "v4_no_transfer": {"candidate": "no_transfer_structure_refine_closed", "valid": 100, "harmonic_speedup": 3.80926014430891, "median_speedup": 3.6646342151966236, "minimum_speedup": 2.506842656905876, "passes_training_gate": true},
+    "random_search": {"candidate": "random_zero_closed", "valid": 100, "harmonic_speedup": 3.8079514009859876, "median_speedup": 3.7117906889177137, "minimum_speedup": 2.4713136641559657, "passes_training_gate": true},
+    "template_synthesis": {"candidate": "template_active_set", "valid": 100, "harmonic_speedup": 3.7909595318464144, "median_speedup": 3.638195980283686, "minimum_speedup": 2.5173796609368333, "passes_training_gate": true},
+    "v3_compatible": {"candidate": "v3_zero_copy_representation", "valid": 100, "harmonic_speedup": 1.0051279060694749, "median_speedup": 1.0016958712279376, "minimum_speedup": 0.9652606473396372, "passes_training_gate": false}
+  },
+  "architecture_comparison": {
+    "v4_minus_v3_harmonic": 2.8015221416647984,
+    "v4_minus_template_harmonic": 0.015690515887858858,
+    "v4_minus_random_harmonic": -0.0013013532517143211,
+    "v4_minus_no_transfer_harmonic": -0.0026100965746365112,
+    "v4_beats_v3_on_training": true,
+    "v4_beats_template_on_training": true,
+    "transfer_advantage_observed": false
+  },
+  "frozen_gate": {"valid_required": 100, "harmonic_speedup_minimum": 1.5, "minimum_speedup": 1.05, "invalid_output_retries": 0},
+  "test_manifest_name": "tensor_completion_3d_T100ms_n6_size100_test.jsonl",
+  "test_manifest_tree_oid": "0bdbf8d4e6dd3897d50143dbf3778ca3e4e02f56",
+  "test_manifest_opened": false,
+  "test_payloads_opened": 0,
+  "blind_selection_frozen": true,
+  "transfer_credit_after_training": false
+}
