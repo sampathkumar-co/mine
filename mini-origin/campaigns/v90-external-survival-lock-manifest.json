@@ -1,0 +1,99 @@
+{
+  "access_boundary": {
+    "decompression_performed": false,
+    "instance_records_parsed": false,
+    "quotient_statistics_computed": false,
+    "raw_bytes_downloaded": true,
+    "tokenization_performed": false
+  },
+  "raw_stream_count": 6,
+  "records": [
+    {
+      "bytes": 1934527,
+      "family": "or_library",
+      "final_url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail507.txt",
+      "name": "rail507",
+      "requested_url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail507.txt",
+      "sha256": "552296fe18f45d3077536f0fdc35c0fd355a5c2036e24954191f73af6a2b5bd1",
+      "transport_headers": {
+        "content_length": "1934527",
+        "content_type": "text/plain; charset=UTF-8",
+        "etag": "\"1d84bf-3e37e8ed77000\"",
+        "last_modified": "Tue, 07 Sep 2004 11:47:12 GMT"
+      }
+    },
+    {
+      "bytes": 1412110,
+      "family": "or_library",
+      "final_url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail516.txt",
+      "name": "rail516",
+      "requested_url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail516.txt",
+      "sha256": "b12e088764cc514df463ae888f6f3b8c58b8caf74ec875e20dd20093f4ae5fd7",
+      "transport_headers": {
+        "content_length": "1412110",
+        "content_type": "text/plain; charset=UTF-8",
+        "etag": "\"158c0e-3e37e8ed77000\"",
+        "last_modified": "Tue, 07 Sep 2004 11:47:12 GMT"
+      }
+    },
+    {
+      "bytes": 1897663,
+      "family": "or_library",
+      "final_url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail582.txt",
+      "name": "rail582",
+      "requested_url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/rail582.txt",
+      "sha256": "870db91f8217fc8defb7a95b642791975e56aba736741b210df8642890df385b",
+      "transport_headers": {
+        "content_length": "1897663",
+        "content_type": "text/plain; charset=UTF-8",
+        "etag": "\"1cf4bf-3e37e8ee6b240\"",
+        "last_modified": "Tue, 07 Sep 2004 11:47:13 GMT"
+      }
+    },
+    {
+      "bytes": 3667907,
+      "family": "dimacs9",
+      "final_url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.NY.gr.gz",
+      "name": "NY-distance",
+      "requested_url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.NY.gr.gz",
+      "sha256": "7b2446c7ffe6179efbc42af6812448e8cb782f12968ca2bb1d50d979343056d4",
+      "transport_headers": {
+        "content_length": "3667907",
+        "content_type": "application/x-gzip",
+        "etag": "\"37f7c3-4210262ad0500\"",
+        "last_modified": "Mon, 30 Oct 2006 07:40:36 GMT"
+      }
+    },
+    {
+      "bytes": 4130672,
+      "family": "dimacs9",
+      "final_url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.BAY.gr.gz",
+      "name": "BAY-distance",
+      "requested_url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.BAY.gr.gz",
+      "sha256": "630c4a96869b3ecdd631ceb0f63923fb954ee4c7c26d983863612e2c4442462e",
+      "transport_headers": {
+        "content_length": "4130672",
+        "content_type": "application/x-gzip",
+        "etag": "\"3f0770-421025b677280\"",
+        "last_modified": "Mon, 30 Oct 2006 07:38:34 GMT"
+      }
+    },
+    {
+      "bytes": 5753354,
+      "family": "dimacs9",
+      "final_url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.COL.gr.gz",
+      "name": "COL-distance",
+      "requested_url": "https://www.diag.uniroma1.it/challenge9/data/USA-road-d/USA-road-d.COL.gr.gz",
+      "sha256": "638bb7412a943b95d0a39211fa741c9c54a8a55a3992281175f950b08a983543",
+      "transport_headers": {
+        "content_length": "5753354",
+        "content_type": "application/x-gzip",
+        "etag": "\"57ca0a-421025c0f4b40\"",
+        "last_modified": "Mon, 30 Oct 2006 07:38:45 GMT"
+      }
+    }
+  ],
+  "records_digest": "401aaee261a3249268e1672acf74988b34b7671f6eb7c8e2e6894066e7d59ef0",
+  "status": "v90_raw_bytes_hash_locked_not_parsed",
+  "version": "v0.90"
+}
