@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 6,
+  "task": "unit_simplex_projection",
+  "revision": 1,
+  "candidate_count": 28,
+  "source_only_design": true,
+  "official_training_seen": false,
+  "official_test_seen": false,
+  "source_semantic_observation": "The reference uses a full descending sort to identify the simplex threshold. The KKT system instead permits finite active-set elimination: for an active set S, theta=(sum(y_S)-1)/|S|; elements at or below theta can be removed, and repeating until stable yields the exact simplex support. Risk-staged variants certify KKT conditions and fall back to the source-faithful sort if necessary.",
+  "implementation_rules": [
+    "v4_full maps active_set_decomposition + vectorized_batch_kernel + risk_aware_staging to finite vectorized support elimination with a 64-stage cap, KKT certificate and exact sort fallback",
+    "v4_no_transfer follows its separately frozen proposal order and is allowed the same source-derived active-set primitive when its proposal contains active_set_decomposition",
+    "random_search and template_synthesis retain strong active-set controls whenever their frozen proposal explicitly contains active_set_decomposition; they are not weakened to protect v4",
+    "dtype candidates use lower precision only to hypothesize support, then recompute theta in float64 and require a KKT certificate before acceptance",
+    "v3_compatible stays within sort/representation/dtype/contiguity mechanisms and does not use active-set decomposition"
+  ],
+  "correctness_boundary": "Synthetic candidates must match an independent exhaustive KKT support-enumeration oracle to 2e-10 absolute/relative tolerance, remain nonnegative and sum to one within 2e-10.",
+  "candidate_source_git_blob_sha1": "0b7cfb79bb7857b86ef7fd59a97b5f55ef2a9565",
+  "requirements_git_blob_sha1": "2c04913adbf4e70b866f8fb7bb603abef158bbda",
+  "synthetic_validator_git_blob_sha1": "bfef21c32abda5bec9aa1c505f044bbb94217557",
+  "source_analysis_git_blob_sha1": "5ca25894b2af6097f5b14813e961a8cacb44f135",
+  "task_start_git_blob_sha1": "6b5942713d7b1e113cc5cf525d109fed519a6895",
+  "human_task_specific_solver_design": false
+}

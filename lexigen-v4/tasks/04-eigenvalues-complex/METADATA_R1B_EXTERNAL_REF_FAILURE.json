@@ -1,0 +1,20 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 4,
+  "task": "eigenvalues_complex",
+  "stage": "metadata_revision1b",
+  "status": "infrastructure_boundary_failure",
+  "workflow_run_id": 32642713123,
+  "workflow_job_id": 97202166409,
+  "failure": "official training matrices are externalized ndarray_ref objects",
+  "exact_error": "RuntimeError: metadata stage refuses external ndarray_ref sidecar downloads",
+  "interpretation": "the corrected parser recognized the AlgoTune wrapper and failed closed rather than downloading training array payloads",
+  "next_correction_scope": "read only NumPy .npy header bytes for referenced TRAINING arrays to recover shape/dtype; never read numerical payload; never access test sidecars",
+  "candidate_execution_count": 0,
+  "reference_execution_count": 0,
+  "eigensolver_execution_count": 0,
+  "training_array_payload_downloaded": false,
+  "test_manifest_downloaded": false,
+  "test_payloads_downloaded": 0,
+  "training_revision_consumed": false
+}

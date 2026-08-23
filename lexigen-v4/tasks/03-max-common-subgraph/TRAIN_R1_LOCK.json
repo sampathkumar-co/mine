@@ -1,0 +1,33 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 3,
+  "task": "max_common_subgraph",
+  "revision": 1,
+  "candidate_source_git_blob_sha1": "a975a48ef3cef23728caa39650f2db5159fe9328",
+  "requirements_git_blob_sha1": "6b6bc893815835562a66a5a98c79e0c087978969",
+  "synthetic_result_git_blob_sha1": "23a4ff18332ff8dd98afed7de05d893fe217a9a3",
+  "metadata_result_git_blob_sha1": "d22bde156bb7f3d93d923d6f8926e6ffd0a2664f",
+  "training_runner_git_blob_sha1": "5e9460645f53aedc7f28fdd615ec9edff3506638",
+  "aggregator_git_blob_sha1": "676e75003451a98bd01e118cf77b6f9d61713621",
+  "train_manifest_name": "max_common_subgraph_T100ms_n4_size100_train.jsonl",
+  "train_manifest_tree_oid": "037d10a3696e0ef5ce6af3b84228b3661a6b639b",
+  "train_manifest_sha256": "534ff69ea6ae33d42734e5a90254fb59257c25991b70a01d488628d4e05b2ea9",
+  "test_manifest_name": "max_common_subgraph_T100ms_n4_size100_test.jsonl",
+  "test_manifest_tree_oid": "cee4dc02b968ffeac9fbfcd8d5157521ead9d3dc",
+  "candidate_count": 28,
+  "training_record_count": 100,
+  "shard_count": 10,
+  "candidate_executions_per_record": 28,
+  "reference_executions_per_record": 1,
+  "invalid_output_retries": 0,
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05
+  },
+  "test_manifest_opened": false,
+  "test_payloads_opened": 0,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "training_revision_consumed": false
+}

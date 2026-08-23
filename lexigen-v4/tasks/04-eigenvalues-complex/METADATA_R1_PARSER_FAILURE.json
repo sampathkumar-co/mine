@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 4,
+  "task": "eigenvalues_complex",
+  "stage": "metadata_revision1",
+  "status": "infrastructure_parser_failure",
+  "workflow_run_id": 32642346298,
+  "workflow_job_id": 97201269190,
+  "failure": "metadata inspector assumed an inline list-of-lists matrix; official training problem is a dictionary-encoded NumPy array",
+  "exact_error": "RuntimeError: unable to identify one inline numeric matrix from problem type dict",
+  "root_cause": "AlgoTune DatasetEncoder uses typed ndarray wrappers such as ndarray_b64; the metadata inspector did not implement that serialization format",
+  "correction_scope": "mechanical metadata decoding only; no candidate, engine, threshold, arm, verifier, or scientific rule changes",
+  "candidate_execution_count": 0,
+  "reference_execution_count": 0,
+  "eigensolver_execution_count": 0,
+  "test_manifest_downloaded": false,
+  "test_payloads_downloaded": 0,
+  "training_revision_consumed": false
+}

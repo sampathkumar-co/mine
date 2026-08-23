@@ -1,0 +1,111 @@
+{
+  "campaign": "LEXIGEN v4 Frozen Generalization Experiment",
+  "task_index": 1,
+  "task": "communicability",
+  "revision": 1,
+  "status": "v4_passed_training_gate_architecture_comparison_lost",
+  "workflow_run_id": 30375546627,
+  "artifact_id": 8694809272,
+  "artifact_name": "lexigen-v4-task1-communicability-training-r1",
+  "artifact_digest": "sha256:4d4b0e8be1cdbbb02727685469ec64b856a020c49297b0344fafcd750784f5e9",
+  "public_pull_request": 96,
+  "public_head_sha": "3f88ce654ba6a1f7c4e178b908d3b0b82f7d1b03",
+  "evidence_hashes": {
+    "training_summary_sha256": "d3481f2a3b6bfefca293903b0a4601546bed74b59bb1afcc40e2a247a8772537",
+    "training_results_sha256": "ca826f244cd7a9f7395b2b61aab4719d7602f17c665b3d22f4266b20a1329cc2"
+  },
+  "frozen_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "selected_by_arm": {
+    "v4_full": {
+      "candidate": "v4_sort_bit_risk",
+      "valid": 100,
+      "count": 100,
+      "exceptions": 0,
+      "invalid_outputs": 0,
+      "harmonic_speedup": 142.29071273744017,
+      "median_speedup": 143.11589388478595,
+      "minimum_speedup": 68.53568505749729,
+      "maximum_speedup": 167.0112522583201,
+      "maximum_absolute_error": 1.9895196601282805e-12,
+      "passes_training_gate": true
+    },
+    "v4_no_transfer": {
+      "candidate": "no_transfer_sort_bit_risk",
+      "valid": 100,
+      "count": 100,
+      "exceptions": 0,
+      "invalid_outputs": 0,
+      "harmonic_speedup": 144.98826046781838,
+      "median_speedup": 145.931316962709,
+      "minimum_speedup": 104.58041457834811,
+      "maximum_speedup": 168.89553818905563,
+      "maximum_absolute_error": 1.9895196601282805e-12,
+      "passes_training_gate": true
+    },
+    "random_search": {
+      "candidate": "random_contiguous_vector_risk",
+      "valid": 100,
+      "count": 100,
+      "exceptions": 0,
+      "invalid_outputs": 0,
+      "harmonic_speedup": 166.74950939816,
+      "median_speedup": 167.00539375504889,
+      "minimum_speedup": 121.80178208148862,
+      "maximum_speedup": 196.64010608894125,
+      "maximum_absolute_error": 2.2737367544323206e-13,
+      "passes_training_gate": true
+    },
+    "template_synthesis": {
+      "candidate": "template_vectorized_batch",
+      "valid": 100,
+      "count": 100,
+      "exceptions": 0,
+      "invalid_outputs": 0,
+      "harmonic_speedup": 156.20286379765886,
+      "median_speedup": 157.70055866825845,
+      "minimum_speedup": 126.80190503144935,
+      "maximum_speedup": 184.18396502848086,
+      "maximum_absolute_error": 2.2737367544323206e-13,
+      "passes_training_gate": true
+    },
+    "v3_compatible": {
+      "candidate": "v3_dtype_specialization",
+      "valid": 100,
+      "count": 100,
+      "exceptions": 0,
+      "invalid_outputs": 0,
+      "harmonic_speedup": 153.6831092081519,
+      "median_speedup": 156.3415153439521,
+      "minimum_speedup": 100.80851711722799,
+      "maximum_speedup": 186.78716547777194,
+      "maximum_absolute_error": 0.0003080064993810083,
+      "passes_training_gate": true
+    }
+  },
+  "architecture_comparison": {
+    "winner": "random_search",
+    "v4_full_harmonic": 142.29071273744017,
+    "v4_no_transfer_harmonic": 144.98826046781838,
+    "random_search_harmonic": 166.74950939816,
+    "template_synthesis_harmonic": 156.20286379765886,
+    "v3_compatible_harmonic": 153.6831092081519,
+    "v4_minus_v3_harmonic": -11.39239647071173,
+    "v4_minus_no_transfer_harmonic": -2.6975477303782043,
+    "v4_beats_v3_on_training": false,
+    "transfer_advantage_observed": false
+  },
+  "scientific_interpretation": "v4 generated a correct and very fast solver, but its extra component and bitset staging did not beat simpler dense vectorisation. Random search selected the strongest mechanism, v3-compatible and template baselines also beat v4, and transfer memory provided no advantage. This is a task-level engineering win and a v4 architecture-comparison loss.",
+  "training_revision_consumed": true,
+  "test_manifest_name": "communicability_T100ms_n61_size100_test.jsonl",
+  "test_manifest_tree_oid": "48efda1a3b334b13efb874355985d9f1d87291f2",
+  "test_manifest_opened": false,
+  "test_payloads_opened": 0,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "human_task_specific_solver_design": false
+}
