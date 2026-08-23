@@ -8,8 +8,6 @@ on:
       - 'mini-origin/**'
       - '.github/workflows/mini-origin-v89-generic-bellman-quotient.yml'
   pull_request:
-    branches:
-      - main
     paths:
       - 'mini-origin/**'
       - '.github/workflows/mini-origin-v89-generic-bellman-quotient.yml'
