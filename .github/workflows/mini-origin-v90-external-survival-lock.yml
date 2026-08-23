@@ -1,0 +1,52 @@
+name: Mini-ORIGIN External Survival Hash Lock v0.90
+
+on:
+  push:
+    branches:
+      - research/mini-origin-v90-external-survival-lock
+    paths:
+      - 'mini-origin/campaigns/v90-external-survival-preregistration.json'
+      - 'mini-origin/src/mini_origin/external_survival_hash_lock_v90.py'
+      - 'mini-origin/tests/test_external_survival_hash_lock_v90.py'
+      - '.github/workflows/mini-origin-v90-external-survival-lock.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  raw-byte-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Mini-ORIGIN
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[dev]'
+      - name: Verify hash-lock boundary tests
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          pytest -q tests/test_external_survival_hash_lock_v90.py
+      - name: Lock external raw bytes without parsing
+        working-directory: mini-origin
+        run: |
+          set -euo pipefail
+          mkdir -p results/v90
+          python -m mini_origin.external_survival_hash_lock_v90 \
+            --output results/v90/raw-byte-lock-manifest.json \
+            2>&1 | tee results/v90/raw-byte-lock.log
+      - name: Upload raw-byte lock evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-origin-v90-external-survival-lock
+          path: |
+            mini-origin/results/v90/raw-byte-lock-manifest.json
+            mini-origin/results/v90/raw-byte-lock.log
+          if-no-files-found: warn
