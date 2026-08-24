@@ -1,0 +1,57 @@
+{
+  "campaign": "LEXIGEN V7 Real Mechanism-Genesis Pilot R1",
+  "stage": "preholdout_real_library_induction_sealed",
+  "status": "success",
+  "workflow_run_id": 32700707971,
+  "artifact_id": 9510383992,
+  "artifact_digest": "sha256:08d22ceb6fc6ed5b79471568aca3bfe58df84581a2bfbe212d0add66718843a2",
+  "library_json_sha256": "0cd5c3d0078237e395d18b21ba193ef9928ac98e8a3d6557188b5b9570884241",
+  "apprenticeship_sha256": "c15d8c0230d0116372fafdda232930aab656dacac65299f77e55b4f23d2956b5",
+  "learned_macro_count": 4,
+  "learned_macros": [
+    {
+      "macro_id": "V7M-001",
+      "sequence": ["EXECUTE", "CERTIFY"],
+      "source_families": ["graph_discrete", "numerical_optimization", "signal_processing"],
+      "family_count": 3,
+      "occurrences": 3,
+      "mdl_savings": 2
+    },
+    {
+      "macro_id": "V7M-002",
+      "sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "source_families": ["numerical_optimization", "signal_processing"],
+      "family_count": 2,
+      "occurrences": 2,
+      "mdl_savings": 2
+    },
+    {
+      "macro_id": "V7M-003",
+      "sequence": ["CERTIFY", "RECOVER"],
+      "source_families": ["numerical_optimization", "signal_processing"],
+      "family_count": 2,
+      "occurrences": 2,
+      "mdl_savings": 1
+    },
+    {
+      "macro_id": "V7M-004",
+      "sequence": ["REDUCE", "EXECUTE"],
+      "source_families": ["linear_algebra", "numerical_optimization"],
+      "family_count": 2,
+      "occurrences": 2,
+      "mdl_savings": 1
+    }
+  ],
+  "random_library": [
+    {"macro_id": "V7R-001", "sequence": ["RECOVER", "REFINE"]},
+    {"macro_id": "V7R-002", "sequence": ["REPRESENT", "CERTIFY", "RESTRICT"]},
+    {"macro_id": "V7R-003", "sequence": ["RECOVER", "RECOVER"]},
+    {"macro_id": "V7R-004", "sequence": ["REPRESENT", "REDUCE"]}
+  ],
+  "holdout_identity_used_during_induction": false,
+  "holdout_source_opened": false,
+  "holdout_descriptions_opened": false,
+  "holdout_manifests_opened": false,
+  "holdout_payloads_opened": false,
+  "trigger_retired_before_result_commit": true
+}
