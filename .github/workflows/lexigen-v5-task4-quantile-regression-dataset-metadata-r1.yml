@@ -1,0 +1,57 @@
+name: LEXIGEN v5 Task 4 Quantile Regression Dataset Metadata R1
+
+on:
+  pull_request:
+    branches:
+      - lexigen/v5-task3-spectral-clustering-result-r1
+    paths:
+      - "lexigen-v5/tasks/04-quantile-regression/TRIGGER_DATASET_METADATA_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify campaign and synthetic evidence before metadata access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/ENGINE_LOCK.json').read_text())
+          for key,path in {
+            'PROTOCOL.md':'lexigen-v5/PROTOCOL.md',
+            'TRANSFER_MEMORY.json':'lexigen-v5/TRANSFER_MEMORY.json',
+            'CONTAMINATION_EXCLUSIONS.json':'lexigen-v5/CONTAMINATION_EXCLUSIONS.json',
+            'engine.py':'lexigen-v5/engine.py',
+            'selector.py':'lexigen-v5/selector.py',
+            'selftest.py':'lexigen-v5/selftest.py'
+          }.items():
+            actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+            if actual!=lock['git_blob_sha1'][key]: raise SystemExit(f'frozen campaign mismatch {key}')
+          synthetic=json.loads(Path('lexigen-v5/tasks/04-quantile-regression/SYNTHETIC_R1_RESULT.json').read_text())
+          if synthetic['status']!='passed' or synthetic['passed_checks']!=180 or synthetic['failed_checks']!=0:
+            raise SystemExit('Task 4 synthetic result is not a clean 180/180 pass')
+          if synthetic['official_training_manifest_opened'] or synthetic['official_test_manifest_opened']:
+            raise SystemExit('manifest boundary already crossed unexpectedly')
+          PY
+      - name: Compile metadata-only inspector
+        run: python -m py_compile lexigen-v5/tasks/04-quantile-regression/inspect_dataset_metadata.py
+      - name: Inspect Hugging Face tree metadata only
+        run: >-
+          python lexigen-v5/tasks/04-quantile-regression/inspect_dataset_metadata.py
+          --output dataset-metadata/dataset-directory-metadata.json
+      - name: Upload immutable metadata evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task4-quantile-regression-dataset-metadata-r1
+          path: dataset-metadata/dataset-directory-metadata.json
+          if-no-files-found: error
+          retention-days: 90
