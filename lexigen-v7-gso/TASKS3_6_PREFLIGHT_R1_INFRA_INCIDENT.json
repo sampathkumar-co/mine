@@ -1,0 +1,14 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks3_6_preflight_r1_baseline_infrastructure_incident",
+  "workflow_run_id": 32747466819,
+  "affected_tasks": [3,6],
+  "failure_boundary": "baseline reference test 0 before any candidate construction/execution/timing",
+  "root_cause": "runner injected HF_HUB_ENABLE_HF_TRANSFER=1 although the frozen base environments did not contain hf_transfer",
+  "candidate_execution_count": {"3":0,"6":0},
+  "candidate_timing_observed": {"3":false,"6":false},
+  "scientific_results_observed": false,
+  "allowed_repair": "remove only HF_HUB_ENABLE_HF_TRANSFER from docker execution environment; preserve all candidates, patch hashes, representative tests, install commands, thresholds and budgets",
+  "tasks_2_4_5_unaffected": true,
+  "expert_information_accessed": false
+}
