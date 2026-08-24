@@ -1,0 +1,28 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "stage":"blind_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32694406190,
+  "artifact_id":9508344823,
+  "artifact_digest":"sha256:294c64ef0159b5521877ecf6862e45a091ffd5ab652e5e58ead8a7eeaf34d3e4",
+  "blind_summary_sha256":"0b9e098bffd13120786ecbd1bef878c1e171d0d39a7782bf03d0010da7a179f2",
+  "blind_results_sha256":"a0e583bbe4da29df69012057220c899c712d81953c5157032e2830df82576595",
+  "test_manifest_sha256":"ac3dd2dfa3f1fd9ab396dd6f49ff88fa8ee155692085a17ac675bd30eae41dbf",
+  "records":100,
+  "arms":{
+    "v5_full":{"candidate":"v5_full_r2_41510e43e8fafb598496","valid":100,"invalid_output_retries":0,"harmonic_speedup":1.2073637940115256,"minimum_speedup":0.3551183981578351,"median_speedup":1.0091427815023843,"maximum_speedup":12.168682021635755,"passes_blind_gate":false},
+    "v5_no_transfer":{"candidate":"v5_no_transfer_r6_66c5848a3c8a4f51b562","valid":100,"invalid_output_retries":0,"harmonic_speedup":1.2337259971759091,"minimum_speedup":0.7328983884918883,"passes_blind_gate":false},
+    "random_search":{"candidate":"random_search_r5_e818498ab004d266d2a1","valid":100,"invalid_output_retries":0,"harmonic_speedup":1.2352287855677315,"minimum_speedup":0.9290630941095689,"passes_blind_gate":false},
+    "static_template":{"candidate":"static_template_r6_d044a19fd4551034dc11","valid":100,"invalid_output_retries":0,"harmonic_speedup":1.2277492199310913,"minimum_speedup":0.6175609051057336,"passes_blind_gate":false},
+    "v4_compatible":{"candidate":"v4_compatible_r3_ec4b9c17aaa3767d4f6d","valid":100,"invalid_output_retries":0,"harmonic_speedup":1.0179906653866844,"minimum_speedup":0.5438294025196589,"passes_blind_gate":false}
+  },
+  "full_over_no_transfer_ratio":0.9786320437238669,
+  "clean_unseen_win":false,
+  "v5_over_v4_task_win":false,
+  "causal_transfer_win":false,
+  "causal_transfer_reason":"Pre-blind selection already precluded causal credit: full and no-transfer use the same polynomial_linear_reduction_plus_reference implementation class, and TM-RRR-01 was learned from the same linear_algebra family as this task.",
+  "blind_reruns":0,
+  "threshold_changes":false
+}
