@@ -46,6 +46,8 @@ jobs:
       - name: Compile frozen training code
         run: python -m py_compile lexigen-v5/engine.py lexigen-v6/tasks/01-max-flow-min-cost/candidates.py lexigen-v6/tasks/01-max-flow-min-cost/train_shard.py
       - name: Evaluate frozen candidates on official training shard
+        env:
+          PYTHONPATH: lexigen-v5
         run: python lexigen-v6/tasks/01-max-flow-min-cost/train_shard.py --shard ${{ matrix.shard }} --source task-source.py --output train-shards/train-shard-${{ matrix.shard }}.jsonl
       - uses: actions/upload-artifact@v4
         with:
