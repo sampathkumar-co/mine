@@ -1,0 +1,48 @@
+name: LEXIGEN v6 Parallel7 Live Snapshot
+on:
+  push:
+    branches: [lexigen/v6-parallel-7-r1]
+    paths: ["lexigen-v6/parallel7/TRIGGER_PARALLEL7_LIVE_SNAPSHOT"]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: 163df2faa32eac02a732dcfff2ff851afabb8f2b
+      TARGET_WORKFLOW: LEXIGEN v6 Parallel Tasks 2-8 Official Training R1
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+      - name: Capture current training status
+        run: |
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']; target_sha=os.environ['TARGET_SHA']; target_name=os.environ['TARGET_WORKFLOW']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'LEXIGEN-v6-live-observer'}
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=60) as r: return json.load(r)
+          q=urllib.parse.urlencode({'head_sha':target_sha,'per_page':100})
+          runs=get(f'https://api.github.com/repos/{repo}/actions/runs?{q}').get('workflow_runs',[])
+          matches=[r for r in runs if r.get('name')==target_name and r.get('event')=='push']
+          if not matches: raise SystemExit('target training run not found')
+          run=max(matches,key=lambda r:int(r['id'])); jobs=get(run['jobs_url']).get('jobs',[])
+          snap={'run_id':run['id'],'status':run.get('status'),'conclusion':run.get('conclusion'),'head_sha':target_sha,'jobs':[],'counts':{}}
+          for j in jobs:
+              item={'id':j['id'],'name':j['name'],'status':j.get('status'),'conclusion':j.get('conclusion'),'active_step':next((s['name'] for s in j.get('steps',[]) if s.get('status')=='in_progress'),None),'failed_steps':[s['name'] for s in j.get('steps',[]) if s.get('conclusion')=='failure']}
+              snap['jobs'].append(item); key=f"{item['status']}:{item['conclusion']}"; snap['counts'][key]=snap['counts'].get(key,0)+1
+          Path('lexigen-v6/parallel7/PARALLEL7_TRAIN_LIVE.json').write_text(json.dumps(snap,indent=2)+'\n')
+          print(json.dumps(snap,indent=2))
+          PY
+      - name: Persist snapshot only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-v6/parallel7/PARALLEL7_TRAIN_LIVE.json
+          git commit -m "lexigen v6: snapshot parallel7 training status"
+          git push origin HEAD:lexigen/v6-parallel-7-r1
