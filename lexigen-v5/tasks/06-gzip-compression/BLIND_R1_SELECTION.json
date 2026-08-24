@@ -1,0 +1,24 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":6,
+  "task":"gzip_compression",
+  "stage":"blind_r1_selection",
+  "selected":{
+    "v5_full":"v5_full_r6_7653e3865aa7a6def4dc",
+    "v5_no_transfer":"v5_no_transfer_r1_66c5848a3c8a4f51b562",
+    "random_search":"random_search_r1_bcb2865badc647aa6bc2",
+    "static_template":"static_template_r6_d044a19fd4551034dc11",
+    "v4_compatible":"v4_compatible_r4_d9863922b850e9717a05"
+  },
+  "selected_v5_learned_transfer":null,
+  "selected_v5_implementation_class":"gzip_reference_level9",
+  "selected_no_transfer_implementation_class":"gzip_reference_level9",
+  "semantic_equivalence_pre_blind":true,
+  "causal_transfer_credit_possible":false,
+  "causal_transfer_impossibility_reason":"No learned-transfer candidate was selected; selected full and no-transfer candidates execute the same canonical gzip implementation.",
+  "test_manifest":{"name":"gzip_compression_T100ms_n658_size100_test.jsonl","oid":"fc0b222f5b452a049aaf049df5280421318d1425","size":16200},
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "blind_reruns_allowed":false,
+  "threshold_changes_allowed":false
+}
