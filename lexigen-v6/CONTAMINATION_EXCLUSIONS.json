@@ -1,0 +1,21 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "frozen_before_screening_pool_selection":true,
+  "policy":"Any task previously selected, source-opened, benchmarked, audited, or excluded because of prior Lexigen exposure is ineligible for v6 screening-pool selection.",
+  "pre_v5_exclusions":[
+    "articulation_points","base64_encoding","chacha_encryption","channel_capacity","communicability","cvar_projection","dst_type_II_scipy_fftpack","eigenvalues_complex","elementwise_integration","integer_factorization","kmeans","max_common_subgraph","min_dominating_set","numerical_integration","ode_fitzhughnagumo","optimal_advertising","outer_product","polynomial_mixed","procrustes","sha256_hashing","tensor_completion_3d","unit_simplex_projection","vector_quantization","water_filling"
+  ],
+  "v5_selected_and_source_exposed_holdouts":[
+    "clustering_outliers","aes_gcm_encryption","spectral_clustering","quantile_regression","earth_movers_distance","gzip_compression","aircraft_wing_design","kernel_density_estimation","least_squares","vertex_cover"
+  ],
+  "v5_posthoc_audit_tasks":["vertex_cover"],
+  "combined_exclusions":[
+    "aes_gcm_encryption","aircraft_wing_design","articulation_points","base64_encoding","chacha_encryption","channel_capacity","clustering_outliers","communicability","cvar_projection","dst_type_II_scipy_fftpack","earth_movers_distance","eigenvalues_complex","elementwise_integration","gzip_compression","integer_factorization","kernel_density_estimation","kmeans","least_squares","max_common_subgraph","min_dominating_set","numerical_integration","ode_fitzhughnagumo","optimal_advertising","outer_product","polynomial_mixed","procrustes","quantile_regression","sha256_hashing","spectral_clustering","tensor_completion_3d","unit_simplex_projection","vector_quantization","vertex_cover","water_filling"
+  ],
+  "combined_exclusion_count":34,
+  "v6_task_sources_opened_before_freeze":false,
+  "v6_task_descriptions_opened_before_freeze":false,
+  "v6_manifests_opened_before_freeze":false,
+  "v6_payloads_opened_before_freeze":false,
+  "v6_public_task_specific_solvers_opened_before_freeze":false
+}
