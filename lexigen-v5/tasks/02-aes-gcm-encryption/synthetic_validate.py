@@ -153,10 +153,10 @@ def main() -> None:
         "v5_full_has_training_eligible_candidate": v5_has_candidate,
         "every_arm_has_training_eligible_candidate": every_arm_has_candidate,
         "task_may_proceed_to_official_training": v5_has_candidate,
-        "candidate_repair_permitted_after_synthetic": false,
-        "official_training_manifest_opened": false,
+        "candidate_repair_permitted_after_synthetic": False,
+        "official_training_manifest_opened": False,
         "official_training_payloads_opened": 0,
-        "official_test_manifest_opened": false,
+        "official_test_manifest_opened": False,
         "official_test_payloads_opened": 0
     }
     args.output.mkdir(parents=True, exist_ok=True)
