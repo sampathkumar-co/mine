@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "stage": "official_training_r1_lock",
+  "training_revision": 1,
+  "maximum_training_revisions": 3,
+  "candidate_count": 30,
+  "training_records_expected": 100,
+  "shards": 10,
+  "git_blob_sha1": {
+    "SYNTHETIC_R1_RESULT.json": "24b21eca050617da216468557c873590092a5df9",
+    "candidates.py": "9092412db930ac6445008f4b4e142c0685126c62",
+    "CANDIDATE_PROVENANCE.json": "4813916c9bfcd445d5afd7b2f41b2817c2b98281",
+    "requirements.txt": "3d548fbb8c1896246b92fc6f15272402faa6a7e7",
+    "train_shard.py": "ba9cb2fe7d28034b589e3eb065fa2b72bb2d6881",
+    "aggregate_train.py": "993cdd2ba804fd16c2f4c760f182010e49ba4a68",
+    "workflow": "64c758d7a75aee34a29d292177df5ddb690826f0"
+  },
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_implementation_changes_after_lock_permitted": false,
+  "training_feedback_allowed_use": "Selection among already frozen candidates only; no candidate implementation changes in revision 1.",
+  "frozen_gate": {"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup_minimum":1.05,"invalid_output_retries":0}
+}
