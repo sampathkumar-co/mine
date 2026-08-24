@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "preflight_plan_frozen_before_feedback",
+  "candidate_ids": ["F1", "F2", "F3", "N1", "N2", "N3", "R1", "R2", "R3"],
+  "test_indexes": [0, 4, 8, 13],
+  "test_selection_reason": "Frozen representative coverage of ordinary declared fields/nested assignment, cached-property/private paths, validate-assignment plus extra-allow paths, and mixed basic/validate/extra/frozen/cached/private paths.",
+  "shared_base_measurement_count_per_test": 1,
+  "candidate_measurement_count_per_test": 1,
+  "candidate_equivalence_check_count_per_test": 1,
+  "candidate_install_procedure": "editable no-dependency install from the base worktree both for shared base and after each candidate patch",
+  "official_gso_evaluator_used": false,
+  "expert_target_timing_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "selection_rule_for_next_stage": "Within each arm, advance the correctness-passing candidate with the largest harmonic speedup over the shared base on the four frozen preflight tests; ties break by higher minimum speedup then lexicographically smaller candidate_id.",
+  "timing_feedback_used_before_freeze": false,
+  "human_task_specific_solver_contribution": false
+}

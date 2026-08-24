@@ -1,0 +1,207 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "source_only_proposals_frozen_before_feedback",
+  "source_result_commit": "2841dbdabf6baee59f543af086cbc98926e07b99",
+  "proposal_budget_per_arm": 6,
+  "preflight_candidate_budget_per_arm": 3,
+  "timing_feedback_used": false,
+  "correctness_feedback_used": false,
+  "expert_patch_used": false,
+  "hints_used": false,
+  "arms": {
+    "v7_full": [
+      {
+        "candidate_id": "F1",
+        "primitive_sequence": ["EXECUTE", "CERTIFY"],
+        "macro_ids": ["V7M-001"],
+        "mechanism": "Memoize a class-local setattr handler per attribute name. On the first assignment, execute the existing semantic dispatch to classify the name, synthesize a handler for stable paths, certify that the handler preserves the same branch semantics, cache it, and invoke it directly on subsequent assignments.",
+        "source_visible_preconditions": ["repeated assignments reuse attribute names", "dispatch depends predominantly on model class metadata", "common declared-field writes are stable after class construction"],
+        "correctness_risk": "medium",
+        "expected_performance": "very_high",
+        "files": ["pydantic/main.py", "pydantic/_internal/_model_construction.py"]
+      },
+      {
+        "candidate_id": "F2",
+        "primitive_sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+        "macro_ids": ["V7M-002"],
+        "mechanism": "Use memoized handlers only for branches whose future behavior is class-stable; certify branch eligibility on miss and recover to the original full dispatcher for unstable dynamic-extra or descriptor cases.",
+        "source_visible_preconditions": ["most benchmark assignments target declared fields/private attributes", "some extra-allow paths are state dependent"],
+        "correctness_risk": "low_medium",
+        "expected_performance": "high",
+        "files": ["pydantic/main.py", "pydantic/_internal/_model_construction.py"]
+      },
+      {
+        "candidate_id": "F3",
+        "primitive_sequence": ["REDUCE", "EXECUTE"],
+        "macro_ids": ["V7M-004"],
+        "mechanism": "Reduce repeated dispatch by precomputing a per-class set of simple assignable fields for models without frozen/validate-assignment complications and execute a direct declared-field write when the name is in that reduced set; otherwise use the original dispatcher.",
+        "source_visible_preconditions": ["model fields and configuration are available at class completion", "many assignments are ordinary declared fields"],
+        "correctness_risk": "low_medium",
+        "expected_performance": "high",
+        "files": ["pydantic/main.py", "pydantic/_internal/_model_construction.py"]
+      },
+      {
+        "candidate_id": "F4",
+        "primitive_sequence": ["CERTIFY", "RECOVER"],
+        "macro_ids": ["V7M-003"],
+        "mechanism": "Cache only negative/non-special classifications for declared fields after certifying that the class is mutable and assignment validation is disabled; recover to the original dispatcher for every unclassified name.",
+        "source_visible_preconditions": ["ordinary mutable fields dominate some tests"],
+        "correctness_risk": "low",
+        "expected_performance": "medium_high",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "F5",
+        "primitive_sequence": ["EXECUTE", "CERTIFY"],
+        "macro_ids": ["V7M-001"],
+        "mechanism": "Memoize specialized handlers for private attributes, cached properties, validate-assignment fields, and ordinary fields separately; handler identity is certified from immutable class metadata before insertion.",
+        "source_visible_preconditions": ["benchmark explicitly exercises private/cached/validate paths"],
+        "correctness_risk": "medium_high",
+        "expected_performance": "high",
+        "files": ["pydantic/main.py", "pydantic/_internal/_model_construction.py"]
+      },
+      {
+        "candidate_id": "F6",
+        "primitive_sequence": ["REDUCE", "EXECUTE"],
+        "macro_ids": ["V7M-004"],
+        "mechanism": "At class completion compile a compact dispatch table from class vars, private attributes, fields, descriptors and config flags, reducing runtime classification to one dictionary lookup plus handler execution.",
+        "source_visible_preconditions": ["class metadata is fixed after construction in ordinary usage"],
+        "correctness_risk": "high",
+        "expected_performance": "very_high",
+        "files": ["pydantic/main.py", "pydantic/_internal/_model_construction.py"]
+      }
+    ],
+    "v7_no_library": [
+      {
+        "candidate_id": "N1",
+        "primitive_sequence": ["RESTRICT", "EXECUTE"],
+        "macro_ids": [],
+        "mechanism": "Move the common declared-field branch earlier after preserving class-var, field-name and frozen checks; skip descriptor/config/extra work when the class is mutable, assignment validation is off, and name is a declared field.",
+        "source_visible_preconditions": ["ordinary declared fields are frequent", "validate_assignment is disabled on default models"],
+        "correctness_risk": "medium",
+        "expected_performance": "high",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "N2",
+        "primitive_sequence": ["SPECIALIZE", "EXECUTE"],
+        "macro_ids": [],
+        "mechanism": "Specialize a fast branch for models with default mutable configuration: valid declared names write directly to __dict__ and fields_set, while all other configurations retain the original path.",
+        "source_visible_preconditions": ["model_config is class-level", "default mutable models dominate basic benchmark cases"],
+        "correctness_risk": "low_medium",
+        "expected_performance": "high",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "N3",
+        "primitive_sequence": ["REPRESENT", "RESTRICT", "EXECUTE"],
+        "macro_ids": [],
+        "mechanism": "Represent class configuration as local booleans and field/private mappings at the start of __setattr__, then use cheaper membership/config branches to reduce repeated attribute and dict lookups without persistent learned-handler state.",
+        "source_visible_preconditions": ["multiple self/class/config lookups occur per call"],
+        "correctness_risk": "low",
+        "expected_performance": "medium",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "N4",
+        "primitive_sequence": ["RESTRICT", "SPECIALIZE"],
+        "macro_ids": [],
+        "mechanism": "Use a direct private-name branch before general valid-field processing and specialize simple private attributes without descriptors.",
+        "source_visible_preconditions": ["private attributes are benchmarked repeatedly"],
+        "correctness_risk": "low_medium",
+        "expected_performance": "medium",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "N5",
+        "primitive_sequence": ["REPRESENT", "EXECUTE"],
+        "macro_ids": [],
+        "mechanism": "Factor ordinary field writes, private writes, and cached-property writes into module-level callables to reduce repeated inline branch bodies and enable cheaper function references, without caching name-to-handler decisions.",
+        "source_visible_preconditions": ["branch bodies repeat simple operations"],
+        "correctness_risk": "medium",
+        "expected_performance": "low_medium",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "N6",
+        "primitive_sequence": ["RESTRICT", "EXECUTE", "RECOVER"],
+        "macro_ids": [],
+        "mechanism": "Attempt the ordinary declared-field write under a narrow static predicate and recover to the original dispatcher otherwise; no persistent learned abstraction or handler memoization is introduced.",
+        "source_visible_preconditions": ["static predicate can exclude frozen, validate-assignment, property, cached-property and extra cases"],
+        "correctness_risk": "low",
+        "expected_performance": "medium_high",
+        "files": ["pydantic/main.py"]
+      }
+    ],
+    "v7_random_library": [
+      {
+        "candidate_id": "R1",
+        "primitive_sequence": ["REPRESENT", "CERTIFY", "RESTRICT"],
+        "macro_ids": ["V7R-002"],
+        "mechanism": "Represent per-call class/config state in a compact tuple, certify the ordinary-field predicate, and restrict the expensive tail dispatcher when the tuple proves the simple path.",
+        "source_visible_preconditions": ["config and field membership determine common path"],
+        "correctness_risk": "low_medium",
+        "expected_performance": "medium_high",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "R2",
+        "primitive_sequence": ["REPRESENT", "REDUCE"],
+        "macro_ids": ["V7R-004"],
+        "mechanism": "Represent declared fields/private names/descriptors as compact frozensets at class creation and reduce membership overhead while retaining the original branch order and operations.",
+        "source_visible_preconditions": ["class metadata is reusable across assignments"],
+        "correctness_risk": "medium",
+        "expected_performance": "medium",
+        "files": ["pydantic/main.py", "pydantic/_internal/_model_construction.py"]
+      },
+      {
+        "candidate_id": "R3",
+        "primitive_sequence": ["RECOVER", "REFINE"],
+        "macro_ids": ["V7R-001"],
+        "mechanism": "Keep the existing dispatcher as recovery behavior, but refine only the final ordinary-field branch to use local references and a single set update operation.",
+        "source_visible_preconditions": ["final branch is hot on ordinary fields"],
+        "correctness_risk": "low",
+        "expected_performance": "low_medium",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "R4",
+        "primitive_sequence": ["RECOVER", "RECOVER"],
+        "macro_ids": ["V7R-003"],
+        "mechanism": "Introduce a guarded fallback wrapper that retries the original dispatcher after a narrow speculative direct write rejects; intended mainly as an equal-size random-library control.",
+        "source_visible_preconditions": ["ordinary field predicate can be checked cheaply"],
+        "correctness_risk": "medium_high",
+        "expected_performance": "low",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "R5",
+        "primitive_sequence": ["REPRESENT", "CERTIFY", "RESTRICT"],
+        "macro_ids": ["V7R-002"],
+        "mechanism": "Build a transient per-call descriptor/config representation, certify absence of special descriptors for the current name, then restrict attribute lookups on the common field path.",
+        "source_visible_preconditions": ["descriptor lookup is repeated"],
+        "correctness_risk": "low_medium",
+        "expected_performance": "medium",
+        "files": ["pydantic/main.py"]
+      },
+      {
+        "candidate_id": "R6",
+        "primitive_sequence": ["REPRESENT", "REDUCE"],
+        "macro_ids": ["V7R-004"],
+        "mechanism": "Represent model config as integer flags and reduce string/dictionary comparisons in the branch chain, leaving assignment semantics untouched.",
+        "source_visible_preconditions": ["model_config lookups occur on each assignment"],
+        "correctness_risk": "medium",
+        "expected_performance": "medium",
+        "files": ["pydantic/main.py", "pydantic/_internal/_model_construction.py"]
+      }
+    ]
+  },
+  "prefeedback_concrete_candidates": {
+    "v7_full": ["F1", "F2", "F3"],
+    "v7_no_library": ["N1", "N2", "N3"],
+    "v7_random_library": ["R1", "R2", "R3"]
+  },
+  "human_task_specific_solver_contribution": false
+}

@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "stage": "preflight_r1_infrastructure_incident",
+  "workflow_run_id": 32702902485,
+  "status": "invalid_before_scientific_feedback",
+  "failure_point": "shared base environment preparation",
+  "failure": "python -m pip install -e . --no-deps returned non-zero inside the frozen GSO Pydantic image",
+  "docker_image_pull_succeeded": true,
+  "preflight_lock_verified": true,
+  "candidate_builder_compiled": true,
+  "preflight_runner_compiled": true,
+  "baseline_performance_tests_executed": 0,
+  "candidate_patches_applied": 0,
+  "candidate_correctness_tests_executed": 0,
+  "candidate_timing_values_observed": 0,
+  "expert_target_timing_observed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "scientific_feedback_observed": false,
+  "r2_repair_boundary": "Runner plumbing only: remove unsupported editable-install assumption and execute against the Pydantic copy already imported by the frozen image, mirroring the exact frozen candidate patch into that import root if it differs from /testbed. Candidate definitions, candidate count, test indexes, budgets, selection rule, thresholds, task and libraries remain unchanged."
+}

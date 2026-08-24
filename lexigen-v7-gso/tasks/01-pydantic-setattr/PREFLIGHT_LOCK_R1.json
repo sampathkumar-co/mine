@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "stage": "task1_preflight_lock_r1",
+  "candidate_ids": ["F1", "F2", "F3", "N1", "N2", "N3", "R1", "R2", "R3"],
+  "test_indexes": [0, 4, 8, 13],
+  "git_blob_sha1": {
+    "PROPOSALS_R1.json": "ecc41ef14724a0f1ccbd93bc860cbaf99c783b59",
+    "PREFLIGHT_PLAN_R1.json": "1146096dd8a74ad6ebb837bc65b29b736443b452",
+    "build_candidate.py": "8c0f1b55c089fb71a265c938ac3d157fec85a9de",
+    "run_preflight.py": "af7831e0b2813d815d63911b2f59769f1e6ae3da",
+    "SOURCE_R1_RESULT.json": "ace951f79e01bc0dd3694558561b5c43cec050c3",
+    "GENERATION_CONTRACT_R1.md": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+    "workflow": "ad7e0f66b3cd358047bb5d44ca3d953c9ae6dd44"
+  },
+  "preflight_executed_before_lock": false,
+  "timing_feedback_opened_before_lock": false,
+  "expert_opt_commit_opened_before_lock": false,
+  "expert_diff_opened_before_lock": false,
+  "hints_opened_before_lock": false,
+  "prior_gso_submission_opened_before_lock": false,
+  "human_task_specific_solver_contribution": false
+}
