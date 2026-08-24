@@ -1,0 +1,17 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "stage":"dataset_directory_metadata_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32692870336,
+  "artifact_id":9507826477,
+  "artifact_digest":"sha256:9457569550414cefb1b53244220ed1593bac6b10809611d23ec654c67b12f32c",
+  "dataset_metadata_sha256":"1e0dfb69ddd3716bf0e4e76146c9e28edf816f30152179487705d8f55d4a5639",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "training_manifest":{"name":"least_squares_T100ms_n102713_size100_train.jsonl","size":27514,"oid":"5e3908ffef99705acc60fe360b50c76c119c555f"},
+  "test_manifest":{"name":"least_squares_T100ms_n102713_size100_test.jsonl","size":27500,"oid":"a2a05f3b2d737d15c4cb46dc327f3954b78ace31"},
+  "manifest_contents_opened":false,
+  "payload_contents_opened":false,
+  "resolve_or_download_urls_followed":false
+}
