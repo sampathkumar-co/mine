@@ -7,7 +7,7 @@
     "OMEGA0": "locked",
     "OMEGA1": "in_progress",
     "OMEGA2": "foundation_started",
-    "OMEGA3": "not_started",
+    "OMEGA3": "evaluator_bridge_started",
     "OMEGA4": "not_started",
     "OMEGA5": "foundation_started",
     "OMEGA6": "not_started",
@@ -27,18 +27,31 @@
     "strict causal long-term-memory admission policy",
     "cross-family parameterized semantic-fragment anti-unification miner",
     "exact proposal expansion verification",
+    "sealed V7 GSO evaluator-result ingestion",
+    "infrastructure-failure exclusion from hindsight learning",
+    "pre-timing proposal provenance parser with expert/timing boundary checks",
+    "candidate-outcome to mechanism-provenance join",
+    "mechanism-level hindsight preference construction",
     "foundation and search-first CI tests"
   ],
   "search_first_decisions": [
     "reused the proven v15 anti-unification mechanism instead of rebuilding induction",
+    "reused the existing V7 GSO Docker/correctness/timing harness instead of cloning a benchmark evaluator",
     "preserved the v23 lesson that fixed human-authored semantic inventories do not transfer globally",
     "did not expand the fixed opcode catalog after current SOAR/DGM evidence favored learned/evolving search over larger hand-authored DSLs",
-    "semantic genesis produces proposals only; it cannot bypass prospective causal memory admission"
+    "semantic genesis produces proposals only; it cannot bypass prospective causal memory admission",
+    "real V7 task3/task6 preflight failures caused by missing hf_transfer before baseline execution are infrastructure evidence only and cannot become negative mechanism labels"
   ],
+  "current_external_dependency": {
+    "source": "LEXIGEN V7 GSO Tasks2-6 Parallel Preflight R1",
+    "workflow_run_id": 32747466819,
+    "status_at_last_check": "in_progress",
+    "scientific_use": "consume only sealed credit-eligible completed candidate outcomes; never modify or rerun from the Omega branch"
+  },
   "next": [
-    "connect semantic proposals to evaluator-guided program search on an exposed development problem",
-    "add a diverse candidate archive only when required by that search loop",
-    "use search trajectories as hindsight learning data rather than adding hand-authored semantic operators",
-    "close remaining OMEGA1 substrate gaps only when a real evaluator case demonstrates they are required"
+    "ingest sealed clean V7 GSO preflight results when their source campaign records them",
+    "train/rank mechanism proposals from real evaluator preference trajectories rather than hand-authored labels",
+    "add a diverse search archive only after real trajectory evidence shows single-lineage search is limiting",
+    "close remaining OMEGA1 substrate gaps only when an exposed evaluator failure proves they are required"
   ]
 }
