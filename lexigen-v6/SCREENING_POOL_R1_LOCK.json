@@ -1,0 +1,38 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage":"screening_pool_selection_r1_lock",
+  "selftest_run_id":32699013683,
+  "source_commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "selection_seed":"LEXIGEN-V6-TRANSFER-REPLICATION-2026-08-24-A",
+  "screening_pool_count":24,
+  "paths":{
+    "ENGINE_LOCK.json":"lexigen-v6/ENGINE_LOCK.json",
+    "PROTOCOL.md":"lexigen-v6/PROTOCOL.md",
+    "TRANSFER_MEMORY.json":"lexigen-v6/TRANSFER_MEMORY.json",
+    "CONTAMINATION_EXCLUSIONS.json":"lexigen-v6/CONTAMINATION_EXCLUSIONS.json",
+    "STRONG_BASELINE_CATALOG.json":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "selector.py":"lexigen-v6/selector.py",
+    "final_selector.py":"lexigen-v6/final_selector.py",
+    "workflow":".github/workflows/lexigen-v6-screening-pool-selection-r1.yml",
+    "v5_engine":"lexigen-v5/engine.py"
+  },
+  "git_blob_sha1":{
+    "ENGINE_LOCK.json":"7514d212b806cc8802eae21b9e7aff5a6855d50e",
+    "PROTOCOL.md":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "TRANSFER_MEMORY.json":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "CONTAMINATION_EXCLUSIONS.json":"86b020eaf4b42bbfbf777c546544b12a5fe13d75",
+    "STRONG_BASELINE_CATALOG.json":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "selector.py":"6ec74f44d1438198c635aaf166eb503195e645f9",
+    "final_selector.py":"9af31f5daccebad3a2c7e3f6cd92d28f894cc4e8",
+    "workflow":"4aed0767e2a39cdc694582fe4da2dc0b76716967",
+    "v5_engine":"a0899a3297216c1056741aa4808fbe7840d8d94c"
+  },
+  "task_sources_opened_before_lock":false,
+  "task_descriptions_opened_before_lock":false,
+  "data_manifests_opened_before_lock":false,
+  "data_payloads_opened_before_lock":false,
+  "public_solvers_opened_before_lock":false,
+  "reports_opened_before_lock":false,
+  "selection_may_be_changed_after_run":false
+}
