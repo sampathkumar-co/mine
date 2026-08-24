@@ -294,13 +294,20 @@ def attach_proposal_provenance(
     return tuple(joined)
 
 
-def _rank_key(observation: EvaluationObservation) -> tuple[int, float, float, str]:
+def _outcome_key(observation: EvaluationObservation) -> tuple[int, float, float]:
+    """Scientific outcome only; never include identifiers as preference evidence."""
+
     return (
         1 if observation.valid else 0,
         observation.score,
         float(observation.metrics.get("minimum_speedup", 0.0)),
-        observation.candidate_id,
     )
+
+
+def _sort_key(observation: EvaluationObservation) -> tuple[int, float, float, str]:
+    """Outcome ranking plus ID only for deterministic ordering of exact ties."""
+
+    return (*_outcome_key(observation), observation.candidate_id)
 
 
 def build_hindsight_preferences(
@@ -320,11 +327,13 @@ def build_hindsight_preferences(
     if any(not item.credit_eligible for item in observations):
         raise ValueError("ineligible observations cannot enter hindsight learning")
 
-    ranked = sorted(observations, key=_rank_key, reverse=True)
+    ranked = sorted(observations, key=_sort_key, reverse=True)
     pairs: list[HindsightPreference] = []
     for better_index, better in enumerate(ranked):
         for worse in ranked[better_index + 1 :]:
-            if _rank_key(better) == _rank_key(worse):
+            # Candidate IDs are allowed to make sorting reproducible, but an ID must
+            # never manufacture a preference when executable outcomes are tied.
+            if _outcome_key(better) == _outcome_key(worse):
                 continue
             if better.valid and not worse.valid:
                 margin = max(1.0, better.score)
