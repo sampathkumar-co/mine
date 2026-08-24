@@ -1,7 +1,16 @@
 import unittest
 
 from lexigen_omega.gene import CausalEvidence, GeneAdmissionPolicy, SemanticGene
-from lexigen_omega.ir import Instruction, OpCode, Program, TypeTag, execute_program
+from lexigen_omega.ir import (
+    BudgetExceeded,
+    ExecutionBudget,
+    Instruction,
+    OpCode,
+    Program,
+    TypeTag,
+    execute_program,
+    execute_program_metered,
+)
 
 
 class IRTests(unittest.TestCase):
@@ -18,6 +27,28 @@ class IRTests(unittest.TestCase):
 
     def test_execute(self) -> None:
         self.assertEqual(execute_program(self.make_program(), {"x": [1, 2, 3]}), [3, 5, 6])
+
+    def test_metered_execution_is_deterministic(self) -> None:
+        result = execute_program_metered(self.make_program(), {"x": [1, 2, 3]})
+        self.assertEqual(result.value, [3, 5, 6])
+        self.assertEqual(result.instructions_executed, 3)
+        self.assertEqual(result.collection_items_created, 6)
+
+    def test_instruction_budget_is_hard(self) -> None:
+        with self.assertRaisesRegex(BudgetExceeded, "instruction budget exceeded"):
+            execute_program_metered(
+                self.make_program(),
+                {"x": [1, 2, 3]},
+                ExecutionBudget(max_instructions=2),
+            )
+
+    def test_collection_budget_is_hard(self) -> None:
+        with self.assertRaisesRegex(BudgetExceeded, "collection-item budget exceeded"):
+            execute_program_metered(
+                self.make_program(),
+                {"x": [1, 2, 3]},
+                ExecutionBudget(max_collection_items_created=5),
+            )
 
     def test_fingerprint_is_deterministic(self) -> None:
         p1 = self.make_program()
