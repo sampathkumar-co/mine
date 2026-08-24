@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 2,
+  "instance_id": "abetlen__llama-cpp-python-2bc1d97",
+  "stage": "causal_equivalence_classes_frozen_before_preflight_timing_completion",
+  "source": "TASKS2_6_MATERIALIZATION_COMPLETE_R1.json",
+  "candidate_timing_used": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "patch_classes": {
+    "1b053c99ea6cce4551f52c141037a42c50fa09761b6c5efb9d051d5a99d8bf7d": ["F1"],
+    "d7a86f9079292b09a00e39a1017034d5fc6111ae3dee4c8eacaa866f5c2b274e": ["F2", "N1"],
+    "5e8b000c05be80f44f7a59d96699748c330fa7510ebb42e8757c4abaad97c7c1": ["F4", "N6", "R1"],
+    "dae026b5a55515a62b7b6f3fcd53f5d25bd2ef7706b67c144c2787de6bf8583b": ["N3"],
+    "9228b89361257df9d65d8d4974cfec490f0c31f9464ee2da3dd93d03bf44c5a5": ["R3"],
+    "550631261494cf6235ff4cf8793820488761616c52f8bda16e56aa5b38e01543": ["R6"]
+  },
+  "initial_full_candidates_causal_distinctness": {
+    "F1": "distinct from every selected no-library/random patch class",
+    "F2": "byte-identical to no-library N1; cannot earn learned-library causal credit if selected",
+    "F4": "byte-identical to no-library N6 and random R1; cannot earn learned-library causal credit if selected"
+  },
+  "causal_implication": "Within the initial Task2 concrete candidate round, only F1 can possibly satisfy the mechanistic non-equivalence requirement for causal transfer. If F1 does not become the qualifying full solution, Task2 would require a lawful frozen revision from the remaining proposal budget to retain any causal path.",
+  "thresholds_changed": false,
+  "candidate_selection_changed": false
+}
