@@ -1,0 +1,7 @@
+{
+  "python": "3.12",
+  "numpy": "1.26.4",
+  "scipy": "1.15.3",
+  "pot": "1.0.0",
+  "source": "AlgoTune frozen requirements at dff9914c10800c7a031c9e8c3d4d1c8cd1b38906"
+}
