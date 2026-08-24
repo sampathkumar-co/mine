@@ -1,5 +1,5 @@
 {
-  "stage": "parallel7_training_completion_observation",
+  "stage": "parallel7_current_progress_observation",
   "workflows": {
     "task46_repair": {
       "found": true,
@@ -35,6 +35,17 @@
           "name": "seal"
         }
       ]
+    },
+    "unified_train_seal": {
+      "found": true,
+      "head_sha": "069dc5d07452d98d5fd3f59d66a5a8bc5d1e8c22",
+      "run_id": 32739453195,
+      "status": "completed",
+      "conclusion": "success",
+      "counts": {
+        "completed:success": 1
+      },
+      "failed_jobs": []
     }
   }
 }
