@@ -1,0 +1,54 @@
+name: LEXIGEN v6 Parallel7 Progress Observer
+on:
+  push:
+    branches: [lexigen/v6-parallel-7-r1]
+    paths: ["lexigen-v6/parallel7/TRIGGER_PARALLEL7_PROGRESS"]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  observe:
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+      - name: Snapshot repair and preservation workflows
+        run: |
+          python - <<'PY'
+          import json,os,urllib.parse,urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'LEXIGEN-v6-parallel7-observer'}
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=60) as r:return json.load(r)
+          targets=[
+            ('task46_repair','88c6795c13432f478f6f370dab27d05e6aff9887','LEXIGEN v6 Tasks4-6 Pretraining Repair R1'),
+            ('preserve_five','514bf9ad16509e313c2d863379f7635a42820680','LEXIGEN v6 Preserve Five Successful Training Tasks R1'),
+          ]
+          out={'stage':'parallel7_training_completion_observation','workflows':{}}
+          for key,sha,name in targets:
+              q=urllib.parse.urlencode({'head_sha':sha,'per_page':100})
+              runs=get(f'https://api.github.com/repos/{repo}/actions/runs?{q}').get('workflow_runs',[])
+              matches=[r for r in runs if r.get('name')==name and r.get('event')=='push']
+              if not matches:
+                  out['workflows'][key]={'found':False,'head_sha':sha};continue
+              run=max(matches,key=lambda r:int(r['id'])); jobs=get(run['jobs_url']).get('jobs',[])
+              counts={}; failed=[]
+              for j in jobs:
+                  k=f"{j.get('status')}:{j.get('conclusion')}";counts[k]=counts.get(k,0)+1
+                  if j.get('conclusion')=='failure':failed.append({'id':j['id'],'name':j['name']})
+              out['workflows'][key]={'found':True,'head_sha':sha,'run_id':run['id'],'status':run.get('status'),'conclusion':run.get('conclusion'),'counts':counts,'failed_jobs':failed}
+          Path('lexigen-v6/parallel7/PARALLEL7_PROGRESS.json').write_text(json.dumps(out,indent=2)+'\n')
+          print(json.dumps(out,indent=2))
+          PY
+      - name: Persist observation only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-v6/parallel7/PARALLEL7_PROGRESS.json
+          git commit -m "lexigen v6: snapshot parallel7 training completion progress" || exit 0
+          git push origin HEAD:lexigen/v6-parallel-7-r1
