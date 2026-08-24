@@ -1,0 +1,71 @@
+{
+  "project": "LEXIGEN V8 Interventional Performance World Model",
+  "stage": "development_falsification_protocol_r1",
+  "inherits_v7_result": "V7 GSO pilot failed; V7 branches remain immutable",
+  "official_holdout_campaign_started": false,
+  "goal": "Before any autonomous optimization campaign, test whether a frozen model learned from measured code interventions predicts intervention validity and performance effects on unseen repositories better than simple and shuffled controls.",
+  "record_schema": {
+    "required": [
+      "record_id",
+      "repository_id",
+      "repository_family",
+      "language",
+      "environment_id",
+      "program_features",
+      "intervention_id",
+      "intervention_family",
+      "intervention_features",
+      "valid",
+      "runtime_before",
+      "runtime_after",
+      "measurement_repetitions",
+      "provenance"
+    ],
+    "derived_targets": {
+      "speedup": "runtime_before/runtime_after",
+      "positive_speedup": "speedup > 1.0"
+    }
+  },
+  "evaluation_split": "leave_one_repository_out; no records from the held-out repository may influence model fitting, feature normalization, intervention statistics or threshold selection",
+  "mandatory_controls": [
+    "global_intervention_frequency_mean",
+    "static_program_features_only",
+    "intervention_identity_only",
+    "shuffled_intervention_effect_labels",
+    "retrieval_nearest_neighbor_when_real_corpus_exists"
+  ],
+  "metrics": [
+    "validity_auroc",
+    "positive_speedup_auroc",
+    "spearman_predicted_vs_observed_log_speedup",
+    "brier_positive_speedup",
+    "top_k_mean_observed_speedup",
+    "high_confidence_vs_low_confidence_gap"
+  ],
+  "development_gate": {
+    "all_required": true,
+    "minimum_heldout_repositories": 8,
+    "positive_speedup_auroc_min": 0.65,
+    "spearman_log_speedup_min": 0.30,
+    "relative_top_k_gain_over_frequency_baseline_min": 0.20,
+    "shuffled_control_auroc_max": 0.56,
+    "shuffled_control_spearman_abs_max": 0.10,
+    "repository_family_holdout_required": true,
+    "language_holdout_required_if_two_or_more_languages_present": true,
+    "thresholds_frozen_before_confirmatory_real_corpus_evaluation": true
+  },
+  "kill_rules": [
+    "Kill IPWM if conditional model does not materially beat intervention-frequency and static-feature baselines on unseen repositories.",
+    "Kill IPWM if shuffled intervention-effect labels retain similar performance.",
+    "Kill IPWM if performance disappears under repository-family holdout.",
+    "Kill IPWM if model confidence is not meaningfully related to realized prediction quality.",
+    "Kill IPWM if retrieval-only baseline matches the full effect model once a real corpus exists.",
+    "Kill IPWM before an optimization campaign if its gain comes only from repository/language identity memorization."
+  ],
+  "claim_boundary": {
+    "synthetic_pipeline_pass_is_scientific_transfer_evidence": false,
+    "development_real_corpus_pass_is_world_breakthrough": false,
+    "optimization_campaign_requires_separate_preregistration": true,
+    "external_frontier_and_independent_reproduction_required_for_breakthrough": true
+  }
+}
