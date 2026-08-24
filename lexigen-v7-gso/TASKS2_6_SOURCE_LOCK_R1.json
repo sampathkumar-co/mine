@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_parallel_source_lock_r1",
+  "task_indexes": [2, 3, 4, 5, 6],
+  "parallel_execution": true,
+  "git_blob_sha1": {
+    "ENGINE_LOCK_R1.json": "6b4283b1baeb8aacfdc13337362ae1ed3ae249f5",
+    "GENERATION_CONTRACT_R1.md": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+    "extract_selected_spec.py": "c736d75b9d4462f80c2475311c3ccbf140e7a2a4",
+    "extract_worktree_context.py": "5d12eb5d816e02920bd002efda45925713f69541",
+    "task2_start": "8196e15fb37d19f8fbc9377e3f4ec89a7bf045a6",
+    "task3_start": "65c23772e7374a7549113fd03d09d79d6b1c1c60",
+    "task4_start": "2da7330533458575defcb0d01f946d724b3e8e48",
+    "task5_start": "2bbf974cabe4bc7c64e827ba013bd53182e7d232",
+    "task6_start": "214eca4907eadeb67bfa89bcb95c3f1d7d8694b0",
+    "workflow": "bb9cad69b96369d2ea4d13dab32596d6aa6e9b39"
+  },
+  "any_prob_script_opened_before_lock": false,
+  "any_tests_opened_before_lock": false,
+  "any_base_worktree_source_opened_before_lock": false,
+  "any_expert_opt_commit_opened_before_lock": false,
+  "any_expert_diff_opened_before_lock": false,
+  "any_hints_opened_before_lock": false,
+  "prior_submissions_opened": false,
+  "candidate_generation_started": false,
+  "thresholds_changed": false,
+  "human_task_specific_solver_contribution": false,
+  "trigger_exists_at_lock_commit": false
+}

@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 5,
+  "instance_id": "pandas-dev__pandas-fd43d4b",
+  "repo": "pandas-dev/pandas",
+  "base_commit": "fd43d4ba856b42bcfc342481dee3b59c4d7cf4cb^",
+  "api": "RangeIndex.take",
+  "selection_was_safe_metadata_only": true,
+  "prob_script_opened": false,
+  "tests_opened": false,
+  "base_worktree_source_opened": false,
+  "expert_opt_commit_opened": false,
+  "expert_diff_opened": false,
+  "hints_opened": false,
+  "prior_submissions_opened": false,
+  "human_task_specific_solver_contribution": false,
+  "engine_branch": "lexigen/v7-gso-engine-lock-r1",
+  "engine_head": "e9b808de80aa86d6ca43040ae1d9ce66ea72095d"
+}
