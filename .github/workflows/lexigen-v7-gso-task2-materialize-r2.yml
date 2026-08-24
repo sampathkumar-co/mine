@@ -1,0 +1,78 @@
+name: LEXIGEN V7 GSO Task2 Candidate Materialize R2
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-source-result-r2]
+    paths: ["lexigen-v7-gso/TRIGGER_TASK2_MATERIALIZE_R2"]
+permissions: {contents: read}
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task2 materialization R2 lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/TASK2_MATERIALIZE_LOCK_R2.json').read_text())
+          paths={
+            'proposal_lock':'lexigen-v7-gso/TASKS2_6_PROPOSAL_LOCK_R1.json',
+            'selection':'lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json',
+            'r1_result':'lexigen-v7-gso/TASKS2_6_MATERIALIZE_R1_RESULT.json',
+            'r1_builder':'lexigen-v7-gso/build_candidate_r1.py',
+            'r2_builder':'lexigen-v7-gso/build_task2_candidate_r2.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-task2-materialize-r2.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'Task2 R2 lock mismatch {key}: {got}')
+          if lock['candidate_timing_observed_before_lock']:
+              raise SystemExit('Task2 timing boundary crossed')
+          PY
+      - name: Compile builders
+        run: python -m py_compile lexigen-v7-gso/build_candidate_r1.py lexigen-v7-gso/build_task2_candidate_r2.py
+      - name: Pull frozen Task2 image and copy target
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="slimshetty/gso:gso.eval.x86_64.abetlen__llama-cpp-python-2bc1d97"
+          docker pull "$IMAGE"
+          C=$(docker create "$IMAGE" true)
+          mkdir -p base/llama_cpp
+          docker cp "$C:/testbed/llama_cpp/llama.py" base/llama_cpp/llama.py
+          docker rm "$C"
+      - name: Materialize unchanged nine Task2 candidates without execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,subprocess,shutil,hashlib
+          from pathlib import Path
+          sel=json.loads(Path('lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json').read_text())['tasks']['2']
+          candidates=sel['v7_full']+sel['v7_no_library']+sel['v7_random_library']
+          out=Path('materialized'); out.mkdir()
+          records=[]
+          for cid in candidates:
+              root=Path('work')/cid
+              dest=root/'llama_cpp/llama.py'
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile('base/llama_cpp/llama.py',dest)
+              c_out=out/cid
+              subprocess.run(['python','lexigen-v7-gso/build_task2_candidate_r2.py','--candidate',cid,'--root',str(root),'--output',str(c_out)],check=True)
+              records.append(json.loads((c_out/f'task2-{cid}.json').read_text()))
+          f1=next(r for r in records if r['candidate']=='F1')
+          if f1['patch_sha256']!='1b053c99ea6cce4551f52c141037a42c50fa09761b6c5efb9d051d5a99d8bf7d':
+              raise SystemExit('F1 changed across construction-only repair')
+          payload={'task':2,'candidate_count':len(records),'candidates':records,'candidate_execution_count':0,'candidate_timing_observed':False,'r1_F1_patch_preserved':True}
+          (out/'MATERIALIZE_RESULT_R2.json').write_text(json.dumps(payload,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-task2-02-llama-gen-b-materialized-r2
+          path: materialized/
+          if-no-files-found: error
+          retention-days: 90
