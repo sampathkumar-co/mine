@@ -1,41 +1,6 @@
 {
-  "stage": "parallel7_current_progress_observation",
+  "stage": "parallel7_blind_progress_observation",
   "workflows": {
-    "task46_repair": {
-      "found": true,
-      "head_sha": "88c6795c13432f478f6f370dab27d05e6aff9887",
-      "run_id": 32738646019,
-      "status": "completed",
-      "conclusion": "failure",
-      "counts": {
-        "completed:success": 11,
-        "completed:failure": 1,
-        "completed:skipped": 1
-      },
-      "failed_jobs": [
-        {
-          "id": 97467722696,
-          "name": "aggregate (edge_expansion)"
-        }
-      ]
-    },
-    "preserve_five": {
-      "found": true,
-      "head_sha": "514bf9ad16509e313c2d863379f7635a42820680",
-      "run_id": 32738733546,
-      "status": "completed",
-      "conclusion": "failure",
-      "counts": {
-        "completed:success": 5,
-        "completed:failure": 1
-      },
-      "failed_jobs": [
-        {
-          "id": 97467845808,
-          "name": "seal"
-        }
-      ]
-    },
     "unified_train_seal": {
       "found": true,
       "head_sha": "069dc5d07452d98d5fd3f59d66a5a8bc5d1e8c22",
@@ -45,7 +10,123 @@
       "counts": {
         "completed:success": 1
       },
-      "failed_jobs": []
+      "failed_jobs": [],
+      "running_jobs": []
+    },
+    "parallel7_blind": {
+      "found": true,
+      "head_sha": "5d5374d96910942834f442a4d2edd89d0652d9bb",
+      "run_id": 32739752645,
+      "status": "queued",
+      "conclusion": null,
+      "counts": {
+        "in_progress:None": 14,
+        "completed:success": 10,
+        "queued:None": 6
+      },
+      "failed_jobs": [],
+      "running_jobs": [
+        {
+          "id": 97471095746,
+          "name": "shard (dct_type_I_scipy_fftpack, 0)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471095869,
+          "name": "shard (odr, 1)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471095907,
+          "name": "shard (odr, 3)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471095912,
+          "name": "shard (odr, 4)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471095916,
+          "name": "shard (dct_type_I_scipy_fftpack, 3)",
+          "status": "queued"
+        },
+        {
+          "id": 97471095925,
+          "name": "shard (dct_type_I_scipy_fftpack, 1)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471095941,
+          "name": "shard (dct_type_I_scipy_fftpack, 2)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471095966,
+          "name": "shard (max_independent_set_cpsat, 2)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471095991,
+          "name": "shard (max_independent_set_cpsat, 0)",
+          "status": "queued"
+        },
+        {
+          "id": 97471096008,
+          "name": "shard (odr, 2)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096016,
+          "name": "shard (svd, 3)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096039,
+          "name": "shard (svd, 1)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096047,
+          "name": "shard (max_independent_set_cpsat, 4)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096061,
+          "name": "shard (max_independent_set_cpsat, 1)",
+          "status": "queued"
+        },
+        {
+          "id": 97471096075,
+          "name": "shard (edge_expansion, 3)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096082,
+          "name": "shard (dct_type_I_scipy_fftpack, 4)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096133,
+          "name": "shard (edge_expansion, 4)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096137,
+          "name": "shard (edge_expansion, 1)",
+          "status": "queued"
+        },
+        {
+          "id": 97471096165,
+          "name": "shard (ode_lorenz96_nonchaotic, 3)",
+          "status": "queued"
+        },
+        {
+          "id": 97471096169,
+          "name": "shard (ode_lorenz96_nonchaotic, 4)",
+          "status": "queued"
+        }
+      ]
     }
   }
 }
