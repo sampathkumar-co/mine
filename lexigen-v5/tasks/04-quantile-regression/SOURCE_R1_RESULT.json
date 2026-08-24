@@ -1,0 +1,38 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "family": "statistics",
+  "stage": "source_analysis_r1_sealed",
+  "status": "success",
+  "source_workflow_run_id": 32683964077,
+  "source_artifact_id": 9505020656,
+  "source_artifact_digest": "sha256:f128578654490781c13d8703a97919501d8b24c6fe6d400a5c40631dccb5bf0f",
+  "source_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path": "AlgoTuneTasks/quantile_regression/quantile_regression.py",
+  "source_git_blob_sha1": "ecb8649e903d8628f2ec612dd3c37dc7454e0bdd",
+  "source_sha256": "828d748129fef7690bc8338a5cf7959ca117cafb6312ace2cd0b5d4b9e5e2788",
+  "description_path": "AlgoTuneTasks/quantile_regression/description.txt",
+  "description_git_blob_sha1": "1b7d2560032c25f39ab5ff55dfa030bc09fa4bdb",
+  "fingerprint_features": ["approximate_verifier","array","boolean","certificate","discrete","iterative","matrix","numeric","order_statistic","scientific_dynamics","set","tensor","threshold","tolerance","verifier"],
+  "applicable_transfer_templates": [
+    {"template":"bit_frontier_restriction","causal_id":"TM-BFR-01","operators":["bit_parallel_representation","sparse_frontier_search","early_certificate_exit"]},
+    {"template":"certified_active_core","causal_id":"TM-CAC-01","operators":["active_set_decomposition","early_certificate_exit","risk_aware_staging"]},
+    {"template":"reduced_representation_refinement","causal_id":"TM-RRR-01","operators":["reduced_representation","bounded_exact_refinement","risk_aware_staging"]}
+  ],
+  "proposal_ids_by_arm": {
+    "v5_full": ["3304c859d463a501bd86","41510e43e8fafb598496","a6102573c9f355414229","4abf2b51384c560522e8","c50e493c5549a408f3e5","514b3e8a41ba1f8b73a1"],
+    "v5_no_transfer": ["91e027e622f2d9a98240","b2614109e1a5ccc10c14","20375ceceffce4d406a4","4a4e1871b7f7b48b9485","d69e86803f54c5a83d06","66c5848a3c8a4f51b562"],
+    "random_search": ["399ba5e6f15e49b3e885","281d4a03f9bc5812f7af","3667208f0eec7d49161f","d59864ed9ab0297d5542","83aa0674a4d1af4a6b66","f809298bda98f85e0e1b"],
+    "static_template": ["dbfcd2af539b0b2636e7","8fd871e046faa7e4d37c","820b1c309b6117eb268d","8f1dafda0d3fbc099aa9","357e80313b8b9dc3cf36","d044a19fd4551034dc11"],
+    "v4_compatible": ["f9f3239b6866512e4f68","9f5f55df04a5ad23f542","ec4b9c17aaa3767d4f6d","7c30efb65d2c20ff8cc9","3df5ed91505aea4ed6cb","0dde88a4a159a3ad0e40"]
+  },
+  "proposal_count_by_arm": {"v5_full":6,"v5_no_transfer":6,"random_search":6,"static_template":6,"v4_compatible":6},
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "human_task_specific_solver_design": false
+}
