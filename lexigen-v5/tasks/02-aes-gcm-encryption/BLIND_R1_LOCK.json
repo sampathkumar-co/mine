@@ -1,0 +1,28 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "stage": "blind_r1_lock",
+  "selected_candidate_count": 5,
+  "test_records_expected": 100,
+  "shards": 10,
+  "expected_test_manifest_name": "aes_gcm_encryption_T100ms_n291598_size100_test.jsonl",
+  "expected_test_manifest_git_blob_sha1": "249219ce000f4c0938a715f723b62f24e94b0484",
+  "expected_dimensions": {"key_size":16,"nonce_size":12,"plaintext_size":298596352,"aad_size":32},
+  "git_blob_sha1": {
+    "TRAIN_R1_RESULT.json": "bf555094b5b53174a1ee3f2ee9dbd13ef738444f",
+    "BLIND_R1_SELECTION.json": "5c9d0c882b6da8864ee46917e55cbdeaccba5faa",
+    "candidates.py": "9092412db930ac6445008f4b4e142c0685126c62",
+    "requirements.txt": "3d548fbb8c1896246b92fc6f15272402faa6a7e7",
+    "blind_shard.py": "f6acd17748f6e650df5a387b9befd9008c317a5f",
+    "aggregate_blind.py": "ac8e250a661611c368eef0819e41c2ebc827ee95",
+    "workflow": "f975b0e38a5141a2b8a56f18a04aa9c9901c93ff"
+  },
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_implementation_changes_after_lock_permitted": false,
+  "threshold_changes_after_lock_permitted": false,
+  "causal_transfer_credit_possible": false,
+  "causal_transfer_credit_impossibility_reason": "Selected v5_full is generic and all five selected arms use the same high_level_exact implementation class.",
+  "frozen_gate": {"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup_minimum":1.05,"invalid_output_retries":0}
+}
