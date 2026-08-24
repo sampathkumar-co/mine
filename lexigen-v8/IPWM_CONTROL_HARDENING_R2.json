@@ -1,0 +1,48 @@
+{
+  "project": "LEXIGEN V8 Interventional Performance World Model",
+  "stage": "synthetic_control_hardening_r2_preregistered",
+  "r1_result_branch": "lexigen/v8-ipwm-synthetic-result-r1",
+  "real_intervention_data_opened": false,
+  "official_holdout_campaign_started": false,
+  "r1_real_development_thresholds_changed": false,
+  "r1_real_top_k_relative_gain_threshold": 0.20,
+  "purpose": "Repair weaknesses exposed by the immutable R1 synthetic audit before any real corpus is collected.",
+  "null_seeds": [101, 211, 307],
+  "new_controls": {
+    "no_cross_terms": "Contains both program and intervention feature blocks plus categorical intervention/language features but no program×intervention products.",
+    "global_permutation_ensemble": "Three independently permuted target sets; fold-local metrics must remain near chance.",
+    "stratified_permutation_ensemble": "Three target permutations performed independently within intervention_family × repository_family strata, preserving coarse base rates while destroying row-level conditional pairing.",
+    "macro_fold_metrics": "Primary null AUROC/Spearman are computed inside each held-out fold and macro-averaged, preventing held-out-group prevalence differences from inflating pooled AUROC.",
+    "heldout_intervention_family": "Leave one intervention family out of fitting; categorical identity is unseen and only transferable numeric intervention/program structure can support prediction."
+  },
+  "synthetic_r2_assertions_frozen_before_execution": {
+    "repository_holdout_full_positive_auroc_min": 0.70,
+    "repository_holdout_full_spearman_min": 0.45,
+    "repository_holdout_full_minus_no_cross_auroc_min": 0.05,
+    "repository_holdout_full_minus_no_cross_spearman_min": 0.15,
+    "repository_holdout_global_null_max_positive_auroc": 0.60,
+    "repository_holdout_global_null_max_abs_spearman": 0.15,
+    "repository_holdout_full_minus_stratified_null_auroc_min": 0.10,
+    "repository_holdout_full_minus_stratified_null_spearman_min": 0.20,
+    "family_holdout_full_positive_auroc_min": 0.65,
+    "family_holdout_full_spearman_min": 0.35,
+    "intervention_family_holdout_full_positive_auroc_min": 0.62,
+    "intervention_family_holdout_full_spearman_min": 0.30,
+    "language_holdout_full_positive_auroc_min": 0.60,
+    "synthetic_top_k_real_gate_not_required": true
+  },
+  "real_data_gate_additions_if_r2_synthetic_spine_passes": {
+    "full_must_beat_no_cross_terms": true,
+    "full_must_beat_static_only": true,
+    "global_null_macro_fold_chance_check": true,
+    "stratified_null_increment_check": true,
+    "multiple_null_seeds_required": true,
+    "heldout_intervention_family_is_development_stress_test": true,
+    "original_r1_real_thresholds_remain_floor_not_ceiling": true
+  },
+  "claim_boundary": {
+    "r2_synthetic_pass_is_real_transfer": false,
+    "r2_synthetic_pass_is_breakthrough": false,
+    "real_corpus_partition_must_be_frozen_separately": true
+  }
+}
