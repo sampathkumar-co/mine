@@ -3,7 +3,7 @@
   "task_index":1,
   "task":"max_flow_min_cost",
   "family":"numerical_optimization",
-  "stage":"train_r1_lock",
+  "stage":"train_r1_lock_revision1",
   "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
   "source_sha256":"25fc1054d288b4593e53e7ab8fed7e2eb54dce5f5b130952842305af2f29fe86",
   "train_manifest_identity":{
@@ -44,7 +44,7 @@
     "dataset_metadata_lock":"9e670d4b6dd6da59296057424e169cfa412f52b1",
     "dataset_metadata_result":"ee50181ef37bb84e77178688e2194eaf5288a884",
     "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
-    "workflow":"a4f44c615d1ec9d9ec69180783f953c17b1883b7"
+    "workflow":"48de4b6a74442b2cf44450a223ed0ea4e2eb8c4d"
   },
   "runtime_versions":{
     "python":"3.12",
@@ -65,6 +65,14 @@
   "public_task_specific_solvers_opened_before_lock":false,
   "verifier_capacity_loophole_exploitation_forbidden":true,
   "official_training_revision_budget":3,
+  "official_training_revision_budget_consumed":1,
+  "revision_reason":"Harness/environment only: add frozen lexigen-v5 directory to PYTHONPATH so candidates.py can import the already-frozen engine module.",
+  "prior_failed_attempt":{
+    "workflow_run_id":32704136933,
+    "failure_record":"lexigen-v6/tasks/01-max-flow-min-cost/TRAIN_R1_ATTEMPT1_FAILURE.json",
+    "official_train_manifest_opened":false,
+    "scientific_candidate_execution_started":false
+  },
   "scientific_candidate_revision_after_lock_forbidden":true,
   "threshold_changes":false
 }
