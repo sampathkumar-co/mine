@@ -1,0 +1,71 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage": "parallel7_blind_r1_lock",
+  "task_count": 7,
+  "training_summary_sha256": {
+    "odr": "ca7149f635697a6ddabd64908d5ddecf19889123c3d880a3cc1c4785476e9749",
+    "dct_type_I_scipy_fftpack": "67f699a0ecba956f6210c93862e9d82af0adeb10d61eb53a1ca4c705843745f8",
+    "ode_lorenz96_nonchaotic": "154de867d64c8ea703cc451866f02453384f09d926d336248373d0006b458fa2",
+    "robust_kalman_filter": "85c0bf2669efe882de3b2a95a59fd08c65e77f746b01f29e3496b876a1c0233d",
+    "edge_expansion": "f11aef7946c72a0f45e768f8fac53e061691665685e458143b1fbc0ef4f841ad",
+    "svd": "146d7271b9a55ff5f95f4c46d2b999c73d1ed4e93b7535c9ee3efd259319015b",
+    "max_independent_set_cpsat": "35965803b0f6f3499f9a766857e0402fb0abb13b48047d28eeca8f8a4fc0fe68"
+  },
+  "all_seven_training_results_sealed_before_blind": true,
+  "task46_repair_training_used": true,
+  "task46_repair_tasks": [
+    "ode_lorenz96_nonchaotic",
+    "edge_expansion"
+  ],
+  "task6_candidate_identity_recovered_from_frozen_signature": true,
+  "task6_training_rerun_for_aggregation_fix": false,
+  "official_test_manifests_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "blind_runs_completed_before_trigger": 0,
+  "exactly_one_official_blind_run_per_task_allowed": true,
+  "post_blind_candidate_revision_allowed": false,
+  "post_blind_timing_rerun_allowed": false,
+  "threshold_changes": false,
+  "runtime_versions": {
+    "python": "3.12",
+    "numpy": "2.5.2",
+    "scipy": "1.16.1",
+    "networkx": "3.6.1",
+    "ortools": "9.11.4210",
+    "cvxpy": "1.7.2"
+  },
+  "frozen_clean_blind_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "paths": {
+    "engine": "lexigen-v5/engine.py",
+    "protocol": "lexigen-v6/PROTOCOL.md",
+    "transfer_memory": "lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog": "lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "parallel_candidates": "lexigen-v6/parallel7/parallel_candidates.py",
+    "parallel_train": "lexigen-v6/parallel7/parallel_train.py",
+    "parallel_train_v2": "lexigen-v6/parallel7/parallel_train_v2.py",
+    "task46_overlay": "lexigen-v6/parallel7/parallel_task46_overlay.py",
+    "blind_runner": "lexigen-v6/parallel7/parallel_blind_v2.py",
+    "blind_aggregate": "lexigen-v6/parallel7/parallel_blind_aggregate.py",
+    "blind_workflow": ".github/workflows/lexigen-v6-parallel7-blind-r1.yml",
+    "edge_signature_aggregate": "lexigen-v6/parallel7/parallel_aggregate_signature.py"
+  },
+  "git_blob_sha1": {
+    "engine": "a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "protocol": "0b70abf916962f6f0048528d0671a83b38222efc",
+    "transfer_memory": "811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog": "2b868c03af77860892d8902bd2666cc1263876f7",
+    "parallel_candidates": "aad467b36d0a45f4c6b28334721b7bddb91c953e",
+    "parallel_train": "866ffa33240631f53f114476a91850173aa2fff2",
+    "parallel_train_v2": "0556b6724ff79e01f66ff8e3b70a696f3950e7f4",
+    "task46_overlay": "b0f1c93e346abe7b5e5cb84760ac465404be0d53",
+    "blind_runner": "812e4d14d846d2d2f6707f998ae2f1ac0bc8e5a2",
+    "blind_aggregate": "76fe8ec6cb06ce14df35f7aaa7371c938a3ee0fe",
+    "blind_workflow": "cc194682031ae4c3892e567b2885e1220504705c",
+    "edge_signature_aggregate": "a370584f38069573aee1ec8008406c2761ecd38d"
+  }
+}
