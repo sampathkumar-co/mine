@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "source_spec_opening_sealed",
+  "status": "success",
+  "workflow_run_id": 32702006356,
+  "artifact_id": 9510877103,
+  "artifact_digest": "sha256:61c9dabc882579fb9eb430de5b5097d7ca2fca4f81e0fe835603222f2bab6b81",
+  "task_spec_sha256": "694aa90d9c328a42fcece495ecf11aa8d864cf9479bd11cfb08a7d1d79f57615",
+  "pydantic_main_sha256": "2a5ce2ba5fc92a98c459221a73106c4fda3d156f38e64bb4470722a2d7c61b25",
+  "worktree_context_sha256": "cc4dd6aed707bc7d862e515da0a57ba19e16a549b7c88fad7bb755813db17cab",
+  "test_count": 14,
+  "source_observation": "BaseModel.__setattr__ performs repeated class-var, field-name, frozen, descriptor, validate-assignment, extra-policy and field-membership dispatch on every assignment before the common declared-field path writes self.__dict__[name] and records the field in __pydantic_fields_set__.",
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "git_objects_read": false,
+  "prior_gso_submission_opened": false,
+  "human_task_specific_solver_idea": false,
+  "trigger_retired_before_result_commit": true
+}
