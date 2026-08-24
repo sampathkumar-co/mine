@@ -1,0 +1,40 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "family": "cryptography_encoding",
+  "stage": "source_analysis_r1_sealed",
+  "status": "success",
+  "source_workflow_run_id": 32679344052,
+  "source_artifact_id": 9503651875,
+  "source_artifact_digest_sha256": "0cff35b0278615600427914b8046390a9dfedc490551821bc2cf696c3b304de7",
+  "source_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path": "AlgoTuneTasks/aes_gcm_encryption/aes_gcm_encryption.py",
+  "source_git_blob_sha1": "2b2039f12cd6b5f89aa3c284ebefe44b8f40191e",
+  "source_sha256": "880d249baac527dcc5dcb619edffec5d2c52b68f4c192e5f42b5bf97ecd5c51b",
+  "description_path": "AlgoTuneTasks/aes_gcm_encryption/description.txt",
+  "description_git_blob_sha1": "363e4372d531e273bebcbe5ab0d264f855b6a3e0",
+  "description_sha256": "809acea8a51075995d7958fc08456496ed0f63f7488ba3056efa7441679f8fee",
+  "fingerprint_features": ["boolean", "bytes", "certificate", "discrete", "graph", "numeric", "verifier"],
+  "applicable_transfer_templates": [
+    {"template": "bit_frontier_restriction", "causal_id": "TM-BFR-01", "operators": ["bit_parallel_representation", "sparse_frontier_search", "early_certificate_exit"]},
+    {"template": "certified_active_core", "causal_id": "TM-CAC-01", "operators": ["active_set_decomposition", "early_certificate_exit", "risk_aware_staging"]},
+    {"template": "precision_backend_error_budget", "causal_id": "TM-PBEB-01", "operators": ["dtype_specialization", "native_backend_substitution", "risk_aware_staging"]}
+  ],
+  "proposal_ids_by_arm": {
+    "v5_full": ["3304c859d463a501bd86", "a6102573c9f355414229", "b1ef08a2d68a248c0821", "7653e3865aa7a6def4dc", "c8350e5b9ffb9c400fc8", "ef8d1d6c3a4fa6d0be21"],
+    "v5_no_transfer": ["d14c06bd6ae45a8dd009", "14a8ffbc5159ff111ac9", "477905d60634240ebda9", "1b859d0377c9b2a19b53", "0a141855078f60fe2b98", "974e0d50c53bf65218c5"],
+    "random_search": ["ed1f4796fdbc83a45b55", "0520aab8496f3d685f92", "e9c9180b0957bb3f7ca7", "01baad563ce94255e3e2", "ae3b52160647eaf9707e", "8615e4a35db08222a26b"],
+    "static_template": ["dbfcd2af539b0b2636e7", "8fd871e046faa7e4d37c", "820b1c309b6117eb268d", "8f1dafda0d3fbc099aa9", "d044a19fd4551034dc11", "357e80313b8b9dc3cf36"],
+    "v4_compatible": ["bd9a928b0a959b433de2", "885bf4f21e819b330732", "695b907772d8a69a1186", "d9863922b850e9717a05", "cdae8cbf0d73bd4d047c", "af7d36f83a386b7726b9"]
+  },
+  "proposal_count_by_arm": {"v5_full": 6, "v5_no_transfer": 6, "random_search": 6, "static_template": 6, "v4_compatible": 6},
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "human_task_specific_solver_design": false,
+  "note": "Frozen engine applicability is preserved even where source semantics make a learned recipe implausible; no post-source engine repair is allowed."
+}
