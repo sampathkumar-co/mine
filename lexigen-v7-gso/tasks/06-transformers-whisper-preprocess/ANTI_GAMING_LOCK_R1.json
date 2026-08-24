@@ -1,0 +1,17 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 6,
+  "stage": "task6_selected_preflight_winners_anti_gaming_locked",
+  "selected_candidates": ["F3","N1","R2"],
+  "anti_gaming_policy_commit": "855c537c2ab1f5d7dbf2ae4598a8230cf7178f4d",
+  "anti_gaming_policy_blob": "0fe8a488502cd9b8d547cbc8651e6402b0dce049",
+  "anti_gaming_auditor_blob": "637227b4d8130ad4714066d0f1b910e81dc2048f",
+  "candidate_changed_after_preflight": false,
+  "expert_diff_inspected": false,
+  "hints_inspected": false,
+  "git_blob_sha1": {
+    "preflight_result": "9e7036408730ceee3eaac943fa0af5e12ff5ed5d",
+    "builder": "5b47dfc5a8fa58bb1cc95ef0ad7f2579d07d8434",
+    "workflow": "a88613869521a0dc4c08c35f3d26a42811b8b6cb"
+  }
+}
