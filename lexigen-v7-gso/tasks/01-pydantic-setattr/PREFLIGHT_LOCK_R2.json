@@ -1,0 +1,32 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "stage": "task1_preflight_lock_r2",
+  "scientific_setup_inherited_unchanged_from_r1": true,
+  "r1_invalid_before_any_scientific_feedback": true,
+  "candidate_ids": ["F1", "F2", "F3", "N1", "N2", "N3", "R1", "R2", "R3"],
+  "test_indexes": [0, 4, 8, 13],
+  "git_blob_sha1": {
+    "PROPOSALS_R1.json": "ecc41ef14724a0f1ccbd93bc860cbaf99c783b59",
+    "PREFLIGHT_PLAN_R1.json": "1146096dd8a74ad6ebb837bc65b29b736443b452",
+    "build_candidate.py": "8c0f1b55c089fb71a265c938ac3d157fec85a9de",
+    "run_preflight.py": "c4b4f73ffebaea4508139301bdcd46911a53223d",
+    "PREFLIGHT_R1_INFRA_INCIDENT.json": "342958950dda80602bc29b3fd25e2ca975b3fbbc",
+    "SOURCE_R1_RESULT.json": "ace951f79e01bc0dd3694558561b5c43cec050c3",
+    "GENERATION_CONTRACT_R1.md": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+    "workflow": "5d1245016f9a0474048e62b6ea6ebdc92622e35b"
+  },
+  "repair_scope": "environment plumbing only: execute the preinstalled frozen-image Pydantic and mirror each already-frozen candidate source transform into its actual import root when different from /testbed",
+  "r2_preflight_executed_before_lock": false,
+  "timing_feedback_opened_before_r2_lock": false,
+  "candidate_definitions_changed_after_r1": false,
+  "test_indexes_changed_after_r1": false,
+  "budgets_changed_after_r1": false,
+  "selection_rule_changed_after_r1": false,
+  "thresholds_changed_after_r1": false,
+  "expert_opt_commit_opened_before_lock": false,
+  "expert_diff_opened_before_lock": false,
+  "hints_opened_before_lock": false,
+  "prior_gso_submission_opened_before_lock": false,
+  "human_task_specific_solver_contribution": false
+}
