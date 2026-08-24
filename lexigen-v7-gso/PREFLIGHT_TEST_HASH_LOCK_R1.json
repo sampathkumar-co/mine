@@ -1,0 +1,15 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "preflight_test_subset_hashes_frozen",
+  "dataset_revision": "c2e4f1a58427cccd15e0e542f136bd204fb19284",
+  "tasks": {
+    "2": {"instance_id":"abetlen__llama-cpp-python-2bc1d97","indexes":[0],"sha256":["f0c87120d26f59ebc3d62dbf620c9a79991aa4d85df957a3ca1767d6af76e9ea"]},
+    "3": {"instance_id":"huggingface__tokenizers-bfd9cde","indexes":[0,2,4],"sha256":["ab12261049cf9f8cf523cc2482f2942e669875640c5c5c96aae47a7991ab0a5e","57d5dff74ded4db2dcb4d6be24715cfad224b8d148047f190f12e306d84af8e9","4745542b289b0b14782ed0d65f9f3848333d6e1744d047c2db7b1a888ff05096"]},
+    "4": {"instance_id":"numpy__numpy-be52f19","indexes":[0,1,4],"sha256":["42dffa00f2c28000df5ae523062c40fb2bdead3cf064b2450b4e5f21a9bcd1c8","9fa9202f894b19a4f3c2f807f2e2a8a3744ea49c0a38463950e7d9d2621642c8","600a6884c566f1526c0811433dba58664acfe2ce4772a63db7bc376edde62074"]},
+    "5": {"instance_id":"pandas-dev__pandas-fd43d4b","indexes":[0,9,18],"sha256":["32cf5a6630ec45c42cde63ca9281511adc14609f669b0a0b9c192d9afddc13f9","2273da7afb8594c26248f6622de547605c0591fc3292506a5d3652af99fdfa96","69f528d060feb819e8bd0f70389f2a9756316ffacd70f42ed20a306ce7f35f5b"],"campaign_credit_eligible":false},
+    "6": {"instance_id":"huggingface__transformers-211f93a","indexes":[0,2,4],"sha256":["0ac7660b581d85c959912db160c7dc26e6c160cfc10e0d8ec6eacff5a35e0583","cebcb401503f48ea40baf7026779986bea0361acf340d1c05cdcc68453e7aa86","c1dfc6828f94034d0d0afe92b1a15e326e7b74d536eab2d3b67881228a0506c3"]}
+  },
+  "hash_source": "already-sealed Tasks2-6 source R2 artifacts",
+  "candidate_timing_observed_before_lock": false,
+  "expert_information_used_for_clean_tasks": false
+}

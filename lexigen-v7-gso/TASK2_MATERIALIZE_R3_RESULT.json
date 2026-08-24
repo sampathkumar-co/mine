@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "task2_materialization_r3_result",
+  "workflow_run_id": 32746510852,
+  "artifact_id": 9527331380,
+  "artifact_digest": "sha256:b0c0a44bcbca5f01cd0423bed3a1d0f6d3f11b0a8b72da92fec0695b5c886e41",
+  "candidate_count": 9,
+  "candidate_execution_count": 0,
+  "candidate_timing_observed": false,
+  "patch_sha256": {
+    "F1": "1b053c99ea6cce4551f52c141037a42c50fa09761b6c5efb9d051d5a99d8bf7d",
+    "F2": "d7a86f9079292b09a00e39a1017034d5fc6111ae3dee4c8eacaa866f5c2b274e",
+    "F4": "5e8b000c05be80f44f7a59d96699748c330fa7510ebb42e8757c4abaad97c7c1",
+    "N1": "d7a86f9079292b09a00e39a1017034d5fc6111ae3dee4c8eacaa866f5c2b274e",
+    "N3": "dae026b5a55515a62b7b6f3fcd53f5d25bd2ef7706b67c144c2787de6bf8583b",
+    "N6": "5e8b000c05be80f44f7a59d96699748c330fa7510ebb42e8757c4abaad97c7c1",
+    "R1": "5e8b000c05be80f44f7a59d96699748c330fa7510ebb42e8757c4abaad97c7c1",
+    "R3": "9228b89361257df9d65d8d4974cfec490f0c31f9464ee2da3dd93d03bf44c5a5",
+    "R6": "550631261494cf6235ff4cf8793820488761616c52f8bda16e56aa5b38e01543"
+  },
+  "r1_r2_incidents_preserved": true,
+  "all_prior_successful_patch_hashes_preserved": true,
+  "expert_information_used": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "selections_changed": false
+}
