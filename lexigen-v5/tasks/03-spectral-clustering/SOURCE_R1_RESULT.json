@@ -1,0 +1,40 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 3,
+  "task": "spectral_clustering",
+  "family": "signal_processing",
+  "stage": "source_analysis_r1_sealed",
+  "status": "success",
+  "source_workflow_run_id": 32680927888,
+  "source_artifact_id": 9504119736,
+  "source_artifact_digest_sha256": "f5b32812189725259d981194b78327f5ef2292986c2b3956259355bbe1b62e21",
+  "source_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path": "AlgoTuneTasks/spectral_clustering/spectral_clustering.py",
+  "source_git_blob_sha1": "7e8055db9c069388e4d3fe7468c4a6d4f33c02e8",
+  "source_sha256": "6bb7024fb4bed4c2f5e0096d7fffc761a6be38ffaab6a8002e3f2a44d86e6da5",
+  "description_path": "AlgoTuneTasks/spectral_clustering/description.txt",
+  "description_git_blob_sha1": "948b53b84808b6d7a59564eb58decfb3f1838a35",
+  "description_sha256": "02a4d3f3564c192ac672099791e7382273a127a3f40ced9fd5571795b39ff0af",
+  "fingerprint_features": ["approximate_verifier", "array", "backend", "boolean", "certificate", "decomposition", "discrete", "graph", "high_dimensional", "iterative", "matrix", "numeric", "order_statistic", "scientific_dynamics", "set", "sparse", "tensor", "tolerance", "topk", "verifier"],
+  "applicable_transfer_templates": [
+    {"template": "bit_frontier_restriction", "causal_id": "TM-BFR-01", "operators": ["bit_parallel_representation", "sparse_frontier_search", "early_certificate_exit"]},
+    {"template": "certified_active_core", "causal_id": "TM-CAC-01", "operators": ["active_set_decomposition", "early_certificate_exit", "risk_aware_staging"]},
+    {"template": "reduced_representation_refinement", "causal_id": "TM-RRR-01", "operators": ["reduced_representation", "bounded_exact_refinement", "risk_aware_staging"]}
+  ],
+  "proposal_ids_by_arm": {
+    "v5_full": ["3304c859d463a501bd86", "41510e43e8fafb598496", "a6102573c9f355414229", "e909b567bac8aa01b86e", "2c6961f9ca6711ce3a3f", "deab8c4f8228e58310f0"],
+    "v5_no_transfer": ["66c5848a3c8a4f51b562", "b93eda021fe3bc5d89cb", "acd3613bac98cfcfce94", "d14c06bd6ae45a8dd009", "0d67be77188699dfb9ee", "5fb64f97237473444d3c"],
+    "random_search": ["53ff79efe576ec7bfcac", "614f3090e8375b79582f", "53f2d6b2e3dc583d92fe", "f38f42c50dd9ebd33968", "5793361bb742983fa1ea", "0b295b955536d6d4b680"],
+    "static_template": ["dbfcd2af539b0b2636e7", "8fd871e046faa7e4d37c", "820b1c309b6117eb268d", "8f1dafda0d3fbc099aa9", "357e80313b8b9dc3cf36", "d044a19fd4551034dc11"],
+    "v4_compatible": ["0dde88a4a159a3ad0e40", "bd9a928b0a959b433de2", "a55401472772ccc050ac", "885bf4f21e819b330732", "7172672e952d57a46910", "695b907772d8a69a1186"]
+  },
+  "proposal_count_by_arm": {"v5_full": 6, "v5_no_transfer": 6, "random_search": 6, "static_template": 6, "v4_compatible": 6},
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "human_task_specific_solver_design": false,
+  "note": "Frozen engine applicability is preserved exactly. Source semantics are used only to instantiate the already-frozen operators; no proposal reranking, engine repair, task swap, threshold change, or public-solver access is permitted."
+}
