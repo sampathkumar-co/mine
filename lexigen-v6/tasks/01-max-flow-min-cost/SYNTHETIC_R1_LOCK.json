@@ -1,0 +1,34 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":1,
+  "task":"max_flow_min_cost",
+  "stage":"synthetic_r1_lock",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/01-max-flow-min-cost/TASK_LOCK.json",
+    "candidates":"lexigen-v6/tasks/01-max-flow-min-cost/candidates.py",
+    "synthetic":"lexigen-v6/tasks/01-max-flow-min-cost/synthetic.py",
+    "proposal_engine":"lexigen-v5/engine.py",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "workflow":".github/workflows/lexigen-v6-task1-synthetic-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"9db3866db92ec7d76f55519b9ac08c6b9ba7663f",
+    "candidates":"e56aea09d5cf0ff5c79fdc537d6ad78c08f6f380",
+    "synthetic":"4aec0b63a519e95b4cdc6daafc7d15532ff7c34a",
+    "proposal_engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "workflow":"f281fcc0db091f809b0d85b9f10e0b26b1491e84"
+  },
+  "source_sha256":"25fc1054d288b4593e53e7ab8fed7e2eb54dce5f5b130952842305af2f29fe86",
+  "candidate_mapping_frozen_before_official_training":true,
+  "strong_baseline_frozen_before_official_training":true,
+  "official_train_manifest_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "verifier_capacity_loophole_exploitation_forbidden":true,
+  "independent_semantic_certificate_required":true
+}

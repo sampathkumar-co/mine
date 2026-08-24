@@ -1,0 +1,26 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":1,
+  "task":"max_flow_min_cost",
+  "stage":"dataset_metadata_r1_lock",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/01-max-flow-min-cost/TASK_LOCK.json",
+    "synthetic_result":"lexigen-v6/tasks/01-max-flow-min-cost/SYNTHETIC_R1_RESULT.json",
+    "metadata_script":"lexigen-v6/tasks/01-max-flow-min-cost/dataset_metadata.py",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "workflow":".github/workflows/lexigen-v6-task1-dataset-metadata-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"9db3866db92ec7d76f55519b9ac08c6b9ba7663f",
+    "synthetic_result":"a695b3d6756b4923987d0f293175a0441e340ccf",
+    "metadata_script":"90503aac36fc2c0d12d0780eec7d14f3e22b4ed5",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "workflow":"f66fe4c4b2908ace5f06c3fa25da56bb671d73e9"
+  },
+  "pair_selection_rule":"exactly one filename stem containing _T100ms_ and _size100_ with matching _train.jsonl/_test.jsonl suffixes",
+  "train_manifest_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "payloads_opened_before_lock":false,
+  "reports_opened_before_lock":false
+}

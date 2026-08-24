@@ -1,0 +1,20 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":1,
+  "task":"max_flow_min_cost",
+  "stage":"dataset_metadata_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32701726875,
+  "artifact_id":9510743375,
+  "artifact_digest":"sha256:394bde02424ec7e053eaa129559650b8e0e39098913094f7a18a7264fe1f0764",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "directory_response_sha256":"9f67ac54175d309402637248a894abbbc4c96445444275c4ce15d53718f1d2e6",
+  "directory_etag":"W/\"1b7-TkaimwC/RWCBOqlI2fQUGxgi78U\"",
+  "file_count":2,
+  "train":{"path":"data/max_flow_min_cost/max_flow_min_cost_T100ms_n64_size100_train.jsonl","name":"max_flow_min_cost_T100ms_n64_size100_train.jsonl","size":24742,"oid":"0dd539d95028d524b813f510ebd5c35e526007f9"},
+  "test":{"path":"data/max_flow_min_cost/max_flow_min_cost_T100ms_n64_size100_test.jsonl","name":"max_flow_min_cost_T100ms_n64_size100_test.jsonl","size":24800,"oid":"74816e40f0cd9df79c88917013f24937940ee91f"},
+  "train_manifest_opened":false,
+  "test_manifest_opened":false,
+  "payloads_opened":0,
+  "reports_opened":false
+}

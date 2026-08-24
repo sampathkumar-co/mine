@@ -1,0 +1,35 @@
+name: LEXIGEN v6 Task1 Pre-Blind Smoke R1
+on:
+  push:
+    branches: [lexigen/v6-task1-max-flow-min-cost-r1]
+    paths: ["lexigen-v6/tasks/01-max-flow-min-cost/TRIGGER_BLIND_SMOKE_R1"]
+permissions: {contents: read}
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install frozen runtime dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir "numpy==2.5.2" "networkx==3.6.1" "ortools==9.11.4210"
+      - name: Fetch exact frozen task source
+        shell: bash
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/oripress/AlgoTune/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/max_flow_min_cost/max_flow_min_cost.py" -o task-source.py
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          got=hashlib.sha256(Path('task-source.py').read_bytes()).hexdigest()
+          expected='25fc1054d288b4593e53e7ab8fed7e2eb54dce5f5b130952842305af2f29fe86'
+          if got!=expected: raise SystemExit(f'source sha mismatch {got}')
+          PY
+      - name: Compile blind package without test access
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/tasks/01-max-flow-min-cost/candidates.py lexigen-v6/tasks/01-max-flow-min-cost/train_shard.py lexigen-v6/tasks/01-max-flow-min-cost/blind_shard.py lexigen-v6/tasks/01-max-flow-min-cost/aggregate_blind.py
+      - name: Run selected-candidate synthetic smoke only
+        env:
+          PYTHONPATH: lexigen-v5
+        run: python lexigen-v6/tasks/01-max-flow-min-cost/blind_shard.py --source task-source.py --smoke
+      - name: Assert smoke never opened test data
+        run: echo "Pre-blind smoke uses only local synthetic.py cases; no official test manifest/payload access occurs in this workflow."

@@ -1,0 +1,85 @@
+name: LEXIGEN v6 Task1 Official Blind R1
+on:
+  push:
+    branches: [lexigen/v6-task1-max-flow-min-cost-r1]
+    paths: ["lexigen-v6/tasks/01-max-flow-min-cost/TRIGGER_BLIND_R1"]
+permissions: {contents: read}
+jobs:
+  shard:
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task1 blind package before test access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/tasks/01-max-flow-min-cost/BLIND_R1_LOCK.json').read_text())
+          for key,path in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              expected=lock['git_blob_sha1'][key]
+              if got!=expected: raise SystemExit(f'blind lock mismatch {key}: {got} != {expected}')
+          if lock['official_test_manifest_opened_before_lock'] or lock['official_test_payloads_opened_before_lock'] != 0:
+              raise SystemExit('Task1 blind boundary crossed before lock')
+          if lock['blind_runs_completed_before_trigger'] != 0:
+              raise SystemExit('Task1 blind already consumed')
+          PY
+      - name: Install exact frozen runtime dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir "numpy==2.5.2" "networkx==3.6.1" "ortools==9.11.4210"
+      - name: Fetch exact frozen task source
+        shell: bash
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/oripress/AlgoTune/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/max_flow_min_cost/max_flow_min_cost.py" -o task-source.py
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/tasks/01-max-flow-min-cost/BLIND_R1_LOCK.json').read_text())
+          got=hashlib.sha256(Path('task-source.py').read_bytes()).hexdigest()
+          if got!=lock['source_sha256']: raise SystemExit(f'source sha mismatch {got}')
+          PY
+      - name: Compile frozen blind code
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/tasks/01-max-flow-min-cost/candidates.py lexigen-v6/tasks/01-max-flow-min-cost/train_shard.py lexigen-v6/tasks/01-max-flow-min-cost/blind_shard.py lexigen-v6/tasks/01-max-flow-min-cost/aggregate_blind.py
+      - name: Execute one frozen official blind shard
+        env:
+          PYTHONPATH: lexigen-v5
+        run: python lexigen-v6/tasks/01-max-flow-min-cost/blind_shard.py --source task-source.py --shard ${{ matrix.shard }} --output blind-shards/blind-shard-${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blind-shard-${{ matrix.shard }}
+          path: blind-shards/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+  aggregate:
+    needs: shard
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: blind-shard-*
+          path: blind-shards
+          merge-multiple: true
+      - name: Compile deterministic blind aggregator
+        run: python -m py_compile lexigen-v6/tasks/01-max-flow-min-cost/aggregate_blind.py
+      - name: Aggregate exactly 700 frozen blind evaluations
+        run: python lexigen-v6/tasks/01-max-flow-min-cost/aggregate_blind.py --input blind-shards --output blind-complete
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task1-blind-r1
+          path: |
+            blind-complete/blind-summary.json
+            blind-complete/blind-results.jsonl
+          if-no-files-found: error
+          retention-days: 90

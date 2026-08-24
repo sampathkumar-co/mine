@@ -1,0 +1,13 @@
+name: LEXIGEN v6 Task1 Official Training R1 (Archived)
+on:
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  archived:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Training boundary already consumed
+        run: |
+          echo "Task1 official training R1 is sealed in TRAIN_R1_RESULT.json."
+          echo "Do not rerun training; this workflow is retained only as provenance."
+          exit 1
