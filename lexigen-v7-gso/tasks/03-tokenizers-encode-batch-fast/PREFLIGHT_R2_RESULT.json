@@ -1,0 +1,39 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 3,
+  "instance_id": "huggingface__tokenizers-bfd9cde",
+  "stage": "preflight_r2_result_sealed",
+  "workflow_run_id": 32748738304,
+  "artifact_id": 9528767518,
+  "artifact_digest": "sha256:421a0e01cdabef12c4d740bf7ee3c438602f9df1b1b5090c58d59e78e9e04dd1",
+  "representative_test_indexes": [0, 2, 4],
+  "baseline_times": {"0": 0.859379, "2": 0.093383, "4": 0.434735},
+  "v7_full": {
+    "candidates": ["F1", "F3", "F4"],
+    "valid_count": 0,
+    "shared_failure": "encode_batch_fast accepted Vec<String> only; frozen test 2 includes raw-text tuple pairs and raises TypeError, and test 4 also requires is_pretokenized keyword compatibility",
+    "winner": null
+  },
+  "v7_no_library": {
+    "winner": "N6",
+    "winner_patch_sha256": "eaf742b6659ac5ccd85d554348126637fc69cc1dbc0137358046dc47ea339d3d",
+    "harmonic_speedup": 0.9812123482416462,
+    "minimum_speedup": 0.9723635680431947,
+    "correct": true
+  },
+  "v7_random_library": {
+    "winner": "R2",
+    "winner_patch_sha256": "eaf742b6659ac5ccd85d554348126637fc69cc1dbc0137358046dc47ea339d3d",
+    "harmonic_speedup": 0.9837107776375058,
+    "minimum_speedup": 0.981236796013073,
+    "correct": true
+  },
+  "control_winners_byte_identical": true,
+  "revision_slots_used_per_arm": 0,
+  "revision_slots_remaining_per_arm": 2,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "thresholds_changed": false,
+  "next_action": "Use revision slot 1 under equal budgets. Repair the source-visible input-contract failure without changing libraries, primitives, tasks, tests, or evaluator rules."
+}
