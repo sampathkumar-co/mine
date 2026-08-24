@@ -1,0 +1,1 @@
+R2 workflow, repair wrapper, and immutable repair lock were committed before the one-shot trigger. The pull request is opened only after those commits; the PR opened event may therefore execute the already-locked trigger path. No scientific input changed after the lock.
