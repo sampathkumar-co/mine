@@ -1,0 +1,60 @@
+{
+  "project": "LEXIGEN V8 Interventional Performance World Model",
+  "stage": "synthetic_pipeline_r1_result_sealed",
+  "workflow_run_id": 32756291230,
+  "job_id": 97524499362,
+  "workflow_conclusion": "success",
+  "artifact_id": 9531122979,
+  "artifact_digest": "sha256:3f0a206230ebdff017c8874f888afa391b9528f5dee06850767fa9cb5b374a99",
+  "corpus_sha256": "a4bed66de68f827406aeb251e8787da3380c92b63125a51f3ca5e73bb795dde6",
+  "evaluation_sha256": "1f4157e2b8f5e10d978db921ddd3117263194e5dd6828db0785772aa061cde97",
+  "synthetic_pipeline_only": true,
+  "scientific_transfer_evidence": false,
+  "official_holdout_campaign_started": false,
+  "record_count": 864,
+  "repository_count": 12,
+  "language_count": 2,
+  "repository_holdout": {
+    "full_positive_speedup_auroc": 0.8787964848354946,
+    "full_spearman_log_speedup": 0.8575903239658522,
+    "full_validity_auroc": 0.8959947785959204,
+    "full_top_k_mean_observed_speedup": 1.2138689312966369,
+    "frequency_positive_speedup_auroc": 0.5202550637659414,
+    "frequency_spearman_log_speedup": 0.0734778772277035,
+    "frequency_top_k_mean_observed_speedup": 1.0183876918466501,
+    "relative_top_k_gain_over_frequency": 0.1919516909081247,
+    "static_only_positive_speedup_auroc": 0.7890365448504983,
+    "static_only_spearman_log_speedup": 0.6256598030721142,
+    "shuffled_positive_speedup_auroc": 0.4981084556853499,
+    "shuffled_spearman_log_speedup": 0.006971487492288033,
+    "shuffled_validity_auroc": 0.6895654651921715
+  },
+  "repository_family_holdout": {
+    "full_positive_speedup_auroc": 0.8574697245740006,
+    "full_spearman_log_speedup": 0.8536009767126519,
+    "full_validity_auroc": 0.8615316731474587,
+    "relative_top_k_gain_over_frequency": 0.19007971286643288,
+    "static_only_positive_speedup_auroc": 0.7706462329868181,
+    "static_only_spearman_log_speedup": 0.6219821348814588,
+    "shuffled_positive_speedup_auroc": 0.5151698638945451,
+    "shuffled_spearman_log_speedup": -0.10177254294328086,
+    "shuffled_validity_auroc": 0.6664368513462582
+  },
+  "language_holdout": {
+    "full_positive_speedup_auroc": 0.855160218626085,
+    "full_spearman_log_speedup": 0.8483632211572453,
+    "full_validity_auroc": 0.8448103104345348,
+    "relative_top_k_gain_over_frequency": 0.19441326078620502,
+    "static_only_positive_speedup_auroc": 0.7969027971278534,
+    "static_only_spearman_log_speedup": 0.628559233925274,
+    "shuffled_positive_speedup_auroc": 0.5224466830993463,
+    "shuffled_spearman_log_speedup": 0.08746536592118277,
+    "shuffled_validity_auroc": 0.7031061838706415
+  },
+  "classification": {
+    "synthetic_sanity_test_passed": true,
+    "real_development_gate_passed": false,
+    "reason_real_gate_not_claimed": "Synthetic data cannot establish real transfer. In addition, repository-holdout relative top-k gain is 0.19195, below the separately frozen 0.20 real development threshold.",
+    "breakthrough": false
+  }
+}
