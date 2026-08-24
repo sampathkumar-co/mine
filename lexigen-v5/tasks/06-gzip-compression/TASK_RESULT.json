@@ -1,0 +1,18 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":6,
+  "task":"gzip_compression",
+  "family":"cryptography_encoding",
+  "final_status":"completed_negative",
+  "clean_unseen_task_win":false,
+  "v5_over_v4_task_win":false,
+  "causal_transfer_win":false,
+  "blind_v5_full":{"valid":100,"harmonic_speedup":0.9996440881717278,"minimum_speedup":0.9205792132398386},
+  "causal_transfer_reason":"No learned-transfer candidate selected after official training; full/no-transfer execute the same canonical gzip implementation.",
+  "threshold_changes":false,
+  "task_swapped_dropped_or_reclassified":false,
+  "blind_reruns":0,
+  "post_blind_repairs":0,
+  "human_task_specific_solver_design":false,
+  "campaign_score_after_task":{"completed_tasks":6,"clean_unseen_wins":1,"v5_over_v4_task_wins":1,"causal_transfer_wins":0}
+}
