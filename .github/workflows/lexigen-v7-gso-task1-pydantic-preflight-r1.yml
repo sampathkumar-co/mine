@@ -1,0 +1,49 @@
+name: LEXIGEN V7 GSO Task1 Pydantic Preflight R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-task1-pydantic-source-result-r1]
+    paths: ["lexigen-v7-gso/tasks/01-pydantic-setattr/TRIGGER_PREFLIGHT_R1"]
+permissions: {contents: read}
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task 1 preflight lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/tasks/01-pydantic-setattr/PREFLIGHT_LOCK_R1.json').read_text())
+          paths={
+            'PROPOSALS_R1.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/PROPOSALS_R1.json',
+            'PREFLIGHT_PLAN_R1.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/PREFLIGHT_PLAN_R1.json',
+            'build_candidate.py':'lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py',
+            'run_preflight.py':'lexigen-v7-gso/tasks/01-pydantic-setattr/run_preflight.py',
+            'SOURCE_R1_RESULT.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/SOURCE_R1_RESULT.json',
+            'GENERATION_CONTRACT_R1.md':'lexigen-v7-gso/GENERATION_CONTRACT_R1.md',
+            'workflow':'.github/workflows/lexigen-v7-gso-task1-pydantic-preflight-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'preflight lock mismatch {key}: {got}')
+          forbidden=['preflight_executed_before_lock','timing_feedback_opened_before_lock','expert_opt_commit_opened_before_lock','expert_diff_opened_before_lock','hints_opened_before_lock']
+          if any(lock.get(k) for k in forbidden): raise SystemExit('Task1 preflight boundary crossed')
+          PY
+      - name: Compile frozen candidate/preflight code
+        run: python -m py_compile lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py lexigen-v7-gso/tasks/01-pydantic-setattr/run_preflight.py
+      - name: Execute equal-budget nine-candidate preflight
+        run: |
+          python lexigen-v7-gso/tasks/01-pydantic-setattr/run_preflight.py \
+            --builder lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py \
+            --output preflight-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-task1-pydantic-preflight-r1
+          path: preflight-evidence/
+          if-no-files-found: error
+          retention-days: 90
