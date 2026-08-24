@@ -1,0 +1,32 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "full_task_feedback_round0_lock_r1",
+  "selected_candidates": {
+    "v7_full": "F3",
+    "v7_no_library": "N1",
+    "v7_random_library": "R3"
+  },
+  "test_indexes": [0,1,2,3,4,5,6,7,8,9,10,11,12,13],
+  "revision_slots_consumed_per_arm": 0,
+  "revision_slots_remaining_per_arm": 2,
+  "git_blob_sha1": {
+    "FULL_FEEDBACK_PLAN_R1.json": "e085b315781d55f3f2e083a982de1356b346574d",
+    "PREFLIGHT_R3_RESULT.json": "fb19bbd22bc40a19924b60d642fc6f1d8963bb78",
+    "build_candidate.py": "8c0f1b55c089fb71a265c938ac3d157fec85a9de",
+    "run_full_feedback_r1.py": "eda0e38ccf7f470919901200f0ce6bca0fa7c73a",
+    "extract_preflight_tests_r3.py": "c011dbf0043e87a635fe69c1d237e4ffebcbe4e6",
+    "GENERATION_CONTRACT_R1.md": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+    "workflow": "cf6920f3574491cf7cbd7d2e813fd7bc3219f55c"
+  },
+  "full_feedback_executed_before_lock": false,
+  "expert_target_timing_accessed_before_lock": false,
+  "expert_opt_commit_accessed_before_lock": false,
+  "expert_diff_accessed_before_lock": false,
+  "hints_accessed_before_lock": false,
+  "selected_candidates_changed_after_preflight": false,
+  "human_task_specific_solver_contribution": false,
+  "thresholds_changed": false,
+  "causal_status_before_full_feedback": "no_causal_evidence_due_to_F3_N1_identical_patch"
+}
