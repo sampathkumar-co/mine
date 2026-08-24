@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 6,
+  "task": "gzip_compression",
+  "stage": "synthetic_r1_sealed",
+  "status": "success",
+  "workflow_run_id": 32687362274,
+  "artifact_id": 9506100786,
+  "artifact_digest": "sha256:e77128faee11a7c7559e1cf78bd5b3b6729ee56f5647a5de00d7d2c745ad38da",
+  "synthetic_summary_sha256": "52b2859b1ea6d54a02cdd7010a79728d64948ebc2012d3d2fe6dcd047846aa32",
+  "synthetic_results_sha256": "7e95a401feff78ccaaf8a0b58a07a411c83eba63934021e6054a202a2d04324e",
+  "checks": 180,
+  "valid_checks": 180,
+  "eligible_candidate_count": 30,
+  "implementation_classes": {
+    "gzip_reference_level9": 25,
+    "gzip_level9_memoryview": 2,
+    "zlib_direct_gzip_level9": 3
+  },
+  "native_backend_candidates_are_random_search_only": true,
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "candidate_changes_after_synthetic": false,
+  "threshold_changes": false
+}

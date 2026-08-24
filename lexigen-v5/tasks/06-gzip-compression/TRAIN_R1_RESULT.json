@@ -1,0 +1,28 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":6,
+  "task":"gzip_compression",
+  "stage":"official_training_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32687721916,
+  "complete_artifact_id":9506229353,
+  "complete_artifact_digest":"sha256:f0142626a1ea2a7c888b426544494c32859b7fb5dfdf0ed01886518a25004e77",
+  "training_summary_sha256":"8451d166eebc1e658917235c5a2e38c957800ae07a88cbf3381aef98fb9144a7",
+  "training_results_sha256":"5803b3e1f13b3aa5213c61b8bda5ca395bb30cb1eb71e02df3cc11302ab9906b",
+  "training_manifest_sha256":"7cbf6b8865e0f4a6c96e94811ab5208aac9907b6bfa57544bfcc70c5d6fd2050",
+  "selected":{
+    "v5_full":{"candidate":"v5_full_r6_7653e3865aa7a6def4dc","implementation_class":"gzip_reference_level9","valid":100,"harmonic_speedup":1.001635315031941,"minimum_speedup":0.952769965101726,"passes_training_gate":false,"learned_transfer":null},
+    "v5_no_transfer":{"candidate":"v5_no_transfer_r1_66c5848a3c8a4f51b562","implementation_class":"gzip_reference_level9","valid":100,"harmonic_speedup":1.0010350373605175,"minimum_speedup":0.9538324977572956,"passes_training_gate":false},
+    "random_search":{"candidate":"random_search_r1_bcb2865badc647aa6bc2","implementation_class":"gzip_reference_level9","valid":100,"harmonic_speedup":1.0008112614002556,"minimum_speedup":0.9498179968415222,"passes_training_gate":false},
+    "static_template":{"candidate":"static_template_r6_d044a19fd4551034dc11","implementation_class":"gzip_reference_level9","valid":100,"harmonic_speedup":1.001283973090339,"minimum_speedup":0.9528980559558047,"passes_training_gate":false},
+    "v4_compatible":{"candidate":"v4_compatible_r4_d9863922b850e9717a05","implementation_class":"gzip_reference_level9","valid":100,"harmonic_speedup":1.0013503937445065,"minimum_speedup":0.9530839734257273,"passes_training_gate":false}
+  },
+  "selected_v5_uses_learned_transfer":false,
+  "selected_full_and_no_transfer_semantically_equivalent":true,
+  "training_causal_separation_threshold_crossed":false,
+  "causal_transfer_possible_on_task_after_training":false,
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "candidate_changes_after_training":false,
+  "threshold_changes":false
+}

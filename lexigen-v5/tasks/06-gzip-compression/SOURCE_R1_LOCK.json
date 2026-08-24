@@ -1,0 +1,5 @@
+{
+  "task":"gzip_compression","task_index":6,"stage":"source_r1_lock",
+  "git_blob_sha1":{"TASK_START.json":"3fa7e6381af9cc1bb965ed309eca23252ec55595","prepare_source.py":"ef289aa8403080a1e0840c3f4ea94411b7d0b6f1","workflow":"2360f1726ca61bc5d3585b5ffbdeaa5bfc464183"},
+  "task_source_opened_before_lock":false,"task_description_opened_before_lock":false,"training_manifest_opened_before_lock":false,"test_manifest_opened_before_lock":false,"proposal_budget_per_arm":6,"human_task_specific_solver_design":false
+}

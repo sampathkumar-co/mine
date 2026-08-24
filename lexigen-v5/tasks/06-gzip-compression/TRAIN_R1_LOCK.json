@@ -1,0 +1,25 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":6,
+  "task":"gzip_compression",
+  "stage":"train_r1_lock",
+  "git_blob_sha1":{
+    "SOURCE_R1_RESULT.json":"fb2e268ddb019d97ddcc8cf7760fee6c93b92f95",
+    "SYNTHETIC_R1_RESULT.json":"17d7d3b2fe6265fb9c24cfe88de3320297f2fbe0",
+    "DATASET_METADATA_R1_RESULT.json":"4f5293c5a78f7575615bb5b211b1e4f07e82c357",
+    "candidates.py":"b610b42baabcd30836d769e13d96a650c1aa13ab",
+    "train_shard.py":"85246da27da088b7a074d4dc6d28b6ff1848df0c",
+    "aggregate_train.py":"8b88d9ef483911ada72d0264d53b44b5d87e42cd",
+    "workflow":"4b8ae45e4ccea8fd8dbd7be0ff0b9cee7196b1c3"
+  },
+  "training_manifest":{"name":"gzip_compression_T100ms_n658_size100_train.jsonl","oid":"f6c04acbfdacbb589c53024618a45bc2706f337f","size":16142},
+  "test_manifest_metadata_only":{"name":"gzip_compression_T100ms_n658_size100_test.jsonl","oid":"fc0b222f5b452a049aaf049df5280421318d1425","size":16200},
+  "candidate_count":30,
+  "proposal_budget_per_arm":6,
+  "official_training_manifest_opened_before_lock":false,
+  "official_training_payloads_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":false,
+  "candidate_changes_after_lock_allowed":false,
+  "threshold_changes_allowed":false
+}
