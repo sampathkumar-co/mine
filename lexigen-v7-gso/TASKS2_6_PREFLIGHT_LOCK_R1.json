@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_parallel_preflight_r1_locked_pre_timing",
+  "git_blob_sha1": {
+    "engine": "6b4283b1baeb8aacfdc13337362ae1ed3ae249f5",
+    "selection": "be4a61c472151ff48af18fb0329763e14a3572bc",
+    "plan": "0f42e6ddb5a5ddf69472f7f52256cd94f5198f0c",
+    "test_hashes": "ac9ff5d88358be63d76c5571ba9a113d41c0fcdb",
+    "materialized": "fe8cf2e09f72f7fef97a8665825ca0d0742192cd",
+    "execmeta_result": "f395fa9293ab8ef74bba16a8759f8c91c255c8b8",
+    "spec_extractor": "c736d75b9d4462f80c2475311c3ccbf140e7a2a4",
+    "execmeta_extractor": "3339bfeaaee48a69373e6523f3ce73d05ff77485",
+    "builder_r1": "5b47dfc5a8fa58bb1cc95ef0ad7f2579d07d8434",
+    "builder_task2_r3": "1db7bdb81f0de5488b596c99069585fa3a2772b4",
+    "runner": "1f2208982eaa485a040bbf5640623e2d27f4b420",
+    "workflow": "ba97b1977384efa7cac1deac01a556dab7602240"
+  },
+  "candidate_count": 45,
+  "parallel_task_jobs": 5,
+  "same_frozen_candidates_as_materialization": true,
+  "same_representative_tests_for_all_arms_within_task": true,
+  "candidate_timing_observed_before_lock": false,
+  "candidate_execution_count_before_lock": 0,
+  "expert_information_used_for_clean_tasks": false,
+  "task5_campaign_credit_eligible": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "selections_changed": false
+}
