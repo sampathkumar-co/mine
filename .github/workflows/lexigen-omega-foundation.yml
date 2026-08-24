@@ -75,3 +75,42 @@ jobs:
           name: lexigen-omega-task1-real-hindsight
           path: omega-evidence/TASK1_REVISION1_HINDSIGHT.json
           retention-days: 90
+
+  prospective-task2-transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - name: Checkout immutable Task1 final-selection evidence
+        uses: actions/checkout@v4
+        with:
+          ref: 3d2aa3c8a1ee9eeb284e3494655c1110078b394e
+          path: _evidence/task1-final
+          fetch-depth: 1
+      - name: Checkout immutable Task2 pre-timing proposal evidence
+        uses: actions/checkout@v4
+        with:
+          ref: 8fb61bb3f320d62f7afaeef5d9c6bc5adf44766a
+          path: _evidence/task2-proposals
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regenerate and verify frozen prospective prediction
+        run: |
+          python lexigen-omega/tools/freeze_task2_prospective_transfer.py \
+            --task1-proposals _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/PROPOSALS_R1.json \
+            --task1-full-feedback _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/FULL_FEEDBACK_R2_RESULT.json \
+            --task1-revision1 _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION1_R1_RESULT.json \
+            --task1-revision2 _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION2_R1_RESULT.json \
+            --task2-proposals _evidence/task2-proposals/lexigen-v7-gso/tasks/02-llama-gen-b/PROPOSALS_R1.json \
+            --task2-selection _evidence/task2-proposals/lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json \
+            --expect lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json \
+            --output omega-evidence/TASK2_PROSPECTIVE_TRANSFER_REGENERATED.json
+      - name: Upload prospective prediction verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-task2-prospective-transfer-r1
+          path: omega-evidence/TASK2_PROSPECTIVE_TRANSFER_REGENERATED.json
+          retention-days: 90
