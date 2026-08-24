@@ -1,0 +1,24 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_candidate_materialization_locked_pre_execution",
+  "purpose": "Construct and hash all 45 preselected patches from frozen base-image source without executing or timing any candidate.",
+  "git_blob_sha1": {
+    "proposal_lock": "d6b129d0122181e9aab41418a41ce9a5a0f2499c",
+    "selection": "be4a61c472151ff48af18fb0329763e14a3572bc",
+    "plan": "0f42e6ddb5a5ddf69472f7f52256cd94f5198f0c",
+    "builder": "5b47dfc5a8fa58bb1cc95ef0ad7f2579d07d8434",
+    "workflow": "534c8adbb0505e0c672bb59651f7df1299ead7e3"
+  },
+  "selected_candidate_count": 45,
+  "task_count": 5,
+  "candidate_execution_allowed": false,
+  "candidate_execution_count_before_lock": 0,
+  "candidate_timing_observed_before_lock": false,
+  "expert_information_used_for_tasks_2_3_4_6": false,
+  "task5_contamination_preserved": true,
+  "task5_campaign_credit_eligible": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "arm_budgets_changed": false,
+  "trigger_present_before_lock": false
+}
