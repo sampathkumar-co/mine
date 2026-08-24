@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 3,
+  "instance_id": "huggingface__tokenizers-bfd9cde",
+  "repo": "huggingface/tokenizers",
+  "base_commit": "bfd9cdeefb6fb2fb9b5514f8a5fad6d7263a69d6^",
+  "api": "Tokenizer.encode_batch_fast",
+  "selection_was_safe_metadata_only": true,
+  "prob_script_opened": false,
+  "tests_opened": false,
+  "base_worktree_source_opened": false,
+  "expert_opt_commit_opened": false,
+  "expert_diff_opened": false,
+  "hints_opened": false,
+  "prior_submissions_opened": false,
+  "human_task_specific_solver_contribution": false,
+  "engine_branch": "lexigen/v7-gso-engine-lock-r1",
+  "engine_head": "e9b808de80aa86d6ca43040ae1d9ce66ea72095d"
+}

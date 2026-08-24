@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 4,
+  "instance_id": "numpy__numpy-be52f19",
+  "repo": "numpy/numpy",
+  "base_commit": "be52f19259d47cd27095e186a7974710c60169ee^",
+  "api": "numpy.subtract",
+  "selection_was_safe_metadata_only": true,
+  "prob_script_opened": false,
+  "tests_opened": false,
+  "base_worktree_source_opened": false,
+  "expert_opt_commit_opened": false,
+  "expert_diff_opened": false,
+  "hints_opened": false,
+  "prior_submissions_opened": false,
+  "human_task_specific_solver_contribution": false,
+  "engine_branch": "lexigen/v7-gso-engine-lock-r1",
+  "engine_head": "e9b808de80aa86d6ca43040ae1d9ce66ea72095d"
+}
