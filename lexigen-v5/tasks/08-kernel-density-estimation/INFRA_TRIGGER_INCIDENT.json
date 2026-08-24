@@ -1,0 +1,14 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":8,
+  "task":"kernel_density_estimation",
+  "incident":"GitHub pull_request paths filtering evaluates the PR diff against base; leaving TRIGGER_TRAIN_R1 present caused the already-failed R1 workflow to launch again on later Task-8 commits.",
+  "first_scientific_r1_run_id":32691913306,
+  "observed_accidental_duplicate_r1_run_id":32692046565,
+  "observed_duplicate_r1_run_number":6,
+  "scientific_use_of_duplicate_runs":false,
+  "candidate_or_threshold_changes_from_incident":false,
+  "blind_access_from_incident":false,
+  "mitigation":"TRIGGER_TRAIN_R1 and TRIGGER_TRAIN_R2 were deleted immediately after R2 launch so later sealing commits have no net trigger-file diff.",
+  "interpretation":"Infrastructure bookkeeping incident only; duplicate runs are excluded from scientific selection and do not repair or reinterpret R1/R2 failures."
+}

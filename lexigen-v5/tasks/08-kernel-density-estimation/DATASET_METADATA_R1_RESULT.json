@@ -1,0 +1,17 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":8,
+  "task":"kernel_density_estimation",
+  "stage":"dataset_directory_metadata_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32691272133,
+  "artifact_id":9507313992,
+  "artifact_digest":"sha256:7664eccbc001d7dbaccc8c0791cefe432e34232f6d2908073e419add9fdd08d4",
+  "dataset_metadata_sha256":"a9ed023f8ce49b9ff3d363cb489cebf0e415cd0d65694ecf6f24b575ddf0687e",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "training_manifest":{"name":"kernel_density_estimation_T100ms_n300_size100_train.jsonl","size":5085207,"oid":"a70fb5e71c9da5d1bdf0bb2e0466d5b89b915bc6"},
+  "test_manifest":{"name":"kernel_density_estimation_T100ms_n300_size100_test.jsonl","size":5963910,"oid":"8ba6a13986708aacec3496c7d7cfbc1a778ffc89"},
+  "manifest_contents_opened":false,
+  "payload_contents_opened":false,
+  "resolve_or_download_urls_followed":false
+}

@@ -1,0 +1,22 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":8,
+  "task":"kernel_density_estimation",
+  "stage":"official_training_r1",
+  "status":"failed_before_candidate_evidence_completion",
+  "workflow_run_id":32691913306,
+  "failed_training_shards":10,
+  "aggregate_status":"skipped",
+  "failure_class":"evaluation_harness_schema_rejection",
+  "failure_evidence":"train_shard.decode_problem rejected an official problem because query_points=[] becomes a one-dimensional NumPy array, while the frozen task source/reference explicitly supports zero query points and returns an empty log_density list.",
+  "representative_job_id":97326975691,
+  "representative_exception":"RuntimeError: invalid KDE shapes",
+  "repair_scope_for_revision_2":"Permit an empty query_points list in the harness decoder. Do not change candidate implementations, candidate eligibility, verifier tolerances, dataset identities, timing gate, selection rule, or any learned-transfer mapping.",
+  "official_training_manifest_was_opened":true,
+  "official_test_manifest_opened":false,
+  "official_test_payloads_opened":0,
+  "candidate_changes_after_r1":false,
+  "threshold_changes":false,
+  "training_revision_budget_used":1,
+  "training_revision_budget_max":3
+}
