@@ -1,0 +1,55 @@
+name: LEXIGEN V7 GSO Task1 Pydantic Full Feedback R2
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-task1-pydantic-preflight-result-r3]
+    paths: ["lexigen-v7-gso/tasks/01-pydantic-setattr/TRIGGER_FULL_FEEDBACK_R2"]
+permissions: {contents: read}
+jobs:
+  full-feedback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task 1 full-feedback R2 lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/tasks/01-pydantic-setattr/FULL_FEEDBACK_LOCK_R2.json').read_text())
+          paths={
+            'FULL_FEEDBACK_PLAN_R1.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/FULL_FEEDBACK_PLAN_R1.json',
+            'PREFLIGHT_R3_RESULT.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/PREFLIGHT_R3_RESULT.json',
+            'FULL_FEEDBACK_R1_INFRA_INCIDENT.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/FULL_FEEDBACK_R1_INFRA_INCIDENT.json',
+            'build_candidate.py':'lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py',
+            'run_full_feedback_r1.py':'lexigen-v7-gso/tasks/01-pydantic-setattr/run_full_feedback_r1.py',
+            'extract_preflight_tests_r3.py':'lexigen-v7-gso/tasks/01-pydantic-setattr/extract_preflight_tests_r3.py',
+            'GENERATION_CONTRACT_R1.md':'lexigen-v7-gso/GENERATION_CONTRACT_R1.md',
+            'workflow':'.github/workflows/lexigen-v7-gso-task1-pydantic-full-feedback-r2.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'full-feedback R2 lock mismatch {key}: {got}')
+          forbidden=['r2_full_feedback_executed_before_lock','candidate_definitions_changed_after_r1','selected_candidates_changed_after_r1','test_indexes_changed_after_r1','expert_target_timing_accessed_before_lock','expert_opt_commit_accessed_before_lock','expert_diff_accessed_before_lock','hints_accessed_before_lock']
+          if any(lock.get(k) for k in forbidden): raise SystemExit('Task1 full-feedback R2 boundary crossed')
+          PY
+      - name: Install frozen test-extractor dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Compile frozen Task1 full-feedback R2 code
+        run: python -m py_compile lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py lexigen-v7-gso/tasks/01-pydantic-setattr/run_full_feedback_r1.py lexigen-v7-gso/tasks/01-pydantic-setattr/extract_preflight_tests_r3.py
+      - name: Recover and verify all frozen Task1 tests
+        run: python lexigen-v7-gso/tasks/01-pydantic-setattr/extract_preflight_tests_r3.py --output frozen-task-tests
+      - name: Execute frozen 14-test feedback round 0 R2
+        run: |
+          python lexigen-v7-gso/tasks/01-pydantic-setattr/run_full_feedback_r1.py \
+            --builder lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py \
+            --tests-dir frozen-task-tests \
+            --output full-feedback-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-task1-pydantic-full-feedback-r2
+          path: full-feedback-evidence/
+          if-no-files-found: error
+          retention-days: 90

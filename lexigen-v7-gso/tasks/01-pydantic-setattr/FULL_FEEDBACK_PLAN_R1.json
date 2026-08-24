@@ -1,0 +1,20 @@
+{
+  "campaign":"LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index":1,
+  "instance_id":"pydantic__pydantic-addf1f9",
+  "stage":"full_task_feedback_round0_frozen",
+  "selected_candidates":{"v7_full":"F3","v7_no_library":"N1","v7_random_library":"R3"},
+  "selection_source":"PREFLIGHT_R3_RESULT.json",
+  "test_indexes":[0,1,2,3,4,5,6,7,8,9,10,11,12,13],
+  "base_measurements_per_test":1,
+  "candidate_measurements_per_test":1,
+  "equivalence_checks_per_candidate_per_test":1,
+  "revision_slots_consumed_per_arm":0,
+  "revision_slots_remaining_per_arm":2,
+  "selection_after_round0":"Record full correctness/performance evidence for the already-selected candidate in each arm. Do not switch candidates based on this round. Any subsequent change must be explicitly logged as revision slot 1 under the frozen generation contract.",
+  "expert_target_timing_accessed":false,
+  "expert_opt_commit_accessed":false,
+  "expert_diff_accessed":false,
+  "hints_accessed":false,
+  "human_task_specific_solver_contribution":false
+}
