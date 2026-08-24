@@ -1,0 +1,49 @@
+name: LEXIGEN v5 Task 5 Earth Movers Distance Synthetic R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task4-quantile-regression-result-r1]
+    paths: ["lexigen-v5/tasks/05-earth-movers-distance/TRIGGER_SYNTHETIC_R1"]
+permissions: {contents: read}
+jobs:
+  synthetic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen campaign scientific files
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/ENGINE_LOCK.json').read_text())
+          for k,p in {'PROTOCOL.md':'lexigen-v5/PROTOCOL.md','TRANSFER_MEMORY.json':'lexigen-v5/TRANSFER_MEMORY.json','CONTAMINATION_EXCLUSIONS.json':'lexigen-v5/CONTAMINATION_EXCLUSIONS.json','engine.py':'lexigen-v5/engine.py','selector.py':'lexigen-v5/selector.py','selftest.py':'lexigen-v5/selftest.py'}.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]: raise SystemExit(f'campaign mismatch {k}')
+          PY
+      - name: Verify Task 5 synthetic lock before execution
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/tasks/05-earth-movers-distance/SYNTHETIC_R1_LOCK.json').read_text())
+          paths={'SOURCE_R1_RESULT.json':'lexigen-v5/tasks/05-earth-movers-distance/SOURCE_R1_RESULT.json','candidates.py':'lexigen-v5/tasks/05-earth-movers-distance/candidates.py','CANDIDATE_PROVENANCE.json':'lexigen-v5/tasks/05-earth-movers-distance/CANDIDATE_PROVENANCE.json','DEPENDENCY_PIN.json':'lexigen-v5/tasks/05-earth-movers-distance/DEPENDENCY_PIN.json','validate_synthetic.py':'lexigen-v5/tasks/05-earth-movers-distance/validate_synthetic.py','workflow':'.github/workflows/lexigen-v5-task5-earth-movers-distance-synthetic-r1.yml'}
+          for k,p in paths.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]: raise SystemExit(f'Task5 synthetic lock mismatch {k}')
+          if lock['official_training_manifest_opened_before_lock'] or lock['official_test_manifest_opened_before_lock']: raise SystemExit('official data boundary crossed')
+          PY
+      - name: Compile frozen Task 5 candidate package
+        run: python -m py_compile lexigen-v5/tasks/05-earth-movers-distance/candidates.py lexigen-v5/tasks/05-earth-movers-distance/validate_synthetic.py
+      - name: Install frozen benchmark dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==1.26.4 scipy==1.15.3 POT==1.0.0
+      - name: Execute frozen synthetic gate
+        working-directory: lexigen-v5/tasks/05-earth-movers-distance
+        run: python validate_synthetic.py --output synthetic-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task5-earth-movers-distance-synthetic-r1
+          path: lexigen-v5/tasks/05-earth-movers-distance/synthetic-evidence/
+          if-no-files-found: error
+          retention-days: 90
