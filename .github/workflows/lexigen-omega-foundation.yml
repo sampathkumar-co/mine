@@ -1,0 +1,41 @@
+name: LEXIGEN OMEGA Foundation
+
+on:
+  pull_request:
+    paths:
+      - 'lexigen-omega/**'
+      - '.github/workflows/lexigen-omega-foundation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Omega core
+        run: |
+          python -m compileall -q lexigen-omega/src lexigen-omega/tests
+      - name: Run Omega foundation tests
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python -m unittest discover -s lexigen-omega/tests -p 'test_*.py' -v
+      - name: Verify Omega0 lock parses
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          lock = json.loads(Path('lexigen-omega/OMEGA0_LOCK.json').read_text())
+          assert lock['gate'] == 'OMEGA0 Scientific Lock'
+          assert lock['status'] == 'locked'
+          assert lock['claim_status'] == 'development_only_no_agi_or_breakthrough_claim'
+          assert lock['architecture_commitments']['search_policy_revision_budget_after_final_freeze'] == 0
+          print('OMEGA0 lock verified')
+          PY
