@@ -1,0 +1,28 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "official_training_r1_sealed",
+  "status": "success",
+  "workflow_run_id": 32686427327,
+  "complete_artifact_id": 9505832461,
+  "complete_artifact_digest": "sha256:eb04a175839bc84b1fb661b0f5f054e9830a00bafebe35ef25815eba58d29de5",
+  "training_summary_sha256": "d3dd0712319ff62d23e1a1b580350e573f46cfac383f9b35fca136c74442beb6",
+  "training_results_sha256": "a5b6eed8e49c72f76ad170f85d2cf8410c4e695f509303867fa97d77a3cb438b",
+  "training_manifest_sha256": "92166a8588e665a89c4ea31df7a7f4758961e567c145b873fea2c85026ab1041",
+  "selected": {
+    "v5_full": {"candidate":"v5_full_r1_3304c859d463a501bd86","implementation_class":"pot_reference_exact","learned_transfer_id":"TM-BFR-01","valid":100,"harmonic_speedup":1.015130176117666,"minimum_speedup":0.9141598737478832,"passes_training_gate":false},
+    "v5_no_transfer": {"candidate":"v5_no_transfer_r2_b2614109e1a5ccc10c14","implementation_class":"pot_reference_exact","valid":100,"harmonic_speedup":1.0141988941554303,"minimum_speedup":0.8998005471989259,"passes_training_gate":false},
+    "random_search": {"candidate":"random_search_r5_7a22ae1a8866ee0b94da","implementation_class":"pot_reference_exact","valid":100,"harmonic_speedup":1.014729424653322,"minimum_speedup":0.9396640136389455,"passes_training_gate":false},
+    "static_template": {"candidate":"static_template_r6_d044a19fd4551034dc11","implementation_class":"pot_reference_exact","valid":100,"harmonic_speedup":1.0159543094492616,"minimum_speedup":0.9432058947367382,"passes_training_gate":false},
+    "v4_compatible": {"candidate":"v4_compatible_r4_7c30efb65d2c20ff8cc9","implementation_class":"pot_reference_exact","valid":100,"harmonic_speedup":1.0169448259985832,"minimum_speedup":0.9406247590928201,"passes_training_gate":false}
+  },
+  "assignment_candidates": {"valid_on_all_training_records":true,"selected":false,"reason":"slower than POT reference on the frozen official training records; harmonic about 0.88x"},
+  "selected_full_and_no_transfer_semantically_equivalent": true,
+  "training_causal_separation_threshold_crossed": false,
+  "causal_transfer_possible_on_task_after_training": false,
+  "official_test_manifest_contents_opened": false,
+  "official_test_payloads_opened": 0,
+  "candidate_changes_after_training": false,
+  "threshold_changes": false
+}
