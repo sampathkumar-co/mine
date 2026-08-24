@@ -1,0 +1,47 @@
+{
+  "project": "LEXIGEN OMEGA Open-Ended Semantic Discovery",
+  "gate": "OMEGA0 Scientific Lock",
+  "status": "locked",
+  "date_utc": "2026-08-24",
+  "claim_status": "development_only_no_agi_or_breakthrough_claim",
+  "isolation": {
+    "track_branch": "lexigen/omega-agi-foundation-r1",
+    "must_not_modify_frozen_v7_gso": true,
+    "must_not_rewrite_historical_language_genesis_results": true
+  },
+  "inherited_evidence": {
+    "v7_gso_protocol_branch": "lexigen/v7-gso-tasks2-6-proposals-r1",
+    "v7_gate_minus1_result_branch": "lexigen/v7-gate-minus1-result-r2",
+    "language_genesis_horizon_branch": "lexigen/language-genesis-v23-heldout-horizon"
+  },
+  "scientific_rules": [
+    "development tasks are explicitly contaminated and cannot later count as blind evidence",
+    "holdout selection occurs only after engine memory adapters budgets selectors seeds and gates are frozen",
+    "no selected holdout may be swapped or dropped after solver-relevant access",
+    "no threshold or success-rule change is permitted after blind results begin",
+    "no expert patch hint hidden solution or prior leaderboard trajectory may influence a candidate before candidate freeze",
+    "causal-transfer credit requires equal-budget full no-memory random-memory and exact learned-gene-removal evidence",
+    "semantic genes enter long-term causal memory only after prospective transfer evidence",
+    "global breakthrough requires heterogeneous external evidence independent reproduction and an external-frontier result"
+  ],
+  "architecture_commitments": {
+    "universal_substrate_must_be_task_agnostic": true,
+    "finished_task_operators_forbidden_after_final_freeze": true,
+    "semantic_primitives_must_have_executable_expansions_or_independent_semantics": true,
+    "search_policy_may_evolve_during_development": true,
+    "search_policy_revision_budget_after_final_freeze": 0,
+    "open_ended_archive_required": true,
+    "counterexample_attack_required": true,
+    "independent_runtime_required_before_global_claim": true
+  },
+  "development_target_not_final_preregistered_gate": {
+    "clean_untouched_discoveries_min": 12,
+    "causal_semantic_transfer_wins_min": 8,
+    "ecosystems_min": 5,
+    "independently_induced_genes_with_causal_credit_min": 4,
+    "external_frontier_advances_min": 1,
+    "post_freeze_rescues_max": 0
+  },
+  "next_gate": "OMEGA1 Universal Substrate",
+  "note": "OMEGA0 locks the direction and integrity boundary. Exact OMEGA10 thresholds must be preregistered before any final holdout identity is selected."
+}
