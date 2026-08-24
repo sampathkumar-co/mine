@@ -1,0 +1,52 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "revision_slot_2_14_test_result_sealed",
+  "status": "success",
+  "workflow_run_id": 32706296990,
+  "artifact_id": 9512418830,
+  "artifact_digest": "sha256:24412096400e07f07195a4b67f66dba497ab57cde744b86e5a59546d26137b2b",
+  "revision_slots_consumed_per_arm": 2,
+  "revision_slots_remaining_per_arm": 0,
+  "all_14_test_hashes_verified": true,
+  "candidates": {
+    "v7_full": {
+      "candidate_id": "F2",
+      "learned_macro_ids": ["V7M-002"],
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 1.0033802574485906,
+      "minimum_speedup_vs_base": 0.9541393795140422,
+      "maximum_speedup_vs_base": 1.0453616673477728,
+      "patch_sha256": "ac5f17b46107ec6612a3680a710c2e86ecd2b2aa0b9dc0fd1cb8830e0f3a349d"
+    },
+    "v7_no_library": {
+      "candidate_id": "N3",
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 1.001499081698942,
+      "minimum_speedup_vs_base": 0.9357887127770236,
+      "maximum_speedup_vs_base": 1.074865116872146,
+      "patch_sha256": "dfeb20cfe1a749a5404934515a613ae0720bc853c260ed5bf62c3833544191e7"
+    },
+    "v7_random_library": {
+      "candidate_id": "R2",
+      "random_macro_ids": ["V7R-004"],
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 1.0048687374158451,
+      "minimum_speedup_vs_base": 0.9570345673575944,
+      "maximum_speedup_vs_base": 1.0603068316663842,
+      "patch_sha256": "9173c0c1b7f77e7f19b5e0c01d5c5bbdabed123b5af7bf5f74dd5c1ec0c3a6dd"
+    }
+  },
+  "causal_status": "no_causal_evidence",
+  "causal_reason": "F2 is mechanistically distinct but does not outperform the controls by the preregistered causal margin; all three arms are effectively near baseline and no clean learned-library advantage exists.",
+  "clean_gso_win_established": false,
+  "official_gso_evaluator_used": false,
+  "expert_target_timing_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "human_task_specific_solver_contribution": false,
+  "trigger_retired_before_result_commit": true,
+  "next_protocol_action": "Search is closed. Freeze the best lawful 14/14 candidate per arm across round0, revision1 and revision2 by harmonic speedup, then run the authoritative GSO evaluator without any further candidate change."
+}
