@@ -1,0 +1,32 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":1,
+  "task":"max_flow_min_cost",
+  "stage":"official_training_r1_attempt1_failure",
+  "workflow_run_id":32704136933,
+  "trigger_commit":"cde0698ea6770846dba82232dcc89c81a709d895",
+  "status":"failed_before_official_training_manifest_fetch",
+  "failed_jobs":10,
+  "shared_failure_step":"Evaluate frozen candidates on official training shard",
+  "failure_class":"preregistered_harness_environment_correction",
+  "exception":"ModuleNotFoundError: No module named 'engine'",
+  "root_cause":"The training runner invoked train_shard.py without adding the frozen lexigen-v5 engine directory to Python module search path; the previously validated synthetic harness does add that path.",
+  "candidate_science_changed":false,
+  "candidate_mapping_changed":false,
+  "strong_baseline_changed":false,
+  "thresholds_changed":false,
+  "official_train_manifest_opened":false,
+  "official_train_payloads_opened":0,
+  "official_test_manifest_opened":false,
+  "official_test_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "evidence":{
+    "representative_job_id":97361561229,
+    "traceback_location":"train_shard.py main -> flat -> candidates.build_candidates -> from engine import generate_proposals",
+    "program_order":"candidate construction occurs before the first training-manifest fetch in train_shard.py"
+  },
+  "correction_allowed_by_protocol":true,
+  "correction_scope":"environment/import path only",
+  "official_training_revision_budget_consumed":1,
+  "official_training_revision_budget_total":3
+}
