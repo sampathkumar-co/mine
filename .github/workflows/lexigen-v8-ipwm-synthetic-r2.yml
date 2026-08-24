@@ -1,0 +1,75 @@
+name: LEXIGEN V8 IPWM Synthetic Controls R2
+on:
+  pull_request:
+    branches: [lexigen/v8-ipwm-synthetic-result-r1]
+    paths:
+      - "lexigen-v8/**"
+      - ".github/workflows/lexigen-v8-ipwm-synthetic-r2.yml"
+permissions:
+  contents: read
+jobs:
+  hardened-falsification-spine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen R2 control lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock = json.loads(Path('lexigen-v8/SYNTHETIC_CONTROLS_LOCK_R2.json').read_text())
+          for key, path in lock['files'].items():
+              got = subprocess.check_output(['git','hash-object',path], text=True).strip()
+              exp = lock['git_blob_sha1'][key]
+              if got != exp:
+                  raise SystemExit(f'R2 lock mismatch {key}: {got} != {exp}')
+          if lock['real_intervention_data_opened'] or lock['scientific_transfer_evidence']:
+              raise SystemExit('R2 synthetic controls must remain pre-real-data and non-transfer evidence')
+          if lock['r1_real_top_k_relative_gain_threshold'] != 0.20:
+              raise SystemExit('R1 real top-k gate changed')
+          PY
+      - name: Compile frozen R2 spine
+        run: python -m py_compile lexigen-v8/ipwm_eval_r1.py lexigen-v8/ipwm_eval_r2.py lexigen-v8/generate_synthetic_ipwm_r1.py lexigen-v8/test_ipwm_pipeline_r2.py
+      - name: Run frozen R2 falsification assertions
+        run: python lexigen-v8/test_ipwm_pipeline_r2.py
+      - name: Produce inspectable R2 evidence
+        shell: bash
+        run: |
+          mkdir -p evidence
+          python lexigen-v8/generate_synthetic_ipwm_r1.py --output evidence/synthetic.jsonl --repos 12 --samples-per-repo 18
+          python lexigen-v8/ipwm_eval_r2.py --input evidence/synthetic.jsonl --output evidence/evaluation-r2.json
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          ev = json.loads(Path('evidence/evaluation-r2.json').read_text())
+          payload = {
+            'stage': 'v8_ipwm_synthetic_controls_r2',
+            'synthetic_pipeline_only': True,
+            'scientific_transfer_evidence': False,
+            'real_intervention_data_opened': False,
+            'corpus_sha256': hashlib.sha256(Path('evidence/synthetic.jsonl').read_bytes()).hexdigest(),
+            'evaluation_sha256': hashlib.sha256(Path('evidence/evaluation-r2.json').read_bytes()).hexdigest(),
+            'repository_holdout': {
+              'macro_full': ev['repository_holdout']['macro']['full'],
+              'macro_no_cross': ev['repository_holdout']['macro']['no_cross'],
+              'macro_static_only': ev['repository_holdout']['macro']['static_only'],
+              'deltas': ev['repository_holdout']['deltas'],
+              'null_summary': ev['repository_holdout']['null_summary'],
+            },
+            'repository_family_holdout_macro_full': ev['repository_family_holdout']['macro']['full'],
+            'intervention_family_holdout_macro_full': ev['intervention_family_holdout']['macro']['full'],
+            'language_holdout_macro_full': ev['language_holdout']['macro']['full'],
+          }
+          Path('evidence/SYNTHETIC_CONTROLS_RESULT_R2.json').write_text(json.dumps(payload, indent=2, sort_keys=True)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v8-ipwm-synthetic-controls-r2
+          path: evidence/
+          if-no-files-found: error
+          retention-days: 90
