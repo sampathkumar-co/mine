@@ -46,11 +46,11 @@ jobs:
       - name: Install exact frozen runtime dependencies
         run: python -m pip install --disable-pip-version-check --no-cache-dir "numpy==2.5.2" "scipy==1.16.1" "networkx==3.6.1" "ortools==9.11.4210" "cvxpy==1.7.2"
       - name: Compile frozen parallel runner
-        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/parallel7/parallel_candidates.py lexigen-v6/parallel7/parallel_train.py lexigen-v6/parallel7/parallel_aggregate.py
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/parallel7/parallel_candidates.py lexigen-v6/parallel7/parallel_train.py lexigen-v6/parallel7/parallel_train_v2.py lexigen-v6/parallel7/parallel_aggregate.py
       - name: Run pre-training synthetic certificate then official training shard
         env:
           PYTHONPATH: lexigen-v5:lexigen-v6/parallel7
-        run: python lexigen-v6/parallel7/parallel_train.py --task "${{ matrix.task }}" --shard "${{ matrix.shard }}" --output "train-shards/${{ matrix.task }}-shard-${{ matrix.shard }}.jsonl"
+        run: python lexigen-v6/parallel7/parallel_train_v2.py --task "${{ matrix.task }}" --shard "${{ matrix.shard }}" --output "train-shards/${{ matrix.task }}-shard-${{ matrix.shard }}.jsonl"
       - uses: actions/upload-artifact@v4
         with:
           name: train-${{ matrix.task }}-shard-${{ matrix.shard }}
