@@ -1,0 +1,52 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "revision_slot_1_14_test_result_sealed",
+  "status": "success",
+  "workflow_run_id": 32705776293,
+  "artifact_id": 9512232585,
+  "artifact_digest": "sha256:be6f4ca3f0060e6b3833ccfe5ff5e4746f79e64a177bc17817da8a31f00051d1",
+  "revision_slots_consumed_per_arm": 1,
+  "revision_slots_remaining_per_arm": 1,
+  "all_14_test_hashes_verified": true,
+  "candidates": {
+    "v7_full": {
+      "candidate_id": "F1",
+      "learned_macro_ids": ["V7M-001"],
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 1.00344577125768,
+      "minimum_speedup_vs_base": 0.9444607987439897,
+      "maximum_speedup_vs_base": 1.0518107322231034,
+      "patch_sha256": "63d68ecb88a6911926a5d60236808643d507d07a1e2fc19a943b62fee5bebaae"
+    },
+    "v7_no_library": {
+      "candidate_id": "N2",
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 1.0102226608970264,
+      "minimum_speedup_vs_base": 0.9362435381964388,
+      "maximum_speedup_vs_base": 1.114064470632908,
+      "patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2"
+    },
+    "v7_random_library": {
+      "candidate_id": "R1",
+      "random_macro_ids": ["V7R-002"],
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 1.0219844534021152,
+      "minimum_speedup_vs_base": 0.9753749493311714,
+      "maximum_speedup_vs_base": 1.1439114391143912,
+      "patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2"
+    }
+  },
+  "causal_status": "no_causal_evidence",
+  "causal_reason": "The learned-macro candidate F1 is mechanistically distinct but slower than both controls on harmonic speedup. N2 and R1 are byte-identical control implementations. No learned-library advantage exists in revision slot 1.",
+  "clean_gso_win_established": false,
+  "official_gso_evaluator_used": false,
+  "expert_target_timing_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "human_task_specific_solver_contribution": false,
+  "trigger_retired_before_result_commit": true,
+  "next_protocol_action": "Use final revision slot 2 equally across all arms with the strongest remaining already-concretized preflight-valid candidate under the same frozen source-only ranking rule: F2, N3, R2. If no qualifying full-arm advantage emerges, freeze the best lawful patch per arm and proceed to authoritative GSO evaluation without further task-specific revisions."
+}
