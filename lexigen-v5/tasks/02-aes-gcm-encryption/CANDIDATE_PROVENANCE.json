@@ -1,0 +1,68 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "stage": "candidate_freeze_r1",
+  "source_result": "SOURCE_R1_RESULT.json",
+  "candidate_count": 30,
+  "candidate_budget_per_arm": 6,
+  "instantiation_policy": {
+    "native_backend_substitution": "Use exact low-level cryptography Cipher(AES,GCM) path.",
+    "precision_backend_error_budget": "Exact byte verifier makes the error budget zero; use exact low-level native cipher path and do not relax precision.",
+    "bit_frontier_restriction": "No graph/frontier exists in byte-stream AES-GCM semantics; correctness-preserving exact high-level AESGCM fallback.",
+    "certified_active_core": "No skippable active core exists because every plaintext/AAD byte affects ciphertext/authentication; correctness-preserving exact high-level AESGCM fallback.",
+    "other_inapplicable_operators": "Do not invent task-specific shortcuts; preserve exact high-level AESGCM path."
+  },
+  "implementation_classes": {
+    "high_level_exact": "AESGCM(key).encrypt(...), then split fixed 16-byte tag exactly like reference.",
+    "native_cipher_exact": "Cipher(algorithms.AES(key), modes.GCM(nonce)) streaming/native path returning ciphertext and tag separately."
+  },
+  "arms": {
+    "v5_full": [
+      {"rank":1,"proposal_id":"3304c859d463a501bd86","operators":["bit_parallel_representation","sparse_frontier_search","early_certificate_exit"],"transfer_ids":["TM-BFR-01"],"learned_template":"bit_frontier_restriction","implementation_class":"high_level_exact"},
+      {"rank":2,"proposal_id":"a6102573c9f355414229","operators":["active_set_decomposition","early_certificate_exit","risk_aware_staging"],"transfer_ids":["TM-CAC-01"],"learned_template":"certified_active_core","implementation_class":"high_level_exact"},
+      {"rank":3,"proposal_id":"b1ef08a2d68a248c0821","operators":["dtype_specialization","native_backend_substitution","risk_aware_staging"],"transfer_ids":["TM-PBEB-01"],"learned_template":"precision_backend_error_budget","implementation_class":"native_cipher_exact"},
+      {"rank":4,"proposal_id":"7653e3865aa7a6def4dc","operators":["bit_parallel_representation","sparse_frontier_search","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":5,"proposal_id":"c8350e5b9ffb9c400fc8","operators":["vectorized_batch_kernel","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":6,"proposal_id":"ef8d1d6c3a4fa6d0be21","operators":["vectorized_batch_kernel","bit_parallel_representation","sparse_frontier_search"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"}
+    ],
+    "v5_no_transfer": [
+      {"rank":1,"proposal_id":"d14c06bd6ae45a8dd009","operators":["bit_parallel_representation","sparse_frontier_search","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":2,"proposal_id":"14a8ffbc5159ff111ac9","operators":["vectorized_batch_kernel","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":3,"proposal_id":"477905d60634240ebda9","operators":["vectorized_batch_kernel","bit_parallel_representation","sparse_frontier_search"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":4,"proposal_id":"1b859d0377c9b2a19b53","operators":["native_backend_substitution","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"native_cipher_exact"},
+      {"rank":5,"proposal_id":"0a141855078f60fe2b98","operators":["risk_aware_staging","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":6,"proposal_id":"974e0d50c53bf65218c5","operators":["vectorized_batch_kernel","sparse_frontier_search","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"}
+    ],
+    "random_search": [
+      {"rank":1,"proposal_id":"ed1f4796fdbc83a45b55","operators":["zero_copy_representation","vectorized_batch_kernel","bit_parallel_representation"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":2,"proposal_id":"0520aab8496f3d685f92","operators":["dtype_specialization","vectorized_batch_kernel","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":3,"proposal_id":"e9c9180b0957bb3f7ca7","operators":["native_backend_substitution","risk_aware_staging","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"native_cipher_exact"},
+      {"rank":4,"proposal_id":"01baad563ce94255e3e2","operators":["native_backend_substitution","sparse_frontier_search"],"transfer_ids":[],"learned_template":null,"implementation_class":"native_cipher_exact"},
+      {"rank":5,"proposal_id":"ae3b52160647eaf9707e","operators":["risk_aware_staging"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":6,"proposal_id":"8615e4a35db08222a26b","operators":["dtype_specialization"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"}
+    ],
+    "static_template": [
+      {"rank":1,"proposal_id":"dbfcd2af539b0b2636e7","operators":["bit_parallel_representation","sparse_frontier_search"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":2,"proposal_id":"8fd871e046faa7e4d37c","operators":["reduced_representation","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":3,"proposal_id":"820b1c309b6117eb268d","operators":["active_set_decomposition","early_certificate_exit"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":4,"proposal_id":"8f1dafda0d3fbc099aa9","operators":["zero_copy_representation","vectorized_batch_kernel"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":5,"proposal_id":"d044a19fd4551034dc11","operators":["dtype_specialization","risk_aware_staging"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":6,"proposal_id":"357e80313b8b9dc3cf36","operators":["contiguous_layout","vectorized_batch_kernel"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"}
+    ],
+    "v4_compatible": [
+      {"rank":1,"proposal_id":"bd9a928b0a959b433de2","operators":["bit_parallel_representation","sparse_frontier_search","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":2,"proposal_id":"885bf4f21e819b330732","operators":["vectorized_batch_kernel","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":3,"proposal_id":"695b907772d8a69a1186","operators":["vectorized_batch_kernel","bit_parallel_representation","sparse_frontier_search"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":4,"proposal_id":"d9863922b850e9717a05","operators":["risk_aware_staging","bit_parallel_representation","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":5,"proposal_id":"cdae8cbf0d73bd4d047c","operators":["vectorized_batch_kernel","sparse_frontier_search","bounded_exact_refinement"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"},
+      {"rank":6,"proposal_id":"af7d36f83a386b7726b9","operators":["risk_aware_staging","bit_parallel_representation","sparse_frontier_search"],"transfer_ids":[],"learned_template":null,"implementation_class":"high_level_exact"}
+    ]
+  },
+  "official_training_manifest_opened_before_freeze": false,
+  "official_training_payloads_opened_before_freeze": false,
+  "official_test_manifest_opened_before_freeze": false,
+  "official_test_payloads_opened_before_freeze": false,
+  "candidate_repair_after_synthetic_permitted": false,
+  "human_task_specific_solver_design": false
+}
