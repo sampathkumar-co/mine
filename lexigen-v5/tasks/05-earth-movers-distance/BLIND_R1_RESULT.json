@@ -1,0 +1,28 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "family": "geometry",
+  "stage": "blind_r1_sealed",
+  "status": "success_negative_performance",
+  "workflow_run_id": 32686765488,
+  "complete_artifact_id": 9505929652,
+  "complete_artifact_digest": "sha256:46e052c58acbe683767320a430f71c509df1618a68d4385188890e5cd3627d19",
+  "blind_summary_sha256": "336408d94e4ddc5ea7b4b254a51d77cb93dac3a0ad4757f321d8a5fba1c4c93d",
+  "blind_results_sha256": "74ff52457a5c192e91c413e2fe1ba1826081372eb6382f939bcb3b2036409110",
+  "test_manifest_sha256": "4c0748586319738118488e38a5ab9297c6d62efb68336870addacd02c4693e4f",
+  "arms": {
+    "v5_full": {"valid":100,"invalid_output_retries":0,"harmonic_speedup":1.009351520989878,"minimum_speedup":0.9371927220427013,"passes_blind_gate":false},
+    "v5_no_transfer": {"valid":100,"invalid_output_retries":0,"harmonic_speedup":1.0098099834211958,"minimum_speedup":0.9573531976065054,"passes_blind_gate":false},
+    "random_search": {"valid":100,"harmonic_speedup":1.0094897931388038,"passes_blind_gate":false},
+    "static_template": {"valid":100,"harmonic_speedup":1.0091182070807738,"passes_blind_gate":false},
+    "v4_compatible": {"valid":100,"harmonic_speedup":1.008087858236572,"passes_blind_gate":false}
+  },
+  "clean_unseen_win": false,
+  "v5_over_v4_task_win": false,
+  "causal_transfer_win": false,
+  "causal_transfer_reason": "Selected full/no-transfer candidates are semantically identical pot_reference_exact paths; additionally full fails the blind performance gate.",
+  "blind_reruns": 0,
+  "threshold_changes": false,
+  "task_replaced_or_dropped": false
+}
