@@ -1,0 +1,47 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "final_arm_selection_frozen_before_authoritative_gso",
+  "search_closed": true,
+  "revision_slots_remaining_per_arm": 0,
+  "selection_rule": "Within each arm, among all candidates that passed all 14 frozen equivalence checks in round0, revision1 or revision2, choose the candidate with highest observed harmonic speedup versus that round's fresh shared base. No candidate or mechanism changes are allowed after this file.",
+  "selected": {
+    "v7_full": {
+      "candidate_id": "F1",
+      "learned_macro_ids": ["V7M-001"],
+      "source_round": "revision1",
+      "harmonic_speedup_vs_base": 1.00344577125768,
+      "patch_sha256": "63d68ecb88a6911926a5d60236808643d507d07a1e2fc19a943b62fee5bebaae"
+    },
+    "v7_no_library": {
+      "candidate_id": "N2",
+      "learned_macro_ids": [],
+      "source_round": "revision1",
+      "harmonic_speedup_vs_base": 1.0102226608970264,
+      "patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2"
+    },
+    "v7_random_library": {
+      "candidate_id": "R1",
+      "random_macro_ids": ["V7R-002"],
+      "source_round": "revision1",
+      "harmonic_speedup_vs_base": 1.0219844534021152,
+      "patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2"
+    }
+  },
+  "semantic_equivalence": {
+    "full_vs_no_library": false,
+    "full_vs_random_library": false,
+    "no_library_vs_random_library": true,
+    "reason": "N2 and R1 are byte-identical patches; F1 is distinct."
+  },
+  "causal_transfer_credit_possible_for_task1": false,
+  "causal_reason": "The best full-arm learned-macro candidate is slower than both controls during frozen internal feedback, so no later authoritative timing can retroactively establish learned-library causal superiority for Task 1 under the preregistered equal-budget causal rule.",
+  "expert_target_timing_accessed_before_final_selection": false,
+  "expert_opt_commit_accessed_before_final_selection": false,
+  "expert_diff_accessed_before_final_selection": false,
+  "hints_accessed_before_final_selection": false,
+  "human_task_specific_solver_contribution": false,
+  "thresholds_changed": false,
+  "next_protocol_action": "Run the authoritative GSO evaluator on exactly F1, N2 and R1. Expert reference execution may now be used only by the evaluator for scoring; the expert diff/hints remain unnecessary and must not be used to alter patches."
+}
