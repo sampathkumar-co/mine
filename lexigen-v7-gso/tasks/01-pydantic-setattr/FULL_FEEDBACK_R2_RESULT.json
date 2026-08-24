@@ -1,0 +1,49 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "full_14_test_feedback_round0_r2_sealed",
+  "status": "success",
+  "workflow_run_id": 32705059964,
+  "artifact_id": 9511968662,
+  "artifact_digest": "sha256:a1dd9d7f09ac85285630728d3ce58e94c2b3c5ec758073dd06ce34c3d8b71469",
+  "all_14_test_hashes_verified": true,
+  "revision_slots_consumed_per_arm": 0,
+  "candidates": {
+    "v7_full": {
+      "candidate_id": "F3",
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 0.9967916851707529,
+      "minimum_speedup_vs_base": 0.9276226595659841,
+      "maximum_speedup_vs_base": 1.044693125738514,
+      "patch_sha256": "d34ccea502d6bdba780e596b40d2af6c8f5acb7afd44f347fc5fe982cab33100"
+    },
+    "v7_no_library": {
+      "candidate_id": "N1",
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 0.9847350787088264,
+      "minimum_speedup_vs_base": 0.917706218447349,
+      "maximum_speedup_vs_base": 1.0458912197326413,
+      "patch_sha256": "d34ccea502d6bdba780e596b40d2af6c8f5acb7afd44f347fc5fe982cab33100"
+    },
+    "v7_random_library": {
+      "candidate_id": "R3",
+      "all_14_equivalence_checks_passed": true,
+      "harmonic_speedup_vs_base": 1.0028364216880499,
+      "minimum_speedup_vs_base": 0.9588584585555017,
+      "maximum_speedup_vs_base": 1.0752611246244097,
+      "patch_sha256": "0e830b9024d0540be2b78e47ed22a5cefcc4d3a4968fa4d757473544da365eab"
+    }
+  },
+  "causal_status": "no_causal_evidence",
+  "causal_reason": "F3 and N1 remain byte-identical implementations; any timing difference is noise and cannot receive learned-transfer credit.",
+  "round0_clean_gso_win_established": false,
+  "round0_reason": "No selected arm demonstrates a material full-suite speedup over base; authoritative expert-target GSO comparison has not yet been opened.",
+  "next_protocol_action": "Consume revision slot 1 equally across all three arms using only already-frozen proposal mechanism families. Full arm tests memoized-handler family F1/F2; no-library and random-library receive equal revision opportunity from their own frozen proposal families. No expert patch/hints/target timing may be opened before revised candidates are frozen.",
+  "expert_target_timing_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "human_task_specific_solver_contribution": false,
+  "trigger_retired_before_result_commit": true
+}
