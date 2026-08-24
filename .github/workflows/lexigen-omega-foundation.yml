@@ -93,6 +93,45 @@ jobs:
           path: omega-evidence/
           retention-days: 90
 
+  exposed-v6-development:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - name: Checkout completed V6 evidence
+        uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+          path: _evidence/v6
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Import V6 frozen causal verdicts as exposed development memory
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python lexigen-omega/tools/import_v6_exposed_transfer.py \
+            --results-root _evidence/v6/lexigen-v6/parallel7/results \
+            --output omega-evidence/V6_EXPOSED_TRANSFER_ARCHIVE.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('omega-evidence/V6_EXPOSED_TRANSFER_ARCHIVE.json').read_text())
+          assert report['status'] == 'development_only_never_final_claim_evidence'
+          assert report['claim_boundary']['final_claim_eligible'] is False
+          assert report['claim_boundary']['causal_memory_admission'] is False
+          assert report['task_count'] == 7
+          print(report['mechanism_ranking'])
+          PY
+      - name: Upload V6 exposed-development evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-v6-exposed-development
+          path: omega-evidence/V6_EXPOSED_TRANSFER_ARCHIVE.json
+          retention-days: 90
+
   prospective-task2-transfer:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
