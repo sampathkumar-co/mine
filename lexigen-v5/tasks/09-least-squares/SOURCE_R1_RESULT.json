@@ -1,0 +1,41 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "family":"linear_algebra",
+  "stage":"source_analysis_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32692351190,
+  "artifact_id":9507664672,
+  "artifact_digest":"sha256:99d3065c93b266bb74aeb9f25175fcfc7d0457dbbbf147032bd3141fb0bf7e3c",
+  "source_git_blob_sha1":"753ded627ad8288bbc91ba64eef3d3b736a881e3",
+  "source_sha256":"e5654e438b923e40e4bce671b94486154e8fce7e2880a2f0a588d3deb16ce91f",
+  "description_git_blob_sha1":"e45bec7a13705d9624d8a02554bc135fb12fc11a",
+  "description_sha256":"22564d803b4bd4b2ad15600c62e55654977d7182ef81d16174a98a4e76a50f5f",
+  "features":["array","boolean","constraints","convex","decomposition","discrete","iterative","matrix","numeric","order_statistic","scientific_dynamics","tensor","threshold","tolerance"],
+  "applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "proposal_counts":{"v5_full":6,"v5_no_transfer":6,"random_search":6,"static_template":6,"v4_compatible":6},
+  "source_contract":{
+    "reference_backend":"scipy.optimize.leastsq with source initial guesses and maxfev=10000",
+    "model_families":["polynomial","exponential","logarithmic","sigmoid","sinusoidal"],
+    "verification":"candidate params are accepted when their MSE is <= 1.05 * reference MSE",
+    "output_field_required":"params"
+  },
+  "proposal_mapping_policy":{
+    "TM-RRR-01":"polynomial model -> direct float64 linear least-squares reduction; all nonlinear models -> exact source leastsq fallback",
+    "TM-BFR-01":"conservative exact source fallback; no certified discrete frontier in solver state",
+    "TM-CAC-01":"conservative exact source fallback; no source-certified active subset before optimization",
+    "generic_reduced_representation":"same polynomial linear reduction, preventing causal credit from an equivalent no-transfer implementation",
+    "native_backend_substitution":"scipy.optimize.least_squares(method='lm') using the same residual and initial guess; fallback to source solver only on backend exception",
+    "dtype_specialization":"float32 polynomial linear reduction with exact source fallback on nonlinear models",
+    "other_operators":"exact source fallback"
+  },
+  "official_training_manifest_opened":false,
+  "official_training_payloads_opened":0,
+  "official_test_manifest_opened":false,
+  "official_test_payloads_opened":0,
+  "reports_opened":false,
+  "public_solvers_opened":false,
+  "human_task_specific_solver_design":false,
+  "threshold_changes":false
+}
