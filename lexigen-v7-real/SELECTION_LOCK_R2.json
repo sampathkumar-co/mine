@@ -1,0 +1,31 @@
+{
+  "campaign": "LEXIGEN V7 Real Mechanism-Genesis Pilot R2",
+  "stage": "preselection_lock_r2",
+  "selection_seed": "LEXIGEN-V7-REAL-MECHANISM-GENESIS-2026-08-24-B",
+  "task_count": 5,
+  "minimum_distinct_families": 5,
+  "maximum_per_family": 1,
+  "forbidden_holdout_families": ["graph_discrete", "linear_algebra", "numerical_optimization", "signal_processing"],
+  "library_json_sha256": "0cd5c3d0078237e395d18b21ba193ef9928ac98e8a3d6557188b5b9570884241",
+  "r1_infeasible_selection_run_id": 32700863128,
+  "r1_revealed_identity_count": 5,
+  "git_blob_sha1": {
+    "PROTOCOL.md": "e95a2c0686f6ee72fd448314caf09d2a223dab48",
+    "CONTAMINATION_EXCLUSIONS.json": "79f781a8d4c5fb1dd979b80ff088f48482228daa",
+    "APPRENTICESHIP_TRACES.json": "8dd8a027a1de89c3f90f86dc7c5ae42ff5bd65c3",
+    "LIBRARY_R1_RESULT.json": "12be069e9a55cfd456095d35fa4e22356387a59e",
+    "R1_SELECTION_FEASIBILITY_INCIDENT.json": "4be3120139a25b20e5b73dd3a597e0540405deb9",
+    "selector.py": "3365442363ab3ff695b398a1ca25e8b4099e4577",
+    "workflow": "022667e734831fdf5a8319d0d6e99a8a0f1633b5"
+  },
+  "selection_executed_before_lock": false,
+  "selected_names_known_before_lock": false,
+  "selected_sources_opened_before_lock": false,
+  "selected_descriptions_opened_before_lock": false,
+  "selected_manifests_opened_before_lock": false,
+  "selected_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "learned_library_changed_after_induction": false,
+  "scientific_thresholds_frozen_before_r2_selection": true
+}

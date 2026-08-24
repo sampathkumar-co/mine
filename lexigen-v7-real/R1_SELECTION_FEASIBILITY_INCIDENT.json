@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN V7 Real Mechanism-Genesis Pilot",
+  "stage": "holdout_selection_r1",
+  "status": "protocol_feasibility_failure_before_source_access",
+  "workflow_run_id": 32700863128,
+  "reason": "After the frozen 34-task contamination exclusions and the preregistered ban on apprenticeship-source families, the frozen AlgoTune snapshot exposed only five distinct eligible families, so the six-task/six-family R1 selector could not satisfy its denominator.",
+  "revealed_name_only_candidates": [
+    {"task": "discrete_log", "family": "miscellaneous"},
+    {"task": "ode_lorenz96_nonchaotic", "family": "scientific_computing"},
+    {"task": "set_cover", "family": "combinatorial"},
+    {"task": "pca", "family": "machine_learning"},
+    {"task": "convex_hull", "family": "geometry"}
+  ],
+  "task_source_opened": false,
+  "task_descriptions_opened": false,
+  "manifests_opened": false,
+  "payloads_opened": false,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "scientific_candidate_execution": false,
+  "r2_policy": "Treat all five revealed task identities as contaminated and exclude them. R2 is separately preregistered before any replacement holdout identity is known."
+}

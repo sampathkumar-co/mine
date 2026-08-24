@@ -4,14 +4,13 @@ import hashlib
 import json
 import re
 import urllib.request
-from collections import Counter
 from pathlib import Path
 
 SOURCE_COMMIT = "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906"
 DATASET_REVISION = "bb02811fa47ca1c833baaa344949bcd8fb307ac8"
-SEED = "LEXIGEN-V7-REAL-MECHANISM-GENESIS-2026-08-24-A"
-TASK_COUNT = 6
-MIN_FAMILIES = 6
+SEED = "LEXIGEN-V7-REAL-MECHANISM-GENESIS-2026-08-24-B"
+TASK_COUNT = 5
+MIN_FAMILIES = 5
 MAX_PER_FAMILY = 1
 FORBIDDEN_HOLDOUT_FAMILIES = {"graph_discrete", "numerical_optimization", "linear_algebra", "signal_processing"}
 SOURCE_TREE_URL = f"https://api.github.com/repos/oripress/AlgoTune/git/trees/{SOURCE_COMMIT}?recursive=1"
@@ -62,7 +61,7 @@ def exclusions() -> set[str]:
 
 
 def source_tasks() -> tuple[set[str], str]:
-    payload, raw = fetch_json(SOURCE_TREE_URL, "LEXIGEN-v7-real-selector")
+    payload, raw = fetch_json(SOURCE_TREE_URL, "LEXIGEN-v7-real-selector-r2")
     if not isinstance(payload, dict) or payload.get("truncated"):
         raise RuntimeError("source tree missing/truncated")
     out = set()
@@ -77,7 +76,7 @@ def source_tasks() -> tuple[set[str], str]:
 
 
 def dataset_tasks() -> tuple[set[str], str]:
-    payload, raw = fetch_json(DATASET_TREE_URL, "LEXIGEN-v7-real-selector")
+    payload, raw = fetch_json(DATASET_TREE_URL, "LEXIGEN-v7-real-selector-r2")
     if not isinstance(payload, list):
         raise RuntimeError("dataset tree is not a list")
     out = set()
@@ -110,10 +109,10 @@ def main() -> None:
         if len(selected) == TASK_COUNT:
             break
     if len(selected) != TASK_COUNT or len(seen) != MIN_FAMILIES:
-        raise RuntimeError(f"could not select six distinct eligible families: got {selected}")
+        raise RuntimeError(f"could not select five distinct eligible families: got {selected}")
     report = {
-        "campaign": "LEXIGEN V7 Real Mechanism-Genesis Pilot R1",
-        "stage": "name_only_holdout_selection",
+        "campaign": "LEXIGEN V7 Real Mechanism-Genesis Pilot R2",
+        "stage": "name_only_holdout_selection_r2",
         "selection_seed": SEED,
         "source_commit": SOURCE_COMMIT,
         "dataset_revision": DATASET_REVISION,
