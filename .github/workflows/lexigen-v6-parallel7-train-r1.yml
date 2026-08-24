@@ -1,0 +1,128 @@
+name: LEXIGEN v6 Parallel Tasks 2-8 Official Training R1
+on:
+  push:
+    branches: [lexigen/v6-parallel-7-r1]
+    paths: ["lexigen-v6/parallel7/TRIGGER_PARALLEL7_TRAIN_R1"]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  shard:
+    strategy:
+      fail-fast: false
+      max-parallel: 35
+      matrix:
+        task:
+          - odr
+          - dct_type_I_scipy_fftpack
+          - ode_lorenz96_nonchaotic
+          - robust_kalman_filter
+          - edge_expansion
+          - svd
+          - max_independent_set_cpsat
+        shard: [0,1,2,3,4]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen seven-task package before any official data access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/parallel7/PARALLEL7_LOCK.json').read_text())
+          for key,path in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              expected=lock['git_blob_sha1'][key]
+              if got!=expected: raise SystemExit(f'parallel7 lock mismatch {key}: {got} != {expected}')
+          if lock['official_training_manifests_opened_before_lock'] or lock['official_test_manifests_opened_before_lock'] or lock['official_payloads_opened_before_lock']:
+              raise SystemExit('parallel7 official-data boundary crossed before lock')
+          if lock['task_count']!=7 or not lock['execution_deduplication_by_frozen_implementation_class']:
+              raise SystemExit('parallel7 methodology lock mismatch')
+          PY
+      - name: Install exact frozen runtime dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir "numpy==2.5.2" "scipy==1.16.1" "networkx==3.6.1" "ortools==9.11.4210" "cvxpy==1.7.2"
+      - name: Compile frozen parallel runner
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/parallel7/parallel_candidates.py lexigen-v6/parallel7/parallel_train.py lexigen-v6/parallel7/parallel_aggregate.py
+      - name: Run pre-training synthetic certificate then official training shard
+        env:
+          PYTHONPATH: lexigen-v5:lexigen-v6/parallel7
+        run: python lexigen-v6/parallel7/parallel_train.py --task "${{ matrix.task }}" --shard "${{ matrix.shard }}" --output "train-shards/${{ matrix.task }}-shard-${{ matrix.shard }}.jsonl"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: train-${{ matrix.task }}-shard-${{ matrix.shard }}
+          path: train-shards/${{ matrix.task }}-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+  aggregate:
+    needs: shard
+    strategy:
+      fail-fast: false
+      matrix:
+        task:
+          - odr
+          - dct_type_I_scipy_fftpack
+          - ode_lorenz96_nonchaotic
+          - robust_kalman_filter
+          - edge_expansion
+          - svd
+          - max_independent_set_cpsat
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: train-${{ matrix.task }}-shard-*
+          path: train-shards
+          merge-multiple: true
+      - name: Aggregate frozen 100-record training denominator
+        run: python lexigen-v6/parallel7/parallel_aggregate.py --task "${{ matrix.task }}" --input train-shards --output "aggregated/${{ matrix.task }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-parallel7-${{ matrix.task }}-train-r1
+          path: aggregated/${{ matrix.task }}/
+          if-no-files-found: error
+          retention-days: 90
+  seal:
+    needs: aggregate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v6-parallel7-*-train-r1
+          path: all-training
+      - name: Seal all seven training summaries into Git
+        env:
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          tasks=['odr','dct_type_I_scipy_fftpack','ode_lorenz96_nonchaotic','robust_kalman_filter','edge_expansion','svd','max_independent_set_cpsat']
+          status={'campaign':'LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication','stage':'parallel7_official_training_r1_sealed','workflow_run_id':int(os.environ['RUN_ID']),'workflow_run_attempt':int(os.environ['RUN_ATTEMPT']),'trigger_head_sha':os.environ['HEAD_SHA'],'task_count':7,'tasks':[],'official_test_manifests_opened':False,'official_test_payloads_opened':0,'threshold_changes':False}
+          for task in tasks:
+              src=Path(f'all-training/lexigen-v6-parallel7-{task}-train-r1/train-summary.json')
+              if not src.exists(): raise SystemExit(f'missing aggregate {task}')
+              raw=src.read_bytes(); summary=json.loads(raw)
+              outdir=Path(f'lexigen-v6/parallel7/results/{task}'); outdir.mkdir(parents=True,exist_ok=True)
+              (outdir/'TRAIN_R1_RESULT.json').write_bytes(raw)
+              status['tasks'].append({'task':task,'summary_sha256':hashlib.sha256(raw).hexdigest(),'full_harmonic_speedup':summary['selected_by_arm']['v6_full']['harmonic_speedup'],'full_minimum_speedup':summary['selected_by_arm']['v6_full']['minimum_speedup'],'full_passes_training_gate':summary['selected_by_arm']['v6_full']['passes_frozen_performance_gate'],'selected_full_implementation_class':summary['selected_by_arm']['v6_full']['implementation_class'],'selected_no_transfer_implementation_class':summary['selected_by_arm']['v6_no_transfer']['implementation_class'],'selected_pair_semantically_distinct':summary['training_diagnostics']['selected_full_no_transfer_semantically_distinct']})
+          Path('lexigen-v6/parallel7/PARALLEL7_TRAIN_STATUS.json').write_text(json.dumps(status,indent=2)+'\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-v6/parallel7/results lexigen-v6/parallel7/PARALLEL7_TRAIN_STATUS.json
+          git commit -m "lexigen v6: seal parallel Tasks 2-8 training results"
+          git push origin HEAD:lexigen/v6-parallel-7-r1
