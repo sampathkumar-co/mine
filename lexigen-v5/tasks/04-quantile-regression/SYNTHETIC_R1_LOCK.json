@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "family": "statistics",
+  "stage": "synthetic_r1_lock",
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "a28c2d89ee07e4ecb840f4081e68eac73d76ce85",
+    "candidates.py": "95e57687ac84ac2f77a2e2f0a82bb7ffd7b153d3",
+    "DEPENDENCY_PIN.json": "7d6c25635d22253062b4e5ca7ddb16f028917328",
+    "validate_synthetic.py": "bba46b2c97e7dfb62eff653ae603f53fb429c086",
+    "workflow": "9a9f6812988b343540c77cccebe3494518377ade"
+  },
+  "candidate_count": 30,
+  "case_count": 6,
+  "expected_checks": 180,
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "failed_candidates_may_not_be_repaired_after_synthetic": true,
+  "synthetic_timing_may_not_be_used_for_candidate_selection": true,
+  "thresholds_changed": false,
+  "human_task_specific_solver_design_after_source": false
+}
