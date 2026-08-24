@@ -1,0 +1,34 @@
+name: LEXIGEN v5 Task 6 Gzip Compression Source R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task5-earth-movers-distance-result-r1]
+    paths: ["lexigen-v5/tasks/06-gzip-compression/TRIGGER_SOURCE_R1"]
+permissions: {contents: read}
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen source package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/tasks/06-gzip-compression/SOURCE_R1_LOCK.json').read_text())
+          for k,p in {'TASK_START.json':'lexigen-v5/tasks/06-gzip-compression/TASK_START.json','prepare_source.py':'lexigen-v5/tasks/06-gzip-compression/prepare_source.py','workflow':'.github/workflows/lexigen-v5-task6-gzip-compression-source-r1.yml'}.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]:raise SystemExit(f'lock mismatch {k}')
+          if any(lock.get(k) for k in ['task_source_opened_before_lock','training_manifest_opened_before_lock','test_manifest_opened_before_lock']):raise SystemExit('boundary crossed')
+          PY
+      - run: python -m py_compile lexigen-v5/tasks/06-gzip-compression/prepare_source.py lexigen-v5/engine.py
+      - env: {PYTHONPATH: lexigen-v5}
+        run: python lexigen-v5/tasks/06-gzip-compression/prepare_source.py --task-start lexigen-v5/tasks/06-gzip-compression/TASK_START.json --output source-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task6-gzip-compression-source-r1
+          path: source-evidence/
+          if-no-files-found: error
+          retention-days: 90
