@@ -1,0 +1,33 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage":"tasks_4_6_pretraining_synthetic_failure",
+  "parent_training_attempt":2,
+  "workflow_run_id":32737033106,
+  "tasks":[
+    {
+      "task_index":4,
+      "task":"ode_lorenz96_nonchaotic",
+      "representative_job_id":97462204752,
+      "failed_implementation_class":"solve_ivp_fast_rhs_dop853",
+      "failure_reason":"ode_final_state_mismatch",
+      "official_training_manifest_opened":false,
+      "correction":"Do not substitute DOP853 under the strict frozen reference-equivalence verifier. Map that generic proposal class back to the already-certified fast-RHS RK45 implementation, making equivalence explicit."
+    },
+    {
+      "task_index":6,
+      "task":"edge_expansion",
+      "representative_job_id":97462204861,
+      "failed_implementation_class":"networkx_edge_expansion",
+      "failure_reason":"edge_expansion_mismatch in independent synthetic certificate",
+      "official_training_manifest_opened":false,
+      "correction":"The NetworkX directed edge_expansion reference counts boundary crossings with exactly one endpoint in S, including both S->V-S and V-S->S directed edges. Correct direct/bitset mechanical implementations to exactly reproduce that source-library semantics."
+    }
+  ],
+  "candidate_changes_limited_to_tasks":[4,6],
+  "tasks_2_3_5_7_8_candidate_mappings_changed":false,
+  "tasks_2_3_5_7_8_training_results_from_attempt2_must_be_preserved":true,
+  "performance_thresholds_changed":false,
+  "test_manifests_opened":false,
+  "test_payloads_opened":0,
+  "public_task_specific_solvers_opened":false
+}
