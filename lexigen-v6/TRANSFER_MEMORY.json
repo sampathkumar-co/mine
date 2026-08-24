@@ -1,0 +1,74 @@
+{
+  "memory_version":"lexigen-v6-transfer-memory-r1",
+  "frozen_before_v6_screening_pool_selection":true,
+  "source_campaigns":["LEXIGEN v4 Frozen Generalization Experiment","LEXIGEN v5 Causal Transfer Generalization Experiment","LEXIGEN v5 Task 10 causal audit R1"],
+  "task_payloads_embedded":false,
+  "solver_source_embedded":false,
+  "holdout_answers_embedded":false,
+  "task_specific_constants_embedded":false,
+  "learned_templates":{
+    "bit_frontier_restriction":{
+      "learned_from_family":"graph_discrete",
+      "original_source_evidence_task":"max_common_subgraph",
+      "causal_id":"TM-BFR-01",
+      "abstract_preconditions":["discrete","set_or_boolean_structure","sparse_or_frontier_search"],
+      "recipe":["encode candidate state in word-parallel form","restrict work to a provably relevant frontier","preserve an exact validity check"],
+      "v5_evidence":{"status":"causal_mechanism_selection_replicated_within_project","holdout_task":"vertex_cover","current_family":"combinatorial","sealed_blind_harmonic_vs_reference":14.081539448936624,"posthoc_repeated_harmonic_vs_reference":13.539802126582043,"independent_recipe_reimplementation_harmonic_vs_reference":6.160426283349206,"algorithmic_novelty":false,"weak_reference_confound_present":true},
+      "forbidden_payload":"No graph instance, answer, task-specific constant, or Task-10 solver source is retained in this memory."
+    },
+    "certified_active_core":{
+      "learned_from_family":"numerical_optimization",
+      "original_source_evidence_task":"unit_simplex_projection",
+      "causal_id":"TM-CAC-01",
+      "abstract_preconditions":["constraints_or_threshold","small_active_core_possible","exact_or_tolerance_certificate"],
+      "recipe":["identify a candidate active subset","solve only the active core","verify the full solution with an independent certificate","fall back only on certificate failure"],
+      "v5_evidence":{"status":"not_yet_causally_replicated"},
+      "forbidden_payload":"No simplex values, support sizes, task-specific thresholds, or solver source are retained."
+    },
+    "reduced_representation_refinement":{
+      "learned_from_family":"linear_algebra",
+      "original_source_evidence_task":"tensor_completion_3d",
+      "causal_id":"TM-RRR-01",
+      "abstract_preconditions":["high_dimensional_numeric_structure","redundant_representation_or_modes","tolerance_verifier"],
+      "recipe":["solve a structurally reduced representation first","lift the result to the required representation","spend bounded refinement only where the official certificate requires it"],
+      "v5_evidence":{"status":"not_yet_causally_replicated"},
+      "forbidden_payload":"No tensor shape, mask, coefficients, or task-specific solver code are retained."
+    },
+    "precision_backend_error_budget":{
+      "learned_from_family":"signal_processing",
+      "original_source_evidence_task":"dst_type_II_scipy_fftpack",
+      "causal_id":"TM-PBEB-01",
+      "abstract_preconditions":["numeric_array","approximate_verifier","native_backend_available","precision_change_possible"],
+      "recipe":["evaluate a lower-cost precision/backend representation","bound or measure numerical error against the frozen verifier budget","use the lower-cost path only when the error budget is structurally safe"],
+      "v5_evidence":{"status":"not_yet_causally_replicated"},
+      "forbidden_payload":"No DST matrices, benchmark payloads, task constants, or source implementation are retained."
+    }
+  },
+  "negative_lessons":{
+    "long_horizon_precision_phase_error":{
+      "causal_id":"NL-LHP-01",
+      "learned_from_family":"scientific_computing",
+      "source_evidence_task":"ode_fitzhughnagumo",
+      "rule":"Do not accept reduced precision or relaxed numerical staging solely from local error checks when an iterative or dynamical computation can accumulate phase/state error across a long horizon."
+    },
+    "implementation_equivalence_is_not_transfer":{
+      "causal_id":"NL-IE-01",
+      "rule":"If full-transfer and no-transfer candidates execute semantically equivalent implementations, timing differences receive zero transfer credit."
+    },
+    "weak_reference_speedup_is_not_discovery":{
+      "causal_id":"NL-WR-01",
+      "source_evidence":"v5 Task 10 vertex_cover post-hoc causal audit",
+      "rule":"A large speedup over the official reference does not establish a strong solver or discovery claim. Every v6 causal win must remain near-parity with the best applicable precommitted strong generic baseline; stronger novelty claims require beating it and passing prior-art review.",
+      "evidence_summary":"Task-10 sealed TM-BFR remained 13.54x faster than PySAT under repeated timings, but an established-style bitset coloring-bound clique/MIS baseline was 61.02x faster than PySAT and about 4.5x faster than the sealed Lexigen solver."
+    },
+    "applicability_must_have_a_denominator":{
+      "causal_id":"NL-AD-01",
+      "source_evidence":"v5 full campaign",
+      "rule":"Do not select only tasks where transfer appears promising after source access without reporting the complete frozen screening denominator. v6 freezes a 24-task pool first and treats source-applicability coverage as a scored gate."
+    }
+  },
+  "allowed_v6_full_use":"v6_full may instantiate only these abstract recipes when the hash-pinned frozen source fingerprint satisfies their preconditions.",
+  "v6_no_transfer_use":"v6_no_transfer receives the same generic operator budget but may not instantiate, imitate, or receive learned recipe compositions or causal IDs.",
+  "strong_baseline_use":"The strong-baseline arm is independent of transfer memory and may use only STRONG_BASELINE_CATALOG.json under its frozen applicability rules.",
+  "evidence_labels_do_not_change_recipe":"The v5 evidence annotations above affect interpretation only; the four recipe contents and causal IDs are unchanged from v5."
+}
