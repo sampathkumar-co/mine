@@ -1,0 +1,23 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":7,
+  "task":"aircraft_wing_design",
+  "family":"miscellaneous",
+  "status":"resolved_negative",
+  "source_stage":"success",
+  "synthetic_stage":{"checks":180,"valid_checks":180,"status":"success"},
+  "official_training_stage":"success",
+  "official_blind_stage":"success",
+  "blind_v5_full":{"valid":100,"harmonic_speedup":0.9161591757258029,"minimum_speedup":0.6564113531119066},
+  "clean_unseen_win":false,
+  "v5_over_v4_task_win":false,
+  "causal_transfer_win":false,
+  "reason":"All selected arms were correct but none passed the frozen 1.50x harmonic / 1.05x minimum blind gate. The distinct learned TM-RRR-01 candidate was slower on official training and was not selected; selected v5_full was implementation-equivalent to no-transfer.",
+  "campaign_after_task":{"tasks_resolved":7,"clean_unseen_wins":1,"v5_over_v4_task_wins":1,"causal_transfer_wins":0},
+  "task_swap":false,
+  "task_drop":false,
+  "reclassification":false,
+  "post_blind_candidate_change":false,
+  "threshold_change":false,
+  "human_task_specific_solver_design":false
+}
