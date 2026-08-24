@@ -1,0 +1,50 @@
+name: LEXIGEN V7 GSO Holdout Selection R1
+on:
+  pull_request:
+    branches: [lexigen/v7-real-library-result-r1]
+    paths: ["lexigen-v7-gso/TRIGGER_SELECT_R1"]
+permissions: {contents: read}
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen GSO selection lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/SELECTION_LOCK_R1.json').read_text())
+          paths={
+            'PROTOCOL.md':'lexigen-v7-gso/PROTOCOL.md',
+            'select_holdouts.py':'lexigen-v7-gso/select_holdouts.py',
+            'LIBRARY_R1_RESULT.json':'lexigen-v7-real/LIBRARY_R1_RESULT.json',
+            'ALGOTUNE_EXHAUSTION_AUDIT.json':'lexigen-v7-real/ALGOTUNE_EXHAUSTION_AUDIT.json',
+            'workflow':'.github/workflows/lexigen-v7-gso-select-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path], text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'lock mismatch {key}: {got}')
+          if any(lock.get(k) for k in [
+              'selection_executed_before_lock','selected_instance_ids_known_before_lock',
+              'prob_script_values_accessed_before_lock','tests_values_accessed_before_lock',
+              'hints_values_accessed_before_lock','opt_commit_values_accessed_before_lock',
+              'gt_diff_values_accessed_before_lock']):
+              raise SystemExit('GSO preselection boundary crossed')
+          PY
+      - name: Install frozen selector dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Compile frozen GSO selector
+        run: python -m py_compile lexigen-v7-gso/select_holdouts.py
+      - name: Execute safe-metadata-only GSO selection
+        run: python lexigen-v7-gso/select_holdouts.py --output gso-selection-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-selection-r1
+          path: gso-selection-evidence/
+          if-no-files-found: error
+          retention-days: 90
