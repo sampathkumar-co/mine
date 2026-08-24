@@ -1,0 +1,24 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "family": "geometry",
+  "status": "resolved_negative_performance",
+  "clean_unseen_win": false,
+  "v5_over_v4_task_win": false,
+  "causal_transfer_win": false,
+  "selected_v5_blind_harmonic_speedup": 1.009351520989878,
+  "selected_v5_blind_minimum_speedup": 0.9371927220427013,
+  "campaign_after_task": {
+    "tasks_resolved": 5,
+    "clean_unseen_wins": 1,
+    "winning_families": ["machine_learning"],
+    "v5_over_v4_task_wins": 1,
+    "causal_transfer_wins": 0
+  },
+  "synthetic_r1_infrastructure_failure_preserved": true,
+  "synthetic_r2_environment_only_retry": true,
+  "thresholds_changed": false,
+  "task_replaced_or_dropped": false,
+  "human_task_specific_solver_contribution": false
+}
