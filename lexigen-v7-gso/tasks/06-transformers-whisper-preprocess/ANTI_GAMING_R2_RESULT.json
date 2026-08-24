@@ -1,0 +1,40 @@
+{
+  "task": 6,
+  "stage": "anti_gaming_r2_transport_repair_result",
+  "workflow_run_id": 32751612730,
+  "artifact_id": 9529257129,
+  "artifact_digest": "sha256:9e9edacb56e14da1a680e34b2d29e581da1d7a544b9de2cb65601d29ac068615",
+  "selected_candidates": ["F3", "N1", "R2"],
+  "all_eligible": true,
+  "results": {
+    "F3": {
+      "allow_paths": ["src/transformers/models/whisper/tokenization_whisper.py"],
+      "changed_paths": ["src/transformers/models/whisper/tokenization_whisper.py"],
+      "added_executable_line_count": 4,
+      "eligible": true,
+      "violations": []
+    },
+    "N1": {
+      "allow_paths": ["src/transformers/models/whisper/tokenization_whisper.py"],
+      "changed_paths": ["src/transformers/models/whisper/tokenization_whisper.py"],
+      "added_executable_line_count": 1,
+      "eligible": true,
+      "violations": []
+    },
+    "R2": {
+      "allow_paths": ["src/transformers/models/whisper/tokenization_whisper.py"],
+      "changed_paths": ["src/transformers/models/whisper/tokenization_whisper.py"],
+      "added_executable_line_count": 1,
+      "eligible": true,
+      "violations": []
+    }
+  },
+  "candidate_source_changed": false,
+  "candidate_timing_observed_in_audit": false,
+  "expert_diff_inspected": false,
+  "hints_inspected": false,
+  "anti_gaming_policy_changed": false,
+  "scientific_classification": "all selected Task6 preflight winners pass the frozen anti-gaming policy; the R1 failure was transport serialization only",
+  "causal_transfer_win": false,
+  "causal_reason": "The selected full mechanism class is independently accessible to the no-library arm (F3 has an exact no-library-equivalent candidate N2), so learned-library causal exclusivity fails regardless of the large raw performance gain."
+}
