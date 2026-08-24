@@ -1,0 +1,24 @@
+name: LEXIGEN v5 Final Campaign Audit R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task10-vertex-cover-result-r1]
+    paths: ["lexigen-v5/TRIGGER_FINAL_AUDIT_R1"]
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Compile final audit validator
+        run: python -m py_compile lexigen-v5/validate_final_audit.py
+      - name: Validate sealed 10-task campaign audit
+        run: python lexigen-v5/validate_final_audit.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-final-campaign-audit-r1
+          path: final-audit-validation.json
+          if-no-files-found: error
+          retention-days: 90
