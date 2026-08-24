@@ -1,0 +1,33 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "stage":"official_training_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32693146175,
+  "artifact_id":9507952710,
+  "artifact_digest":"sha256:a5a5d36b8a6be2a05ba2f7fd3593eca1bfdd001377580d623f3cb9a4d2c6a389",
+  "training_summary_sha256":"4256b886c55f43d6cff650a5f9f3ed1784026785e3efd738852c2fd3b48163d1",
+  "training_results_sha256":"3e3d81954034ee5eca899031370ec9bb1f03a7a07e218be12ec366b7d9f45bcc",
+  "train_manifest_sha256":"2b6c9e484fcf1eb6c9da1f31ab2dcd2fce99bd8ce37bb7833e063ff6e577716a",
+  "training_records":100,
+  "candidate_evaluations":3000,
+  "selected":{
+    "v5_full":{"candidate":"v5_full_r2_41510e43e8fafb598496","implementation_class":"polynomial_linear_reduction_plus_reference","causal_id":"TM-RRR-01","valid":100,"harmonic_speedup":1.2936726212703233,"minimum_speedup":0.9528334409890538,"passes_gate":false},
+    "v5_no_transfer":{"candidate":"v5_no_transfer_r6_66c5848a3c8a4f51b562","implementation_class":"polynomial_linear_reduction_plus_reference","valid":100,"harmonic_speedup":1.2924062024518759,"minimum_speedup":0.9384199426246178,"passes_gate":false},
+    "random_search":{"candidate":"random_search_r5_e818498ab004d266d2a1","implementation_class":"polynomial_float32_reduction_plus_reference","valid":100,"harmonic_speedup":1.2216128080727469,"minimum_speedup":0.7381108017320327,"passes_gate":false},
+    "static_template":{"candidate":"static_template_r6_d044a19fd4551034dc11","implementation_class":"polynomial_float32_reduction_plus_reference","valid":100,"harmonic_speedup":1.2895681890459667,"minimum_speedup":0.9339463536114437,"passes_gate":false},
+    "v4_compatible":{"candidate":"v4_compatible_r3_ec4b9c17aaa3767d4f6d","implementation_class":"scipy_leastsq_reference","valid":100,"harmonic_speedup":1.0469338691613699,"minimum_speedup":0.9650292784517699,"passes_gate":false}
+  },
+  "v5_over_no_transfer_ratio":1.000979892247534,
+  "selected_pair_semantically_distinct":false,
+  "equivalent_implementation_available_in_no_transfer":true,
+  "learned_recipe_source_family":"linear_algebra",
+  "current_family":"linear_algebra",
+  "source_family_differs_from_current":false,
+  "causal_transfer_credit_possible_on_blind":false,
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "candidate_changes_after_training":false,
+  "threshold_changes":false
+}
