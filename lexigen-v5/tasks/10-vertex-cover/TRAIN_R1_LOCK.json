@@ -1,0 +1,27 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":10,
+  "task":"vertex_cover",
+  "stage":"official_training_r1_lock",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "training_manifest":{"name":"vertex_cover_T100ms_n15_size100_train.jsonl","size":1143142,"oid":"96a0ba025ddae33bcd581527cddf3467765cc53f"},
+  "test_manifest_metadata_only":{"name":"vertex_cover_T100ms_n15_size100_test.jsonl","size":1143200,"oid":"a11bc56b01a7ab254843102454d790637b89ec56"},
+  "git_blob_sha1":{
+    "SYNTHETIC_R1_RESULT.json":"ec393144466012fd8a9fe63048db54b197a36d7f",
+    "DATASET_METADATA_R1_RESULT.json":"c4616e863ade82534d6690d11d98b5345a2e669c",
+    "candidates.py":"d1f599efbec5014094fd279799f0c5c30d9b6665",
+    "train_shard.py":"fc5ddc9ec6fe3dd3c6323b18a31c3eac9e918dca",
+    "aggregate_train.py":"41c28523f9610a0850b81009cc67fca68def9df6",
+    "workflow":"e3aa5c87d2897b54f9e2a7b3c3abb7ae3bf5755f"
+  },
+  "candidate_count":30,
+  "records":100,
+  "candidate_evaluations":3000,
+  "frozen_gate":{"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup":1.05,"invalid_output_retries":0},
+  "official_training_manifest_opened_before_lock":false,
+  "official_training_payloads_opened_before_lock":0,
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":0,
+  "candidate_changes_after_synthetic":false,
+  "threshold_changes":false
+}
