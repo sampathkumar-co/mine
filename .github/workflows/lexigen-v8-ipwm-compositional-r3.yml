@@ -1,0 +1,74 @@
+name: LEXIGEN V8 IPWM Compositional R3
+on:
+  pull_request:
+    branches: [lexigen/v8-ipwm-controls-result-r2]
+    paths:
+      - "lexigen-v8/**"
+      - ".github/workflows/lexigen-v8-ipwm-compositional-r3.yml"
+permissions:
+  contents: read
+jobs:
+  compositional-falsification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen R3 lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock = json.loads(Path('lexigen-v8/COMPOSITIONAL_R3_LOCK.json').read_text())
+          for key, path in lock['files'].items():
+              got = subprocess.check_output(['git','hash-object',path], text=True).strip()
+              exp = lock['git_blob_sha1'][key]
+              if got != exp:
+                  raise SystemExit(f'R3 lock mismatch {key}: {got} != {exp}')
+          if lock['real_intervention_data_opened'] or lock['scientific_transfer_evidence']:
+              raise SystemExit('R3 synthetic boundary crossed')
+          if lock['r1_real_top_k_relative_gain_threshold'] != 0.20:
+              raise SystemExit('real top-k threshold changed')
+          PY
+      - name: Compile R3 spine
+        run: python -m py_compile lexigen-v8/ipwm_eval_r1.py lexigen-v8/ipwm_eval_r3.py lexigen-v8/generate_synthetic_ipwm_r1.py lexigen-v8/check_ipwm_r3_result.py
+      - name: Generate unchanged synthetic corpus
+        run: |
+          mkdir -p evidence-r3
+          python lexigen-v8/generate_synthetic_ipwm_r1.py --output evidence-r3/synthetic.jsonl --repos 12 --samples-per-repo 18
+      - name: Run aligned compositional evaluation once
+        run: python lexigen-v8/ipwm_eval_r3.py --input evidence-r3/synthetic.jsonl --output evidence-r3/evaluation-r3.json
+      - name: Apply frozen R3 gates
+        run: python lexigen-v8/check_ipwm_r3_result.py --evaluation evidence-r3/evaluation-r3.json | tee evidence-r3/gate-result.json
+      - name: Hash evidence
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          ev = json.loads(Path('evidence-r3/evaluation-r3.json').read_text())
+          payload = {
+            'stage': 'v8_ipwm_compositional_r3',
+            'synthetic_pipeline_only': True,
+            'scientific_transfer_evidence': False,
+            'real_intervention_data_opened': False,
+            'corpus_sha256': hashlib.sha256(Path('evidence-r3/synthetic.jsonl').read_bytes()).hexdigest(),
+            'evaluation_sha256': hashlib.sha256(Path('evidence-r3/evaluation-r3.json').read_bytes()).hexdigest(),
+            'repository_full': ev['repository_holdout']['macro']['full'],
+            'repository_deltas': ev['repository_holdout']['deltas'],
+            'repository_null': ev['repository_holdout']['null_summary'],
+            'intervention_family_full': ev['intervention_family_holdout']['macro']['full'],
+            'intervention_family_deltas': ev['intervention_family_holdout']['deltas'],
+          }
+          Path('evidence-r3/COMPOSITIONAL_R3_RESULT.json').write_text(json.dumps(payload, indent=2, sort_keys=True)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lexigen-v8-ipwm-compositional-r3
+          path: evidence-r3/
+          if-no-files-found: warn
+          retention-days: 90
