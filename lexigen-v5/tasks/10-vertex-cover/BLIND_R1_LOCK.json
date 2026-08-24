@@ -1,0 +1,26 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":10,
+  "task":"vertex_cover",
+  "stage":"blind_r1_lock",
+  "test_manifest":{"name":"vertex_cover_T100ms_n15_size100_test.jsonl","size":1143200,"oid":"a11bc56b01a7ab254843102454d790637b89ec56"},
+  "git_blob_sha1":{
+    "TRAIN_R1_RESULT.json":"1c37370f222b0e8ad8c6447db1454caa3500540d",
+    "BLIND_R1_SELECTION.json":"4833e755d626c40abc94b48629ee59ad9654445b",
+    "candidates.py":"d1f599efbec5014094fd279799f0c5c30d9b6665",
+    "blind_shard.py":"84abc1f67cb5e00237868e79d13f53924f4fb317",
+    "aggregate_blind.py":"2cbd832fc9c08d58a4c7b5eb2ab47f1d2bd9bfc2",
+    "workflow":"dbdf143d6204551da94bf17e749cd00e68162120"
+  },
+  "selected_candidate_count":5,
+  "records":100,
+  "frozen_gate":{"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup":1.05,"invalid_output_retries":0},
+  "causal_transfer_candidate":"v5_full_r1_3304c859d463a501bd86",
+  "causal_transfer_id":"TM-BFR-01",
+  "preregistered_ablation":"v5_no_transfer",
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":0,
+  "post_training_candidate_changes":false,
+  "threshold_changes":false,
+  "blind_reruns_allowed":false
+}

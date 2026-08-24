@@ -1,0 +1,20 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":10,
+  "task":"vertex_cover",
+  "stage":"synthetic_r1_lock",
+  "git_blob_sha1":{
+    "SOURCE_R1_RESULT.json":"352ac699d44264b1a1c86439bea7e107578857c8",
+    "candidates.py":"d1f599efbec5014094fd279799f0c5c30d9b6665",
+    "validate_synthetic.py":"e785fbb8bd77671e239d5343ce44662c9df9ee05",
+    "workflow":"c9eda1e15ddc44038f1a5daa7fc176f1233780c7"
+  },
+  "candidate_count":30,
+  "synthetic_case_count":6,
+  "official_training_manifest_opened_before_lock":false,
+  "official_training_payloads_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":false,
+  "candidate_changes_after_lock":false,
+  "threshold_changes":false
+}
