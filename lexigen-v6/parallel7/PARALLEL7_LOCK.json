@@ -1,6 +1,6 @@
 {
   "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
-  "stage":"parallel_tasks_2_8_pretraining_lock",
+  "stage":"parallel_tasks_2_8_pretraining_lock_revision1",
   "task_count":7,
   "tasks":[
     {"index":2,"task":"odr","family":"miscellaneous","source_sha256":"076efd6697175397912d5d8e3bc1b121ba7461db3fdbf04263fa6d57f81eb68c","selection_score":"098c15f06d370d41d546387b7c2a2e7b3e05df6298f1ade6a269fb1eeae242d9","applicability_score":"112ed869171de81c6b1ffe4c865f3a096c89dc293d8056983760453d0d8d6c37","applicable_causal_ids":["TM-BFR-01","TM-CAC-01","TM-PBEB-01","TM-RRR-01"]},
@@ -25,13 +25,15 @@
   "execution_deduplication_by_frozen_implementation_class":true,
   "execution_deduplication_rationale":"Candidates that map to the exact same frozen callable/implementation class receive one measured execution per record and share that result. This removes redundant expensive solves and prevents timing noise from manufacturing differences between semantically identical candidates.",
   "selection_within_equivalent_class_cannot_claim_causal_difference":true,
+  "dataset_manifest_policy":"After source/candidate/baseline hashes and synthetic certificates pass, query only revision-pinned directory metadata to identify the single train/test JSONL pair. Open the training manifest only; retain the test filename/metadata without opening test contents.",
   "paths":{
     "proposal_engine":"lexigen-v5/engine.py",
     "protocol":"lexigen-v6/PROTOCOL.md",
     "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
     "strong_baseline_catalog":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
     "parallel_candidates":"lexigen-v6/parallel7/parallel_candidates.py",
-    "parallel_train":"lexigen-v6/parallel7/parallel_train.py",
+    "parallel_train_base":"lexigen-v6/parallel7/parallel_train.py",
+    "parallel_train_r2":"lexigen-v6/parallel7/parallel_train_v2.py",
     "parallel_aggregate":"lexigen-v6/parallel7/parallel_aggregate.py",
     "training_workflow":".github/workflows/lexigen-v6-parallel7-train-r1.yml"
   },
@@ -41,27 +43,19 @@
     "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
     "strong_baseline_catalog":"2b868c03af77860892d8902bd2666cc1263876f7",
     "parallel_candidates":"aad467b36d0a45f4c6b28334721b7bddb91c953e",
-    "parallel_train":"866ffa33240631f53f114476a91850173aa2fff2",
+    "parallel_train_base":"866ffa33240631f53f114476a91850173aa2fff2",
+    "parallel_train_r2":"0556b6724ff79e01f66ff8e3b70a696f3950e7f4",
     "parallel_aggregate":"24e4ec136022b6f17ae24357735bd996de3401db",
-    "training_workflow":"1a819b32abe40745271c4dbc98ff8af662d865a8"
+    "training_workflow":"202c4aaac63db59236a387c67ae850ae970cfbad"
   },
-  "runtime_versions":{
-    "python":"3.12",
-    "numpy":"2.5.2",
-    "scipy":"1.16.1",
-    "networkx":"3.6.1",
-    "ortools":"9.11.4210",
-    "cvxpy":"1.7.2"
-  },
-  "frozen_performance_gate":{
-    "valid_required":100,
-    "harmonic_speedup_minimum":1.50,
-    "minimum_speedup":1.05,
-    "invalid_output_retries":0
-  },
+  "runtime_versions":{"python":"3.12","numpy":"2.5.2","scipy":"1.16.1","networkx":"3.6.1","ortools":"9.11.4210","cvxpy":"1.7.2"},
+  "frozen_performance_gate":{"valid_required":100,"harmonic_speedup_minimum":1.50,"minimum_speedup":1.05,"invalid_output_retries":0},
   "official_training_manifests_opened_before_lock":false,
   "official_test_manifests_opened_before_lock":false,
   "official_payloads_opened_before_lock":false,
+  "attempt1":{"workflow_run_id":32736018491,"failure_record":"lexigen-v6/parallel7/PARALLEL7_TRAIN_ATTEMPT1_FAILURE.json","harness_revision_consumed":1,"candidate_selection_outputs_used":false,"scientific_candidate_revision":false},
+  "official_training_harness_revision_budget_total":3,
+  "official_training_harness_revision_budget_consumed":1,
   "public_task_specific_solvers_opened":false,
   "post_training_scientific_candidate_revision_allowed":false,
   "threshold_changes":false
