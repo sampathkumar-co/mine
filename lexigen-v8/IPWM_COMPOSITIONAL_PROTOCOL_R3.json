@@ -1,0 +1,69 @@
+{
+  "stage": "lexigen_v8_ipwm_compositional_representation_r3_preregistered",
+  "status": "development_falsification_only",
+  "parent_failed_result_branch": "lexigen/v8-ipwm-controls-result-r2",
+  "real_intervention_data_opened": false,
+  "official_holdout_campaign_started": false,
+  "scientific_transfer_evidence": false,
+  "r1_synthetic_generator_must_remain_byte_identical": true,
+  "r1_real_top_k_relative_gain_threshold_unchanged": 0.20,
+  "r2_failed_thresholds_may_not_be_relaxed": true,
+  "failure_target": "R2 could predict across unseen repositories/families/languages but failed to generalize to a completely unseen intervention family; full AUROC 0.58494 was below 0.62 and slightly below the no-cross control.",
+  "r3_hypothesis": "A structurally constrained compositional model that represents a program as primitive susceptibilities and an intervention as strengths on the same primitive axes can extrapolate an intervention effect from primitive geometry even when the intervention-family identity has never appeared during training.",
+  "representation": {
+    "name": "Aligned Primitive Susceptibility x Action Model",
+    "allowed_full_features": [
+      "bias",
+      "program primitive values p[k]",
+      "intervention primitive values i[k]",
+      "aligned products p[k]*i[k] only when primitive key k exists on both sides",
+      "language identity",
+      "environment identity",
+      "language x intervention-primitive products",
+      "environment x intervention-primitive products"
+    ],
+    "forbidden_full_features": [
+      "intervention_family categorical identity",
+      "intervention_id categorical identity",
+      "arbitrary p[k]*i[j] products for k != j",
+      "repository_id identity",
+      "repository_family identity"
+    ],
+    "reason": "The model must earn unseen-intervention transfer from primitive semantics, not memorize a family label or fit an unconstrained interaction matrix that is underdetermined when a family is removed."
+  },
+  "controls": {
+    "no_alignment": "Same program/intervention/environment/language main effects but no p[k]*i[k] aligned susceptibility terms.",
+    "static_only": "Program primitives plus environment/language context, no intervention primitive values.",
+    "intervention_only": "Intervention primitive values plus environment/language context, no program primitives.",
+    "global_permutation": "Five coherent row permutations of all outcome targets inside each training fold.",
+    "stratified_permutation": "Five coherent row permutations inside intervention_family x repository_family strata.",
+    "r2_full": "Predecessor diagnostic only; not a success baseline because it already failed the target stress test."
+  },
+  "null_seeds": [101, 211, 307, 401, 503],
+  "frozen_synthetic_r3_gates": {
+    "repository_holdout_full_positive_auroc_min": 0.82,
+    "repository_holdout_full_spearman_min": 0.75,
+    "repository_holdout_full_minus_no_alignment_auroc_min": 0.05,
+    "repository_holdout_full_minus_no_alignment_spearman_min": 0.12,
+    "repository_holdout_global_null_max_positive_auroc": 0.60,
+    "repository_holdout_global_null_max_abs_spearman": 0.15,
+    "repository_holdout_global_null_max_validity_auroc": 0.62,
+    "repository_family_holdout_full_positive_auroc_min": 0.80,
+    "repository_family_holdout_full_spearman_min": 0.70,
+    "language_holdout_full_positive_auroc_min": 0.80,
+    "language_holdout_full_spearman_min": 0.70,
+    "intervention_family_holdout_full_positive_auroc_min": 0.70,
+    "intervention_family_holdout_full_spearman_min": 0.50,
+    "intervention_family_holdout_full_minus_no_alignment_auroc_min": 0.05,
+    "intervention_family_holdout_full_minus_no_alignment_spearman_min": 0.10,
+    "intervention_family_holdout_full_minus_stratified_null_auroc_min": 0.10,
+    "intervention_family_holdout_full_minus_stratified_null_spearman_min": 0.20
+  },
+  "kill_rules": [
+    "Any frozen synthetic R3 gate failure => do not open real intervention data.",
+    "If intervention-family transfer still fails, kill the current IPWM compositional route rather than create R3.1 with weaker gates.",
+    "If validity null remains above 0.62, real-data execution is blocked even if speedup prediction passes.",
+    "Synthetic R3 pass cannot be described as real transfer, causal search benefit, novelty, or breakthrough."
+  ],
+  "novelty_boundary": "Compiler cost models and causal/evidence-driven optimization already exist. A future defensible claim would require prospective cross-repository compositional intervention transfer and causal search improvement over strong controls; R3 itself is only a falsification prerequisite."
+}

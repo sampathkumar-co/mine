@@ -1,0 +1,33 @@
+{
+  "stage": "lexigen_v8_ipwm_compositional_r3_locked",
+  "real_intervention_data_opened": false,
+  "scientific_transfer_evidence": false,
+  "official_holdout_campaign_started": false,
+  "r1_real_top_k_relative_gain_threshold": 0.20,
+  "r1_generator_changed": false,
+  "r2_failed_thresholds_relaxed": false,
+  "null_seeds": [101, 211, 307, 401, 503],
+  "files": {
+    "protocol_r3": "lexigen-v8/IPWM_COMPOSITIONAL_PROTOCOL_R3.json",
+    "synthetic_generator_r1_unchanged": "lexigen-v8/generate_synthetic_ipwm_r1.py",
+    "base_evaluator_r1": "lexigen-v8/ipwm_eval_r1.py",
+    "compositional_evaluator_r3": "lexigen-v8/ipwm_eval_r3.py",
+    "gate_checker_r3": "lexigen-v8/check_ipwm_r3_result.py",
+    "workflow_r3": ".github/workflows/lexigen-v8-ipwm-compositional-r3.yml"
+  },
+  "git_blob_sha1": {
+    "protocol_r3": "3bb9095eaa5d480d797fc2a9a55b585f12a1f6b8",
+    "synthetic_generator_r1_unchanged": "368abab79fc98d4ab1a1e87dbaf1b0d5c0945637",
+    "base_evaluator_r1": "e0fb7d83e63fa09016ed9e4e0b92be4f3c58a796",
+    "compositional_evaluator_r3": "63ab2e91fe5d3bb4129f9365ba362d4014654509",
+    "gate_checker_r3": "42f9ea9033ae7d5c8ce8254dbca33ec929baa489",
+    "workflow_r3": "a2d78917ef609d7da1adc9a32e67ea75d6b6c442"
+  },
+  "feature_contract": {
+    "intervention_family_identity_allowed": false,
+    "intervention_id_identity_allowed": false,
+    "arbitrary_off_diagonal_program_intervention_products_allowed": false,
+    "aligned_primitive_products_required": true,
+    "environment_and_language_context_allowed": true
+  }
+}
