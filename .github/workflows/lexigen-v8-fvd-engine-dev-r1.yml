@@ -1,0 +1,97 @@
+name: LEXIGEN V8 FVD Engine Development R1
+on:
+  pull_request:
+    branches: [lexigen/v8-capability-pivot-r1]
+    paths:
+      - "lexigen-v8/FVD_EXPERIENCE_SCHEMA_R1.json"
+      - "lexigen-v8/FVD_HISTORICAL_SOURCE_MANIFEST_R1.json"
+      - "lexigen-v8/FVD_PROPOSAL_CLASSES_R1.json"
+      - "lexigen-v8/build_fvd_experience_r1.py"
+      - "lexigen-v8/fvd_allocator_r1.py"
+      - "lexigen-v8/test_fvd_engine_dev_r1.py"
+      - ".github/workflows/lexigen-v8-fvd-engine-dev-r1.yml"
+permissions:
+  contents: read
+jobs:
+  fvd-engine-development-canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify immutable parent capability protocol
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object lexigen-v8/CAPABILITY_BREAKTHROUGH_PROTOCOL_R1.json)" = "d347ba7cc29c0b024e925d267e523bd3f983007e"
+          test "$(git hash-object lexigen-v8/ARCHITECTURE_TOURNAMENT_R2.md)" = "890658c52c4983cdf65f4b09364b00251a723e1c"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('lexigen-v8/CAPABILITY_BREAKTHROUGH_PROTOCOL_R1.json').read_text())
+          assert p['official_fvd_holdout_campaign_started'] is False
+          assert p['real_ipwm_intervention_data_opened'] is False
+          assert p['world_breakthrough_claim_allowed'] is False
+          PY
+      - name: Compile FVD development spine
+        run: |
+          python -m py_compile \
+            lexigen-v8/strict_gate_runner.py \
+            lexigen-v8/build_fvd_experience_r1.py \
+            lexigen-v8/fvd_allocator_r1.py \
+            lexigen-v8/test_fvd_engine_dev_r1.py
+      - name: Build deterministic historical experience artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence-fvd-dev-r1
+          python lexigen-v8/build_fvd_experience_r1.py \
+            --output evidence-fvd-dev-r1/FVD_EXPERIENCE_DEV_R1.json \
+            | tee evidence-fvd-dev-r1/build-summary.json
+      - name: Run strict FVD development canaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python lexigen-v8/strict_gate_runner.py \
+            --output evidence-fvd-dev-r1/canary-result.json \
+            -- python lexigen-v8/test_fvd_engine_dev_r1.py
+      - name: Cross-check build and canary evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          artifact=json.loads(Path('evidence-fvd-dev-r1/FVD_EXPERIENCE_DEV_R1.json').read_text())
+          canary=json.loads(Path('evidence-fvd-dev-r1/canary-result.json').read_text())
+          assert canary['fvd_engine_dev_r1_passed'] is True
+          assert canary['scientific_transfer_evidence'] is False
+          assert canary['official_holdout_data_accessed'] is False
+          assert artifact['artifact_sha256'] == canary['experience_artifact_sha256']
+          assert artifact['official_holdout_data_accessed'] is False
+          assert artifact['blocked_ipwm_real_intervention_data_accessed'] is False
+          assert artifact['scientific_transfer_evidence_created_by_this_build'] is False
+          payload={
+            'stage':'v8_fvd_engine_development_r1',
+            'development_only':True,
+            'official_holdout_campaign_started':False,
+            'scientific_transfer_evidence':False,
+            'experience_artifact_sha256':artifact['artifact_sha256'],
+            'experience_file_sha256':hashlib.sha256(Path('evidence-fvd-dev-r1/FVD_EXPERIENCE_DEV_R1.json').read_bytes()).hexdigest(),
+            'canary_file_sha256':hashlib.sha256(Path('evidence-fvd-dev-r1/canary-result.json').read_bytes()).hexdigest(),
+            'frontier_full_allocation':canary['frontier_full_allocation'],
+            'frontier_no_experience_allocation':canary['frontier_no_experience_allocation'],
+            'frontier_shuffled_allocation':canary['frontier_shuffled_allocation'],
+            'precision_risk_full_allocation':canary['precision_risk_full_allocation'],
+            'precision_risk_retrieval_allocation':canary['precision_risk_retrieval_allocation'],
+          }
+          Path('evidence-fvd-dev-r1/FVD_ENGINE_DEV_RESULT_R1.json').write_text(json.dumps(payload,indent=2,sort_keys=True)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v8-fvd-engine-development-r1
+          path: evidence-fvd-dev-r1/
+          if-no-files-found: error
+          retention-days: 90
