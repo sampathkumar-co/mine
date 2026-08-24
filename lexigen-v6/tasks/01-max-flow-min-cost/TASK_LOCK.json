@@ -1,0 +1,33 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":1,
+  "task":"max_flow_min_cost",
+  "family":"numerical_optimization",
+  "selection_score":"2e21df49ab9fdf495adc13ab8e4c4cd5d9a75f5371e7009115ad830ea4b9f321",
+  "applicability_score":"05e93d337185dbeee4f305cf9687682631c22218af2054f66c3cd27b5773c487",
+  "source_commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path":"AlgoTuneTasks/max_flow_min_cost/max_flow_min_cost.py",
+  "source_git_blob_sha1":"30cc2d1cefd748c2674ce31634ef8ddf465b09fb",
+  "source_sha256":"25fc1054d288b4593e53e7ab8fed7e2eb54dce5f5b130952842305af2f29fe86",
+  "description_git_blob_sha1":"6dac89bd310e1a7b550b9cebbdf86562543a64ef",
+  "description_sha256":"6103478c9660f3558d5f36344215b71ee89a6b16ca13b3799da1a4af7b640cc5",
+  "applicable_causal_ids":["TM-BFR-01","TM-RRR-01"],
+  "strong_baseline_ids":["SB-BOOL-EXACT-01","SB-GRAPH-BITSET-01","SB-NATIVE-NUMERIC-01","SB-REDUCED-LINALG-01"],
+  "source_semantics":"maximum s-t flow with minimum total edge cost; source implementation uses networkx.max_flow_min_cost after dense-matrix to DiGraph conversion",
+  "official_verifier_observation":{
+    "capacity_upper_bound_checked":false,
+    "positive_flow_requires_existing_edge":false,
+    "conservation_checked":true,
+    "reference_max_flow_and_cost_checked":true,
+    "exploit_allowed_by_v6":false,
+    "independent_semantic_certificate_required":true,
+    "independent_certificate_adds_capacity_and_edge_existence_checks":true
+  },
+  "official_train_manifest_opened":false,
+  "official_train_payloads_opened":0,
+  "official_test_manifest_opened":false,
+  "official_test_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "human_task_specific_solver_design":false,
+  "threshold_changes":false
+}
