@@ -1,0 +1,20 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 3,
+  "stage": "revision1_candidates_materialized_and_frozen_before_execution",
+  "target": "bindings/python/src/tokenizer.rs",
+  "base_target_sha256": "b4e9a5b49fd31df6ae9f30924e3d6c827b18a8075de307d4229a93d120ef71e0",
+  "patch_sha256": {
+    "F2R1": "7f3b9808b454e3b828be9720d428c8aec4e82085a937c7fb4d6bdace3f8e8b22",
+    "N4R1": "7f3b9808b454e3b828be9720d428c8aec4e82085a937c7fb4d6bdace3f8e8b22",
+    "R4R1": "9b3f9fa3d377aff8380be3246a2bc20dedd318be920f862f089d556d364bf114"
+  },
+  "full_vs_no_library_byte_identical": true,
+  "materialization_method": "deterministic frozen builder applied to the exact base target recovered from the completed Task3 R2 evidence; execution workflow must independently reproduce the base and patch hashes before any candidate timing",
+  "candidate_execution_observed": false,
+  "candidate_timing_observed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "thresholds_changed": false
+}
