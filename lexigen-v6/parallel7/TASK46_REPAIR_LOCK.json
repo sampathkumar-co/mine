@@ -29,7 +29,7 @@
     "repair_runner":"9000cd67817edbfca39ee7c2eb2d914bb910f989",
     "aggregate":"24e4ec136022b6f17ae24357735bd996de3401db",
     "repair_workflow":"b5a4553af91257ac00ab5a55e5cb25ddf594e96a",
-    "failure_record":"4cab4c67502d22d787facb218578fd76a44bf713"
+    "failure_record":"491dad96c1d38134bb1611ad3f82e77e14c7c15c"
   },
   "runtime_versions":{"python":"3.12","numpy":"2.5.2","scipy":"1.16.1","networkx":"3.6.1","ortools":"9.11.4210","cvxpy":"1.7.2"},
   "frozen_performance_gate":{"valid_required":100,"harmonic_speedup_minimum":1.50,"minimum_speedup":1.05,"invalid_output_retries":0},
