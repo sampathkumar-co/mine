@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import random
 from collections import defaultdict
 from pathlib import Path
@@ -22,31 +21,40 @@ def no_cross_features(rec: dict) -> dict[str, float]:
     return out
 
 
-def permute_targets(values: list[float], records: list[dict], seed: int, strata: tuple[str, ...] | None) -> list[float]:
-    result = list(values)
+def _joint_permutation(records: list[dict], seed: int, strata: tuple[str, ...] | None) -> list[int]:
+    rng = random.Random(seed)
     groups: dict[tuple, list[int]] = defaultdict(list)
     if strata is None:
         groups[("ALL",)] = list(range(len(records)))
     else:
         for i, rec in enumerate(records):
             groups[tuple(rec[k] for k in strata)].append(i)
-    rng = random.Random(seed)
+    perm = list(range(len(records)))
     for key in sorted(groups, key=lambda x: tuple(map(str, x))):
-        idx = groups[key]
-        shuffled = [values[i] for i in idx]
-        rng.shuffle(shuffled)
-        for i, v in zip(idx, shuffled):
-            result[i] = v
-    return result
+        dst = list(groups[key])
+        src = list(dst)
+        rng.shuffle(src)
+        for d, s in zip(dst, src):
+            perm[d] = s
+    return perm
 
 
-def fit_three(train: list[dict], test: list[dict], extractor, *, y_pos=None, y_log=None, y_valid=None):
-    if y_pos is None:
+def permuted_targets(records: list[dict], seed: int, strata: tuple[str, ...] | None):
+    perm = _joint_permutation(records, seed, strata)
+    return (
+        [float(records[i]["positive_speedup"]) for i in perm],
+        [float(records[i]["log_speedup"]) for i in perm],
+        [float(records[i]["valid_label"]) for i in perm],
+    )
+
+
+def fit_three(train: list[dict], test: list[dict], extractor, *, targets=None):
+    if targets is None:
         y_pos = [float(x["positive_speedup"]) for x in train]
-    if y_log is None:
         y_log = [float(x["log_speedup"]) for x in train]
-    if y_valid is None:
         y_valid = [float(x["valid_label"]) for x in train]
+    else:
+        y_pos, y_log, y_valid = targets
     mp = r1.SparseLinear(binary=True)
     ml = r1.SparseLinear(binary=False, lr=0.12)
     mv = r1.SparseLinear(binary=True)
@@ -88,7 +96,7 @@ def metric_pack(test: list[dict], pred_pos: list[float], pred_log: list[float], 
 
 def average_metric_dict(rows: list[dict]) -> dict:
     keys = sorted({k for x in rows for k in x})
-    return {k: mean([float(x[k]) for x in rows if k in x]) for k in keys}
+    return {k: mean(float(x[k]) for x in rows if k in x) for k in keys}
 
 
 def evaluate_group_holdout(records: list[dict], group_key: str) -> dict:
@@ -120,40 +128,46 @@ def evaluate_group_holdout(records: list[dict], group_key: str) -> dict:
             "frequency": metric_pack(test, freq_pos, freq_log),
         }
 
-        base_pos = [float(x["positive_speedup"]) for x in train]
-        base_log = [float(x["log_speedup"]) for x in train]
-        base_valid = [float(x["valid_label"]) for x in train]
-
         for seed in NULL_SEEDS:
-            gp = permute_targets(base_pos, train, seed + fold_no * 10000 + 1, None)
-            gl = permute_targets(base_log, train, seed + fold_no * 10000 + 2, None)
-            gv = permute_targets(base_valid, train, seed + fold_no * 10000 + 3, None)
-            p, l, v = fit_three(train, test, r1.full_features, y_pos=gp, y_log=gl, y_valid=gv)
+            gtargets = permuted_targets(train, seed + fold_no * 10000, None)
+            p, l, v = fit_three(train, test, r1.full_features, targets=gtargets)
             global_null_by_seed[seed].append(metric_pack(test, p, l, v))
 
-            strata = ("intervention_family", "repository_family")
-            sp = permute_targets(base_pos, train, seed + fold_no * 10000 + 101, strata)
-            sl = permute_targets(base_log, train, seed + fold_no * 10000 + 102, strata)
-            sv = permute_targets(base_valid, train, seed + fold_no * 10000 + 103, strata)
-            p, l, v = fit_three(train, test, r1.full_features, y_pos=sp, y_log=sl, y_valid=sv)
+            stargets = permuted_targets(
+                train,
+                seed + fold_no * 10000 + 5000,
+                ("intervention_family", "repository_family"),
+            )
+            p, l, v = fit_three(train, test, r1.full_features, targets=stargets)
             strat_null_by_seed[seed].append(metric_pack(test, p, l, v))
 
         folds.append(fold)
 
-    macro = {}
-    for name in ["full", "no_cross", "static_only", "intervention_only", "frequency"]:
-        macro[name] = average_metric_dict([f[name] for f in folds])
+    macro = {
+        name: average_metric_dict([f[name] for f in folds])
+        for name in ["full", "no_cross", "static_only", "intervention_only", "frequency"]
+    }
 
-    global_null = []
-    strat_null = []
-    for seed in NULL_SEEDS:
-        global_null.append({"seed": seed, "macro": average_metric_dict(global_null_by_seed[seed])})
-        strat_null.append({"seed": seed, "macro": average_metric_dict(strat_null_by_seed[seed])})
+    global_null = [
+        {"seed": seed, "macro": average_metric_dict(global_null_by_seed[seed])}
+        for seed in NULL_SEEDS
+    ]
+    strat_null = [
+        {"seed": seed, "macro": average_metric_dict(strat_null_by_seed[seed])}
+        for seed in NULL_SEEDS
+    ]
 
     full = macro["full"]
     no_cross = macro["no_cross"]
     static = macro["static_only"]
     freq = macro["frequency"]
+    global_aurocs = [x["macro"]["positive_speedup_auroc"] for x in global_null]
+    global_spears = [x["macro"]["spearman_log_speedup"] for x in global_null]
+    global_valid = [x["macro"].get("validity_auroc", 0.5) for x in global_null]
+    strat_aurocs = [x["macro"]["positive_speedup_auroc"] for x in strat_null]
+    strat_spears = [x["macro"]["spearman_log_speedup"] for x in strat_null]
+    strat_valid = [x["macro"].get("validity_auroc", 0.5) for x in strat_null]
+
     out = {
         "group_key": group_key,
         "group_count": len(folds),
@@ -162,31 +176,33 @@ def evaluate_group_holdout(records: list[dict], group_key: str) -> dict:
         "macro": macro,
         "global_null": global_null,
         "stratified_null": strat_null,
+        "null_summary": {
+            "global_mean_positive_auroc": mean(global_aurocs),
+            "global_max_positive_auroc": max(global_aurocs),
+            "global_mean_spearman": mean(global_spears),
+            "global_max_abs_spearman": max(abs(x) for x in global_spears),
+            "global_mean_validity_auroc": mean(global_valid),
+            "global_max_validity_auroc": max(global_valid),
+            "stratified_mean_positive_auroc": mean(strat_aurocs),
+            "stratified_max_positive_auroc": max(strat_aurocs),
+            "stratified_mean_spearman": mean(strat_spears),
+            "stratified_max_abs_spearman": max(abs(x) for x in strat_spears),
+            "stratified_mean_validity_auroc": mean(strat_valid),
+            "stratified_max_validity_auroc": max(strat_valid),
+        },
         "deltas": {
             "full_minus_no_cross_positive_auroc": full["positive_speedup_auroc"] - no_cross["positive_speedup_auroc"],
             "full_minus_no_cross_spearman": full["spearman_log_speedup"] - no_cross["spearman_log_speedup"],
             "full_minus_static_positive_auroc": full["positive_speedup_auroc"] - static["positive_speedup_auroc"],
             "full_minus_static_spearman": full["spearman_log_speedup"] - static["spearman_log_speedup"],
+            "full_minus_stratified_null_positive_auroc": full["positive_speedup_auroc"] - max(strat_aurocs),
+            "full_minus_stratified_null_spearman": full["spearman_log_speedup"] - max(strat_spears),
             "relative_top_k_gain_over_frequency": (
                 full["top_k_mean_observed_speedup"] / freq["top_k_mean_observed_speedup"] - 1.0
                 if freq["top_k_mean_observed_speedup"] > 0 else 0.0
             ),
         },
     }
-    out["null_summary"] = {
-        "global_max_positive_auroc": max(x["macro"]["positive_speedup_auroc"] for x in global_null),
-        "global_max_abs_spearman": max(abs(x["macro"]["spearman_log_speedup"]) for x in global_null),
-        "global_max_validity_auroc": max(x["macro"].get("validity_auroc", 0.5) for x in global_null),
-        "stratified_max_positive_auroc": max(x["macro"]["positive_speedup_auroc"] for x in strat_null),
-        "stratified_max_spearman": max(x["macro"]["spearman_log_speedup"] for x in strat_null),
-        "stratified_max_validity_auroc": max(x["macro"].get("validity_auroc", 0.5) for x in strat_null),
-    }
-    out["deltas"]["full_minus_stratified_null_positive_auroc"] = (
-        full["positive_speedup_auroc"] - out["null_summary"]["stratified_max_positive_auroc"]
-    )
-    out["deltas"]["full_minus_stratified_null_spearman"] = (
-        full["spearman_log_speedup"] - out["null_summary"]["stratified_max_spearman"]
-    )
     return out
 
 
