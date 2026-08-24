@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_preflight_plan_pre_timing",
+  "representative_test_indexes": {
+    "2": [0],
+    "3": [0, 2, 4],
+    "4": [0, 1, 4],
+    "5": [0, 9, 18],
+    "6": [0, 2, 4]
+  },
+  "rationale": {
+    "2": "Only one frozen GSO test exists and it is the complete real inference workload.",
+    "3": "Cover large Wikitext raw-string batch plus two independently generated raw-string workloads.",
+    "4": "Cover dominant complex .at, mixed dtype/repeated-index behavior, and multidimensional/edge cases.",
+    "5": "Diagnostic only: cover huge default RangeIndex, mixed negative/dtype/step regimes, and out-of-bounds/negative-step behavior.",
+    "6": "Cover long tiny-model list, special-token-heavy small-model list, and another 10k-token realistic list."
+  },
+  "same_tests_for_all_arms": true,
+  "candidate_timing_used": false,
+  "expert_information_used_for_tasks_2_3_4_6": false,
+  "task5_campaign_credit_eligible": false
+}
