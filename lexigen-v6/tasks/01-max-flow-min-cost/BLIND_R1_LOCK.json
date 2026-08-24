@@ -85,6 +85,25 @@
     "training_causal_separation_condition":false,
     "baseline_qualified_causal_transfer_win_already_blocked_by_condition_3":true
   },
+  "preblind_smoke":{
+    "workflow_run_id":32705166925,
+    "job_id":97364577838,
+    "status":"success",
+    "compiled_blind_package":true,
+    "selected_candidate_synthetic_certificate_passed":true,
+    "official_test_manifest_opened":false,
+    "official_test_payloads_opened":0
+  },
+  "training_orchestration_deviation":{
+    "observed":true,
+    "class":"github_pull_request_path_filter_retrigger",
+    "description":"After the sealed training result and candidate selection, later PR synchronization commits could schedule duplicate executions because the training trigger file remained anywhere in the PR diff.",
+    "duplicate_training_outputs_used_for_selection":false,
+    "duplicate_training_outputs_inspected_for_performance":false,
+    "candidate_selection_changed_after_sealed_training":false,
+    "training_workflow_auto_trigger_disabled_before_blind":true,
+    "scientific_effect":"No post-selection training evidence is permitted to change Task1 candidates or thresholds; deviation is preserved as provenance and claim-quality caveat."
+  },
   "frozen_clean_gate":{
     "valid_required":100,
     "harmonic_speedup_minimum":1.50,
@@ -119,7 +138,7 @@
     "aggregate_blind":"8c76be3d08a9fdf018e027ecd8f6524d412118d0",
     "proposal_engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
     "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
-    "blind_workflow":"5bb65c4d306a41b4f790db0775f3f0de5f851ec6"
+    "blind_workflow":"e658b4a3b3272adcaad40fe9282b269d8f432f69"
   },
   "runtime_versions":{
     "python":"3.12",
