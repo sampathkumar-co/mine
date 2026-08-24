@@ -27,11 +27,10 @@ jobs:
               req=urllib.request.Request(url,headers=headers)
               with urllib.request.urlopen(req,timeout=60) as r:return json.load(r)
           targets=[
-            ('task46_repair','88c6795c13432f478f6f370dab27d05e6aff9887','LEXIGEN v6 Tasks4-6 Pretraining Repair R1'),
-            ('preserve_five','514bf9ad16509e313c2d863379f7635a42820680','LEXIGEN v6 Preserve Five Successful Training Tasks R1'),
             ('unified_train_seal','069dc5d07452d98d5fd3f59d66a5a8bc5d1e8c22','LEXIGEN v6 Unified Parallel7 Training Seal R1'),
+            ('parallel7_blind','5d5374d96910942834f442a4d2edd89d0652d9bb','LEXIGEN v6 Parallel Tasks 2-8 Official Blind R1'),
           ]
-          out={'stage':'parallel7_current_progress_observation','workflows':{}}
+          out={'stage':'parallel7_blind_progress_observation','workflows':{}}
           for key,sha,name in targets:
               q=urllib.parse.urlencode({'head_sha':sha,'per_page':100})
               runs=get(f'https://api.github.com/repos/{repo}/actions/runs?{q}').get('workflow_runs',[])
@@ -39,11 +38,12 @@ jobs:
               if not matches:
                   out['workflows'][key]={'found':False,'head_sha':sha};continue
               run=max(matches,key=lambda r:int(r['id'])); jobs=get(run['jobs_url']).get('jobs',[])
-              counts={}; failed=[]
+              counts={}; failed=[]; running=[]
               for j in jobs:
                   k=f"{j.get('status')}:{j.get('conclusion')}";counts[k]=counts.get(k,0)+1
                   if j.get('conclusion')=='failure':failed.append({'id':j['id'],'name':j['name']})
-              out['workflows'][key]={'found':True,'head_sha':sha,'run_id':run['id'],'status':run.get('status'),'conclusion':run.get('conclusion'),'counts':counts,'failed_jobs':failed}
+                  if j.get('status') in {'queued','in_progress'}: running.append({'id':j['id'],'name':j['name'],'status':j.get('status')})
+              out['workflows'][key]={'found':True,'head_sha':sha,'run_id':run['id'],'status':run.get('status'),'conclusion':run.get('conclusion'),'counts':counts,'failed_jobs':failed,'running_jobs':running}
           Path('lexigen-v6/parallel7/PARALLEL7_PROGRESS.json').write_text(json.dumps(out,indent=2)+'\n')
           print(json.dumps(out,indent=2))
           PY
@@ -52,6 +52,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add lexigen-v6/parallel7/PARALLEL7_PROGRESS.json
-          git commit -m "lexigen v6: snapshot current parallel7 progress" || exit 0
+          git commit -m "lexigen v6: snapshot parallel7 blind progress" || exit 0
           git pull --rebase origin lexigen/v6-parallel-7-r1
           git push origin HEAD:lexigen/v6-parallel-7-r1
