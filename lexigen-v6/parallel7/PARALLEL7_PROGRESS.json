@@ -1,0 +1,40 @@
+{
+  "stage": "parallel7_training_completion_observation",
+  "workflows": {
+    "task46_repair": {
+      "found": true,
+      "head_sha": "88c6795c13432f478f6f370dab27d05e6aff9887",
+      "run_id": 32738646019,
+      "status": "completed",
+      "conclusion": "failure",
+      "counts": {
+        "completed:success": 11,
+        "completed:failure": 1,
+        "completed:skipped": 1
+      },
+      "failed_jobs": [
+        {
+          "id": 97467722696,
+          "name": "aggregate (edge_expansion)"
+        }
+      ]
+    },
+    "preserve_five": {
+      "found": true,
+      "head_sha": "514bf9ad16509e313c2d863379f7635a42820680",
+      "run_id": 32738733546,
+      "status": "completed",
+      "conclusion": "failure",
+      "counts": {
+        "completed:success": 5,
+        "completed:failure": 1
+      },
+      "failed_jobs": [
+        {
+          "id": 97467845808,
+          "name": "seal"
+        }
+      ]
+    }
+  }
+}
