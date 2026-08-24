@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import re
-import shutil
 import subprocess
 from pathlib import Path
 
@@ -36,12 +34,42 @@ def timing_from_container(name: str, path: str) -> float:
     return float(match.group(1))
 
 
-def install_editable(name: str) -> None:
-    dexec(
+def imported_file(name: str) -> str:
+    return dexec(
         name,
         "cd /testbed && source .venv/bin/activate && "
-        "python -m pip install --disable-pip-version-check -e . --no-deps >/tmp/v7-install.log 2>&1",
+        "python -c 'import pydantic; print(pydantic.__file__)'",
+        capture=True,
+    ).stdout.strip()
+
+
+def imported_root(name: str) -> str:
+    return dexec(
+        name,
+        "cd /testbed && source .venv/bin/activate && "
+        "python -c 'import pathlib,pydantic; print(pathlib.Path(pydantic.__file__).resolve().parent.parent)'",
+        capture=True,
+    ).stdout.strip()
+
+
+def apply_frozen_candidate(name: str, candidate: str, import_root: str) -> None:
+    # Always modify the repository working tree so the preserved patch is a real source patch.
+    dexec(name, f'python /tmp/build_candidate.py --root /testbed --candidate {candidate}')
+    # The frozen GSO image imports an already-installed copy. Mirror the exact same source
+    # transform there for preflight only; this is environment plumbing, not another candidate.
+    if import_root.rstrip('/') != '/testbed':
+        dexec(name, f"python /tmp/build_candidate.py --root '{import_root}' --candidate {candidate}")
+    dexec(
+        name,
+        "python -m py_compile /testbed/pydantic/main.py "
+        "/testbed/pydantic/_internal/_model_construction.py",
     )
+    if import_root.rstrip('/') != '/testbed':
+        dexec(
+            name,
+            f"python -m py_compile '{import_root}/pydantic/main.py' "
+            f"'{import_root}/pydantic/_internal/_model_construction.py'",
+        )
 
 
 def main() -> None:
@@ -56,15 +84,12 @@ def main() -> None:
 
     run(['docker', 'pull', IMAGE])
 
-    # One frozen shared base measurement/reference set for all arms.
+    # One frozen shared base measurement/reference set for all arms. No repo installation,
+    # checkout, history read or expert target is needed: execute the image exactly as shipped.
     base_name = 'lexigen-v7-pydantic-base'
     make_container(base_name)
-    install_editable(base_name)
-    imported = dexec(
-        base_name,
-        "cd /testbed && source .venv/bin/activate && python -c 'import pydantic; print(pydantic.__file__)'",
-        capture=True,
-    ).stdout.strip()
+    imported = imported_file(base_name)
+    import_root = imported_root(base_name)
     base_times: dict[str, float] = {}
     for index in TEST_INDEXES:
         prefix = f'/tmp/v7_ref_{index}'
@@ -91,18 +116,9 @@ def main() -> None:
         error = None
         candidate_times: dict[str, float] = {}
         try:
-            dexec(name, f'python /tmp/build_candidate.py --root /testbed --candidate {candidate}')
-            dexec(
-                name,
-                "python -m py_compile /testbed/pydantic/main.py "
-                "/testbed/pydantic/_internal/_model_construction.py",
-            )
-            install_editable(name)
-            imported_candidate = dexec(
-                name,
-                "cd /testbed && source .venv/bin/activate && python -c 'import pydantic; print(pydantic.__file__)'",
-                capture=True,
-            ).stdout.strip()
+            candidate_import_root = imported_root(name)
+            apply_frozen_candidate(name, candidate, candidate_import_root)
+            imported_candidate = imported_file(name)
             for index in TEST_INDEXES:
                 dexec(
                     name,
@@ -115,10 +131,13 @@ def main() -> None:
                 'cd /testbed && git diff -- pydantic/main.py pydantic/_internal/_model_construction.py',
                 capture=True,
             ).stdout
+            if not patch.strip():
+                raise RuntimeError('candidate produced empty repository patch')
             (candidate_dir / 'candidate.patch').write_text(patch, encoding='utf-8')
         except Exception as exc:
             patch_ok = False
             imported_candidate = None
+            candidate_import_root = None
             error = repr(exc)
 
         ratios = {
@@ -139,7 +158,9 @@ def main() -> None:
             'harmonic_speedup': harmonic,
             'minimum_speedup': min(ratios.values()) if ratios else 0.0,
             'base_import_path': imported,
+            'base_import_root': import_root,
             'candidate_import_path': imported_candidate,
+            'candidate_import_root': candidate_import_root,
             'error': error,
             'expert_opt_commit_accessed': False,
             'expert_diff_accessed': False,
@@ -151,12 +172,15 @@ def main() -> None:
         run(['docker', 'rm', '-f', name], check=False)
 
     summary = {
-        'stage': 'task1_equal_budget_preflight_r1',
+        'stage': 'task1_equal_budget_preflight_r2',
         'image': IMAGE,
         'test_indexes': TEST_INDEXES,
         'base_times_seconds': base_times,
+        'base_import_path': imported,
+        'base_import_root': import_root,
         'candidates': rows,
         'official_gso_evaluator_used': False,
+        'expert_target_timing_accessed': False,
         'expert_opt_commit_accessed': False,
         'expert_diff_accessed': False,
         'hints_accessed': False,
