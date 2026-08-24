@@ -1,0 +1,14 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_execution_metadata_safe_projection_result",
+  "workflow_run_id": 32745632153,
+  "artifact_id": 9526918533,
+  "artifact_digest": "sha256:0038c9d18bccaa4ae20c989e1211c81f937abad0f0202e39be1490a7055a7379",
+  "dataset_revision": "c2e4f1a58427cccd15e0e542f136bd204fb19284",
+  "projection": ["instance_id","repo","install_commands"],
+  "record_count": 5,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "candidate_timing_observed": false
+}
