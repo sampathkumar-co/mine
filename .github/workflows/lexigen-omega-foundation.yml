@@ -69,11 +69,28 @@ jobs:
             --proposals _evidence/task1-proposals/lexigen-v7-gso/tasks/01-pydantic-setattr/PROPOSALS_R1.json \
             --result _evidence/task1-result/lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION1_R1_RESULT.json \
             --output omega-evidence/TASK1_REVISION1_HINDSIGHT.json
+      - name: Feed exposed hindsight into development treadmill
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python lexigen-omega/tools/build_development_archive.py \
+            --hindsight omega-evidence/TASK1_REVISION1_HINDSIGHT.json \
+            --output omega-evidence/EXPOSED_DEVELOPMENT_ARCHIVE.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('omega-evidence/EXPOSED_DEVELOPMENT_ARCHIVE.json').read_text())
+          assert report['status'] == 'development_only_never_final_claim_evidence'
+          assert report['claim_boundary']['final_claim_eligible'] is False
+          assert report['claim_boundary']['causal_memory_admission'] is False
+          assert report['task_count'] == 1
+          print(report['mechanism_ranking'])
+          PY
       - name: Upload Omega real hindsight evidence
         uses: actions/upload-artifact@v4
         with:
           name: lexigen-omega-task1-real-hindsight
-          path: omega-evidence/TASK1_REVISION1_HINDSIGHT.json
+          path: omega-evidence/
           retention-days: 90
 
   prospective-task2-transfer:
