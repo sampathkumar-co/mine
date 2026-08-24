@@ -1,0 +1,90 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "safe_metadata_only_selection_sealed",
+  "status": "success",
+  "workflow_run_id": 32701492386,
+  "artifact_id": 9510661393,
+  "artifact_digest": "sha256:2088c6fb440d2787a029ae60b84633c170d8925f58dc7d2412c7a06267013d6b",
+  "selection_json_sha256": "39503aea6dc6423c20937e3ab081f418399bb7ed9d9cbf509732cdceb5b321a1",
+  "inventory_row_count": 102,
+  "inventory_sha256": "028d93dc292c9a6156fff2723dc7d602d573670ae8d829f4350d7ac299152d16",
+  "selected_count": 6,
+  "selected_repo_count": 6,
+  "selected": [
+    {
+      "index": 1,
+      "instance_id": "pydantic__pydantic-addf1f9",
+      "repo": "pydantic/pydantic",
+      "base_commit": "addf1f99f232b27a62d7968c49ffca60f5b56a92^",
+      "api": "BaseModel.__setattr__",
+      "created_at": "2024-11-19 12:47:25",
+      "arch": "x86_64",
+      "instance_image_tag": "latest",
+      "selection_score": "03d0ac72267573732000b65c9ee67d9e01dfd2dec7975093758149a177672e79"
+    },
+    {
+      "index": 2,
+      "instance_id": "abetlen__llama-cpp-python-2bc1d97",
+      "repo": "abetlen/llama-cpp-python",
+      "base_commit": "e712cffc0c22d5406c6fe02a1769992f2181f229",
+      "api": "llama_cpp.gen_b",
+      "created_at": "2024-12-19 01:55:12",
+      "arch": "x86_64",
+      "instance_image_tag": "latest",
+      "selection_score": "078d3cde64ad0e5f88523dff83d8d3a4cbb5462bd328a36d66a866f71624ec0c"
+    },
+    {
+      "index": 3,
+      "instance_id": "huggingface__tokenizers-bfd9cde",
+      "repo": "huggingface/tokenizers",
+      "base_commit": "bfd9cdeefb6fb2fb9b5514f8a5fad6d7263a69d6^",
+      "api": "Tokenizer.encode_batch_fast",
+      "created_at": "2024-08-08 14:56:13",
+      "arch": "x86_64",
+      "instance_image_tag": "latest",
+      "selection_score": "08d840e9c56f100c1095d977e25e9d8fd880b8c8f418e3dcdb24f6cc4aec3159"
+    },
+    {
+      "index": 4,
+      "instance_id": "numpy__numpy-be52f19",
+      "repo": "numpy/numpy",
+      "base_commit": "be52f19259d47cd27095e186a7974710c60169ee^",
+      "api": "numpy.subtract",
+      "created_at": "2023-02-10 00:47:35",
+      "arch": "x86_64",
+      "instance_image_tag": "latest",
+      "selection_score": "08f62f2402382832f28b1488f0298137564970bedf8bdd9b9f5e908f9b3e7cb6"
+    },
+    {
+      "index": 5,
+      "instance_id": "pandas-dev__pandas-fd43d4b",
+      "repo": "pandas-dev/pandas",
+      "base_commit": "fd43d4ba856b42bcfc342481dee3b59c4d7cf4cb^",
+      "api": "RangeIndex.take",
+      "created_at": "2023-07-18 12:21:45",
+      "arch": "x86_64",
+      "instance_image_tag": "latest",
+      "selection_score": "0b9af176e200b14ccf85c3d3b5871f8e824049cc2ed6fe84911e4ae1a9b552bc"
+    },
+    {
+      "index": 6,
+      "instance_id": "huggingface__transformers-211f93a",
+      "repo": "huggingface/transformers",
+      "base_commit": "211f93aab95d1c683494e61c3cf8ff10e1f5d6b7^",
+      "api": "WhisperTokenizer._preprocess_token_ids",
+      "created_at": "2023-09-28 19:02:27",
+      "arch": "x86_64",
+      "instance_image_tag": "latest",
+      "selection_score": "1d2d1eace01c5963847ae4f12da5b60fbac2c76627cf0ab4579c5d9511a9d62b"
+    }
+  ],
+  "safe_columns": ["instance_id", "repo", "base_commit", "api", "created_at", "arch", "instance_image_tag"],
+  "forbidden_column_values_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "performance_test_spec_accessed": false,
+  "correctness_tests_accessed": false,
+  "prior_submissions_accessed": false,
+  "trigger_retired_before_result_commit": true
+}
