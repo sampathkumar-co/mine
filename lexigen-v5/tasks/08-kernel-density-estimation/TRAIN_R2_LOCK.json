@@ -1,0 +1,29 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":8,
+  "task":"kernel_density_estimation",
+  "stage":"official_training_r2_lock",
+  "revision_reason":"R1 harness rejected source-supported empty query_points; R2 only permits that schema case.",
+  "git_blob_sha1":{
+    "TRAIN_R1_FAILURE.json":"5e2e20cb0ec904c465127d58fca647a9c0105bb3",
+    "SYNTHETIC_R1_RESULT.json":"a46ee144e64e7f5c177621b4eec338480eaade46",
+    "DATASET_METADATA_R1_RESULT.json":"4317186f91e1dd9cede29fef5bfe12b02bdabbc5",
+    "candidates.py":"a7cd45ea26695a1543d158bb256c802013720027",
+    "train_shard_r2.py":"b5408222f976bfd3586316398b6a5dc05d2c8f8b",
+    "aggregate_train.py":"bb9d6faf08fd948376c35b50a4d8fc56484cb3d1",
+    "workflow":"8e166487868837cbb0b23df6154bf5e5287fc9dc"
+  },
+  "training_manifest":{"name":"kernel_density_estimation_T100ms_n300_size100_train.jsonl","size":5085207,"oid":"a70fb5e71c9da5d1bdf0bb2e0466d5b89b915bc6"},
+  "test_manifest_metadata_only":{"name":"kernel_density_estimation_T100ms_n300_size100_test.jsonl","size":5963910,"oid":"8ba6a13986708aacec3496c7d7cfbc1a778ffc89"},
+  "eligible_candidate_count":18,
+  "official_training_manifest_opened_before_lock":true,
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":0,
+  "candidate_changes_after_r1":false,
+  "eligibility_changes_after_r1":false,
+  "verifier_threshold_changes_after_r1":false,
+  "selection_rule_changes_after_r1":false,
+  "threshold_changes":false,
+  "training_revision":2,
+  "training_revision_budget_max":3
+}
