@@ -1,0 +1,28 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 5,
+  "instance_id": "pandas-dev__pandas-fd43d4b",
+  "stage": "post_source_pre_proposal_freeze",
+  "classification": "scientific_boundary_violation_expert_commit_opened_early",
+  "incident": "While resolving the caret-suffixed selected base commit to inspect additional base source, the research agent fetched commit fd43d4ba856b42bcfc342481dee3b59c4d7cf4cb. That commit is the task's optimization commit and the response exposed its commit message and patch before Task-5 proposals were frozen.",
+  "expert_opt_commit_accessed_early": true,
+  "expert_diff_accessed_early": true,
+  "hints_accessed": false,
+  "candidate_generation_before_incident": false,
+  "candidate_timing_before_incident": false,
+  "task_swapped_or_dropped": false,
+  "eligibility_after_incident": {
+    "clean_gso_win_credit": false,
+    "causal_transfer_credit": false,
+    "campaign_denominator_membership": true,
+    "diagnostic_execution_allowed": true
+  },
+  "containment": [
+    "Do not use the revealed commit message or patch to construct or rank Task-5 candidates.",
+    "Any Task-5 proposals must be justified only from the already-permitted R2 source artifact and frozen primitive/macro vocabulary.",
+    "Report Task 5 as contaminated regardless of eventual performance.",
+    "Do not replace Task 5 with another selected instance."
+  ],
+  "other_tasks_contaminated": false,
+  "preserved_before_further_task5_candidate_work": true
+}

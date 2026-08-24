@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_materialization_r1_partial_result",
+  "workflow_run_id": 32743868213,
+  "candidate_execution_count": 0,
+  "candidate_timing_observed": false,
+  "successful_tasks": {
+    "3": {"artifact_id":9526285243,"artifact_digest":"sha256:e1a774e2354a6312f22d2e34c981f7f2af1917188116087a95eaa27b027f9bcb"},
+    "4": {"artifact_id":9526243179,"artifact_digest":"sha256:0491c440aaa754dcab7a4e1d5913087b5f71de94a46d09b5b1206a68fa744073"},
+    "5": {"artifact_id":9526246921,"artifact_digest":"sha256:0814a12614093b8c826ec2d20444c1c8517a1809e6aa4b5d2a011a5fb7e5578f"},
+    "6": {"artifact_id":9526265275,"artifact_digest":"sha256:507a76e766d72cee7407d049e4958385d06dd4472d387cd0eb4f5204a329bb60"}
+  },
+  "task2": {
+    "status": "construction_infrastructure_failure",
+    "F1_materialized_before_failure": true,
+    "F1_patch_sha256": "1b053c99ea6cce4551f52c141037a42c50fa09761b6c5efb9d051d5a99d8bf7d",
+    "failure_candidate": "F2",
+    "failure": "builder replacement marker self._ctx.kv_cache_seq_rm(-1, self.n_tokens, -1) occurs twice in llama.py; transform was not scoped to Llama.eval",
+    "candidate_executed": false,
+    "timing_observed": false,
+    "allowed_r2_repair": "scope F2/N1/N3 replacement to the already-selected Llama.eval function only; do not alter candidate mechanisms or selections"
+  },
+  "task5_campaign_credit_eligible": false,
+  "expert_information_used_for_tasks_2_3_4_6": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "arm_budgets_changed": false,
+  "r1_evidence_preserved": true
+}

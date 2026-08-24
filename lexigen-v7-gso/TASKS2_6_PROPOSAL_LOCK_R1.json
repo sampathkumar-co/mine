@@ -1,0 +1,31 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_source_only_proposals_frozen",
+  "proposal_budget_per_arm": 6,
+  "arms": ["v7_full", "v7_no_library", "v7_random_library"],
+  "task_count": 5,
+  "total_proposals": 90,
+  "source_result_blob": "e82e1c8097f9f50db63dc1f959889976e2cccef3",
+  "engine_lock_blob": "6b4283b1baeb8aacfdc13337362ae1ed3ae249f5",
+  "generation_contract_blob": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+  "proposal_blobs": {
+    "task2": "24ad51830d598df47fb25226dba77143a81b373c",
+    "task3": "e70d3701be780d329aa8d41313c11612a5661898",
+    "task4": "736d91ff06f54d2d236c3f14ce0226f3f54aba4f",
+    "task5": "d24d5ffbf74c2f919b69d4ab3d65b18ac2415fe0",
+    "task6": "57fbaa300bd9d555317e02dfbb499301f5d5fe85"
+  },
+  "task5_contamination_incident_blob": "da7b6c895939b78f747146cb09062ee58b416ccc",
+  "task5_campaign_credit_eligible": false,
+  "clean_tasks": [2,3,4,6],
+  "candidate_patch_built_before_lock": false,
+  "candidate_timing_observed_before_lock": false,
+  "tasks2_4_6_expert_opt_commit_accessed": false,
+  "tasks2_4_6_expert_diff_accessed": false,
+  "tasks2_4_6_hints_accessed": false,
+  "task5_expert_boundary_violation_preserved": true,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "arm_budgets_changed": false,
+  "next_protocol_action": "Freeze up to three concrete candidates per arm per task from this proposal pool before any candidate timing."
+}

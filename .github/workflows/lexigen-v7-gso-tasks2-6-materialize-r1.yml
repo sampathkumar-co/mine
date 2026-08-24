@@ -1,0 +1,92 @@
+name: LEXIGEN V7 GSO Tasks2-6 Candidate Materialize R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-source-result-r2]
+    paths: ["lexigen-v7-gso/TRIGGER_TASKS2_6_MATERIALIZE_R1"]
+permissions: {contents: read}
+jobs:
+  materialize:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {task: 2, slug: "02-llama-gen-b", instance: "abetlen__llama-cpp-python-2bc1d97", target: "llama_cpp/llama.py"}
+          - {task: 3, slug: "03-tokenizers-encode-batch-fast", instance: "huggingface__tokenizers-bfd9cde", target: "bindings/python/src/tokenizer.rs"}
+          - {task: 4, slug: "04-numpy-subtract", instance: "numpy__numpy-be52f19", target: "numpy/core/code_generators/generate_umath.py"}
+          - {task: 5, slug: "05-pandas-rangeindex-take", instance: "pandas-dev__pandas-fd43d4b", target: "pandas/core/indexes/range.py"}
+          - {task: 6, slug: "06-transformers-whisper-preprocess", instance: "huggingface__transformers-211f93a", target: "src/transformers/models/whisper/tokenization_whisper.py"}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen materialization lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/TASKS2_6_MATERIALIZE_LOCK_R1.json').read_text())
+          paths={
+            'proposal_lock':'lexigen-v7-gso/TASKS2_6_PROPOSAL_LOCK_R1.json',
+            'selection':'lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json',
+            'plan':'lexigen-v7-gso/PREFLIGHT_PLAN_R1.json',
+            'builder':'lexigen-v7-gso/build_candidate_r1.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-tasks2-6-materialize-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'materialize lock mismatch {key}: {got}')
+          if lock['candidate_timing_observed_before_lock']:
+              raise SystemExit('timing boundary crossed before materialization lock')
+          PY
+      - name: Compile builder
+        run: python -m py_compile lexigen-v7-gso/build_candidate_r1.py
+      - name: Pull frozen base image and copy only target file
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="slimshetty/gso:gso.eval.x86_64.${{ matrix.instance }}"
+          docker pull "$IMAGE"
+          C=$(docker create "$IMAGE" true)
+          mkdir -p "base/$(dirname '${{ matrix.target }}')"
+          docker cp "$C:/testbed/${{ matrix.target }}" "base/${{ matrix.target }}"
+          docker rm "$C"
+          test -f "base/${{ matrix.target }}"
+      - name: Materialize all selected candidates without execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,subprocess,shutil,hashlib,os
+          from pathlib import Path
+          task=str(os.environ['TASK'])
+          target=Path(os.environ['TARGET'])
+          sel=json.loads(Path('lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json').read_text())['tasks'][task]
+          candidates=sel['v7_full']+sel['v7_no_library']+sel['v7_random_library']
+          out=Path('materialized'); out.mkdir()
+          records=[]
+          base=Path('base')/target
+          for cid in candidates:
+              root=Path('work')/cid
+              dest=root/target
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(base,dest)
+              c_out=out/cid
+              subprocess.run(['python','lexigen-v7-gso/build_candidate_r1.py','--task',task,'--candidate',cid,'--root',str(root),'--output',str(c_out)],check=True)
+              report=json.loads((c_out/f'task{task}-{cid}.json').read_text())
+              report['changed_file_bytes']=dest.stat().st_size
+              records.append(report)
+          payload={'task':int(task),'candidate_count':len(records),'candidates':records,'candidate_execution_count':0,'candidate_timing_observed':False}
+          (out/'MATERIALIZE_RESULT.json').write_text(json.dumps(payload,indent=2)+'\n')
+          PY
+        env:
+          TASK: ${{ matrix.task }}
+          TARGET: ${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-task${{ matrix.task }}-${{ matrix.slug }}-materialized-r1
+          path: materialized/
+          if-no-files-found: error
+          retention-days: 90
