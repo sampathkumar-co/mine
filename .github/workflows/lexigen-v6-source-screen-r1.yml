@@ -1,0 +1,40 @@
+name: LEXIGEN v6 Source Fingerprint Screen R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task10-causal-audit-result-r1]
+    paths: ["lexigen-v6/TRIGGER_SOURCE_SCREEN_R1"]
+permissions: {contents: read}
+jobs:
+  screen:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen source-screen package before source access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/SOURCE_SCREEN_R1_LOCK.json').read_text())
+          for k,p in lock['paths'].items():
+            got=subprocess.check_output(['git','hash-object',p],text=True).strip()
+            if got!=lock['git_blob_sha1'][k]:raise SystemExit(f'v6 source-screen lock mismatch {k}')
+          if any(lock[k] for k in ['screening_task_sources_opened_before_lock','training_manifests_opened_before_lock','test_manifests_opened_before_lock','public_solvers_opened_before_lock']):raise SystemExit('source-screen boundary crossed')
+          PY
+      - run: python -m py_compile lexigen-v6/screen_sources.py lexigen-v6/final_selector.py lexigen-v5/engine.py
+      - name: Fingerprint all 24 sealed screening tasks from source only
+        run: python lexigen-v6/screen_sources.py
+      - name: Apply frozen applicability-conditioned final selector
+        run: python lexigen-v6/final_selector.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-source-screen-r1
+          path: |
+            screening-source-evidence.jsonl
+            source-screen-summary.json
+            final-selection.json
+          if-no-files-found: error
+          retention-days: 90
