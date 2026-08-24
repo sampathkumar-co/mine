@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "final_campaign_audit_r1_locked",
+  "campaign_status": "completed_frozen_gate_failed",
+  "campaign_gate_passed": false,
+  "kill_rule_invoked": true,
+  "frozen_protocol_blob": "1237220004c51f010f0132d3a871862c87eed5cf",
+  "final_audit_json_blob": "2bd574e9d2ff212feaf193bf5778eb6e4d433496",
+  "final_audit_markdown_blob": "66d5a5c78a5ca6ef26bdcf5c864578d2c1da75d9",
+  "task3_causal_reachability_audit_blob": "52792a6ad7f83e1f5ba3adec7542002953d81016",
+  "task2_preflight_workflow_run_id": 32747466819,
+  "task2_preflight_job_id": 97496316081,
+  "task2_status_at_kill": "in_progress_diagnostic_only_after_kill",
+  "task2_can_reopen_campaign": false,
+  "supporting_prs": {
+    "task4_contamination": 312,
+    "task6_antigaming_result": 314,
+    "task2_pre_timing_equivalence": 315,
+    "task5_diagnostic_result": 316
+  },
+  "integrity": {
+    "selected_instance_swaps": 0,
+    "selected_instance_drops": 0,
+    "post_result_threshold_changes": 0,
+    "expert_information_used_to_rescue_task4": false,
+    "task3_revision2_run_after_causal_impossibility": false,
+    "pilot_reopened_after_kill": false
+  }
+}

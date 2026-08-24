@@ -1,0 +1,107 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "status": "completed_frozen_gate_failed",
+  "campaign_gate_passed": false,
+  "kill_rule_invoked": true,
+  "kill_reason": "The preregistered pilot requires at least 2 causal-transfer wins. Task 1 is causally negative, Task 3 is causally impossible under the remaining frozen mechanism space, Task 4 is confirmatory-ineligible after expert-boundary contamination, Task 5 is diagnostic-only/ineligible, and Task 6 is causally negative because the same mechanism class is independently available to the no-library arm. Therefore at most one causal-transfer win can remain possible (Task 2), so the >=2 causal-win gate is mathematically unreachable.",
+  "protocol_gate_requirements": {
+    "full_clean_gso_wins_min": 3,
+    "clean_win_repositories_min": 3,
+    "causal_transfer_wins_min": 2,
+    "causal_repositories_min": 2,
+    "distinct_learned_macro_ids_min": 2,
+    "full_minus_no_library_task_wins_min": 2,
+    "full_minus_random_library_task_wins_min": 2,
+    "median_human_task_specific_solver_contribution": 0,
+    "selected_instance_swaps_or_drops_allowed": 0,
+    "post_result_threshold_changes_allowed": 0
+  },
+  "task_ledger": {
+    "1": {
+      "instance": "Pydantic task",
+      "status": "closed",
+      "clean_gso_performance_win": true,
+      "official_full_patch_over_base_harmonic_speedup": 2.129,
+      "official_full_patch_over_expert_harmonic_ratio": 1.012,
+      "anti_gaming_passed": true,
+      "causal_transfer_win": false,
+      "causal_reason": "Frozen causal rules do not permit later expert-relative timing to retroactively override the earlier equal-budget evidence needed for causal superiority."
+    },
+    "2": {
+      "instance": "abetlen__llama-cpp-python-2bc1d97",
+      "status": "diagnostic_pending_at_kill",
+      "preflight_workflow_run_id": 32747466819,
+      "preflight_job_id": 97496316081,
+      "initial_full_causally_distinct_class": "F1 only",
+      "pre_timing_equivalence": {
+        "F2_equals_N1": true,
+        "F4_equals_N6_and_R1": true
+      },
+      "can_change_campaign_verdict": false,
+      "maximum_additional_causal_wins_from_task": 1
+    },
+    "3": {
+      "instance": "huggingface__tokenizers-bfd9cde",
+      "status": "causal_impossibility_proven_after_revision1",
+      "round0_full_correct_candidates": 0,
+      "revision1_all_arms_correct": false,
+      "revision1_full_and_no_library_same_patch": true,
+      "revision2_unused": true,
+      "revision2_can_restore_causal_exclusivity": false,
+      "causal_transfer_win": false,
+      "causal_reachability_audit_blob": "52792a6ad7f83e1f5ba3adec7542002953d81016"
+    },
+    "4": {
+      "instance": "numpy__numpy-be52f19",
+      "status": "diagnostic_only_after_expert_boundary_contamination",
+      "round0_valid_candidates": 0,
+      "campaign_credit_eligible": false,
+      "causal_transfer_win": false,
+      "incident_pr": 312
+    },
+    "5": {
+      "instance": "pandas-dev__pandas-fd43d4b",
+      "status": "diagnostic_only_preexisting_contamination",
+      "campaign_credit_eligible": false,
+      "all_nine_preflight_candidates_correct": true,
+      "best_random_subset_harmonic_speedup": 2.091,
+      "best_full_subset_harmonic_speedup": 2.019,
+      "causal_transfer_win": false,
+      "diagnostic_result_pr": 316
+    },
+    "6": {
+      "instance": "huggingface__transformers-211f93a",
+      "status": "closed_performance_positive_causal_negative",
+      "best_full_preflight_harmonic_speedup": 69.573,
+      "anti_gaming_passed": true,
+      "anti_gaming_repair_artifact_id": 9529257129,
+      "anti_gaming_repair_artifact_digest": "sha256:9e9edacb56e14da1a680e34b2d29e581da1d7a544b9de2cb65601d29ac068615",
+      "causal_transfer_win": false,
+      "causal_reason": "The same qualifying mechanism class is independently available to the no-library arm.",
+      "result_pr": 314
+    }
+  },
+  "causal_gate_math": {
+    "already_closed_causal_wins": 0,
+    "remaining_tasks_that_could_still_add_causal_credit_at_kill": [2],
+    "maximum_total_causal_wins_possible_after_kill_point": 1,
+    "required_total_causal_wins": 2,
+    "gate_unreachable": true
+  },
+  "scientific_conclusion": "V7 demonstrated meaningful repository-scale optimization ability, including a clean official GSO win on Task 1 and a very large Task 6 preflight speedup, but the frozen learned abstraction library did not establish the required general causal advantage over equally budgeted no-library/random controls. The V7 GSO pilot therefore fails and is not a breakthrough result.",
+  "claim_boundary": {
+    "general_causal_transfer_breakthrough_established": false,
+    "world_level_ai_breakthrough_established": false,
+    "larger_confirmatory_campaign_justified_by_this_pilot_alone": false,
+    "post_kill_task2_result_may_be_preserved_as_diagnostic_only": true,
+    "pilot_may_be_reopened_by_task2": false
+  },
+  "integrity": {
+    "selected_instance_swaps": 0,
+    "selected_instance_drops": 0,
+    "post_result_threshold_changes": 0,
+    "task3_revision2_run_after_causal_impossibility": false,
+    "task4_expert_patch_used_to_generate_revision": false,
+    "task2_still_running_when_kill_rule_became_mathematically_triggered": true
+  }
+}
