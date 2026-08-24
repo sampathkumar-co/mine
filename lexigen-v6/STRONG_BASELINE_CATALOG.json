@@ -1,0 +1,59 @@
+{
+  "catalog_version":"lexigen-v6-strong-baseline-r1",
+  "frozen_before_v6_screening_pool_selection":true,
+  "purpose":"Independent generic confound-control arm. Entries are broad algorithm/backend families, not task-specific solver code, task identities, payloads, answers, or tuned constants.",
+  "rules":{
+    "no_transfer_memory_ids":true,
+    "no_public_task_specific_solver_access":true,
+    "freeze_concrete_instantiation_before_official_training":true,
+    "independent_correctness_certificate_required":true,
+    "equal_blind_denominator_required":true,
+    "post_blind_human_baseline_cannot_increase_v6_score":true
+  },
+  "entries":[
+    {
+      "baseline_id":"SB-BOOL-EXACT-01",
+      "name":"native_boolean_optimization_backend",
+      "preconditions_any":["boolean","discrete","constraints","set"],
+      "allowed_mechanisms":["PySAT RC2/MaxSAT","PySAT native cardinality encodings","OR-Tools CP-SAT when exact integer/Boolean formulation is mechanically derivable"],
+      "restriction":"No task-specific branching heuristic or hand-derived problem reduction may be added after task identity is known."
+    },
+    {
+      "baseline_id":"SB-GRAPH-BITSET-01",
+      "name":"certified_bitset_graph_search",
+      "preconditions_all":["graph","discrete"],
+      "allowed_mechanisms":["word-parallel adjacency/frontier representation","generic branch-and-bound","greedy coloring/cardinality upper bounds"],
+      "restriction":"May instantiate clique/independent-set style search only when an exact mechanical reduction and inverse mapping are certified from source semantics before official training. No instance-tuned ordering constants."
+    },
+    {
+      "baseline_id":"SB-NATIVE-NUMERIC-01",
+      "name":"optimized_native_numeric_backend",
+      "preconditions_any":["numeric","array","matrix","tensor","backend"],
+      "allowed_mechanisms":["NumPy/SciPy specialized routines","BLAS/LAPACK-backed exact or tolerance-equivalent drivers","vectorized native kernels"],
+      "restriction":"Only public general-purpose library APIs; no public solver implementation for the selected task may be inspected."
+    },
+    {
+      "baseline_id":"SB-CONVEX-01",
+      "name":"independent_convex_solver_backend",
+      "preconditions_any":["convex","constraints","projection"],
+      "allowed_mechanisms":["CVXPY with frozen installed solvers","SciPy optimize general-purpose methods","closed-form generic projection primitives already frozen before selection"],
+      "restriction":"No task-specific algebraic derivation authored after task identity is known."
+    },
+    {
+      "baseline_id":"SB-REDUCED-LINALG-01",
+      "name":"specialized_linear_algebra_backend",
+      "preconditions_any":["matrix","decomposition","high_dimensional"],
+      "allowed_mechanisms":["SciPy/NumPy specialized decomposition drivers","sparse linear algebra when source structure mechanically exposes sparsity","batched vectorized formulations"],
+      "restriction":"No task-specific symbolic reformulation beyond mechanically certified shape/sparsity reduction."
+    },
+    {
+      "baseline_id":"SB-BYTES-NATIVE-01",
+      "name":"native_bytes_crypto_compression_backend",
+      "preconditions_any":["bytes"],
+      "allowed_mechanisms":["standard-library/native optimized codecs","cryptography package primitives","memoryview/zero-copy buffer handling"],
+      "restriction":"No altered algorithm/format semantics and no task-specific external implementation lookup."
+    }
+  ],
+  "coverage_fallback":"If no catalog entry applies, use the strongest independently available source-equivalent/native-backend implementation that can be selected without public task-specific solver access; mark strong_baseline_coverage_limited=true. Such a task can pass ordinary correctness/clean gates but cannot count as a baseline-qualified causal win unless the fallback is valid on the full blind denominator.",
+  "task_specific_content_embedded":false
+}

@@ -1,0 +1,37 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "lock_version":"lexigen-v6-design-lock-r1",
+  "frozen_before_screening_pool_selection":true,
+  "source_commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "python":"3.12",
+  "runner":"ubuntu-24.04",
+  "proposal_engine":{"path":"lexigen-v5/engine.py","git_blob_sha1":"a0899a3297216c1056741aa4808fbe7840d8d94c","engine_version":"lexigen-v5.0.0-causal-transfer-frozen","proposal_limit_per_arm":6,"modified_for_v6":false},
+  "learned_signatures":{
+    "TM-BFR-01":["bit_parallel_representation","sparse_frontier_search","early_certificate_exit"],
+    "TM-CAC-01":["active_set_decomposition","early_certificate_exit","risk_aware_staging"],
+    "TM-RRR-01":["reduced_representation","bounded_exact_refinement","risk_aware_staging"],
+    "TM-PBEB-01":["dtype_specialization","native_backend_substitution","risk_aware_staging"]
+  },
+  "screening":{"pool_count":24,"minimum_name_derived_families":8,"maximum_per_family":4,"selection_seed":"LEXIGEN-V6-TRANSFER-REPLICATION-2026-08-24-A"},
+  "applicability":{"minimum_applicable":8,"minimum_applicable_families":5,"minimum_distinct_causal_ids":2,"source_only":true,"train_test_access":false},
+  "final_selection":{"count":8,"minimum_families":5,"maximum_per_family":2,"selection_seed":"LEXIGEN-V6-FINAL-APPLICABLE-2026-08-24-A"},
+  "clean_blind_gate":{"valid_required":100,"harmonic_speedup_required":1.5,"minimum_speedup_required":1.05,"invalid_output_retries_required":0},
+  "causal_gate":{"full_over_no_transfer_ratio_if_both_pass":1.25,"different_source_family_required":true,"semantic_nonequivalence_required":true,"recipe_removal_ablation_required":true,"strong_baseline_competitiveness_required":0.8},
+  "campaign_gate":{"baseline_qualified_causal_wins_required":3,"causal_win_families_required":3,"distinct_causal_ids_required":2,"clean_full_wins_required":4,"task_win_margin_vs_each_control_required":2},
+  "novel_discovery_gate":{"full_over_best_strong_baseline_required":1.25,"prior_art_review_required":true,"independent_reimplementation_required":true,"affects_replication_score":false},
+  "locked_files":{
+    "PROTOCOL.md":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "TRANSFER_MEMORY.json":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "CONTAMINATION_EXCLUSIONS.json":"86b020eaf4b42bbfbf777c546544b12a5fe13d75",
+    "STRONG_BASELINE_CATALOG.json":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "selector.py":"6ec74f44d1438198c635aaf166eb503195e645f9",
+    "final_selector.py":"9af31f5daccebad3a2c7e3f6cd92d28f894cc4e8"
+  },
+  "task_sources_opened_before_lock":false,
+  "task_descriptions_opened_before_lock":false,
+  "training_manifests_opened_before_lock":false,
+  "test_manifests_opened_before_lock":false,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "thresholds_may_change_after_lock":false
+}
