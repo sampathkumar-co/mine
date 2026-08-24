@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "postselection_pre_task_engine_lock",
+  "selection_result_blob": "aa4e159c98a4ea272e0906ba489f9463555c480e",
+  "learned_library_json_sha256": "0cd5c3d0078237e395d18b21ba193ef9928ac98e8a3d6557188b5b9570884241",
+  "proposal_budget_per_arm": 6,
+  "preflight_candidate_budget_per_arm": 3,
+  "official_feedback_revisions_per_arm": 2,
+  "final_patches_per_arm": 1,
+  "arms": ["v7_full", "v7_no_library", "v7_random_library"],
+  "git_blob_sha1": {
+    "PROTOCOL.md": "1237220004c51f010f0132d3a871862c87eed5cf",
+    "SELECTION_R1_RESULT.json": "aa4e159c98a4ea272e0906ba489f9463555c480e",
+    "GENERATION_CONTRACT_R1.md": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+    "LIBRARY_R1_RESULT.json": "12be069e9a55cfd456095d35fa4e22356387a59e"
+  },
+  "task1_prob_script_accessed_before_lock": false,
+  "task1_tests_accessed_before_lock": false,
+  "task1_repository_source_accessed_for_solver_design_before_lock": false,
+  "expert_opt_commit_accessed_before_lock": false,
+  "expert_diff_accessed_before_lock": false,
+  "hints_accessed_before_lock": false,
+  "prior_gso_submissions_accessed_before_lock": false,
+  "human_task_specific_solver_contribution_before_lock": false,
+  "thresholds_frozen": true,
+  "arm_budgets_frozen": true,
+  "causal_equivalence_rule_frozen": true,
+  "macro_removal_rule_frozen": true
+}
