@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 
 @dataclass(frozen=True)
@@ -28,6 +28,34 @@ class HindsightPreference:
     source: str
 
 
+@dataclass(frozen=True)
+class ProposalProvenance:
+    candidate_id: str
+    arm: str
+    primitive_sequence: tuple[str, ...]
+    macro_ids: tuple[str, ...]
+    mechanism: str
+    source_visible_preconditions: str
+    correctness_risk: str
+    files_functions: tuple[str, ...]
+    expected_performance_mechanism: str
+
+
+@dataclass(frozen=True)
+class MechanismObservation:
+    evaluation: EvaluationObservation
+    provenance: ProposalProvenance
+
+
+@dataclass(frozen=True)
+class MechanismPreference:
+    task_id: str
+    preferred: ProposalProvenance
+    rejected: ProposalProvenance
+    margin: float
+    source: str
+
+
 def ingest_v7_gso_preflight_result(
     payload: Mapping[str, Any],
     *,
@@ -38,6 +66,11 @@ def ingest_v7_gso_preflight_result(
     Ω does not rerun or reinterpret GSO here. The V7 harness remains the evaluator;
     this bridge only consumes its recorded outcomes. Diagnostic/contaminated tasks are
     excluded by default so they cannot silently become learning evidence.
+
+    Infrastructure incidents and partially evaluated rows are intentionally excluded.
+    They are useful engineering evidence, but must not teach Ω that a mechanism is
+    scientifically bad. Only candidate rows that completed without runner errors enter
+    hindsight learning.
     """
 
     if payload.get("stage") != "tasks2_6_preflight_r1":
@@ -46,9 +79,18 @@ def ingest_v7_gso_preflight_result(
     if require_credit_eligible and not eligible:
         return ()
 
+    status = str(payload.get("status", ""))
+    if status.startswith("infrastructure_"):
+        return ()
+
     task_id = str(payload.get("instance_id") or f"v7-task-{payload.get('task')}")
     observations: list[EvaluationObservation] = []
     for row in payload.get("candidate_results", []):
+        # A row with a runner/install/apply/eqcheck exception has not completed the
+        # same evaluation path as a successful row. Keep it out of learning until a
+        # future explicit failure taxonomy can prove it is a scientific negative.
+        if row.get("error"):
+            continue
         candidate = str(row["candidate"])
         correct = bool(row.get("correct", False))
         harmonic = float(row.get("harmonic_speedup", 0.0) or 0.0)
@@ -73,6 +115,78 @@ def ingest_v7_gso_preflight_result(
             )
         )
     return tuple(observations)
+
+
+def parse_v7_gso_proposals(payload: Mapping[str, Any]) -> tuple[ProposalProvenance, ...]:
+    """Parse the frozen pre-timing V7 proposal pool into mechanism provenance.
+
+    The proposal file is intentionally accepted only when it asserts no timing or
+    expert leakage. This prevents post-result descriptions from becoming Ω training
+    labels under the guise of provenance.
+    """
+
+    if bool(payload.get("timing_feedback_used", True)):
+        raise ValueError("proposal provenance used timing feedback")
+    for forbidden in ("expert_opt_commit_accessed", "expert_diff_accessed", "hints_accessed"):
+        if bool(payload.get(forbidden, True)):
+            raise ValueError(f"proposal provenance crossed forbidden boundary: {forbidden}")
+
+    schema = tuple(str(x) for x in payload.get("schema", ()))
+    required = (
+        "proposal_id",
+        "arm",
+        "primitive_sequence",
+        "macro_ids",
+        "mechanism",
+        "source_visible_preconditions",
+        "correctness_risk",
+        "files_functions",
+        "expected_performance_mechanism",
+    )
+    if schema != required:
+        raise ValueError("unsupported V7 proposal schema")
+
+    records: list[ProposalProvenance] = []
+    seen: set[str] = set()
+    for raw in payload.get("proposals", ()):
+        if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)) or len(raw) != len(required):
+            raise ValueError("malformed proposal row")
+        candidate = str(raw[0])
+        if candidate in seen:
+            raise ValueError(f"duplicate proposal id: {candidate}")
+        seen.add(candidate)
+        records.append(
+            ProposalProvenance(
+                candidate_id=candidate,
+                arm=str(raw[1]),
+                primitive_sequence=tuple(str(x) for x in raw[2]),
+                macro_ids=tuple(str(x) for x in raw[3]),
+                mechanism=str(raw[4]),
+                source_visible_preconditions=str(raw[5]),
+                correctness_risk=str(raw[6]),
+                files_functions=tuple(str(x) for x in raw[7]),
+                expected_performance_mechanism=str(raw[8]),
+            )
+        )
+    return tuple(records)
+
+
+def attach_proposal_provenance(
+    observations: tuple[EvaluationObservation, ...],
+    proposals: tuple[ProposalProvenance, ...],
+) -> tuple[MechanismObservation, ...]:
+    """Join evaluator outcomes to mechanisms by frozen candidate ID and arm."""
+
+    lookup = {item.candidate_id: item for item in proposals}
+    joined: list[MechanismObservation] = []
+    for observation in observations:
+        provenance = lookup.get(observation.candidate_id)
+        if provenance is None:
+            raise ValueError(f"missing frozen proposal provenance for {observation.candidate_id}")
+        if provenance.arm != observation.arm:
+            raise ValueError(f"arm mismatch for {observation.candidate_id}")
+        joined.append(MechanismObservation(observation, provenance))
+    return tuple(joined)
 
 
 def _rank_key(observation: EvaluationObservation) -> tuple[int, float, float, str]:
@@ -130,3 +244,29 @@ def build_hindsight_preferences(
             if len(pairs) >= max_pairs:
                 return tuple(pairs)
     return tuple(pairs)
+
+
+def build_mechanism_preferences(
+    observations: tuple[MechanismObservation, ...],
+    *,
+    max_pairs: int = 64,
+) -> tuple[MechanismPreference, ...]:
+    """Convert outcome preferences into mechanism-level learning records."""
+
+    if not observations:
+        return ()
+    by_candidate = {item.evaluation.candidate_id: item.provenance for item in observations}
+    raw = build_hindsight_preferences(
+        tuple(item.evaluation for item in observations),
+        max_pairs=max_pairs,
+    )
+    return tuple(
+        MechanismPreference(
+            task_id=item.task_id,
+            preferred=by_candidate[item.preferred_candidate],
+            rejected=by_candidate[item.rejected_candidate],
+            margin=item.margin,
+            source=item.source,
+        )
+        for item in raw
+    )
