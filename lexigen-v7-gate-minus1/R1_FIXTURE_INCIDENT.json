@@ -1,0 +1,28 @@
+{
+  "experiment": "LEXIGEN V7 Gate -1 R1",
+  "workflow_run_id": 32699545049,
+  "status": "invalid_fixture_binding_preserved",
+  "lock_verification": "passed",
+  "compile_stage": "passed",
+  "execution_stage": "failed_zero_of_three",
+  "root_cause": "The committed holdout input vectors and committed behavior signatures came from different deterministic fixture instances. The signatures were generated before the manually committed input vectors were finalized, so no candidate program could match the locked search/validation signatures.",
+  "scientific_interpretation": "R1 is not evidence for or against the abstraction-transfer hypothesis because the target behavior relation was internally inconsistent.",
+  "scientific_files_changed_after_r1_result": false,
+  "r2_allowed_changes": [
+    "replace manually coupled holdout inputs/signatures with one frozen deterministic oracle generator",
+    "pass only generated behavior signatures and inputs to the learner",
+    "verify exact oracle JSON digest before search"
+  ],
+  "unchanged_in_r2": [
+    "low-level DSL atoms",
+    "apprenticeship programs",
+    "macro induction rule",
+    "500 evaluator-call budget",
+    "maximum expanded program length 4",
+    "random-library control",
+    "specific-macro removal replay",
+    "pass/kill thresholds",
+    "claim boundary"
+  ],
+  "rerun_is_not_a_scientific_retry": true
+}
