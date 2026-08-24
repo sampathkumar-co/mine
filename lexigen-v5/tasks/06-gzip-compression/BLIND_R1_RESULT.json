@@ -1,0 +1,27 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":6,
+  "task":"gzip_compression",
+  "stage":"blind_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32687983381,
+  "complete_artifact_id":9506307423,
+  "complete_artifact_digest":"sha256:1d89e6f62555afe44c5e945dbd499cb3e427ab34eb0279161cbc84c401f4a4f4",
+  "blind_summary_sha256":"51270889a26a7fc9e058db6c914eff074b551e1d221e218005b37056d24ba5be",
+  "blind_results_sha256":"5e10028a518d2c3367631596c40df35b5ab04a4a2c8651f05fb1bcd5d1ebe993",
+  "test_manifest_sha256":"89d469d98a370eee51807fae84211f22d168197eced126ae0a721b95e75b58b5",
+  "arms":{
+    "v5_full":{"valid":100,"invalid_output_retries":0,"harmonic_speedup":0.9996440881717278,"minimum_speedup":0.9205792132398386,"median_speedup":1.0001878903181667,"passes_blind_gate":false},
+    "v5_no_transfer":{"valid":100,"invalid_output_retries":0,"harmonic_speedup":1.000922691736539,"minimum_speedup":0.9594400037632557,"median_speedup":1.0007626226562039,"passes_blind_gate":false},
+    "random_search":{"valid":100,"invalid_output_retries":0,"harmonic_speedup":1.0009156435205278,"minimum_speedup":0.9811123977485956,"median_speedup":1.0006701603583639,"passes_blind_gate":false},
+    "static_template":{"valid":100,"invalid_output_retries":0,"harmonic_speedup":0.9997512923686313,"minimum_speedup":0.9335516342907465,"median_speedup":1.0008828190023351,"passes_blind_gate":false},
+    "v4_compatible":{"valid":100,"invalid_output_retries":0,"harmonic_speedup":1.0010850695603635,"minimum_speedup":0.9523024919115072,"median_speedup":1.0008324760097893,"passes_blind_gate":false}
+  },
+  "clean_unseen_task_win":false,
+  "v5_over_v4_task_win":false,
+  "causal_transfer_win":false,
+  "full_over_no_transfer_ratio":0.9987225751045838,
+  "blind_reruns":0,
+  "post_blind_repairs":0,
+  "threshold_changes":false
+}
