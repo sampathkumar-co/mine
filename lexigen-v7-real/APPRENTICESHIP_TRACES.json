@@ -1,0 +1,36 @@
+{
+  "campaign": "LEXIGEN V7 Real Mechanism-Genesis Pilot R1",
+  "source": "sealed pre-V7 Lexigen benchmark evidence only",
+  "task_payloads_embedded": false,
+  "solver_source_embedded": false,
+  "task_constants_embedded": false,
+  "trace_representation": "low-level typed mechanism roles; V5 recipe names are not supplied to the inducer",
+  "traces": [
+    {
+      "trace_id": "A-GD-01",
+      "source_family": "graph_discrete",
+      "source_evidence_task": "max_common_subgraph",
+      "roles": ["REPRESENT", "RESTRICT", "EXECUTE", "CERTIFY"]
+    },
+    {
+      "trace_id": "A-NO-01",
+      "source_family": "numerical_optimization",
+      "source_evidence_task": "unit_simplex_projection",
+      "roles": ["RESTRICT", "REDUCE", "EXECUTE", "CERTIFY", "RECOVER"]
+    },
+    {
+      "trace_id": "A-LA-01",
+      "source_family": "linear_algebra",
+      "source_evidence_task": "tensor_completion_3d",
+      "roles": ["REDUCE", "EXECUTE", "LIFT", "REFINE", "CERTIFY"]
+    },
+    {
+      "trace_id": "A-SP-01",
+      "source_family": "signal_processing",
+      "source_evidence_task": "dst_type_II_scipy_fftpack",
+      "roles": ["SPECIALIZE", "EXECUTE", "CERTIFY", "RECOVER"]
+    }
+  ],
+  "allowed_role_vocabulary": ["REPRESENT", "RESTRICT", "REDUCE", "EXECUTE", "LIFT", "REFINE", "CERTIFY", "RECOVER", "SPECIALIZE"],
+  "human_holdout_specific_information": false
+}
