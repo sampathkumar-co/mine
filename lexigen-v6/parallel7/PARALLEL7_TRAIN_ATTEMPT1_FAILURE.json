@@ -1,0 +1,19 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage":"parallel_tasks_2_8_training_attempt1_failure",
+  "workflow_run_id":32736018491,
+  "trigger_commit":"163df2faa32eac02a732dcfff2ff851afabb8f2b",
+  "failure_class":"preregistered_harness_dataset_path_correction",
+  "live_snapshot":{"completed_failure_jobs":26,"in_progress_jobs":4},
+  "representative_failure":{"task":"dct_type_I_scipy_fftpack","job_id":97458886363,"exception":"HTTP Error 404: Not Found","failed_url":"data/dct_type_I_scipy_fftpack/dct_type_I_scipy_fftpack_T100ms_n64_size100_train.jsonl","source_lock_passed":true,"dependencies_installed":true,"code_compiled":true,"pretraining_synthetic_certificate_passed":true,"official_training_manifest_successfully_opened":false},
+  "root_cause":"The parallel harness incorrectly assumed every selected task used the Task-1 n64/T100ms filename convention. Dataset size parameter n is task-specific and must be discovered from revision-pinned directory metadata.",
+  "correction_scope":"Harness metadata discovery only. Query the frozen dataset revision directory metadata after the pretraining boundary, deterministically identify the single train/test JSONL pair, then fetch only the training manifest.",
+  "candidate_mapping_changed":false,
+  "strong_baseline_mapping_changed":false,
+  "synthetic_checks_changed":false,
+  "performance_thresholds_changed":false,
+  "candidate_selection_from_attempt1_used":false,
+  "test_manifests_opened_by_correction":false,
+  "test_payloads_opened":0,
+  "scientific_candidate_revision":false
+}
