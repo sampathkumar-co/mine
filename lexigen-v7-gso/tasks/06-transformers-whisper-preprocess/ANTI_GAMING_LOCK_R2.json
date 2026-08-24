@@ -1,0 +1,28 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 6,
+  "stage": "task6_anti_gaming_transport_repair_r2_locked",
+  "selected_candidates": ["F3", "N1", "R2"],
+  "repair_reason": "R1 candidate hash matched exactly, but the frozen auditor could not parse difflib unified patch headers. R2 changes only the serialization supplied to the unchanged auditor.",
+  "candidate_changed": false,
+  "policy_changed": false,
+  "auditor_changed": false,
+  "candidate_budget_changed": false,
+  "thresholds_changed": false,
+  "expert_diff_inspected": false,
+  "hints_inspected": false,
+  "original_patch_sha256": {
+    "F3": "a7024c81a78df80e8836e42360098931596cbef8e1b08313fb6234dd2c2ca036",
+    "N1": "07baeb62e293beddbe7d1f5a81389879eb1c7adc5fc2f28de7f2fbbf1b756c6b",
+    "R2": "07baeb62e293beddbe7d1f5a81389879eb1c7adc5fc2f28de7f2fbbf1b756c6b"
+  },
+  "frozen_policy_commit": "855c537c2ab1f5d7dbf2ae4598a8230cf7178f4d",
+  "frozen_policy_blob": "0fe8a488502cd9b8d547cbc8651e6402b0dce049",
+  "frozen_auditor_blob": "637227b4d8130ad4714066d0f1b910e81dc2048f",
+  "git_blob_sha1": {
+    "r1_lock": "7709da90e23e90c2864221576eec9bfb8ca8bf18",
+    "r1_incident": "627abb0167158ba879fe3cfc4025cd8189c18617",
+    "builder": "5b47dfc5a8fa58bb1cc95ef0ad7f2579d07d8434",
+    "workflow": "f209d20a9196ad3780b9dbca9492e01c443563dc"
+  }
+}

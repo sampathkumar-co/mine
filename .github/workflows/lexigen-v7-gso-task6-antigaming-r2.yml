@@ -1,0 +1,98 @@
+name: LEXIGEN V7 GSO Task6 Anti-Gaming R2
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-task6-antigaming-r1]
+    paths: ["lexigen-v7-gso/tasks/06-transformers-whisper-preprocess/TRIGGER_ANTI_GAMING_R2"]
+permissions: {contents: read}
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen R2 repair lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/tasks/06-transformers-whisper-preprocess/ANTI_GAMING_LOCK_R2.json').read_text())
+          paths={
+            'r1_lock':'lexigen-v7-gso/tasks/06-transformers-whisper-preprocess/ANTI_GAMING_LOCK_R1.json',
+            'r1_incident':'lexigen-v7-gso/tasks/06-transformers-whisper-preprocess/ANTI_GAMING_R1_INFRA_INCIDENT.json',
+            'builder':'lexigen-v7-gso/build_candidate_r1.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-task6-antigaming-r2.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'T6 R2 repair lock mismatch {key}: {got}')
+          if lock['candidate_changed'] or lock['policy_changed'] or lock['auditor_changed'] or lock['expert_diff_inspected'] or lock['hints_inspected']:
+              raise SystemExit('T6 R2 repair crossed scientific boundary')
+          PY
+      - name: Recover exact frozen anti-gaming policy and auditor
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p audit-tools
+          curl -fsSL "https://raw.githubusercontent.com/sampathkumar-co/mine/855c537c2ab1f5d7dbf2ae4598a8230cf7178f4d/lexigen-v7-gso/ANTI_GAMING_POLICY_R1.md" -o audit-tools/ANTI_GAMING_POLICY_R1.md
+          curl -fsSL "https://raw.githubusercontent.com/sampathkumar-co/mine/855c537c2ab1f5d7dbf2ae4598a8230cf7178f4d/lexigen-v7-gso/audit_patch_r1.py" -o audit-tools/audit_patch_r1.py
+          test "$(git hash-object audit-tools/ANTI_GAMING_POLICY_R1.md)" = "0fe8a488502cd9b8d547cbc8651e6402b0dce049"
+          test "$(git hash-object audit-tools/audit_patch_r1.py)" = "637227b4d8130ad4714066d0f1b910e81dc2048f"
+          python -m py_compile audit-tools/audit_patch_r1.py lexigen-v7-gso/build_candidate_r1.py
+      - name: Reproduce frozen candidates and audit Git-native serialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="slimshetty/gso:gso.eval.x86_64.huggingface__transformers-211f93a"
+          TARGET="src/transformers/models/whisper/tokenization_whisper.py"
+          docker pull "$IMAGE"
+          mkdir -p audit evidence
+          for SPEC in \
+            "F3:a7024c81a78df80e8836e42360098931596cbef8e1b08313fb6234dd2c2ca036" \
+            "N1:07baeb62e293beddbe7d1f5a81389879eb1c7adc5fc2f28de7f2fbbf1b756c6b" \
+            "R2:07baeb62e293beddbe7d1f5a81389879eb1c7adc5fc2f28de7f2fbbf1b756c6b"; do
+            CID=${SPEC%%:*}; EXPECTED=${SPEC##*:}
+            C=$(docker create "$IMAGE" tail -f /dev/null)
+            docker start "$C" >/dev/null
+            trap 'docker rm -f "$C" >/dev/null 2>&1 || true' EXIT
+            docker cp lexigen-v7-gso/build_candidate_r1.py "$C:/tmp/build_candidate_r1.py"
+            docker exec -w /testbed "$C" python /tmp/build_candidate_r1.py --task 6 --candidate "$CID" --root /testbed --output /tmp/frozen-patch
+            docker cp "$C:/tmp/frozen-patch/task6-$CID.patch" "evidence/$CID.original-unified.patch"
+            test "$(sha256sum "evidence/$CID.original-unified.patch" | awk '{print $1}')" = "$EXPECTED"
+            docker exec -w /testbed "$C" git diff -- "$TARGET" > "audit/$CID.git.patch"
+            test -s "audit/$CID.git.patch"
+            grep -q "^diff --git a/$TARGET b/$TARGET$" "audit/$CID.git.patch"
+            python audit-tools/audit_patch_r1.py --patch "audit/$CID.git.patch" --allow-path "$TARGET" --output "audit/$CID.json"
+            docker rm -f "$C" >/dev/null
+            trap - EXIT
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          ids=['F3','N1','R2']
+          out={cid:json.loads((Path('audit')/f'{cid}.json').read_text()) for cid in ids}
+          payload={
+              'task':6,
+              'stage':'anti_gaming_r2_transport_repair_result',
+              'selected_candidates':ids,
+              'all_eligible':all(x['eligible'] for x in out.values()),
+              'results':out,
+              'candidate_source_changed':False,
+              'candidate_timing_observed':False,
+              'expert_diff_inspected':False,
+              'hints_inspected':False,
+          }
+          Path('audit/ANTI_GAMING_R2_RESULT.json').write_text(json.dumps(payload,indent=2)+'\n')
+          if not payload['all_eligible']: raise SystemExit('Task6 anti-gaming R2 scientific rejection')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lexigen-v7-gso-task6-antigaming-r2
+          path: |
+            audit/
+            evidence/
+          if-no-files-found: error
+          retention-days: 90
