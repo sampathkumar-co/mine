@@ -1,0 +1,24 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "family": "cryptography_encoding",
+  "final_status": "completed_negative",
+  "clean_unseen_task_win": false,
+  "v5_over_v4_task_win": false,
+  "causal_transfer_win": false,
+  "source_stage": "passed",
+  "synthetic_stage": {"status":"passed","checks_passed":180,"checks_total":180},
+  "training_stage": {"status":"completed","v5_full_valid":100,"v5_full_harmonic_speedup":1.0017654857481924,"v5_full_minimum_speedup":0.9714025725390103,"performance_gate_passed":false},
+  "blind_stage": {"status":"failed_frozen_blind_speed_gate","v5_full_valid":100,"v5_full_harmonic_speedup":1.0001612132814104,"v5_full_minimum_speedup":0.9463133530867248,"invalid_output_retries":0},
+  "causal_result": "No causal-transfer credit: selected v5_full used no learned recipe and was implementation-equivalent to the comparison-arm selections.",
+  "scientific_interpretation": "AES-GCM is a correctness success but a performance/generalization failure under the frozen v5 gate. The frozen architecture found no speedup over the reference and no advantage over v4/no-transfer/random/static. Preserve as negative evidence; do not rescue this task.",
+  "campaign_score_after_task": {
+    "completed_tasks": 2,
+    "clean_unseen_wins": 1,
+    "v5_over_v4_task_wins": 1,
+    "causal_transfer_wins": 0
+  },
+  "thresholds_changed": false,
+  "post_result_rescue_permitted": false
+}
