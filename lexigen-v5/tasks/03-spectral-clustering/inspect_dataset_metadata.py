@@ -41,7 +41,10 @@ def main() -> None:
             "lastCommit": item.get("lastCommit"),
         })
 
-    jsonls = sorted(row for row in rows if str(row["path"]).endswith(".jsonl"))
+    jsonls = sorted(
+        (row for row in rows if str(row["path"]).endswith(".jsonl")),
+        key=lambda row: str(row["path"]),
+    )
     train = [row for row in jsonls if str(row["path"]).endswith("_train.jsonl")]
     test = [row for row in jsonls if str(row["path"]).endswith("_test.jsonl")]
     if len(train) != 1 or len(test) != 1:
