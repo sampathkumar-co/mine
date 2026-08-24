@@ -1,0 +1,38 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "family": "cryptography_encoding",
+  "stage": "blind_r1_sealed",
+  "status": "failed_frozen_blind_speed_gate",
+  "workflow_run_id": 32680360426,
+  "artifact_id": 9504020931,
+  "artifact_digest_sha256": "3449164ed13177d8b1cfa7c4c094c72fa290e6dc8b03e3af1b2b2f9b4bf8451a",
+  "test_manifest_name": "aes_gcm_encryption_T100ms_n291598_size100_test.jsonl",
+  "test_manifest_git_blob_sha1": "249219ce000f4c0938a715f723b62f24e94b0484",
+  "test_manifest_sha256": "843209ffc88f1f3d66fdfe2b397c67ede438e24e5e9ef228330bfc338bec5937",
+  "blind_records": 100,
+  "selected_by_arm": {
+    "v5_full": "v5_full_r4_7653e3865aa7a6def4dc",
+    "v5_no_transfer": "v5_no_transfer_r5_0a141855078f60fe2b98",
+    "random_search": "random_search_r5_ae3b52160647eaf9707e",
+    "static_template": "static_template_r3_820b1c309b6117eb268d",
+    "v4_compatible": "v4_compatible_r1_bd9a928b0a959b433de2"
+  },
+  "arms": {
+    "v5_full": {"valid":100,"invalid_outputs":0,"harmonic_speedup":1.0001612132814104,"median_speedup":1.0014835414553591,"minimum_speedup":0.9463133530867248,"maximum_speedup":1.0367036957156632,"invalid_output_retries":0,"passes_blind_gate":false},
+    "v5_no_transfer": {"valid":100,"invalid_outputs":0,"harmonic_speedup":1.0024181464391944,"median_speedup":1.0033470941304279,"minimum_speedup":0.9562480705191995,"maximum_speedup":1.0405245102642604,"invalid_output_retries":0,"passes_blind_gate":false},
+    "random_search": {"valid":100,"invalid_outputs":0,"harmonic_speedup":1.0021078883090955,"median_speedup":1.0017208135408957,"minimum_speedup":0.9834119424355812,"maximum_speedup":1.0425943980594756,"invalid_output_retries":0,"passes_blind_gate":false},
+    "static_template": {"valid":100,"invalid_outputs":0,"harmonic_speedup":1.002988454065031,"median_speedup":1.0043903390187912,"minimum_speedup":0.9707015711515777,"maximum_speedup":1.0307984609357044,"invalid_output_retries":0,"passes_blind_gate":false},
+    "v4_compatible": {"valid":100,"invalid_outputs":0,"harmonic_speedup":1.0014938600277004,"median_speedup":1.0014032244480502,"minimum_speedup":0.9530562246602012,"maximum_speedup":1.0300916377893017,"invalid_output_retries":0,"passes_blind_gate":false}
+  },
+  "frozen_gate": {"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup_minimum":1.05,"invalid_output_retries":0},
+  "clean_unseen_task_win": false,
+  "v5_beats_v4_by_task_win": false,
+  "causal_transfer_win": false,
+  "causal_transfer_credit": false,
+  "causal_transfer_credit_reason": "The selected v5_full program used no learned transfer recipe and all selected arms executed the same high_level_exact AESGCM implementation class; timing differences are implementation-equivalent.",
+  "blind_reruns": 0,
+  "thresholds_changed": false,
+  "candidate_repairs_after_blind": 0
+}
