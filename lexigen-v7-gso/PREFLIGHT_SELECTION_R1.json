@@ -1,0 +1,20 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_concrete_candidate_selection_pre_timing",
+  "selection_rule": "source-only plausibility and lower correctness risk from the already-frozen proposal pool; no candidate timing used",
+  "candidate_budget_per_arm": 3,
+  "tasks": {
+    "2": {"v7_full":["F1","F2","F4"],"v7_no_library":["N1","N3","N6"],"v7_random_library":["R1","R3","R6"]},
+    "3": {"v7_full":["F1","F3","F4"],"v7_no_library":["N1","N3","N6"],"v7_random_library":["R1","R2","R5"]},
+    "4": {"v7_full":["F1","F3","F6"],"v7_no_library":["N1","N2","N6"],"v7_random_library":["R1","R2","R6"]},
+    "5": {"v7_full":["F1","F2","F4"],"v7_no_library":["N1","N2","N4"],"v7_random_library":["R1","R2","R6"],"campaign_credit_eligible":false},
+    "6": {"v7_full":["F1","F3","F4"],"v7_no_library":["N1","N2","N3"],"v7_random_library":["R1","R2","R5"]}
+  },
+  "total_concrete_candidates": 45,
+  "candidate_timing_used": false,
+  "expert_information_used_for_tasks_2_3_4_6": false,
+  "task5_contamination_preserved": true,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "arm_budgets_changed": false
+}
