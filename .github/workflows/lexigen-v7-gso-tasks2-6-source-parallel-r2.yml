@@ -1,0 +1,91 @@
+name: LEXIGEN V7 GSO Tasks2-6 Parallel Source R2
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-engine-lock-r1]
+    paths: ["lexigen-v7-gso/TRIGGER_TASKS2_6_SOURCE_R2"]
+permissions: {contents: read}
+jobs:
+  source:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {index: 2, slug: "02-llama-gen-b", instance: "abetlen__llama-cpp-python-2bc1d97", api: "llama_cpp.gen_b"}
+          - {index: 3, slug: "03-tokenizers-encode-batch-fast", instance: "huggingface__tokenizers-bfd9cde", api: "Tokenizer.encode_batch_fast"}
+          - {index: 4, slug: "04-numpy-subtract", instance: "numpy__numpy-be52f19", api: "numpy.subtract"}
+          - {index: 5, slug: "05-pandas-rangeindex-take", instance: "pandas-dev__pandas-fd43d4b", api: "RangeIndex.take"}
+          - {index: 6, slug: "06-transformers-whisper-preprocess", instance: "huggingface__transformers-211f93a", api: "WhisperTokenizer._preprocess_token_ids"}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen repaired parallel source lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/TASKS2_6_SOURCE_LOCK_R2.json').read_text())
+          paths={
+            'ENGINE_LOCK_R1.json':'lexigen-v7-gso/ENGINE_LOCK_R1.json',
+            'GENERATION_CONTRACT_R1.md':'lexigen-v7-gso/GENERATION_CONTRACT_R1.md',
+            'extract_selected_spec.py':'lexigen-v7-gso/extract_selected_spec.py',
+            'extract_worktree_context.py':'lexigen-v7-gso/extract_worktree_context.py',
+            'r1_incident':'lexigen-v7-gso/TASKS2_6_SOURCE_R1_CONTEXT_INCIDENT.json',
+            'task2_start':'lexigen-v7-gso/tasks/02-llama-gen-b/TASK_START.json',
+            'task3_start':'lexigen-v7-gso/tasks/03-tokenizers-encode-batch-fast/TASK_START.json',
+            'task4_start':'lexigen-v7-gso/tasks/04-numpy-subtract/TASK_START.json',
+            'task5_start':'lexigen-v7-gso/tasks/05-pandas-rangeindex-take/TASK_START.json',
+            'task6_start':'lexigen-v7-gso/tasks/06-transformers-whisper-preprocess/TASK_START.json',
+            'workflow':'.github/workflows/lexigen-v7-gso-tasks2-6-source-parallel-r2.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'parallel source R2 lock mismatch {key}: {got}')
+          forbidden=['candidate_generation_started_before_r2','candidate_timing_observed_before_r2','expert_opt_commit_accessed_before_r2','expert_diff_accessed_before_r2','hints_accessed_before_r2']
+          if any(lock.get(k) for k in forbidden): raise SystemExit('parallel source R2 boundary crossed')
+          PY
+      - name: Install frozen extractor dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Compile frozen extractors
+        run: python -m py_compile lexigen-v7-gso/extract_selected_spec.py lexigen-v7-gso/extract_worktree_context.py
+      - name: Reopen same permitted GSO specification
+        run: |
+          mkdir -p task-source
+          python lexigen-v7-gso/extract_selected_spec.py --instance-id '${{ matrix.instance }}' --output task-source/spec
+      - name: Pull frozen GSO base-worktree image
+        run: |
+          IMAGE="slimshetty/gso:gso.eval.x86_64.${{ matrix.instance }}"
+          docker pull "$IMAGE"
+          docker image inspect "$IMAGE" --format '{{json .RepoDigests}}' > task-source/image-repodigests.json
+      - name: Extract repaired project-source context without venv/git objects
+        run: |
+          IMAGE="slimshetty/gso:gso.eval.x86_64.${{ matrix.instance }}"
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE/lexigen-v7-gso/extract_worktree_context.py:/extract_worktree_context.py:ro" \
+            -v "$GITHUB_WORKSPACE/task-source:/out" \
+            "$IMAGE" \
+            python /extract_worktree_context.py --root /testbed --api '${{ matrix.api }}' --output /out/worktree
+      - name: Seal repaired source artifact inventory
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path('task-source'); rows=[]
+          for p in sorted(root.rglob('*')):
+              if p.is_file(): rows.append({'path':str(p.relative_to(root)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size})
+          payload={'task_index':int(os.environ['TASK_INDEX']),'instance_id':os.environ['INSTANCE_ID'],'files':rows,'source_retrieval_revision':2,'expert_diff_accessed':False,'hints_accessed':False,'git_objects_read':False,'virtualenv_or_site_packages_scanned':False}
+          (root/'artifact-inventory.json').write_text(json.dumps(payload,indent=2)+'\n')
+          PY
+        env:
+          TASK_INDEX: ${{ matrix.index }}
+          INSTANCE_ID: ${{ matrix.instance }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-task${{ matrix.index }}-${{ matrix.slug }}-source-r2
+          path: task-source/
+          if-no-files-found: error
+          include-hidden-files: false
+          retention-days: 90
