@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 6,
+  "instance_id": "huggingface__transformers-211f93a",
+  "stage": "preflight_r2_result_sealed",
+  "workflow_run_id": 32748738304,
+  "artifact_id": 9528257413,
+  "artifact_digest": "sha256:0c4d63b03617b8d9c499cc69ac8af27449caf0a333811bd62c35d1c168866978",
+  "representative_test_indexes": [0,2,4],
+  "all_nine_candidates_correct": true,
+  "winner_by_arm": {
+    "v7_full": {"candidate_id":"F3","learned_macro_ids":["V7M-001"],"harmonic_speedup":69.57342694482872,"minimum_speedup":51.60955710955711,"patch_sha256":"a7024c81a78df80e8836e42360098931596cbef8e1b08313fb6234dd2c2ca036"},
+    "v7_no_library": {"candidate_id":"N1","harmonic_speedup":68.74352275178534,"minimum_speedup":50.60685669390803,"patch_sha256":"07baeb62e293beddbe7d1f5a81389879eb1c7adc5fc2f28de7f2fbbf1b756c6b"},
+    "v7_random_library": {"candidate_id":"R2","harmonic_speedup":68.7285912840735,"minimum_speedup":49.75393307161503,"patch_sha256":"07baeb62e293beddbe7d1f5a81389879eb1c7adc5fc2f28de7f2fbbf1b756c6b"}
+  },
+  "causal_transfer_possible": false,
+  "causal_reason": "F3's exact patch is independently accessible as no-library candidate N2 (same frozen patch SHA a7024c81...), so the learned-macro implementation class is not exclusive to the learned library. Timing noise between equivalent accessible mechanisms cannot earn causal credit.",
+  "revision_slots_used": 0,
+  "revision_slots_remaining": 2,
+  "revision_needed": false,
+  "decision": "freeze current winner per arm; no revision is scientifically necessary because each arm already has a correct high-performance candidate and causal credit is structurally unavailable",
+  "expert_diff_opened": false,
+  "hints_opened": false,
+  "thresholds_changed": false
+}
