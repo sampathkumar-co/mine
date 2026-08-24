@@ -122,6 +122,29 @@ class Program:
         return hashlib.sha256(self.canonical_json().encode("utf-8")).hexdigest()
 
 
+@dataclass(frozen=True)
+class ExecutionBudget:
+    max_instructions: int = 10000
+    max_collection_items_created: int = 100000
+
+    def __post_init__(self) -> None:
+        if self.max_instructions <= 0:
+            raise ValueError("max_instructions must be positive")
+        if self.max_collection_items_created < 0:
+            raise ValueError("max_collection_items_created must be non-negative")
+
+
+@dataclass(frozen=True)
+class ExecutionResult:
+    value: Any
+    instructions_executed: int
+    collection_items_created: int
+
+
+class BudgetExceeded(RuntimeError):
+    pass
+
+
 def _canonicalize(value: Any) -> Any:
     if isinstance(value, Mapping):
         return {k: _canonicalize(value[k]) for k in sorted(value)}
@@ -136,15 +159,28 @@ def _resolve(env: Mapping[str, Any], names: Iterable[str]) -> list[Any]:
     return [env[name] for name in names]
 
 
-def execute_program(program: Program, inputs: Mapping[str, Any]) -> Any:
-    """Execute the deterministic Ω1 core IR.
+def _created_collection_items(value: Any) -> int:
+    if isinstance(value, Mapping):
+        return len(value)
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return len(value)
+    return 0
 
-    This interpreter is deliberately small. Higher-level semantic genes must lower to
-    this substrate or to a separately verified primitive extension. No task identity
-    is visible here.
+
+def execute_program_metered(
+    program: Program,
+    inputs: Mapping[str, Any],
+    budget: ExecutionBudget | None = None,
+) -> ExecutionResult:
+    """Execute Ω1 IR under deterministic resource accounting.
+
+    The counters intentionally measure abstract IR work rather than wall time so
+    candidate comparisons remain reproducible across machines. Benchmark adapters
+    may add wall-clock/CPU/GPU accounting separately.
     """
 
     program.validate()
+    budget = budget or ExecutionBudget()
     expected = set(program.inputs)
     supplied = set(inputs)
     if supplied != expected:
@@ -153,8 +189,17 @@ def execute_program(program: Program, inputs: Mapping[str, Any]) -> Any:
         raise ValueError(f"input mismatch missing={missing} extra={extra}")
 
     env: dict[str, Any] = dict(inputs)
+    instructions_executed = 0
+    collection_items_created = 0
 
     for ins in program.instructions:
+        instructions_executed += 1
+        if instructions_executed > budget.max_instructions:
+            raise BudgetExceeded(
+                f"instruction budget exceeded: {instructions_executed} > "
+                f"{budget.max_instructions}"
+            )
+
         args = _resolve(env, ins.args)
         op = ins.op
 
@@ -226,10 +271,27 @@ def execute_program(program: Program, inputs: Mapping[str, Any]) -> Any:
         elif op is OpCode.REDUCE_SUM:
             value = sum(args[0])
         elif op is OpCode.RETURN:
-            return args[0]
+            return ExecutionResult(
+                value=args[0],
+                instructions_executed=instructions_executed,
+                collection_items_created=collection_items_created,
+            )
         else:  # pragma: no cover - enum exhaustiveness guard
             raise NotImplementedError(op.value)
 
+        collection_items_created += _created_collection_items(value)
+        if collection_items_created > budget.max_collection_items_created:
+            raise BudgetExceeded(
+                "collection-item budget exceeded: "
+                f"{collection_items_created} > "
+                f"{budget.max_collection_items_created}"
+            )
         env[ins.name] = value
 
     raise RuntimeError("validated program terminated without RETURN")
+
+
+def execute_program(program: Program, inputs: Mapping[str, Any]) -> Any:
+    """Compatibility wrapper returning only the program value."""
+
+    return execute_program_metered(program, inputs).value
