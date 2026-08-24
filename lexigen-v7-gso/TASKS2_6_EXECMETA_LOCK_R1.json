@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_execution_metadata_projection_locked",
+  "purpose": "Read only instance_id/repo/install_commands after proposal freeze for evaluation plumbing; never read expert target fields.",
+  "git_blob_sha1": {
+    "proposal_lock": "d6b129d0122181e9aab41418a41ce9a5a0f2499c",
+    "selection": "be4a61c472151ff48af18fb0329763e14a3572bc",
+    "extractor": "3339bfeaaee48a69373e6523f3ce73d05ff77485",
+    "workflow": "7fd115a5b357bcd8ce6f8bb036919fa625364809"
+  },
+  "allowed_columns": ["instance_id", "repo", "install_commands"],
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "candidate_execution_count_before_lock": 0,
+  "candidate_timing_observed_before_lock": false,
+  "task5_contamination_status_unchanged": true,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "trigger_present_before_lock": false
+}
