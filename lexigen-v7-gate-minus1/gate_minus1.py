@@ -8,8 +8,6 @@ import json
 import random
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
-
 
 def apply_atom(name: str, xs: tuple[int, ...]) -> tuple[int, ...]:
     if name == "ABS":
@@ -47,6 +45,12 @@ def execute(program: tuple[str, ...], xs: tuple[int, ...]) -> tuple[int, ...]:
     return value
 
 
+def behavior_signature(program: tuple[str, ...], inputs: list[list[int]]) -> str:
+    outputs = [list(execute(program, tuple(xs))) for xs in inputs]
+    payload = json.dumps(outputs, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(payload).hexdigest()
+
+
 def induce_macros(spec: dict) -> list[dict]:
     family_support: dict[tuple[str, ...], set[str]] = collections.defaultdict(set)
     occurrences: collections.Counter[tuple[str, ...]] = collections.Counter()
@@ -65,30 +69,19 @@ def induce_macros(spec: dict) -> list[dict]:
         if len(source_families) < spec["minimum_source_families_per_macro"]:
             continue
         mdl_savings = occurrence_count * (len(seq) - 1) - 1
-        ranked.append(
-            (
-                -mdl_savings,
-                -len(source_families),
-                -occurrence_count,
-                -len(seq),
-                seq,
-                source_families,
-            )
-        )
+        ranked.append((-mdl_savings, -len(source_families), -occurrence_count, -len(seq), seq, source_families))
     ranked.sort()
     selected = []
     for index, row in enumerate(ranked[: spec["learned_macro_count"]], start=1):
-        neg_savings, neg_families, neg_occurrences, neg_len, seq, source_families = row
-        selected.append(
-            {
-                "id": f"MG-{index:03d}",
-                "sequence": list(seq),
-                "source_families": source_families,
-                "family_count": -neg_families,
-                "occurrences": -neg_occurrences,
-                "mdl_savings": -neg_savings,
-            }
-        )
+        neg_savings, neg_families, neg_occurrences, _neg_len, seq, source_families = row
+        selected.append({
+            "id": f"MG-{index:03d}",
+            "sequence": list(seq),
+            "source_families": source_families,
+            "family_count": -neg_families,
+            "occurrences": -neg_occurrences,
+            "mdl_savings": -neg_savings,
+        })
     return selected
 
 
@@ -115,20 +108,7 @@ def token_space(spec: dict, library: list[dict]) -> list[tuple[str, tuple[str, .
     return sorted(tokens, key=lambda item: item[0])
 
 
-def candidate_matches(program: tuple[str, ...], cases: list[dict]) -> bool:
-    for case in cases:
-        result = execute(program, tuple(case["input"]))
-        if list(result) != case["output"]:
-            return False
-    return True
-
-
-def search_holdout(
-    spec: dict,
-    holdout: dict,
-    library: list[dict],
-    removed_macro_id: str | None = None,
-) -> dict:
+def search_holdout(spec: dict, holdout: dict, library: list[dict], removed_macro_id: str | None = None) -> dict:
     if removed_macro_id is not None:
         library = [x for x in library if x["id"] != removed_macro_id]
     tokens = token_space(spec, library)
@@ -139,18 +119,15 @@ def search_holdout(
 
     for token_depth in range(1, max_expanded + 1):
         for choice_indices in itertools.product(range(len(tokens)), repeat=token_depth):
-            expansion = tuple(
-                atom for index in choice_indices for atom in tokens[index][1]
-            )
+            expansion = tuple(atom for index in choice_indices for atom in tokens[index][1])
             if len(expansion) > max_expanded or expansion in seen_expansions:
                 continue
             seen_expansions.add(expansion)
             evaluator_calls += 1
-            if candidate_matches(expansion, holdout["search_cases"]):
-                validation_passed = candidate_matches(
-                    expansion, holdout["validation_cases"]
-                )
-                if validation_passed:
+            search_sig = behavior_signature(expansion, spec["search_inputs"])
+            if search_sig == holdout["search_signature_sha256"]:
+                validation_sig = behavior_signature(expansion, spec["validation_inputs"])
+                if validation_sig == holdout["validation_signature_sha256"]:
                     return {
                         "found": True,
                         "evaluator_calls": evaluator_calls,
@@ -160,18 +137,8 @@ def search_holdout(
                         "budget": budget,
                     }
             if evaluator_calls >= budget:
-                return {
-                    "found": False,
-                    "evaluator_calls": evaluator_calls,
-                    "validation_passed": False,
-                    "budget": budget,
-                }
-    return {
-        "found": False,
-        "evaluator_calls": evaluator_calls,
-        "validation_passed": False,
-        "budget": budget,
-    }
+                return {"found": False, "evaluator_calls": evaluator_calls, "validation_passed": False, "budget": budget}
+    return {"found": False, "evaluator_calls": evaluator_calls, "validation_passed": False, "budget": budget}
 
 
 def sha256_json(value: object) -> str:
@@ -187,24 +154,14 @@ def run(spec: dict) -> dict:
     learned_over_none = 0
     learned_over_random = 0
     successful_transfers = 0
-
     source_family_by_macro = {m["id"]: set(m["source_families"]) for m in learned}
 
     for holdout in spec["holdouts"]:
         full = search_holdout(spec, holdout, learned)
         none = search_holdout(spec, holdout, [])
         random_result = search_holdout(spec, holdout, random_lib)
-
-        used_macro_ids = [
-            token[1:]
-            for token in full.get("tokens", [])
-            if token.startswith("@MG-")
-        ]
-        cross_family_used = [
-            macro_id
-            for macro_id in used_macro_ids
-            if holdout["family"] not in source_family_by_macro[macro_id]
-        ]
+        used_macro_ids = [token[1:] for token in full.get("tokens", []) if token.startswith("@MG-")]
+        cross_family_used = [macro_id for macro_id in used_macro_ids if holdout["family"] not in source_family_by_macro[macro_id]]
         transfer_success = bool(full["found"] and cross_family_used)
         successful_transfers += int(transfer_success)
         learned_over_none += int(full["found"] and not none["found"])
@@ -213,40 +170,30 @@ def run(spec: dict) -> dict:
         removals = {}
         specific_removal_failed = False
         for macro_id in sorted(set(cross_family_used)):
-            replay = search_holdout(
-                spec, holdout, learned, removed_macro_id=macro_id
-            )
+            replay = search_holdout(spec, holdout, learned, removed_macro_id=macro_id)
             removals[macro_id] = replay
             if full["found"] and not replay["found"]:
                 specific_removal_failed = True
         removal_failures += int(specific_removal_failed)
-
-        results.append(
-            {
-                "family": holdout["family"],
-                "full": full,
-                "no_library": none,
-                "random_library": random_result,
-                "cross_family_macro_ids_used": cross_family_used,
-                "prospective_transfer_success": transfer_success,
-                "specific_macro_removal_replays": removals,
-                "specific_macro_removal_failure": specific_removal_failed,
-            }
-        )
+        results.append({
+            "family": holdout["family"],
+            "full": full,
+            "no_library": none,
+            "random_library": random_result,
+            "cross_family_macro_ids_used": cross_family_used,
+            "prospective_transfer_success": transfer_success,
+            "specific_macro_removal_replays": removals,
+            "specific_macro_removal_failure": specific_removal_failed,
+        })
 
     gate = spec["pass_gate"]
     checks = {
         "induced_macros_min": len(learned) >= gate["induced_macros_min"],
-        "successful_holdout_transfers_min": successful_transfers
-        >= gate["successful_holdout_transfers_min"],
-        "learned_library_successes_over_no_library_min": learned_over_none
-        >= gate["learned_library_successes_over_no_library_min"],
-        "learned_library_successes_over_random_library_min": learned_over_random
-        >= gate["learned_library_successes_over_random_library_min"],
-        "specific_macro_removal_failures_min": removal_failures
-        >= gate["specific_macro_removal_failures_min"],
-        "human_task_specific_solver_hints_zero": gate["human_task_specific_solver_hints"]
-        == 0,
+        "successful_holdout_transfers_min": successful_transfers >= gate["successful_holdout_transfers_min"],
+        "learned_library_successes_over_no_library_min": learned_over_none >= gate["learned_library_successes_over_no_library_min"],
+        "learned_library_successes_over_random_library_min": learned_over_random >= gate["learned_library_successes_over_random_library_min"],
+        "specific_macro_removal_failures_min": removal_failures >= gate["specific_macro_removal_failures_min"],
+        "human_task_specific_solver_hints_zero": gate["human_task_specific_solver_hints"] == 0,
     }
     return {
         "experiment": spec["experiment"],
@@ -263,11 +210,7 @@ def run(spec: dict) -> dict:
             "specific_macro_removal_failure_count": removal_failures,
         },
         "gate_checks": checks,
-        "claim_boundary": (
-            "Gate -1 is only an architecture-feasibility result on a committed "
-            "synthetic DSL. Passing does not establish novelty, external generality, "
-            "or an AI breakthrough; it only permits construction of a stronger V7."
-        ),
+        "claim_boundary": "Gate -1 is only an architecture-feasibility result on a committed synthetic DSL. Passing does not establish novelty, external generality, or an AI breakthrough; it only permits construction of a stronger V7."
     }
 
 
@@ -279,9 +222,7 @@ def main() -> None:
     spec = json.loads(args.spec.read_text())
     result = run(spec)
     args.output.mkdir(parents=True, exist_ok=True)
-    (args.output / "GATE_MINUS1_RESULT.json").write_text(
-        json.dumps(result, indent=2) + "\n"
-    )
+    (args.output / "GATE_MINUS1_RESULT.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))
     if result["status"] != "passed":
         raise SystemExit(2)
