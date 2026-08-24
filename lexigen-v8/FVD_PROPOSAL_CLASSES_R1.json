@@ -1,0 +1,74 @@
+{
+  "schema": "lexigen-v8-fvd-proposal-classes-r1",
+  "status": "development_vocabulary_pre_holdout",
+  "primitive_vocabulary": [
+    "REPRESENT",
+    "RESTRICT",
+    "REDUCE",
+    "EXECUTE",
+    "LIFT",
+    "REFINE",
+    "CERTIFY",
+    "RECOVER",
+    "SPECIALIZE"
+  ],
+  "proposal_classes": [
+    {
+      "proposal_class_id": "PC-FRONTIER-CERT",
+      "label": "frontier restriction with certificate",
+      "mechanism_sequence": ["REPRESENT", "RESTRICT", "EXECUTE", "CERTIFY", "RECOVER"],
+      "context_tags": ["discrete", "set_or_boolean_structure", "sparse_or_frontier_search", "exact_or_structural_certificate"],
+      "historical_template": "bit_frontier_restriction"
+    },
+    {
+      "proposal_class_id": "PC-ACTIVE-CORE",
+      "label": "certified active-core reduction",
+      "mechanism_sequence": ["RESTRICT", "REDUCE", "EXECUTE", "LIFT", "CERTIFY", "RECOVER"],
+      "context_tags": ["constraints_or_threshold", "small_active_core_possible", "exact_or_tolerance_certificate"],
+      "historical_template": "certified_active_core"
+    },
+    {
+      "proposal_class_id": "PC-REDUCED-REFINE",
+      "label": "reduced representation plus bounded refinement",
+      "mechanism_sequence": ["REDUCE", "EXECUTE", "LIFT", "REFINE", "CERTIFY"],
+      "context_tags": ["high_dimensional_numeric_structure", "redundant_representation_or_modes", "tolerance_verifier"],
+      "historical_template": "reduced_representation_refinement"
+    },
+    {
+      "proposal_class_id": "PC-PRECISION-BACKEND",
+      "label": "precision or backend specialization under error budget",
+      "mechanism_sequence": ["REPRESENT", "SPECIALIZE", "EXECUTE", "CERTIFY", "RECOVER"],
+      "context_tags": ["numeric_array", "approximate_verifier", "native_backend_available", "precision_change_possible"],
+      "historical_template": "precision_backend_error_budget"
+    },
+    {
+      "proposal_class_id": "PC-EXEC-CERT",
+      "label": "execution-path replacement with certificate",
+      "mechanism_sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "context_tags": ["hot_execution_path", "fast_path_possible", "fallback_available"],
+      "historical_template": null
+    },
+    {
+      "proposal_class_id": "PC-REDUCE-EXEC",
+      "label": "equivalent-domain reduction before execution",
+      "mechanism_sequence": ["REDUCE", "EXECUTE", "CERTIFY"],
+      "context_tags": ["reducible_domain", "equivalence_certificate_possible"],
+      "historical_template": null
+    },
+    {
+      "proposal_class_id": "PC-REP-SPECIALIZE",
+      "label": "representation and regime specialization",
+      "mechanism_sequence": ["REPRESENT", "SPECIALIZE", "CERTIFY", "RECOVER"],
+      "context_tags": ["source_visible_type_shape_or_value_regime", "specialized_representation_possible", "fallback_available"],
+      "historical_template": null
+    },
+    {
+      "proposal_class_id": "PC-RESTRICT-RECOVER",
+      "label": "provable work restriction with safe recovery",
+      "mechanism_sequence": ["RESTRICT", "EXECUTE", "CERTIFY", "RECOVER"],
+      "context_tags": ["provably_irrelevant_work_possible", "local_predicate_available", "fallback_available"],
+      "historical_template": null
+    }
+  ],
+  "claim_boundary": "These are task-independent search classes, not solutions. The same class vocabulary is available to every FVD arm; experience may only alter allocation/ranking under frozen equal budgets."
+}
