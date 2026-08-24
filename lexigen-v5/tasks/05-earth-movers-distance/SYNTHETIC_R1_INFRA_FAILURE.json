@@ -1,0 +1,18 @@
+{
+  "task": "earth_movers_distance",
+  "stage": "synthetic_r1",
+  "workflow_run_id": 32686004215,
+  "job_id": 97311080894,
+  "classification": "infrastructure_dependency_resolution_failure_before_candidate_execution",
+  "failed_step": "Install frozen benchmark dependencies",
+  "failure": "POT==1.0.0 was listed in upstream frozen requirements but was unavailable from the runner package index; pip found releases only through 0.9.7.post1.",
+  "campaign_lock_verified": true,
+  "synthetic_lock_verified": true,
+  "candidate_package_compiled": true,
+  "synthetic_cases_executed": 0,
+  "candidate_executions": 0,
+  "official_training_manifest_opened": false,
+  "official_test_manifest_opened": false,
+  "scientific_candidate_changes_permitted": false,
+  "allowed_repair": "environment-only dependency pin correction"
+}
