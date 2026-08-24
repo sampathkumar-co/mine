@@ -1,0 +1,65 @@
+name: LEXIGEN v5 Task 5 Earth Movers Distance Train R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task4-quantile-regression-result-r1]
+    paths: ["lexigen-v5/tasks/05-earth-movers-distance/TRIGGER_TRAIN_R1"]
+permissions: {contents: read}
+jobs:
+  train:
+    strategy:
+      fail-fast: false
+      matrix: {shard: [0,1,2,3,4,5,6,7,8,9]}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task 5 training package before official access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/tasks/05-earth-movers-distance/TRAIN_R1_LOCK.json').read_text())
+          paths={'SOURCE_R1_RESULT.json':'lexigen-v5/tasks/05-earth-movers-distance/SOURCE_R1_RESULT.json','SYNTHETIC_R2_RESULT.json':'lexigen-v5/tasks/05-earth-movers-distance/SYNTHETIC_R2_RESULT.json','DATASET_METADATA_R1_RESULT.json':'lexigen-v5/tasks/05-earth-movers-distance/DATASET_METADATA_R1_RESULT.json','candidates.py':'lexigen-v5/tasks/05-earth-movers-distance/candidates.py','DEPENDENCY_PIN_R2.json':'lexigen-v5/tasks/05-earth-movers-distance/DEPENDENCY_PIN_R2.json','train_shard.py':'lexigen-v5/tasks/05-earth-movers-distance/train_shard.py','aggregate_train.py':'lexigen-v5/tasks/05-earth-movers-distance/aggregate_train.py','workflow':'.github/workflows/lexigen-v5-task5-earth-movers-distance-train-r1.yml'}
+          for k,p in paths.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]: raise SystemExit(f'Task5 training lock mismatch {k}')
+          if lock['training_manifest']['oid']!='19eac35e67713b6a56ccb7ae500519b8c1b57a3f' or lock['test_manifest_metadata_only']['oid']!='dd5b455a8ca5b6af0165be7fbd318f331112ff3f': raise SystemExit('dataset identity mismatch')
+          if lock['official_training_manifest_opened_before_lock'] or lock['official_test_manifest_opened_before_lock']: raise SystemExit('data boundary crossed')
+          PY
+      - name: Compile frozen Task 5 training package
+        run: python -m py_compile lexigen-v5/tasks/05-earth-movers-distance/candidates.py lexigen-v5/tasks/05-earth-movers-distance/train_shard.py lexigen-v5/tasks/05-earth-movers-distance/aggregate_train.py
+      - name: Install frozen dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==1.26.4 scipy==1.15.3 POT==0.9.6.post1
+      - name: Execute official training shard
+        working-directory: lexigen-v5/tasks/05-earth-movers-distance
+        run: python train_shard.py --shard ${{ matrix.shard }} --output train-evidence/train-shard-${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task5-earth-movers-distance-train-r1-shard-${{ matrix.shard }}
+          path: lexigen-v5/tasks/05-earth-movers-distance/train-evidence/train-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+  aggregate:
+    needs: train
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==1.26.4 scipy==1.15.3 POT==0.9.6.post1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v5-task5-earth-movers-distance-train-r1-shard-*
+          path: downloaded-training
+          merge-multiple: true
+      - name: Aggregate immutable official training evidence
+        run: PYTHONPATH=lexigen-v5/tasks/05-earth-movers-distance python lexigen-v5/tasks/05-earth-movers-distance/aggregate_train.py --input downloaded-training --output complete-training
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task5-earth-movers-distance-train-r1-complete
+          path: complete-training/
+          if-no-files-found: error
+          retention-days: 90
