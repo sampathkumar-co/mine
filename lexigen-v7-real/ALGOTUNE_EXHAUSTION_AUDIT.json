@@ -1,0 +1,18 @@
+{
+  "campaign": "LEXIGEN V7 Real Mechanism-Genesis",
+  "status": "algotune_pool_exhausted_for_strict_distant_family_pilot",
+  "r1_selection_run_id": 32700863128,
+  "r1_result": "six-family denominator infeasible; five eligible families observed",
+  "r1_revealed_name_only": ["discrete_log", "ode_lorenz96_nonchaotic", "set_cover", "pca", "convex_hull"],
+  "r2_selection_run_id": 32701062449,
+  "r2_result": "after excluding all R1-revealed identities, five-family denominator also infeasible; four eligible families observed",
+  "r2_revealed_name_only": ["vectorized_newton", "ode_lotkavolterra", "lu_factorization", "sparse_pca"],
+  "task_sources_opened": false,
+  "task_descriptions_opened": false,
+  "manifests_opened": false,
+  "payloads_opened": false,
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "scientific_candidate_execution": false,
+  "decision": "Do not keep shrinking the denominator or relaxing semantic-distance rules. Move the V7 real pilot to a broader independent performance-optimization benchmark while preserving the already-frozen learned library."
+}
