@@ -1,0 +1,20 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "stage":"final_campaign_audit_r1_validation",
+  "status":"validated",
+  "workflow_run_id":32696975558,
+  "artifact_id":9509149806,
+  "artifact_digest":"sha256:57047fcd84dde96eff75565ec98cfcf48b9aa728a689a73ce2b33516747178a4",
+  "validation_json_sha256":"c25c62dfd1bd547253283ac494e893f443a2392b51af76710d0dd4a79501b766",
+  "task_count":10,
+  "task_win_counts":{"v5_full":2,"v5_no_transfer":1,"random_search":1,"static_template":1,"v4_compatible":0},
+  "clean_wins":2,
+  "winning_families":["combinatorial","machine_learning"],
+  "v5_over_v4_task_wins":2,
+  "causal_transfer_wins":1,
+  "causal_families":["combinatorial"],
+  "causal_ids":["TM-BFR-01"],
+  "campaign_gate_passed":false,
+  "task10_causal_result_preserved":true,
+  "validation_reruns":0
+}
