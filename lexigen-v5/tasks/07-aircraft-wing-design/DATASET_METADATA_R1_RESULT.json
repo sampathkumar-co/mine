@@ -1,0 +1,17 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":7,
+  "task":"aircraft_wing_design",
+  "stage":"dataset_directory_metadata_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32689919402,
+  "artifact_id":9506898704,
+  "artifact_digest":"sha256:a0a12a1e503fbd2893a4b2f9de2589d84760c98ef90e7d9bbd613a3d81ff37fc",
+  "dataset_metadata_sha256":"a9aa96601e12f2cc8129736532a5b8d9898035da0d565b30d29c29a781662960",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "training_manifest":{"name":"aircraft_wing_design_T100ms_n10_size100_train.jsonl","size":384615,"oid":"1ee8b5ce85490484e568e4359f710f7f59687b49"},
+  "test_manifest":{"name":"aircraft_wing_design_T100ms_n10_size100_test.jsonl","size":384557,"oid":"adf280f7d8134006d54145d291409d692ef28a40"},
+  "manifest_contents_opened":false,
+  "payload_contents_opened":false,
+  "resolve_or_download_urls_followed":false
+}
