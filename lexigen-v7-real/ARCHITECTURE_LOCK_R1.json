@@ -1,0 +1,33 @@
+{
+  "campaign": "LEXIGEN V7 Real Mechanism-Genesis Pilot R1",
+  "stage": "preholdout_architecture_lock",
+  "source_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "selection_seed": "LEXIGEN-V7-REAL-MECHANISM-GENESIS-2026-08-24-A",
+  "holdout_task_count": 6,
+  "minimum_distinct_holdout_families": 6,
+  "maximum_per_family": 1,
+  "forbidden_holdout_families": ["graph_discrete", "linear_algebra", "numerical_optimization", "signal_processing"],
+  "git_blob_sha1": {
+    "PROTOCOL.md": "ad7f04477b72fa023afb34a32d72827de08cbcfa",
+    "CONTAMINATION_EXCLUSIONS.json": "ae89426ff1087ebf7dd2435dccafe28a9d4ba0a6",
+    "APPRENTICESHIP_TRACES.json": "8dd8a027a1de89c3f90f86dc7c5ae42ff5bd65c3",
+    "induce_library.py": "12149e2111812b5ecacade77fab579bd1df1e974",
+    "selector.py": "d5718fcddcb0acc0414a15b8de3456fb4ec03cf4",
+    "workflow": "8a1018eada35639e94561e8abbd5d850454eae05"
+  },
+  "gate_minus1_result_branch": "lexigen/v7-gate-minus1-result-r2",
+  "v5_final_audit_sha": "6267ce2acb7ee22306c61188c956f6c69e996af2",
+  "holdout_selection_executed_before_lock": false,
+  "holdout_names_known_before_lock": false,
+  "holdout_source_opened_before_lock": false,
+  "holdout_descriptions_opened_before_lock": false,
+  "holdout_manifests_opened_before_lock": false,
+  "holdout_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "thresholds_frozen_before_selection": true,
+  "comparison_arms_frozen_before_selection": true,
+  "apprenticeship_traces_frozen_before_selection": true,
+  "abstraction_inducer_frozen_before_selection": true
+}
