@@ -1,0 +1,33 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":10,
+  "task":"vertex_cover",
+  "stage":"blind_selection_r1",
+  "selected_candidates":{
+    "v5_full":"v5_full_r1_3304c859d463a501bd86",
+    "v5_no_transfer":"v5_no_transfer_r1_66c5848a3c8a4f51b562",
+    "random_search":"random_search_r3_2ef21250df83098c75bd",
+    "static_template":"static_template_r2_8fd871e046faa7e4d37c",
+    "v4_compatible":"v4_compatible_r5_cdae8cbf0d73bd4d047c"
+  },
+  "v5_full_selected_learned_causal_id":"TM-BFR-01",
+  "v5_full_selected_learned_template":"bit_frontier_restriction",
+  "selected_v5_implementation_class":"learned_bit_frontier_exact",
+  "selected_no_transfer_implementation_class":"isolated_core_plus_reference",
+  "selected_pair_semantically_distinct":true,
+  "equivalent_implementation_available_in_no_transfer":false,
+  "learned_recipe_source_family":"graph_discrete",
+  "current_family":"combinatorial",
+  "source_family_differs_from_current":true,
+  "training_v5_over_no_transfer_ratio":13.871662760412176,
+  "training_causal_separation_threshold_crossed":true,
+  "preregistered_ablation":"v5_no_transfer removes learned transfer recipes while preserving equal task-stage budget",
+  "causal_transfer_credit_possible_on_blind":true,
+  "official_test_manifest_name":"vertex_cover_T100ms_n15_size100_test.jsonl",
+  "official_test_manifest_oid":"a11bc56b01a7ab254843102454d790637b89ec56",
+  "official_test_manifest_size":1143200,
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "post_training_candidate_changes":false,
+  "threshold_changes":false
+}
