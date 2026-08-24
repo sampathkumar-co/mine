@@ -1,0 +1,28 @@
+name: LEXIGEN v5 Task 5 Earth Movers Distance Dataset Metadata R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task4-quantile-regression-result-r1]
+    paths: ["lexigen-v5/tasks/05-earth-movers-distance/TRIGGER_DATASET_METADATA_R1"]
+permissions: {contents: read}
+jobs:
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify sealed synthetic evidence before metadata access
+        shell: bash
+        run: |
+          test "$(git hash-object lexigen-v5/tasks/05-earth-movers-distance/SYNTHETIC_R2_RESULT.json)" = "8bc161d2f31ac2c4d21e894945ea3cba4b70888c"
+      - name: Compile metadata-only inspector
+        run: python -m py_compile lexigen-v5/tasks/05-earth-movers-distance/inspect_dataset_metadata.py
+      - name: Inspect Hugging Face tree metadata only
+        run: python lexigen-v5/tasks/05-earth-movers-distance/inspect_dataset_metadata.py --output dataset-metadata.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task5-earth-movers-distance-dataset-metadata-r1
+          path: dataset-metadata.json
+          if-no-files-found: error
+          retention-days: 90
