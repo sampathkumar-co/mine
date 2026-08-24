@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "family": "statistics",
+  "stage": "synthetic_r1_sealed",
+  "status": "passed",
+  "workflow_run_id": 32684344647,
+  "artifact_id": 9505142917,
+  "artifact_digest": "sha256:2418d72a4fd5bd32e2895542d5e796bf5674ca93c9d9021e66c500df4c52d0b7",
+  "workflow_head_sha": "44e7d4e2c610e0a9d9efe6d4e1db182ffacfe2ef",
+  "candidate_count": 30,
+  "case_count": 6,
+  "total_checks": 180,
+  "passed_checks": 180,
+  "failed_checks": 0,
+  "learned_candidate_max_abs_error": {
+    "TM-BFR-01": 0.0,
+    "TM-RRR-01": 3.277378368693462e-13,
+    "TM-CAC-01": 3.126388037344441e-13
+  },
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "synthetic_timing_used_for_candidate_selection": false,
+  "candidate_repair_after_synthetic": false,
+  "thresholds_changed": false
+}
