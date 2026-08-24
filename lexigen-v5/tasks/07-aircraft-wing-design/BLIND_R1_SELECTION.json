@@ -1,0 +1,28 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":7,
+  "task":"aircraft_wing_design",
+  "stage":"blind_selection_r1",
+  "selected_candidates":{
+    "v5_full":"v5_full_r1_3304c859d463a501bd86",
+    "v5_no_transfer":"v5_no_transfer_r1_91e027e622f2d9a98240",
+    "random_search":"random_search_r1_487d4f738090692a3fa8",
+    "static_template":"static_template_r3_820b1c309b6117eb268d",
+    "v4_compatible":"v4_compatible_r3_ec4b9c17aaa3767d4f6d"
+  },
+  "v5_full_selected_learned_causal_id":"TM-BFR-01",
+  "v5_full_selected_learned_template":"bit_frontier_restriction",
+  "selected_v5_implementation_class":"cvxpy_default_gp",
+  "selected_no_transfer_implementation_class":"cvxpy_default_gp",
+  "selected_pair_semantically_distinct":false,
+  "causal_transfer_credit_possible_on_blind":false,
+  "causal_transfer_preblind_reason":"Selected v5_full and v5_no_transfer candidates execute the same cvxpy_default_gp implementation; protocol forbids causal credit for implementation-equivalent programs.",
+  "recipe_removal_ablation":"v5_no_transfer is the preregistered learned-recipe removal ablation; it is implementation-equivalent to selected v5_full here.",
+  "official_test_manifest_name":"aircraft_wing_design_T100ms_n10_size100_test.jsonl",
+  "official_test_manifest_oid":"adf280f7d8134006d54145d291409d692ef28a40",
+  "official_test_manifest_size":384557,
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "post_training_candidate_changes":false,
+  "threshold_changes":false
+}

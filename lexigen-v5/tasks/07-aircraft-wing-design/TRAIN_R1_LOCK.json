@@ -1,0 +1,32 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":7,
+  "task":"aircraft_wing_design",
+  "stage":"official_training_r1_lock",
+  "git_blob_sha1":{
+    "SOURCE_R1_RESULT.json":"2546908fa2f7e0b46dc44d658507c361236d8082",
+    "SYNTHETIC_R1_RESULT.json":"fbc639c88ea10fe683a1adfcc8abdcf3e3e75773",
+    "DATASET_METADATA_R1_RESULT.json":"329d5049292bdebbe3df38cc366b0d1495d18263",
+    "candidates.py":"092804bff00662af154ee1b07236a9d0795156b4",
+    "train_shard.py":"81967ec3ff1e73b1ea1e577135a37a7505162859",
+    "aggregate_train.py":"c67aaa9eebe7ede3ae248e08cf5d725eec4d8df5",
+    "workflow":"8a56648e7392edbdbb2f9638de4edc9799dbbcb6"
+  },
+  "training_manifest":{"name":"aircraft_wing_design_T100ms_n10_size100_train.jsonl","size":384615,"oid":"1ee8b5ce85490484e568e4359f710f7f59687b49"},
+  "test_manifest_metadata_only":{"name":"aircraft_wing_design_T100ms_n10_size100_test.jsonl","size":384557,"oid":"adf280f7d8134006d54145d291409d692ef28a40"},
+  "python":"3.12",
+  "numpy":"1.26.4",
+  "cvxpy":"1.6.5",
+  "candidate_count":30,
+  "proposal_budget_per_arm":6,
+  "official_training_revisions_allowed":3,
+  "official_training_revision":1,
+  "official_training_manifest_opened_before_lock":false,
+  "official_training_payloads_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":false,
+  "reports_opened":false,
+  "public_solvers_opened":false,
+  "threshold_changes":false,
+  "candidate_changes_after_lock":false
+}

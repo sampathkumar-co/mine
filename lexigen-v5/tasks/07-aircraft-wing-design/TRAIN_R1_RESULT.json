@@ -1,0 +1,32 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":7,
+  "task":"aircraft_wing_design",
+  "stage":"official_training_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32690168621,
+  "artifact_id":9507006512,
+  "artifact_digest":"sha256:0506eae2a7e9ffb28633e48c9f61f126584e80a9d3e51aa6f6d18115772a8bd1",
+  "training_summary_sha256":"a101e7392ca6cbb15badaec3f97d1e1d0206403d060477539cfc95e42515538e",
+  "training_results_sha256":"7fe9ba2fc09b471aac8d41eedd6e789440afb28d1c89cb69b691c335b5261c24",
+  "train_manifest_sha256":"1307c051d4c0d3734f378daa753b8a4636b9ec5b44f09c35b6819eea01b4084a",
+  "training_records":100,
+  "candidate_evaluations":3000,
+  "selected":{
+    "v5_full":{"candidate":"v5_full_r1_3304c859d463a501bd86","implementation_class":"cvxpy_default_gp","learned_template":"bit_frontier_restriction","causal_id":"TM-BFR-01","valid":100,"harmonic_speedup":0.9013338767876207,"minimum_speedup":0.6283205454226931,"passes_gate":false},
+    "v5_no_transfer":{"candidate":"v5_no_transfer_r1_91e027e622f2d9a98240","implementation_class":"cvxpy_default_gp","valid":100,"harmonic_speedup":0.9004349346896404,"minimum_speedup":0.6253967732073101,"passes_gate":false},
+    "random_search":{"candidate":"random_search_r1_487d4f738090692a3fa8","implementation_class":"cvxpy_default_gp","valid":100,"harmonic_speedup":0.9007165952301716,"minimum_speedup":0.6058206295281187,"passes_gate":false},
+    "static_template":{"candidate":"static_template_r3_820b1c309b6117eb268d","implementation_class":"cvxpy_default_gp","valid":100,"harmonic_speedup":0.903177923679806,"minimum_speedup":0.6060723914658335,"passes_gate":false},
+    "v4_compatible":{"candidate":"v4_compatible_r3_ec4b9c17aaa3767d4f6d","implementation_class":"cvxpy_default_gp","valid":100,"harmonic_speedup":0.902233019595335,"minimum_speedup":0.6144302164463894,"passes_gate":false}
+  },
+  "distinct_learned_rrr":{"candidate":"v5_full_r2_41510e43e8fafb598496","implementation_class":"clarabel_relaxed_1e-6","causal_id":"TM-RRR-01","valid":100,"harmonic_speedup":0.8712771074716711,"minimum_speedup":0.5780426294460796,"selected":false},
+  "v5_over_no_transfer_ratio":1.0009983420937463,
+  "selected_pair_semantically_distinct":false,
+  "equivalent_implementation_available_in_no_transfer":true,
+  "training_causal_separation_threshold_crossed":false,
+  "causal_transfer_credit":false,
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "candidate_changes_after_training":false,
+  "threshold_changes":false
+}
