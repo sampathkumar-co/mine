@@ -1,0 +1,45 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "revision_slot_1_plan_frozen",
+  "revision_slot": 1,
+  "selected_candidates": {
+    "v7_full": "F1",
+    "v7_no_library": "N2",
+    "v7_random_library": "R1"
+  },
+  "selection_rule": "Within each arm, exclude the round-0 selected candidate and choose the strongest remaining already-concretized, already-preflight-valid candidate from PROPOSALS_R1.json by frozen source-only expected-performance tier, then deterministic candidate ID as tie-break. This yields F1, N2, R1.",
+  "selection_uses_post_feedback_new_mechanism": false,
+  "all_candidates_existed_before_first_timing_feedback": true,
+  "all_candidates_passed_frozen_preflight_equivalence": true,
+  "test_indexes": [0,1,2,3,4,5,6,7,8,9,10,11,12,13],
+  "shared_fresh_base_measurement": true,
+  "candidate_measurements_per_test": 1,
+  "equivalence_checks_per_candidate_per_test": 1,
+  "equal_evaluator_budget": true,
+  "revision_slots_consumed_after_execution_per_arm": 1,
+  "revision_slots_remaining_after_execution_per_arm": 1,
+  "full_candidate_provenance": {
+    "candidate_id": "F1",
+    "learned_macro_ids": ["V7M-001"],
+    "macro": "EXECUTE -> CERTIFY",
+    "mechanism": "class-local per-name setattr-handler memoization"
+  },
+  "no_library_candidate_provenance": {
+    "candidate_id": "N2",
+    "learned_macro_ids": [],
+    "mechanism": "static default-mutable-model specialization"
+  },
+  "random_library_candidate_provenance": {
+    "candidate_id": "R1",
+    "random_macro_ids": ["V7R-002"],
+    "mechanism": "represent/certify/restrict ordinary-field fast path"
+  },
+  "expert_target_timing_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "human_task_specific_solver_contribution": false,
+  "thresholds_changed": false
+}
