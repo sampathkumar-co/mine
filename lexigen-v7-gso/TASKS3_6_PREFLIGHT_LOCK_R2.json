@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks3_6_preflight_infrastructure_repair_r2_locked",
+  "failed_r1_workflow_run_id": 32747466819,
+  "affected_tasks": [3, 6],
+  "repair": "remove HF_HUB_ENABLE_HF_TRANSFER=1 from docker exec environment only; scientific runner imported unchanged",
+  "candidate_execution_observed_in_failed_r1": false,
+  "candidate_timing_observed_in_failed_r1": false,
+  "scientific_inputs_changed": false,
+  "candidate_patch_hashes_changed": false,
+  "tests_changed": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "budgets_changed": false,
+  "git_blob_sha1": {
+    "r1_lock": "3c6b1711adc1bde5a30a269fd0cf035b945f2ce7",
+    "incident": "b22909a9ea691350ccabbf9a263e312944bf1e9c",
+    "r1_runner": "1f2208982eaa485a040bbf5640623e2d27f4b420",
+    "r2_wrapper": "95275c6989b751297202f0a9be38644c265ede02",
+    "workflow": "8b64a0f5bd4c65dd2b97212010cdcc89c0964d8f"
+  }
+}
