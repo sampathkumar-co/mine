@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 4,
+  "instance_id": "numpy__numpy-be52f19",
+  "stage": "expert_boundary_contamination_sealed",
+  "base_commit_as_frozen": "be52f19259d47cd27095e186a7974710c60169ee^",
+  "contaminating_lookup": "public GitHub commit lookup for be52f19259d47cd27095e186a7974710c60169ee while diagnosing why direct complex indexed-loop registration failed to compile",
+  "what_was_exposed": "commit metadata and changed-file patch content for be52f19259d47cd27095e186a7974710c60169ee",
+  "why_this_crosses_the_boundary": "The selected instance ID and frozen base identify this commit as the immediate successor to the base; its patch is therefore expert-target information under the protocol's pre-final-patch prohibition.",
+  "candidate_changed_using_expert_information": false,
+  "revision_generated_after_exposure": false,
+  "expert_information_will_be_used_for_confirmatory_candidate_generation": false,
+  "task4_confirmatory_campaign_credit_eligible": false,
+  "task4_causal_transfer_credit_eligible": false,
+  "task4_clean_gso_win_campaign_credit_eligible": false,
+  "task4_may_continue_diagnostic_only": true,
+  "selected_instance_swapped_or_dropped": false,
+  "thresholds_changed": false,
+  "required_action": "Do not generate a confirmatory Task4 revision from the exposed expert patch. Preserve all prior Task4 evidence and treat any further Task4 work as explicitly post-hoc diagnostic only.",
+  "campaign_implication": "With Task1 and Task6 already causal-negative and Task5 ineligible, the >=2 causal-transfer-win gate can now only be satisfied if both Task2 and Task3 earn valid causal credit."
+}
