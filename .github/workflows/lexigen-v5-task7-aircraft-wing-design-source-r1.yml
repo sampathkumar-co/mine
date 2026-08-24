@@ -1,0 +1,46 @@
+name: LEXIGEN v5 Task 7 Aircraft Wing Design Source R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task6-gzip-compression-result-r1]
+    paths: ["lexigen-v5/tasks/07-aircraft-wing-design/TRIGGER_SOURCE_R1"]
+permissions: {contents: read}
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen campaign scientific files
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/ENGINE_LOCK.json').read_text())
+          for k,p in {'PROTOCOL.md':'lexigen-v5/PROTOCOL.md','TRANSFER_MEMORY.json':'lexigen-v5/TRANSFER_MEMORY.json','CONTAMINATION_EXCLUSIONS.json':'lexigen-v5/CONTAMINATION_EXCLUSIONS.json','engine.py':'lexigen-v5/engine.py','selector.py':'lexigen-v5/selector.py','selftest.py':'lexigen-v5/selftest.py'}.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]:raise SystemExit(f'campaign mismatch {k}')
+          PY
+      - name: Verify Task 7 source lock before source access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/tasks/07-aircraft-wing-design/SOURCE_R1_LOCK.json').read_text())
+          for k,p in {'TASK_START.json':'lexigen-v5/tasks/07-aircraft-wing-design/TASK_START.json','prepare_source.py':'lexigen-v5/tasks/07-aircraft-wing-design/prepare_source.py','workflow':'.github/workflows/lexigen-v5-task7-aircraft-wing-design-source-r1.yml'}.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]:raise SystemExit(f'Task7 lock mismatch {k}')
+          if any(lock.get(k) for k in ['task_source_opened_before_lock','task_description_opened_before_lock','training_manifest_opened_before_lock','training_payloads_opened_before_lock','test_manifest_opened_before_lock','test_payloads_opened_before_lock']):raise SystemExit('boundary crossed')
+          PY
+      - name: Compile frozen source package
+        run: python -m py_compile lexigen-v5/tasks/07-aircraft-wing-design/prepare_source.py lexigen-v5/engine.py
+      - name: Execute source-only analysis
+        env: {PYTHONPATH: lexigen-v5}
+        run: python lexigen-v5/tasks/07-aircraft-wing-design/prepare_source.py --task-start lexigen-v5/tasks/07-aircraft-wing-design/TASK_START.json --output source-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task7-aircraft-wing-design-source-r1
+          path: source-evidence/
+          if-no-files-found: error
+          retention-days: 90
