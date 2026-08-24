@@ -1,0 +1,33 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage": "full_v6_replication_gate_after_8_tasks",
+  "task_count": 8,
+  "clean_win_counts": {
+    "v6_full": 1,
+    "v6_no_transfer": 1,
+    "random_search": 1,
+    "static_template": 1,
+    "v5_compatible": 1
+  },
+  "baseline_qualified_causal_win_count": 0,
+  "causal_win_tasks": [],
+  "causal_win_families": [],
+  "causal_ids": [],
+  "conditions": {
+    "applicability_coverage_gate_passed": true,
+    "at_least_3_of_8_baseline_qualified_causal_wins": false,
+    "causal_wins_span_at_least_3_families": false,
+    "causal_wins_use_at_least_2_causal_ids": false,
+    "v6_full_at_least_4_clean_blind_wins": false,
+    "full_exceeds_no_transfer_by_at_least_2_wins": false,
+    "full_exceeds_random_by_at_least_2_wins": false,
+    "full_exceeds_static_by_at_least_2_wins": false,
+    "full_exceeds_v5_compatible_by_at_least_2_wins": false,
+    "median_human_task_specific_solver_contribution_zero": true,
+    "zero_task_swaps_drops_reclassification_after_source_access": true,
+    "zero_post_result_threshold_changes": true
+  },
+  "v6_replication_gate_passed": false,
+  "human_task_specific_solver_contribution_policy": "Only mechanical instantiations of frozen generic operators and precommitted strong-baseline catalog families were used; no post-result task-specific rescue solver or tuned instance heuristic was introduced.",
+  "threshold_changes": false
+}
