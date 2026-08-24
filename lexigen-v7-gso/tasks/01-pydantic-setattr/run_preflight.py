@@ -26,6 +26,14 @@ def make_container(name: str) -> None:
     run(['docker', 'start', name])
 
 
+def inject_tests(name: str, tests_dir: Path) -> None:
+    for index in TEST_INDEXES:
+        src = (tests_dir / f'gso_test_{index}.py').resolve()
+        if not src.is_file():
+            raise RuntimeError(f'missing frozen test {src}')
+        run(['docker', 'cp', str(src), f'{name}:/gso_test_{index}.py'])
+
+
 def timing_from_container(name: str, path: str) -> float:
     text = dexec(name, f'cat {path}', capture=True).stdout
     match = TIME_RE.search(text)
@@ -53,10 +61,7 @@ def imported_root(name: str) -> str:
 
 
 def apply_frozen_candidate(name: str, candidate: str, import_root: str) -> None:
-    # Always modify the repository working tree so the preserved patch is a real source patch.
     dexec(name, f'python /tmp/build_candidate.py --root /testbed --candidate {candidate}')
-    # The frozen GSO image imports an already-installed copy. Mirror the exact same source
-    # transform there for preflight only; this is environment plumbing, not another candidate.
     if import_root.rstrip('/') != '/testbed':
         dexec(name, f"python /tmp/build_candidate.py --root '{import_root}' --candidate {candidate}")
     dexec(
@@ -75,6 +80,7 @@ def apply_frozen_candidate(name: str, candidate: str, import_root: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('--builder', type=Path, required=True)
+    parser.add_argument('--tests-dir', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     out = args.output.resolve()
@@ -84,10 +90,9 @@ def main() -> None:
 
     run(['docker', 'pull', IMAGE])
 
-    # One frozen shared base measurement/reference set for all arms. No repo installation,
-    # checkout, history read or expert target is needed: execute the image exactly as shipped.
     base_name = 'lexigen-v7-pydantic-base'
     make_container(base_name)
+    inject_tests(base_name, args.tests_dir)
     imported = imported_file(base_name)
     import_root = imported_root(base_name)
     base_times: dict[str, float] = {}
@@ -108,6 +113,7 @@ def main() -> None:
         candidate_dir = out / candidate
         candidate_dir.mkdir(exist_ok=True)
         make_container(name)
+        inject_tests(name, args.tests_dir)
         run(['docker', 'cp', str(args.builder.resolve()), f'{name}:/tmp/build_candidate.py'])
         for index in TEST_INDEXES:
             run(['docker', 'cp', str(refs / f'{index}_result.json'), f'{name}:/tmp/v7_ref_{index}_result.json'])
@@ -172,9 +178,10 @@ def main() -> None:
         run(['docker', 'rm', '-f', name], check=False)
 
     summary = {
-        'stage': 'task1_equal_budget_preflight_r2',
+        'stage': 'task1_equal_budget_preflight_r3',
         'image': IMAGE,
         'test_indexes': TEST_INDEXES,
+        'frozen_tests_injected_from_pinned_dataset': True,
         'base_times_seconds': base_times,
         'base_import_path': imported,
         'base_import_root': import_root,
