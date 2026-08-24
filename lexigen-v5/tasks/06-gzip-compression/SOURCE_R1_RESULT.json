@@ -1,0 +1,30 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 6,
+  "task": "gzip_compression",
+  "stage": "source_analysis_r1_sealed",
+  "status": "success",
+  "workflow_run_id": 32687181940,
+  "artifact_id": 9506046132,
+  "artifact_digest": "sha256:fc186b5da695c7f3bb04c2f8aebe8530c6f67005c9cb918232ac204cfb1a89c9",
+  "source_git_blob_sha1": "9292665932f4a44ac29f200622475ae427bb0e58",
+  "source_sha256": "5b33ef2d40dd75a64af7d8e5fb1281f5688ac38cb303b3e77dded420dd56ea30",
+  "description_git_blob_sha1": "8e23a2d256be78288a3f7fe3230aafbc69938f4a",
+  "description_sha256": "40b0f0cec9d69ccf59eef361aaf9e98ebbff9f12c3b4beba915a669e5f3d1e35",
+  "features": ["approximate_verifier","array","backend","batch","boolean","bytes","certificate","decomposition","discrete","high_dimensional","iterative","matrix","numeric","scientific_dynamics","set","tolerance","verifier"],
+  "applicable_transfer_ids": ["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "proposal_counts": {"v5_full":6,"v5_no_transfer":6,"random_search":6,"static_template":6,"v4_compatible":6},
+  "verifier_contract": {
+    "semantic_requirement": "gzip-decompresses exactly to original plaintext",
+    "size_requirement": "compressed length <= ceil(reference gzip level-9 length * 1.001)",
+    "canonical_reference": "gzip.compress(plaintext, compresslevel=9, mtime=0)"
+  },
+  "reports_opened": false,
+  "public_solvers_opened": false,
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "human_task_specific_solver_design": false,
+  "threshold_changes": false
+}
