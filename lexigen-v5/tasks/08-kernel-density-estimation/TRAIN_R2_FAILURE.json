@@ -1,0 +1,22 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":8,
+  "task":"kernel_density_estimation",
+  "stage":"official_training_r2",
+  "status":"failed_denominator_incompatibility",
+  "workflow_run_id":32692046635,
+  "failed_training_shards":10,
+  "aggregate_status":"skipped",
+  "failure_class":"official_dataset_source_contract_incompatibility",
+  "representative_job_id":97327326964,
+  "representative_exception":"RuntimeError: invalid KDE data shape",
+  "source_contract_evidence":"Pinned source solve() explicitly rejects X.shape[0] == 0 with ValueError('No data points provided.'); is_solution() cannot certify a reference when solve() returns an error.",
+  "scientific_interpretation":"At least one official training record contains zero data points, so the frozen source task cannot produce a valid reference solution for that record. Changing R3 to accept zero training data would alter task semantics and is prohibited.",
+  "training_revision_3_used":false,
+  "blind_run_permitted":false,
+  "official_test_manifest_opened":false,
+  "official_test_payloads_opened":0,
+  "candidate_changes_after_r1":false,
+  "candidate_changes_after_r2":false,
+  "threshold_changes":false
+}
