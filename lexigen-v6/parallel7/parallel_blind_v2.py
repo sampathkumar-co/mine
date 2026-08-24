@@ -24,8 +24,7 @@ def activate_task_overlay(task: str) -> None:
 
 def verify_all_training_summaries_against_lock(lock: dict) -> None:
     expected=lock.get("training_summary_sha256",{})
-    if set(expected)!=set(TASKS):
-        raise RuntimeError(f"blind lock must freeze all seven training summaries; got {sorted(expected)}")
+    if set(expected)!=set(TASKS): raise RuntimeError(f"blind lock must freeze all seven training summaries; got {sorted(expected)}")
     for task,want in expected.items():
         p=Path(f"lexigen-v6/parallel7/results/{task}/TRAIN_R1_RESULT.json")
         if not p.exists(): raise RuntimeError(f"missing sealed training summary {task}")
@@ -33,18 +32,26 @@ def verify_all_training_summaries_against_lock(lock: dict) -> None:
         if got!=want: raise RuntimeError(f"training summary hash mismatch {task}: {got} != {want}")
 
 
+def spec_matches(c: Candidate, arm: str, spec: dict) -> bool:
+    return c.arm==arm and c.implementation_class==spec["implementation_class"] and list(c.operators)==spec["operators"] and list(c.transfer_ids)==spec["transfer_ids"] and c.learned_template==spec.get("learned_template") and c.baseline_id==spec.get("baseline_id")
+
+
 def selected_entries(task: str, source_text: str):
     activate_task_overlay(task)
     train_path=Path(f"lexigen-v6/parallel7/results/{task}/TRAIN_R1_RESULT.json")
     summary=json.loads(train_path.read_text())
-    all_candidates={c.name:c for c in pc.flat_candidates(task,source_text)}
+    candidates=pc.flat_candidates(task,source_text)
+    by_name={c.name:c for c in candidates}
     selected=[]
     for arm in ARM_ORDER:
-        spec=summary["selected_by_arm"][arm]; name=spec["candidate"]
-        if name not in all_candidates: raise RuntimeError(f"{task}: selected candidate missing {name}")
-        c=all_candidates[name]
-        if c.arm!=arm or c.implementation_class!=spec["implementation_class"] or list(c.operators)!=spec["operators"] or list(c.transfer_ids)!=spec["transfer_ids"] or c.learned_template!=spec.get("learned_template") or c.baseline_id!=spec.get("baseline_id"):
-            raise RuntimeError(f"{task}: selected candidate provenance mismatch {name}")
+        spec=summary["selected_by_arm"][arm]; name=str(spec["candidate"])
+        direct=by_name.get(name)
+        if direct is not None and spec_matches(direct,arm,spec):
+            c=direct
+        else:
+            matches=[x for x in candidates if spec_matches(x,arm,spec)]
+            if len(matches)!=1: raise RuntimeError(f"{task}: cannot resolve sealed {arm} candidate by frozen spec; name={name} matches={len(matches)}")
+            c=matches[0]
         selected.append(c)
     full=selected[0]
     abl_impl,abl_fn=pc._map_impl(task,tuple(full.operators),())
@@ -61,7 +68,7 @@ def preblind_smoke(task,entries):
         ref=pc.REFERENCE_SOLVERS[task](problem)
         for impl,c in class_reps.items():
             got=c.solve(problem); ok,reason,metrics=pt.verify(task,problem,got,ref)
-            rows.append({"case":case_idx,"implementation_class":impl,"representative":c.name,"valid":bool(ok),"reason":reason,**metrics})
+            rows.append({"case":case_idx,"implementation_class":impl,"representative":c.name,"valid":bool(ok),"reason":reason,"verification_metrics":metrics})
             if not ok: raise RuntimeError(f"{task}: preblind smoke failed {impl} case={case_idx}: {reason}")
     return rows
 
@@ -106,7 +113,7 @@ def main():
             if c_err is None: valid,reason,metrics=pt.verify(task,problem,got,ref)
             else: valid,reason,metrics=False,"exception",{}
             for c in members:
-                evidence.append({"task":task,"task_index":cfg["index"],"family":cfg["family"],"index":idx+1,"seed":int(row.get("seed",idx+1)),"arm":c.arm,"candidate":c.name,"implementation_class":c.implementation_class,"operators":list(c.operators),"transfer_ids":list(c.transfer_ids),"learned_template":c.learned_template,"baseline_id":c.baseline_id,"recipe_removal_ablation":c.arm==ABLATION_ARM,"valid":bool(valid and c_err is None),"failure_reason":c_err or reason,"candidate_ns":c_ns,"reference_ns":ref_ns,"speedup":(ref_ns/c_ns) if c_ns and c_ns>0 else 0.0,"shared_execution_class":True,"class_candidate_count":len(members),"execution_order":execution_order,"shard":args.shard,"invalid_output_retries":0,"test_manifest_name":test_name,"test_manifest_sha256":manifest_sha,"test_manifest_tree_metadata":expected_test_meta,"source_sha256":src_sha,"training_results_sha256":train_summary["results_sha256"],"task46_repair_overlay_active":task in REPAIRED_TASKS,**metrics})
+                evidence.append({"task":task,"task_index":cfg["index"],"family":cfg["family"],"index":idx+1,"seed":int(row.get("seed",idx+1)),"arm":c.arm,"candidate":c.name,"implementation_class":c.implementation_class,"operators":list(c.operators),"transfer_ids":list(c.transfer_ids),"learned_template":c.learned_template,"baseline_id":c.baseline_id,"recipe_removal_ablation":c.arm==ABLATION_ARM,"valid":bool(valid and c_err is None),"failure_reason":c_err or reason,"candidate_ns":c_ns,"reference_ns":ref_ns,"speedup":(ref_ns/c_ns) if c_ns and c_ns>0 else 0.0,"shared_execution_class":True,"class_candidate_count":len(members),"execution_order":execution_order,"shard":args.shard,"invalid_output_retries":0,"test_manifest_name":test_name,"test_manifest_sha256":manifest_sha,"test_manifest_tree_metadata":expected_test_meta,"source_sha256":src_sha,"training_results_sha256":train_summary["results_sha256"],"task46_repair_overlay_active":task in REPAIRED_TASKS,"verification_metrics":metrics})
         del problem,ref,class_runs; gc.collect()
     args.output.parent.mkdir(parents=True,exist_ok=True); args.output.write_text("\n".join(json.dumps(x,separators=(",",":")) for x in evidence)+"\n")
     smoke_sha=hashlib.sha256(json.dumps(smoke,sort_keys=True,separators=(",",":")).encode()).hexdigest()
