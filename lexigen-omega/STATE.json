@@ -12,7 +12,7 @@
     "OMEGA5": "foundation_started",
     "OMEGA6": "not_started",
     "OMEGA7": "not_started",
-    "OMEGA8": "not_started",
+    "OMEGA8": "exposed_development_treadmill_started",
     "OMEGA9": "not_started",
     "OMEGA10": "not_started",
     "OMEGA11": "not_started"
@@ -36,8 +36,27 @@
     "pinned cross-branch real-evidence reproduction in GitHub Actions",
     "prospectively frozen exact-sequence cross-repository Task2 prediction",
     "preregistered Task2 transfer scorer with insufficient-evidence path",
+    "exposed development archive separated from final causal memory",
+    "per-task-normalized mechanism priority ranking for development search",
+    "generic hindsight-to-development-archive builder",
     "foundation and search-first CI tests"
   ],
+  "development_treadmill": {
+    "policy_file": "lexigen-omega/DEVELOPMENT_TREADMILL_R1.md",
+    "status": "active",
+    "purpose": "iterate aggressively on already-exposed V6/V7/public/synthetic tasks until a frozen candidate satisfies internal multi-domain readiness conditions",
+    "allowed": [
+      "change semantic representation",
+      "invent mutate compose and delete development semantic genes",
+      "change search policy and searcher implementation",
+      "use hindsight from exposed correctness and performance results",
+      "maintain competing solver lineages",
+      "rerun exposed development evaluations"
+    ],
+    "permanent_boundary": "no exposed-development observation may ever be relabelled as final blind or causal-transfer evidence",
+    "infrastructure_incidents": "zero scientific reward and zero scientific penalty",
+    "future_blind_policy": "freeze once after development readiness and use a fresh untouched denominator; failed blind tasks can only become development tasks after their original failure is preserved"
+  },
   "first_real_hindsight_evidence": {
     "source_instance": "pydantic__pydantic-addf1f9",
     "proposal_commit": "1aed9ff5b94739e3568cdf9f841e2c42045a380c",
@@ -80,7 +99,7 @@
   },
   "current_V7_preflight_observations": {
     "run_id": 32747466819,
-    "Task2": "in_progress_after_Omega_prediction_freeze",
+    "Task2": "in_progress_after_Omega_prediction_freeze_at_last_live_check",
     "Task3": "infrastructure_baseline_failure_missing_hf_transfer_no_candidate_evidence",
     "Task4": "job_completed_but_all_nine_candidates_install_errors_zero_learning_observations",
     "Task5": "completed_but_contaminated_diagnostic_only",
@@ -100,13 +119,15 @@
     "semantic genesis produces proposals only; it cannot bypass prospective causal memory admission",
     "infrastructure failures and errored candidate rows cannot become negative mechanism labels",
     "did not manually translate V6 recipe IDs into Omega primitives because that mapping would be subjective",
-    "did not implement a neural preference trainer before prospective multi-repository evidence exists"
+    "did not implement a neural preference trainer before prospective multi-repository evidence exists",
+    "after negative V6/V7 evidence, continue iteration on a permanently exposed development pool instead of repeatedly consuming fresh blind denominators"
   ],
   "next": [
-    "when V7 Task2 completes, score its sealed result against the already-frozen Omega prospective prediction without revising prediction or scorer",
-    "if Task2 lacks at least four clean covered candidates, record insufficient evidence rather than rescue the run",
-    "if Task2 is interpretable, preserve the exact prospective score before any learner architecture change",
-    "seek additional prospective repositories before admitting any cross-repository mechanism preference to causal memory",
-    "choose the smallest justified hindsight learner only after multiple clean prospective targets exist"
+    "validate the new exposed development archive and Task1 priority report in CI",
+    "move completed failed V6/V7 tasks into the exposed development registry only after their original scientific outcomes are preserved",
+    "build multi-task development hindsight and use it to prioritize mechanism/search-policy mutations",
+    "add competing searcher lineages once multi-task evidence exists so OMEGA4 self-evolution is evidence-driven",
+    "continue exposed development until the treadmill readiness gate is satisfied across at least five families",
+    "only then freeze a candidate and open a fresh untouched global blind campaign"
   ]
 }
