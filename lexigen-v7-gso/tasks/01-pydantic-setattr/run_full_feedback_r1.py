@@ -42,6 +42,21 @@ def timing(name: str, path: str) -> float:
     return float(match.group(1))
 
 
+def discover_reference_basename(name: str, prefix: str) -> str:
+    prefix_name = Path(prefix).name
+    script = (
+        "python - <<'PY'\n"
+        "from pathlib import Path\n"
+        f"matches=sorted(p.name for p in Path('/tmp').glob('{prefix_name}*') if p.is_file())\n"
+        "print('\\n'.join(matches))\n"
+        "PY"
+    )
+    matches = [line.strip() for line in dexec(name, script, capture=True).stdout.splitlines() if line.strip()]
+    if len(matches) != 1:
+        raise RuntimeError(f'expected exactly one reference file for {prefix_name}, got {matches}')
+    return matches[0]
+
+
 def import_root(name: str) -> str:
     return dexec(
         name,
@@ -85,11 +100,14 @@ def main() -> None:
     make_container(base_name)
     inject_tests(base_name, args.tests_dir)
     base_times: dict[str, float] = {}
+    reference_basenames: dict[str, str] = {}
     for index in TEST_INDEXES:
         prefix = f'/tmp/v7_full_ref_{index}'
         dexec(base_name, f"cd /testbed && source .venv/bin/activate && python /gso_test_{index}.py /tmp/base_{index}.txt --reference --file_prefix {prefix}")
         base_times[str(index)] = timing(base_name, f'/tmp/base_{index}.txt')
-        run(['docker', 'cp', f'{base_name}:{prefix}_result.json', str(refs / f'{index}_result.json')])
+        basename = discover_reference_basename(base_name, prefix)
+        reference_basenames[str(index)] = basename
+        run(['docker', 'cp', f'{base_name}:/tmp/{basename}', str(refs / basename)])
     run(['docker', 'rm', '-f', base_name], check=False)
 
     rows = []
@@ -100,7 +118,8 @@ def main() -> None:
         make_container(name)
         inject_tests(name, args.tests_dir)
         for index in TEST_INDEXES:
-            run(['docker', 'cp', str(refs / f'{index}_result.json'), f'{name}:/tmp/v7_full_ref_{index}_result.json'])
+            basename = reference_basenames[str(index)]
+            run(['docker', 'cp', str(refs / basename), f'{name}:/tmp/{basename}'])
         candidate_times: dict[str, float] = {}
         passed = True
         error = None
@@ -135,10 +154,11 @@ def main() -> None:
         run(['docker', 'rm', '-f', name], check=False)
 
     report = {
-        'stage': 'task1_full_14_test_feedback_round0_r1',
+        'stage': 'task1_full_14_test_feedback_round0_r2',
         'image': IMAGE,
         'test_indexes': TEST_INDEXES,
         'base_times_seconds': base_times,
+        'reference_basenames': reference_basenames,
         'candidates': rows,
         'revision_slots_consumed_per_arm': 0,
         'official_gso_evaluator_used': False,
