@@ -1,0 +1,78 @@
+name: LEXIGEN v6 Preserve Five Successful Training Tasks R1
+on:
+  push:
+    branches: [lexigen/v6-parallel-7-r1]
+    paths: ["lexigen-v6/parallel7/TRIGGER_PRESERVE_FIVE_TRAIN_R1"]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  aggregate:
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        task:
+          - odr
+          - dct_type_I_scipy_fftpack
+          - robust_kalman_filter
+          - svd
+          - max_independent_set_cpsat
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Download preserved Attempt-2 shard artifacts only
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32737033106
+          pattern: train-${{ matrix.task }}-shard-*
+          path: train-shards
+          merge-multiple: true
+      - name: Aggregate preserved official training shards
+        run: python lexigen-v6/parallel7/parallel_aggregate.py --task "${{ matrix.task }}" --input train-shards --output "aggregated/${{ matrix.task }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preserved-${{ matrix.task }}-train-r1
+          path: aggregated/${{ matrix.task }}/
+          if-no-files-found: error
+          retention-days: 90
+  seal:
+    needs: aggregate
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: preserved-*-train-r1
+          path: preserved-results
+      - name: Seal exactly the five successful Attempt-2 tasks
+        env:
+          SOURCE_RUN_ID: 32737033106
+          SOURCE_HEAD_SHA: f15b1f848db78e32dc3c18802cf68784151393ea
+          SEAL_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          tasks=['odr','dct_type_I_scipy_fftpack','robust_kalman_filter','svd','max_independent_set_cpsat']
+          status={'campaign':'LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication','stage':'five_successful_attempt2_training_tasks_sealed','source_training_run_id':int(os.environ['SOURCE_RUN_ID']),'source_training_head_sha':os.environ['SOURCE_HEAD_SHA'],'seal_workflow_run_id':int(os.environ['SEAL_RUN_ID']),'tasks':[],'rerun_for_selection':False,'new_official_data_access':False,'test_manifests_opened':False,'test_payloads_opened':0}
+          for task in tasks:
+              src=Path(f'preserved-results/preserved-{task}-train-r1/train-summary.json')
+              if not src.exists(): raise SystemExit(f'missing preserved aggregate {task}')
+              raw=src.read_bytes(); summary=json.loads(raw)
+              out=Path(f'lexigen-v6/parallel7/results/{task}'); out.mkdir(parents=True,exist_ok=True)
+              (out/'TRAIN_R1_RESULT.json').write_bytes(raw)
+              status['tasks'].append({'task':task,'summary_sha256':hashlib.sha256(raw).hexdigest(),'full_harmonic_speedup':summary['selected_by_arm']['v6_full']['harmonic_speedup'],'full_minimum_speedup':summary['selected_by_arm']['v6_full']['minimum_speedup'],'selected_pair_semantically_distinct':summary['training_diagnostics']['selected_full_no_transfer_semantically_distinct']})
+          Path('lexigen-v6/parallel7/PARALLEL7_FIVE_TRAIN_STATUS.json').write_text(json.dumps(status,indent=2)+'\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-v6/parallel7/results lexigen-v6/parallel7/PARALLEL7_FIVE_TRAIN_STATUS.json
+          git commit -m "lexigen v6: seal five preserved Attempt-2 training tasks"
+          git push origin HEAD:lexigen/v6-parallel-7-r1
