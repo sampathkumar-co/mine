@@ -1,0 +1,96 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 1,
+  "task": "max_flow_min_cost",
+  "stage": "official_blind_r1_observation",
+  "target_head_sha": "437b2822758a2921169cda06de12a5c736afb8fc",
+  "run_id": 32705364344,
+  "run_number": 1,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-08-24T08:15:16Z",
+  "updated_at": "2026-08-24T08:19:51Z",
+  "run_attempt": 1,
+  "artifacts": [
+    {
+      "id": 9512158045,
+      "name": "lexigen-v6-task1-blind-r1",
+      "size_in_bytes": 25771,
+      "digest": "sha256:5f12f4fcba301a4dce28bf10016d7d799a3f78dc26feb20fa5354ea514aec687",
+      "expired": false
+    },
+    {
+      "id": 9512152066,
+      "name": "blind-shard-1",
+      "size_in_bytes": 3390,
+      "digest": "sha256:fa12d5227c05224f282983e10d98947ccb84495cc7fafea9cd0e09577c771614",
+      "expired": false
+    },
+    {
+      "id": 9512141751,
+      "name": "blind-shard-3",
+      "size_in_bytes": 3393,
+      "digest": "sha256:6626519ff92d1b17f4cbffcd54ed9dfb464c55ab495f0d52fc39007c249a0043",
+      "expired": false
+    },
+    {
+      "id": 9512140591,
+      "name": "blind-shard-5",
+      "size_in_bytes": 3413,
+      "digest": "sha256:530af356b5dbd075011d561b449de6a52324a0f85d4d5a83485df5c95762bd25",
+      "expired": false
+    },
+    {
+      "id": 9512137954,
+      "name": "blind-shard-4",
+      "size_in_bytes": 3413,
+      "digest": "sha256:1763f70bd2c665575360af3e5a603cb865baf6d31943425d60ff320d54dccc30",
+      "expired": false
+    },
+    {
+      "id": 9512134796,
+      "name": "blind-shard-2",
+      "size_in_bytes": 3405,
+      "digest": "sha256:263819ea4dc7c4110801ee462fbd96b8e2f575bab4631ede92a954b8c42c3045",
+      "expired": false
+    },
+    {
+      "id": 9512116876,
+      "name": "blind-shard-6",
+      "size_in_bytes": 3427,
+      "digest": "sha256:6694407d8ebf1dc95c1bc0f1ce4f8f2653da74f868a711be0abfe045e9117315",
+      "expired": false
+    },
+    {
+      "id": 9512111971,
+      "name": "blind-shard-0",
+      "size_in_bytes": 3412,
+      "digest": "sha256:a62af5e2a9dc6f36bfc6243123f99afc17eba7946ea33c4e991b7ba2d15d1d4a",
+      "expired": false
+    },
+    {
+      "id": 9512098134,
+      "name": "blind-shard-7",
+      "size_in_bytes": 3424,
+      "digest": "sha256:2c20da585c4b04f171d089d344540be8ded72dad8fa4b1cf8df16ac72f390ae5",
+      "expired": false
+    },
+    {
+      "id": 9512097502,
+      "name": "blind-shard-9",
+      "size_in_bytes": 3430,
+      "digest": "sha256:ba7bfb4e7f68162b725e1a411e1abc557380612d6ca5148b601fb52d1ad2d905",
+      "expired": false
+    },
+    {
+      "id": 9512067032,
+      "name": "blind-shard-8",
+      "size_in_bytes": 3363,
+      "digest": "sha256:423474d1f77fe74b9599ee6235f1e3dd7211234f4f05d4f2c14af16f51018210",
+      "expired": false
+    }
+  ],
+  "observer_changed_blind_execution": false,
+  "observer_opened_benchmark_test_data": false
+}
