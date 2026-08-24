@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_source_r1_context_incident",
+  "r1_workflow_run_id": 32739187222,
+  "detected_before_any_candidate_generation": true,
+  "observed_completed_artifacts": {
+    "task4_numpy": {"artifact_id": 9524454884, "digest": "sha256:95af0cefceff79dc62440498853b1074a870b5f4894a7eac9d578306c1f595fe"},
+    "task5_pandas": {"artifact_id": 9524461306, "digest": "sha256:c6f377e0ada11fd6b6cb8b8f05febee4c3fc3edc5c80e8aabab1b2e76dbdf1f4"}
+  },
+  "issue": "The R1 generic context extractor traversed /testbed/.venv before project source. For completed NumPy and pandas artifacts the 24-file cap was exhausted by virtualenv/site-packages matches; hidden .venv payload files were then omitted by artifact upload. The permitted prob_script/tests were valid, but the solver-relevant base-worktree context was unusable.",
+  "classification": "source_retrieval_infrastructure_only",
+  "scientific_candidate_executed": false,
+  "candidate_timing_observed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "r2_allowed_change": "Only base-worktree context retrieval: exclude virtualenv/site-packages/build/dist/cache paths and rank project-source matches. Task identities, specs, tests, engine, learned/random libraries, proposal budgets, thresholds and causal rules remain unchanged.",
+  "r1_evidence_preserved": true
+}
