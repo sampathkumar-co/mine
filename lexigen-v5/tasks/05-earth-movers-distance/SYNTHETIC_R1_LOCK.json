@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "synthetic_r1_lock",
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "1fb8688d35f30695bb17204f65f11514f306a410",
+    "candidates.py": "2ebbb4e9c9c2c145e9bc3c13acae218bf0fac441",
+    "CANDIDATE_PROVENANCE.json": "4c298c5d733c997a36f2106e4843710aefac9ded",
+    "DEPENDENCY_PIN.json": "341f82cfffd2ee8ff6d5dc0651e28c44a58213ff",
+    "validate_synthetic.py": "463896f7e67316dfe69081ea4dafbfc1aa2d54f1",
+    "workflow": "df4bd2682ce7fcdae1e14b2b5610d5007fd7b13c"
+  },
+  "candidate_count": 30,
+  "synthetic_case_count": 6,
+  "synthetic_check_count": 180,
+  "synthetic_timings_may_select_candidates": false,
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_repairs_after_synthetic_execution_allowed": false
+}

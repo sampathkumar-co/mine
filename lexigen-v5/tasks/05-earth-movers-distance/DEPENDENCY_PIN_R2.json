@@ -1,0 +1,9 @@
+{
+  "python": "3.12",
+  "numpy": "1.26.4",
+  "scipy": "1.15.3",
+  "pot": "0.9.6.post1",
+  "reason": "Infrastructure-only correction: upstream requirements list pot==1.0.0 but that release is unavailable on the runner package index; no candidate executed under R1.",
+  "candidate_code_changed": false,
+  "validator_changed": false
+}

@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "source_r1_lock",
+  "git_blob_sha1": {
+    "TASK_START.json": "b64534c8d519162fd438bde845434bd09f9a7560",
+    "prepare_source.py": "1324607577de26a90621b6afc50dfc7be918c428",
+    "workflow": "cd93094e5f237864c7610c60174e40209bfa278c"
+  },
+  "task_source_opened_before_lock": false,
+  "task_description_opened_before_lock": false,
+  "training_manifest_opened_before_lock": false,
+  "training_payloads_opened_before_lock": false,
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "proposal_budget_per_arm": 6,
+  "human_task_specific_solver_design": false
+}

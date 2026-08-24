@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "source_stage_complete_before_candidate_instantiation": true,
+  "candidate_count": 30,
+  "proposal_budget_per_arm": 6,
+  "instantiation_policy": {
+    "uniform_assignment_exact": "Used when a frozen proposal contains reduced_representation or native_backend_substitution. For equal uniform square marginals, reduce the transport LP to linear assignment and construct the exact permutation transport plan; otherwise fall back to the reference POT solver.",
+    "pot_reference_exact": "Conservative exact fallback for proposals whose structural preconditions are absent or not safely expressible from source semantics."
+  },
+  "learned_recipe_interpretation": {
+    "TM-RRR-01": "uniform assignment reduction",
+    "TM-PBEB-01": "native scipy assignment backend when the exact uniform reduction applies",
+    "TM-BFR-01": "reference fallback; sparse-frontier preconditions absent",
+    "TM-CAC-01": "reference fallback; no separately certified active core identified before official data"
+  },
+  "causal_equivalence_rule": "Any no-transfer/random/static candidate using uniform_assignment_exact is implementation-equivalent to a learned candidate using the same mechanism and blocks causal credit.",
+  "official_training_manifest_opened": false,
+  "official_training_payloads_opened": 0,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "human_task_specific_solver_contribution": false,
+  "post_training_candidate_repairs_allowed": false
+}

@@ -1,0 +1,19 @@
+{
+  "task": "earth_movers_distance",
+  "stage": "synthetic_r2_lock",
+  "previous_failed_run_id": 32686004215,
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "1fb8688d35f30695bb17204f65f11514f306a410",
+    "candidates.py": "2ebbb4e9c9c2c145e9bc3c13acae218bf0fac441",
+    "CANDIDATE_PROVENANCE.json": "4c298c5d733c997a36f2106e4843710aefac9ded",
+    "DEPENDENCY_PIN_R2.json": "daa0e45b9b2fa44465656fd5676cf7e227e68fd5",
+    "validate_synthetic.py": "463896f7e67316dfe69081ea4dafbfc1aa2d54f1",
+    "workflow": "5f793d0c9030e5922141d5e767518547ff19943d"
+  },
+  "candidate_code_changed_from_r1": false,
+  "validator_changed_from_r1": false,
+  "synthetic_cases_changed_from_r1": false,
+  "thresholds_changed": false,
+  "official_training_manifest_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false
+}

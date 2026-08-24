@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "dataset_directory_metadata_r1_sealed",
+  "workflow_run_id": 32686211548,
+  "artifact_id": 9505731474,
+  "artifact_digest": "sha256:ad456d6798a32cf44e364575d55cb1b309c308873a84d4aada0cf88202c33925",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "training_manifest": {
+    "name": "earth_movers_distance_T100ms_n1151_size100_train.jsonl",
+    "size": 2492842,
+    "oid": "19eac35e67713b6a56ccb7ae500519b8c1b57a3f"
+  },
+  "test_manifest": {
+    "name": "earth_movers_distance_T100ms_n1151_size100_test.jsonl",
+    "size": 2492900,
+    "oid": "dd5b455a8ca5b6af0165be7fbd318f331112ff3f"
+  },
+  "manifest_contents_opened": false,
+  "payload_contents_opened": false,
+  "resolve_or_download_urls_followed": false
+}

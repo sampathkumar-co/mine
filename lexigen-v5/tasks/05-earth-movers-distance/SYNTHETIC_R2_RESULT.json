@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "synthetic_r2_sealed",
+  "status": "success",
+  "workflow_run_id": 32686092412,
+  "artifact_id": 9505693298,
+  "artifact_digest": "sha256:ff13d20052164953a2e79122cc28b4f4bcb4dc1207577c47988c1475837a7cf2",
+  "cases": 6,
+  "candidate_count": 30,
+  "checks": 180,
+  "passed": 180,
+  "failed": 0,
+  "r1_infrastructure_failure_preserved": true,
+  "r2_change_scope": "POT dependency pin only",
+  "candidate_code_changed_from_r1": false,
+  "validator_changed_from_r1": false,
+  "synthetic_timings_used_for_selection": false,
+  "official_training_manifest_opened": false,
+  "official_test_manifest_opened": false
+}

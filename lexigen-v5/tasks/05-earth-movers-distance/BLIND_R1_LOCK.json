@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "blind_r1_lock",
+  "git_blob_sha1": {
+    "TRAIN_R1_RESULT.json": "42ce73cd23c74520614690ec252a9a1d4c729444",
+    "BLIND_R1_SELECTION.json": "f33cd0f784028a58f95c379a8675b7f52857acde",
+    "candidates.py": "2ebbb4e9c9c2c145e9bc3c13acae218bf0fac441",
+    "blind_shard.py": "93f2452b117f4b4c7a40739bd85fd9d206b3f0fd",
+    "aggregate_blind.py": "dcd9a9dee60bdc730eb1e1dfbeee204fdf9bd3e8",
+    "workflow": "f3e916790856d468ce55bd337b7f99ed7c446da2"
+  },
+  "test_manifest": {
+    "name": "earth_movers_distance_T100ms_n1151_size100_test.jsonl",
+    "oid": "dd5b455a8ca5b6af0165be7fbd318f331112ff3f",
+    "size": 2492900
+  },
+  "selected_candidate_count": 5,
+  "records": 100,
+  "frozen_default_gate": {"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup":1.05,"invalid_output_retries":0},
+  "causal_transfer_possible_pre_blind": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "blind_reruns_allowed": false,
+  "threshold_changes_allowed": false
+}
