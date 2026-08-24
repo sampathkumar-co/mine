@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "authoritative_gso_lock",
+  "gso_harness_commit": "7074865b48123b30a2e61d7dbc4887fcd990e681",
+  "gso_dataset_revision": "c2e4f1a58427cccd15e0e542f136bd204fb19284",
+  "git_blob_sha1": {
+    "AUTHORITATIVE_PLAN_R1.json": "5dc31c35db565a7bb40454035812cf0a9177f26c",
+    "FINAL_SELECTION_R1.json": "474e9132b325e5b9cf1b4b7d672ec2aab44d76fd",
+    "REVISION2_R1_RESULT.json": "4bf9cfb165655d08fcc2eaa6c66b70ecc34710b0",
+    "build_candidate.py": "8c0f1b55c089fb71a265c938ac3d157fec85a9de",
+    "prepare_authoritative_eval_r1.py": "4c29f2e3a1ab372b1f0d07347f59275b790e2c92",
+    "workflow": "fa03c90c53d8a4a3a1dac3d5e359f67cef9282e9"
+  },
+  "authoritative_executed_before_lock": false,
+  "candidate_changed_after_final_selection": false,
+  "revision_slot_added_after_search_close": false,
+  "expert_diff_used_for_patch_generation": false,
+  "hints_used_for_patch_generation": false,
+  "search_closed": true,
+  "revision_slots_remaining_per_arm": 0,
+  "thresholds_changed": false,
+  "human_task_specific_solver_contribution": false
+}

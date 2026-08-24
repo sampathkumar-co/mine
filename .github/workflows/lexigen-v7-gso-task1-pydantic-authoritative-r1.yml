@@ -1,0 +1,94 @@
+name: LEXIGEN V7 GSO Task1 Pydantic Authoritative R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-task1-pydantic-final-selection-r1]
+    paths: ["lexigen-v7-gso/tasks/01-pydantic-setattr/TRIGGER_AUTHORITATIVE_R1"]
+permissions: {contents: read}
+jobs:
+  authoritative:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task 1 authoritative lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/tasks/01-pydantic-setattr/AUTHORITATIVE_LOCK_R1.json').read_text())
+          paths={
+            'AUTHORITATIVE_PLAN_R1.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/AUTHORITATIVE_PLAN_R1.json',
+            'FINAL_SELECTION_R1.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/FINAL_SELECTION_R1.json',
+            'REVISION2_R1_RESULT.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION2_R1_RESULT.json',
+            'build_candidate.py':'lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py',
+            'prepare_authoritative_eval_r1.py':'lexigen-v7-gso/tasks/01-pydantic-setattr/prepare_authoritative_eval_r1.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-task1-pydantic-authoritative-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'authoritative lock mismatch {key}: {got}')
+          if lock['gso_harness_commit']!='7074865b48123b30a2e61d7dbc4887fcd990e681': raise SystemExit('unexpected GSO harness commit')
+          if lock['gso_dataset_revision']!='c2e4f1a58427cccd15e0e542f136bd204fb19284': raise SystemExit('unexpected GSO dataset revision')
+          forbidden=['authoritative_executed_before_lock','candidate_changed_after_final_selection','revision_slot_added_after_search_close','expert_diff_used_for_patch_generation','hints_used_for_patch_generation']
+          if any(lock.get(k) for k in forbidden): raise SystemExit('Task1 authoritative boundary crossed')
+          PY
+      - name: Install uv orchestration tool
+        run: python -m pip install --disable-pip-version-check uv
+      - name: Checkout pinned official GSO harness
+        shell: bash
+        run: |
+          git clone --recursive https://github.com/gso-bench/gso.git gso-harness
+          git -C gso-harness checkout --detach 7074865b48123b30a2e61d7dbc4887fcd990e681
+          git -C gso-harness submodule update --init --recursive
+          git -C gso-harness status --short
+          git -C gso-harness rev-parse HEAD
+      - name: Install pinned GSO environment
+        working-directory: gso-harness
+        run: uv sync --frozen
+      - name: Compile frozen authoritative input builder
+        run: python -m py_compile lexigen-v7-gso/tasks/01-pydantic-setattr/prepare_authoritative_eval_r1.py lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py
+      - name: Generate and verify final frozen patches and pinned Task1 dataset
+        shell: bash
+        run: |
+          mkdir -p "$HOME/buckets/gso_bucket/datasets"
+          cd gso-harness
+          uv run python "$GITHUB_WORKSPACE/lexigen-v7-gso/tasks/01-pydantic-setattr/prepare_authoritative_eval_r1.py" \
+            --builder "$GITHUB_WORKSPACE/lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py" \
+            --output "$GITHUB_WORKSPACE/authoritative-inputs" \
+            --dataset-output "$HOME/buckets/gso_bucket/datasets/lexigen-v7-task1-pinned.jsonl"
+      - name: Run official GSO evaluator for all frozen arms
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd gso-harness
+          for arm in v7_full v7_no_library v7_random_library; do
+            echo "===== authoritative arm: $arm ====="
+            uv run python src/gso/harness/run_evaluation.py \
+              --dataset_name lexigen-v7-task1-pinned.jsonl \
+              --split test \
+              --instance_ids pydantic__pydantic-addf1f9 \
+              --predictions_path "$GITHUB_WORKSPACE/authoritative-inputs/predictions/${arm}.jsonl" \
+              --max_workers 1 \
+              --timeout 3600 \
+              --run_id "lexigen-v7-task1-${arm}-authoritative-r1" \
+              --verbose
+          done
+      - name: Collect authoritative evidence
+        shell: bash
+        run: |
+          mkdir -p authoritative-output
+          cp -r authoritative-inputs authoritative-output/input-manifest
+          if [ -d gso-harness/reports ]; then cp -r gso-harness/reports authoritative-output/reports; fi
+          if [ -d gso-harness/logs/run_evaluation ]; then cp -r gso-harness/logs/run_evaluation authoritative-output/run_evaluation_logs; fi
+          git -C gso-harness rev-parse HEAD > authoritative-output/gso_harness_commit.txt
+          uv --version > authoritative-output/uv_version.txt
+          docker version > authoritative-output/docker_version.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-task1-pydantic-authoritative-r1
+          path: authoritative-output/
+          if-no-files-found: error
+          retention-days: 90
