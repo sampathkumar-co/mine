@@ -1,0 +1,49 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 3,
+  "instance_id": "huggingface__tokenizers-bfd9cde",
+  "stage": "task3_causal_reachability_audit_after_revision1",
+  "question": "Can any remaining lawful revision under the frozen proposal/library budget create a learned-macro mechanism class that is not independently reconstructed or explicitly represented by the no-library arm?",
+  "evidence": {
+    "initial_materialization": {
+      "F1_F3_F4_N1_N3_same_patch": "f72eebb7b04a105f01669d126bb1926504430f7892dd725c9c7a19a5852cd336",
+      "interpretation": "The direct native raw-string encode_batch_fast mechanism generated from learned V7M-004/V7M-001 was independently reconstructed byte-for-byte by no-library candidates before timing."
+    },
+    "revision1": {
+      "F2R1_N4R1_same_patch": "7f3b9808b454e3b828be9720d428c8aec4e82085a937c7fb4d6bdace3f8e8b22",
+      "interpretation": "The learned V7M-002 execute-certify-recover fast-path plus compatibility recovery mechanism was independently reconstructed byte-for-byte by no-library under equal revision budget."
+    },
+    "remaining_frozen_full_proposals": {
+      "F5_V7M_003": {
+        "mechanism": "Python/BaseTokenizer dispatch to a native fast path when applicable with recovery to encode_batch",
+        "no_library_counterpart": "N5: BaseTokenizer wrapper selects low-level raw-string method for non-pretokenized text",
+        "random_counterpart": "R3: Python wrapper attempts fast string-only path then existing encode_batch",
+        "classification": "mechanism class explicitly represented outside learned library"
+      },
+      "F6_V7M_002": {
+        "mechanism": "native list[str] fast path with fallback/recovery for unsupported inputs",
+        "no_library_counterpart": "N4/F2R1 class already materialized byte-identically; N1/N2/N3 also independently target the same native raw-string direct execution family",
+        "classification": "mechanism class already independently reconstructed outside learned library"
+      }
+    },
+    "F4_refinement_note": {
+      "frozen_proposal": "Vec<PyBackedStr>-style raw string extraction followed by direct batch execution",
+      "no_library_counterpart": "N4 one-shot homogeneous raw-string representation/extraction followed by direct batch execution",
+      "classification": "same semantic/mechanistic specialization class under the frozen causal-equivalence rule; the initial materializer already collapsed F4 and N1/N3 to an identical direct native implementation"
+    }
+  },
+  "revision2_allowed": true,
+  "revision2_scientifically_useful_for_performance": true,
+  "revision2_can_restore_causal_exclusivity": false,
+  "reason": "The frozen generation contract forbids adding a new task-specific primitive/library mechanism after feedback. Every remaining learned Task3 mechanism family is either already reconstructed byte-for-byte by no-library or explicitly mirrored by a frozen no-library mechanism family. A second revision could repair correctness or improve speed, but could not establish that access to the learned library causally enabled a mechanism unavailable to the no-library arm.",
+  "task3_causal_transfer_win_mathematically_possible_under_frozen_campaign": false,
+  "task3_revision2_required_for_campaign_gate": false,
+  "task3_revision2_action": "do not run under the campaign kill rule; preserve the unused slot rather than spend compute on a result that cannot satisfy causal credit",
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "human_task_specific_solver_contribution": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "task_swapped_or_dropped": false
+}
