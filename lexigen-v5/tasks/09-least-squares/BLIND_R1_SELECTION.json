@@ -1,0 +1,30 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "stage":"blind_selection_r1",
+  "selected_candidates":{
+    "v5_full":"v5_full_r2_41510e43e8fafb598496",
+    "v5_no_transfer":"v5_no_transfer_r6_66c5848a3c8a4f51b562",
+    "random_search":"random_search_r5_e818498ab004d266d2a1",
+    "static_template":"static_template_r6_d044a19fd4551034dc11",
+    "v4_compatible":"v4_compatible_r3_ec4b9c17aaa3767d4f6d"
+  },
+  "v5_full_selected_learned_causal_id":"TM-RRR-01",
+  "v5_full_selected_learned_template":"reduced_representation_refinement",
+  "selected_v5_implementation_class":"polynomial_linear_reduction_plus_reference",
+  "selected_no_transfer_implementation_class":"polynomial_linear_reduction_plus_reference",
+  "selected_pair_semantically_distinct":false,
+  "learned_recipe_source_family":"linear_algebra",
+  "current_family":"linear_algebra",
+  "source_family_differs_from_current":false,
+  "causal_transfer_credit_possible_on_blind":false,
+  "causal_transfer_preblind_reason":"Selected full/no-transfer implementations are equivalent, and the learned recipe source family equals the current holdout family; both independently preclude causal credit.",
+  "official_test_manifest_name":"least_squares_T100ms_n102713_size100_test.jsonl",
+  "official_test_manifest_oid":"a2a05f3b2d737d15c4cb46dc327f3954b78ace31",
+  "official_test_manifest_size":27500,
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "post_training_candidate_changes":false,
+  "threshold_changes":false
+}

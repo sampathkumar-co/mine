@@ -1,0 +1,39 @@
+name: LEXIGEN v5 Task 9 Least Squares Synthetic R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task8-kernel-density-estimation-result-r1]
+    paths: ["lexigen-v5/tasks/09-least-squares/TRIGGER_SYNTHETIC_R1"]
+permissions: {contents: read}
+jobs:
+  synthetic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task 9 synthetic package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/tasks/09-least-squares/SYNTHETIC_R1_LOCK.json').read_text())
+          paths={'SOURCE_R1_RESULT.json':'lexigen-v5/tasks/09-least-squares/SOURCE_R1_RESULT.json','candidates.py':'lexigen-v5/tasks/09-least-squares/candidates.py','validate_synthetic.py':'lexigen-v5/tasks/09-least-squares/validate_synthetic.py','workflow':'.github/workflows/lexigen-v5-task9-least-squares-synthetic-r1.yml'}
+          for k,p in paths.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]:raise SystemExit(f'Task9 synthetic lock mismatch {k}')
+          if lock['official_training_manifest_opened_before_lock'] or lock['official_test_manifest_opened_before_lock']:raise SystemExit('official data boundary crossed')
+          PY
+      - name: Install frozen dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==2.3.5 scipy==1.17.0
+      - name: Compile frozen candidate package
+        run: python -m py_compile lexigen-v5/tasks/09-least-squares/candidates.py lexigen-v5/tasks/09-least-squares/validate_synthetic.py
+      - name: Execute frozen synthetic gate
+        working-directory: lexigen-v5/tasks/09-least-squares
+        run: python validate_synthetic.py --output synthetic-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task9-least-squares-synthetic-r1
+          path: lexigen-v5/tasks/09-least-squares/synthetic-evidence/
+          if-no-files-found: error
+          retention-days: 90

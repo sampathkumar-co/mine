@@ -1,0 +1,63 @@
+name: LEXIGEN v5 Task 9 Least Squares Blind R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task8-kernel-density-estimation-result-r1]
+    paths: ["lexigen-v5/tasks/09-least-squares/TRIGGER_BLIND_R1"]
+permissions: {contents: read}
+jobs:
+  blind:
+    strategy:
+      fail-fast: false
+      matrix: {shard: [0,1,2,3,4,5,6,7,8,9]}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task 9 blind package before test access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/tasks/09-least-squares/BLIND_R1_LOCK.json').read_text())
+          paths={'TRAIN_R1_RESULT.json':'lexigen-v5/tasks/09-least-squares/TRAIN_R1_RESULT.json','BLIND_R1_SELECTION.json':'lexigen-v5/tasks/09-least-squares/BLIND_R1_SELECTION.json','candidates.py':'lexigen-v5/tasks/09-least-squares/candidates.py','blind_shard.py':'lexigen-v5/tasks/09-least-squares/blind_shard.py','aggregate_blind.py':'lexigen-v5/tasks/09-least-squares/aggregate_blind.py','workflow':'.github/workflows/lexigen-v5-task9-least-squares-blind-r1.yml'}
+          for k,p in paths.items():
+            if subprocess.check_output(['git','hash-object',p],text=True).strip()!=lock['git_blob_sha1'][k]:raise SystemExit(f'Task9 blind lock mismatch {k}')
+          if lock['test_manifest']['oid']!='a2a05f3b2d737d15c4cb46dc327f3954b78ace31':raise SystemExit('test identity mismatch')
+          if lock['official_test_manifest_opened_before_lock'] or lock['official_test_payloads_opened_before_lock']:raise SystemExit('blind boundary crossed')
+          if lock['post_training_candidate_changes'] or lock['threshold_changes']:raise SystemExit('scientific package changed')
+          PY
+      - name: Install frozen dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==2.3.5 scipy==1.17.0
+      - name: Compile frozen blind package
+        run: python -m py_compile lexigen-v5/tasks/09-least-squares/candidates.py lexigen-v5/tasks/09-least-squares/blind_shard.py lexigen-v5/tasks/09-least-squares/aggregate_blind.py
+      - name: Execute official blind shard
+        working-directory: lexigen-v5/tasks/09-least-squares
+        run: python blind_shard.py --shard ${{ matrix.shard }} --output blind-evidence/blind-shard-${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task9-least-squares-blind-r1-shard-${{ matrix.shard }}
+          path: lexigen-v5/tasks/09-least-squares/blind-evidence/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+  aggregate:
+    needs: blind
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v5-task9-least-squares-blind-r1-shard-*
+          path: downloaded-blind
+          merge-multiple: true
+      - name: Aggregate immutable blind evidence
+        run: python lexigen-v5/tasks/09-least-squares/aggregate_blind.py --input downloaded-blind --output complete-blind
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task9-least-squares-blind-r1-complete
+          path: complete-blind/
+          if-no-files-found: error
+          retention-days: 90
