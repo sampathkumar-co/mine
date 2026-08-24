@@ -6,7 +6,7 @@
   "gates": {
     "OMEGA0": "locked",
     "OMEGA1": "in_progress",
-    "OMEGA2": "not_started",
+    "OMEGA2": "foundation_started",
     "OMEGA3": "not_started",
     "OMEGA4": "not_started",
     "OMEGA5": "foundation_started",
@@ -20,13 +20,25 @@
   "implemented": [
     "task-agnostic deterministic typed core IR",
     "canonical executable program fingerprints",
+    "deterministic abstract resource accounting and hard execution budgets",
+    "independently implemented portable interpreter",
+    "generated differential parity tests across primary and portable runtimes",
     "semantic gene evidence object",
     "strict causal long-term-memory admission policy",
-    "foundation tests"
+    "cross-family parameterized semantic-fragment anti-unification miner",
+    "exact proposal expansion verification",
+    "foundation and search-first CI tests"
+  ],
+  "search_first_decisions": [
+    "reused the proven v15 anti-unification mechanism instead of rebuilding induction",
+    "preserved the v23 lesson that fixed human-authored semantic inventories do not transfer globally",
+    "did not expand the fixed opcode catalog after current SOAR/DGM evidence favored learned/evolving search over larger hand-authored DSLs",
+    "semantic genesis produces proposals only; it cannot bypass prospective causal memory admission"
   ],
   "next": [
-    "close OMEGA1 with richer control-flow/state/function substrate and independent interpreter",
-    "implement OMEGA2 semantic anti-unification and primitive invention",
-    "build prospective development transfer fixture before allowing any gene into causal memory"
+    "connect semantic proposals to evaluator-guided program search on an exposed development problem",
+    "add a diverse candidate archive only when required by that search loop",
+    "use search trajectories as hindsight learning data rather than adding hand-authored semantic operators",
+    "close remaining OMEGA1 substrate gaps only when a real evaluator case demonstrates they are required"
   ]
 }
