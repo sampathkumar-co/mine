@@ -1,0 +1,32 @@
+{
+  "stage": "lexigen_v8_ipwm_synthetic_controls_r2_locked",
+  "real_intervention_data_opened": false,
+  "scientific_transfer_evidence": false,
+  "official_holdout_campaign_started": false,
+  "r1_real_top_k_relative_gain_threshold": 0.20,
+  "null_seeds": [101, 211, 307],
+  "files": {
+    "control_protocol": "lexigen-v8/IPWM_CONTROL_HARDENING_R2.json",
+    "synthetic_generator_r1_unchanged": "lexigen-v8/generate_synthetic_ipwm_r1.py",
+    "base_evaluator_r1": "lexigen-v8/ipwm_eval_r1.py",
+    "hardened_evaluator_r2": "lexigen-v8/ipwm_eval_r2.py",
+    "assertions_r2": "lexigen-v8/test_ipwm_pipeline_r2.py",
+    "workflow_r2": ".github/workflows/lexigen-v8-ipwm-synthetic-r2.yml"
+  },
+  "git_blob_sha1": {
+    "control_protocol": "f23f512e0fd61bd93e8e9d03ad6a97d9f8d43b61",
+    "synthetic_generator_r1_unchanged": "368abab79fc98d4ab1a1e87dbaf1b0d5c0945637",
+    "base_evaluator_r1": "e0fb7d83e63fa09016ed9e4e0b92be4f3c58a796",
+    "hardened_evaluator_r2": "f36f36b76263d5bf0806a52de449bdfae05c1474",
+    "assertions_r2": "c4f655cd0fef3fa08e437ae03521e1e03ca24e13",
+    "workflow_r2": "caf7cf8d560f106696d22e2b0f0928cba7e20842"
+  },
+  "integrity": {
+    "r1_generator_changed": false,
+    "r1_real_thresholds_changed": false,
+    "joint_target_permutation_used_for_nulls": true,
+    "null_metrics_fold_local_then_macro_averaged": true,
+    "heldout_intervention_family_enabled": true,
+    "no_cross_control_enabled": true
+  }
+}
