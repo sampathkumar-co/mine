@@ -1,0 +1,61 @@
+{
+  "manifest": "lexigen-v8-fvd-historical-source-manifest-r1",
+  "status": "frozen_for_engine_development_before_any_new_fvd_holdout_selection",
+  "sources": [
+    {
+      "id": "v5_transfer_memory",
+      "path": "lexigen-v5/TRANSFER_MEMORY.json",
+      "git_blob_sha1": "6ae2e118be6261631450eadd088d89724b3deed8",
+      "allowed_use": ["abstract preconditions", "abstract recipes", "source families", "causal IDs", "negative lessons"],
+      "forbidden_inference": "Do not infer a historical causal success merely because a template exists in transfer memory."
+    },
+    {
+      "id": "v5_final_audit",
+      "path": "lexigen-v5/CAMPAIGN_FINAL_AUDIT_R1.json",
+      "git_blob_sha1": "f85dfaf45367f54613b3839319e9015b409655c5",
+      "allowed_use": ["clean win ledger", "causal win ledger", "speedup magnitudes", "family provenance", "campaign-level negative result"],
+      "forbidden_inference": "The failed V5 campaign cannot be relabeled a general transfer success."
+    },
+    {
+      "id": "v5_task1_provenance",
+      "path": "lexigen-v5/tasks/01-clustering-outliers/CANDIDATE_PROVENANCE.json",
+      "git_blob_sha1": "c590e4c5da6032da960bea73282ff418a741fd05",
+      "allowed_use": ["cross-family candidate exposure", "implementation-equivalence policy"],
+      "forbidden_inference": "Task 1 selected no learned transfer candidate, so this file provides zero positive causal-transfer count."
+    },
+    {
+      "id": "v5_task1_result",
+      "path": "lexigen-v5/tasks/01-clustering-outliers/TASK_RESULT.json",
+      "git_blob_sha1": "81628c01d4a945540ecf1ca74e3b8212499b2861",
+      "allowed_use": ["performance-only success", "equivalence negative lesson"],
+      "forbidden_inference": "The 2.47x clean performance win is non-causal because full/no-transfer/random/static leading implementations were equivalent."
+    },
+    {
+      "id": "v7_generation_contract",
+      "path": "lexigen-v7-gso/GENERATION_CONTRACT_R1.md",
+      "git_blob_sha1": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+      "allowed_use": ["generic primitive vocabulary", "equal-budget discipline", "semantic-equivalence rule", "macro-removal replay principle"],
+      "forbidden_inference": "V7 learned macros are not positive causal priors because the final campaign failed."
+    },
+    {
+      "id": "v7_final_audit",
+      "path": "lexigen-v7-gso/FINAL_CAMPAIGN_AUDIT_R1.json",
+      "git_blob_sha1": "2bd574e9d2ff212feaf193bf5778eb6e4d433496",
+      "allowed_use": ["performance-only positive diagnostics", "causal-negative diagnostics", "contamination/ineligibility lessons", "kill-rule evidence"],
+      "forbidden_inference": "No V7 task contributes a confirmed causal-transfer success."
+    },
+    {
+      "id": "v8_ipwm_r3_failed_result",
+      "path": "lexigen-v8/COMPOSITIONAL_R3_FAILED_RESULT.json",
+      "git_blob_sha1": "dc1ad5d3acc160a9582a33d1ea82df04f9bdd812",
+      "allowed_use": ["predictive-signal-not-transfer lesson", "validity-null confounding lesson", "CI scientific-exit-status lesson"],
+      "forbidden_inference": "R3 synthetic predictive accuracy is not scientific transfer evidence."
+    }
+  ],
+  "official_new_fvd_holdout_inventory_accessed": false,
+  "blocked_ipwm_real_intervention_corpus_accessed": false,
+  "expert_solution_payloads_imported": false,
+  "future_holdout_task_payloads_embedded": false,
+  "human_task_specific_solver_content": false,
+  "claim_boundary": "This manifest is restricted to already-sealed historical evidence and may be used for FVD engine development/apprenticeship only."
+}
