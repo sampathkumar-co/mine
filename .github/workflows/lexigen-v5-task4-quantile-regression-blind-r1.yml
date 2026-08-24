@@ -1,0 +1,108 @@
+name: LEXIGEN v5 Task 4 Quantile Regression Blind R1
+
+on:
+  pull_request:
+    branches:
+      - lexigen/v5-task3-spectral-clustering-result-r1
+    paths:
+      - "lexigen-v5/tasks/04-quantile-regression/TRIGGER_BLIND_R1"
+
+permissions:
+  contents: read
+
+jobs:
+  blind:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen campaign scientific files
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/ENGINE_LOCK.json').read_text())
+          for key,path in {
+            'PROTOCOL.md':'lexigen-v5/PROTOCOL.md',
+            'TRANSFER_MEMORY.json':'lexigen-v5/TRANSFER_MEMORY.json',
+            'CONTAMINATION_EXCLUSIONS.json':'lexigen-v5/CONTAMINATION_EXCLUSIONS.json',
+            'engine.py':'lexigen-v5/engine.py',
+            'selector.py':'lexigen-v5/selector.py',
+            'selftest.py':'lexigen-v5/selftest.py'
+          }.items():
+            actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+            if actual!=lock['git_blob_sha1'][key]: raise SystemExit(f'frozen campaign mismatch {key}')
+          PY
+      - name: Verify frozen Task 4 blind package before test access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/tasks/04-quantile-regression/BLIND_R1_LOCK.json').read_text())
+          for key,path in {
+            'TRAIN_R1_RESULT.json':'lexigen-v5/tasks/04-quantile-regression/TRAIN_R1_RESULT.json',
+            'BLIND_R1_SELECTION.json':'lexigen-v5/tasks/04-quantile-regression/BLIND_R1_SELECTION.json',
+            'candidates.py':'lexigen-v5/tasks/04-quantile-regression/candidates.py',
+            'DEPENDENCY_PIN.json':'lexigen-v5/tasks/04-quantile-regression/DEPENDENCY_PIN.json',
+            'blind_shard.py':'lexigen-v5/tasks/04-quantile-regression/blind_shard.py',
+            'aggregate_blind.py':'lexigen-v5/tasks/04-quantile-regression/aggregate_blind.py',
+            'workflow':'.github/workflows/lexigen-v5-task4-quantile-regression-blind-r1.yml'
+          }.items():
+            actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+            if actual!=lock['git_blob_sha1'][key]: raise SystemExit(f'Task 4 blind lock mismatch {key}: {actual}')
+          if lock['test_manifest']['name']!='quantile_regression_T100ms_n356_size100_test.jsonl': raise SystemExit('test manifest name mismatch')
+          if lock['test_manifest']['oid']!='fa47823b663ed89c95d00ac4315fb0086000ae80': raise SystemExit('test manifest OID mismatch')
+          if lock['test_manifest']['size']!=691920: raise SystemExit('test manifest size mismatch')
+          if lock['official_test_manifest_opened_before_lock'] or lock['official_test_payloads_opened_before_lock']:
+            raise SystemExit('test boundary crossed before blind lock')
+          PY
+      - name: Compile frozen Task 4 blind package
+        run: python -m py_compile lexigen-v5/tasks/04-quantile-regression/candidates.py lexigen-v5/tasks/04-quantile-regression/blind_shard.py lexigen-v5/tasks/04-quantile-regression/aggregate_blind.py
+      - name: Install frozen benchmark dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==2.3.5 scipy==1.17.0 scikit-learn==1.8.0
+      - name: Execute official blind shard
+        working-directory: lexigen-v5/tasks/04-quantile-regression
+        run: python blind_shard.py --shard ${{ matrix.shard }} --output blind-evidence/blind-shard-${{ matrix.shard }}.jsonl
+      - name: Upload immutable blind shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task4-quantile-regression-blind-r1-shard-${{ matrix.shard }}
+          path: lexigen-v5/tasks/04-quantile-regression/blind-evidence/blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: blind
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v5-task4-quantile-regression-blind-r1-shard-*
+          path: downloaded-blind
+          merge-multiple: true
+      - name: Aggregate immutable blind evidence
+        run: >-
+          python lexigen-v5/tasks/04-quantile-regression/aggregate_blind.py
+          --input downloaded-blind
+          --output complete-blind
+      - name: Upload complete blind evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task4-quantile-regression-blind-r1-complete
+          path: complete-blind/
+          if-no-files-found: error
+          retention-days: 90

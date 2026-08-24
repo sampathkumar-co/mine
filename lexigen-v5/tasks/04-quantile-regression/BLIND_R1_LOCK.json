@@ -1,0 +1,32 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "family": "statistics",
+  "stage": "blind_r1_lock",
+  "git_blob_sha1": {
+    "TRAIN_R1_RESULT.json": "781589cca40021beec84490176f3e4fe2264edf9",
+    "BLIND_R1_SELECTION.json": "0ecab64218c05b341f47fb794ee8368a3d061be2",
+    "candidates.py": "95e57687ac84ac2f77a2e2f0a82bb7ffd7b153d3",
+    "DEPENDENCY_PIN.json": "7d6c25635d22253062b4e5ca7ddb16f028917328",
+    "blind_shard.py": "0eb0d26766180fba7218b686b1358545c39d441a",
+    "aggregate_blind.py": "6c509e798cffd739ca657995e2fffa1ce6d7048f",
+    "workflow": "2b26e6ad0cb670c6c0e4395f0f81b6e3d0f6327f"
+  },
+  "test_manifest": {
+    "name": "quantile_regression_T100ms_n356_size100_test.jsonl",
+    "oid": "fa47823b663ed89c95d00ac4315fb0086000ae80",
+    "size": 691920,
+    "expected_records": 100
+  },
+  "selected_candidate_count": 5,
+  "shard_count": 10,
+  "v5_full_selected_transfer_id": "TM-RRR-01",
+  "semantic_distinctness_condition_passed_before_blind": false,
+  "causal_transfer_credit_possible": false,
+  "recipe_removal_replay_required": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_changes_after_blind_access_forbidden": true,
+  "thresholds_changed": false
+}

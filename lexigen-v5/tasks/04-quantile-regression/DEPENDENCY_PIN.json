@@ -1,0 +1,7 @@
+{
+  "python": "3.12",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "scikit-learn": "1.8.0",
+  "source": "frozen reproducible Task-4 runner environment"
+}

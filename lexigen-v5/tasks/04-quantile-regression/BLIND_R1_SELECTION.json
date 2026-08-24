@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "stage": "blind_r1_selection",
+  "selection_source": "official_training_r1",
+  "selection_rule": "100% correctness; performance-gate pass first; then harmonic, minimum, median speedup, stable candidate name",
+  "selected": {
+    "v5_full": "v5_full_r2_41510e43e8fafb598496",
+    "v5_no_transfer": "v5_no_transfer_r6_66c5848a3c8a4f51b562",
+    "random_search": "random_search_r1_399ba5e6f15e49b3e885",
+    "static_template": "static_template_r2_8fd871e046faa7e4d37c",
+    "v4_compatible": "v4_compatible_r2_9f5f55df04a5ad23f542"
+  },
+  "v5_full_transfer_ids": ["TM-RRR-01"],
+  "v5_full_learned_template": "reduced_representation_refinement",
+  "selected_v5_normalized_implementation_class": "free_parameter_lp",
+  "selected_no_transfer_normalized_implementation_class": "free_parameter_lp",
+  "semantic_distinctness_condition_passed": false,
+  "causal_transfer_credit_possible": false,
+  "recipe_removal_replay_required_for_causal_credit": false,
+  "recipe_removal_replay_skip_reason": "Causal credit condition 3 already fails because the selected full and no-transfer implementations are semantically implementation-equivalent.",
+  "test_manifest_name": "quantile_regression_T100ms_n356_size100_test.jsonl",
+  "test_manifest_tree_oid": "fa47823b663ed89c95d00ac4315fb0086000ae80",
+  "test_manifest_size": 691920,
+  "official_test_manifest_contents_opened_before_selection": false,
+  "official_test_payloads_opened_before_selection": 0,
+  "thresholds_changed": false
+}

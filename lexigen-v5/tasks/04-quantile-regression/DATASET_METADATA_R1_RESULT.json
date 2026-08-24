@@ -1,0 +1,26 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "stage": "dataset_directory_metadata_r1_sealed",
+  "status": "passed",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "workflow_run_id": 32684473223,
+  "artifact_id": 9505177793,
+  "artifact_digest": "sha256:de28f9379f3826a39e5b093a45e10e6dc714e338ecfa6c592d6a2ddb4cb927a1",
+  "training_manifest_metadata": {
+    "path": "data/quantile_regression/quantile_regression_T100ms_n356_size100_train.jsonl",
+    "name": "quantile_regression_T100ms_n356_size100_train.jsonl",
+    "size": 691744,
+    "oid": "0e0c8234f88d313d8f4e2066c05ba72577e3c161"
+  },
+  "test_manifest_metadata": {
+    "path": "data/quantile_regression/quantile_regression_T100ms_n356_size100_test.jsonl",
+    "name": "quantile_regression_T100ms_n356_size100_test.jsonl",
+    "size": 691920,
+    "oid": "fa47823b663ed89c95d00ac4315fb0086000ae80"
+  },
+  "manifest_contents_opened": false,
+  "payload_contents_opened": false,
+  "resolve_or_download_urls_followed": false
+}
