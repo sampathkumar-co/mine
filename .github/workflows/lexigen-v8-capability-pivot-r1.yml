@@ -1,0 +1,69 @@
+name: LEXIGEN V8 Capability Pivot R1
+on:
+  pull_request:
+    branches: [lexigen/v8-ipwm-compositional-result-r3]
+    paths:
+      - "lexigen-v8/ARCHITECTURE_TOURNAMENT_R2.md"
+      - "lexigen-v8/CAPABILITY_BREAKTHROUGH_PROTOCOL_R1.json"
+      - "lexigen-v8/strict_gate_runner.py"
+      - ".github/workflows/lexigen-v8-capability-pivot-r1.yml"
+permissions:
+  contents: read
+jobs:
+  preregistration-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile strict gate runner
+        run: python -m py_compile lexigen-v8/strict_gate_runner.py
+      - name: Validate frozen capability protocol invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('lexigen-v8/CAPABILITY_BREAKTHROUGH_PROTOCOL_R1.json').read_text())
+          assert p['status'] == 'preregistered_pre_holdout'
+          assert p['real_ipwm_intervention_data_opened'] is False
+          assert p['official_fvd_holdout_campaign_started'] is False
+          assert p['world_breakthrough_claim_allowed'] is False
+          c = p['internal_campaign_success_all_required']
+          assert c['full_clean_win_fraction_min'] >= 2/3
+          assert c['full_minus_no_experience_task_wins_min'] >= 2
+          assert c['full_minus_no_experience_percentage_points_min'] >= 20
+          assert c['causal_transfer_wins_min'] >= 2
+          assert c['causal_transfer_holdout_families_min'] >= 2
+          assert c['no_post_result_task_swap_drop_reclassification'] is True
+          assert c['no_post_freeze_threshold_or_budget_change'] is True
+          PY
+      - name: Prove strict runner preserves success
+        shell: bash
+        run: |
+          set -euo pipefail
+          python lexigen-v8/strict_gate_runner.py --output /tmp/success.txt -- python -c "print('SUCCESS_SENTINEL')"
+          grep -q SUCCESS_SENTINEL /tmp/success.txt
+      - name: Prove strict runner preserves scientific failure
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          python lexigen-v8/strict_gate_runner.py --output /tmp/failure.txt -- python -c "import sys; print('FAILURE_SENTINEL'); sys.exit(7)"
+          rc=$?
+          set -e
+          test "$rc" -eq 7
+          grep -q FAILURE_SENTINEL /tmp/failure.txt
+      - name: Prove shell pipelines cannot mask failures
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          bash -o pipefail -c 'python -c "import sys; print(\"PIPEFAIL_SENTINEL\"); sys.exit(9)" | tee /tmp/pipefail.txt'
+          rc=$?
+          set -e
+          test "$rc" -eq 9
+          grep -q PIPEFAIL_SENTINEL /tmp/pipefail.txt
