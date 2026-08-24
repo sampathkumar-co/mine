@@ -108,7 +108,7 @@ def token_space(spec: dict, library: list[dict]) -> list[tuple[str, tuple[str, .
     return sorted(tokens, key=lambda item: item[0])
 
 
-def search_holdout(spec: dict, holdout: dict, library: list[dict], removed_macro_id: str | None = None) -> dict:
+def search_holdout(spec: dict, oracle: dict, holdout: dict, library: list[dict], removed_macro_id: str | None = None) -> dict:
     if removed_macro_id is not None:
         library = [x for x in library if x["id"] != removed_macro_id]
     tokens = token_space(spec, library)
@@ -124,9 +124,8 @@ def search_holdout(spec: dict, holdout: dict, library: list[dict], removed_macro
                 continue
             seen_expansions.add(expansion)
             evaluator_calls += 1
-            search_sig = behavior_signature(expansion, spec["search_inputs"])
-            if search_sig == holdout["search_signature_sha256"]:
-                validation_sig = behavior_signature(expansion, spec["validation_inputs"])
+            if behavior_signature(expansion, oracle["search_inputs"]) == holdout["search_signature_sha256"]:
+                validation_sig = behavior_signature(expansion, oracle["validation_inputs"])
                 if validation_sig == holdout["validation_signature_sha256"]:
                     return {
                         "found": True,
@@ -141,25 +140,22 @@ def search_holdout(spec: dict, holdout: dict, library: list[dict], removed_macro
     return {"found": False, "evaluator_calls": evaluator_calls, "validation_passed": False, "budget": budget}
 
 
-def sha256_json(value: object) -> str:
+def canonical_sha256(value: object) -> str:
     payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(payload).hexdigest()
 
 
-def run(spec: dict) -> dict:
+def run(spec: dict, oracle: dict) -> dict:
     learned = induce_macros(spec)
     random_lib = random_library(spec, learned)
     results = []
-    removal_failures = 0
-    learned_over_none = 0
-    learned_over_random = 0
-    successful_transfers = 0
+    removal_failures = learned_over_none = learned_over_random = successful_transfers = 0
     source_family_by_macro = {m["id"]: set(m["source_families"]) for m in learned}
 
-    for holdout in spec["holdouts"]:
-        full = search_holdout(spec, holdout, learned)
-        none = search_holdout(spec, holdout, [])
-        random_result = search_holdout(spec, holdout, random_lib)
+    for holdout in oracle["holdouts"]:
+        full = search_holdout(spec, oracle, holdout, learned)
+        none = search_holdout(spec, oracle, holdout, [])
+        random_result = search_holdout(spec, oracle, holdout, random_lib)
         used_macro_ids = [token[1:] for token in full.get("tokens", []) if token.startswith("@MG-")]
         cross_family_used = [macro_id for macro_id in used_macro_ids if holdout["family"] not in source_family_by_macro[macro_id]]
         transfer_success = bool(full["found"] and cross_family_used)
@@ -170,7 +166,7 @@ def run(spec: dict) -> dict:
         removals = {}
         specific_removal_failed = False
         for macro_id in sorted(set(cross_family_used)):
-            replay = search_holdout(spec, holdout, learned, removed_macro_id=macro_id)
+            replay = search_holdout(spec, oracle, holdout, learned, removed_macro_id=macro_id)
             removals[macro_id] = replay
             if full["found"] and not replay["found"]:
                 specific_removal_failed = True
@@ -198,31 +194,34 @@ def run(spec: dict) -> dict:
     return {
         "experiment": spec["experiment"],
         "status": "passed" if all(checks.values()) else "failed",
-        "spec_sha256": sha256_json(spec),
+        "spec_sha256": canonical_sha256(spec),
+        "oracle_sha256": canonical_sha256(oracle),
         "learned_macros": learned,
         "random_library": random_lib,
         "holdout_results": results,
         "aggregate": {
-            "holdout_count": len(spec["holdouts"]),
+            "holdout_count": len(oracle["holdouts"]),
             "successful_prospective_transfers": successful_transfers,
             "learned_over_no_library_success_count": learned_over_none,
             "learned_over_random_library_success_count": learned_over_random,
             "specific_macro_removal_failure_count": removal_failures,
         },
         "gate_checks": checks,
-        "claim_boundary": "Gate -1 is only an architecture-feasibility result on a committed synthetic DSL. Passing does not establish novelty, external generality, or an AI breakthrough; it only permits construction of a stronger V7."
+        "claim_boundary": "Gate -1 is only an architecture-feasibility result on a committed synthetic DSL. Passing does not establish novelty, external generality, or an AI breakthrough."
     }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--spec", type=Path, required=True)
+    parser.add_argument("--oracle", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     spec = json.loads(args.spec.read_text())
-    result = run(spec)
+    oracle = json.loads(args.oracle.read_text())
+    result = run(spec, oracle)
     args.output.mkdir(parents=True, exist_ok=True)
-    (args.output / "GATE_MINUS1_RESULT.json").write_text(json.dumps(result, indent=2) + "\n")
+    (args.output / "GATE_MINUS1_R2_RESULT.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))
     if result["status"] != "passed":
         raise SystemExit(2)
