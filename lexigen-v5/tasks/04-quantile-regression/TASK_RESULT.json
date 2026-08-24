@@ -1,0 +1,36 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "family": "statistics",
+  "status": "resolved_negative_performance",
+  "scientific_resolution": "correct_on_all_blind_records_but_below_frozen_speed_gate",
+  "blind_workflow_run_id": 32685085084,
+  "blind_complete_artifact_id": 9505402601,
+  "blind_complete_artifact_digest": "sha256:7fcfd2ad8175f0959f020b6a1a84c9ed060a1d770d8f4946671c2509802d5eb8",
+  "v5_full": {
+    "candidate": "v5_full_r2_41510e43e8fafb598496",
+    "learned_transfer_id": "TM-RRR-01",
+    "valid": 100,
+    "invalid_output_retries": 0,
+    "harmonic_speedup": 1.1951887446497171,
+    "minimum_speedup": 1.1149575130389635,
+    "passes_blind_gate": false
+  },
+  "v5_no_transfer_harmonic_speedup": 1.1969325281566763,
+  "v4_compatible_harmonic_speedup": 1.021046895695991,
+  "clean_unseen_win": false,
+  "v5_over_v4_task_win": false,
+  "causal_transfer_win": false,
+  "causal_transfer_reason": "Selected full and no-transfer candidates are implementation-equivalent free_parameter_lp mechanisms, and full has no performance advantage.",
+  "campaign_after_task": {
+    "tasks_resolved": 4,
+    "clean_unseen_wins": 1,
+    "winning_families": ["machine_learning"],
+    "v5_over_v4_task_wins": 1,
+    "causal_transfer_wins": 0
+  },
+  "thresholds_changed": false,
+  "task_replaced_or_dropped": false,
+  "human_task_specific_solver_contribution": false
+}
