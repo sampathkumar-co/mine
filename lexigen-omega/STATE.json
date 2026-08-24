@@ -1,0 +1,32 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "branch": "lexigen/omega-agi-foundation-r1",
+  "status": "active_development",
+  "claim": "no_agi_or_breakthrough_claim",
+  "gates": {
+    "OMEGA0": "locked",
+    "OMEGA1": "in_progress",
+    "OMEGA2": "not_started",
+    "OMEGA3": "not_started",
+    "OMEGA4": "not_started",
+    "OMEGA5": "foundation_started",
+    "OMEGA6": "not_started",
+    "OMEGA7": "not_started",
+    "OMEGA8": "not_started",
+    "OMEGA9": "not_started",
+    "OMEGA10": "not_started",
+    "OMEGA11": "not_started"
+  },
+  "implemented": [
+    "task-agnostic deterministic typed core IR",
+    "canonical executable program fingerprints",
+    "semantic gene evidence object",
+    "strict causal long-term-memory admission policy",
+    "foundation tests"
+  ],
+  "next": [
+    "close OMEGA1 with richer control-flow/state/function substrate and independent interpreter",
+    "implement OMEGA2 semantic anti-unification and primitive invention",
+    "build prospective development transfer fixture before allowing any gene into causal memory"
+  ]
+}
