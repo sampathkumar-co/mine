@@ -1,0 +1,37 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "train_r1_lock",
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "1fb8688d35f30695bb17204f65f11514f306a410",
+    "SYNTHETIC_R2_RESULT.json": "8bc161d2f31ac2c4d21e894945ea3cba4b70888c",
+    "DATASET_METADATA_R1_RESULT.json": "8c286f6ad3d4a52f008b0a0033ef57097a9eb3bb",
+    "candidates.py": "2ebbb4e9c9c2c145e9bc3c13acae218bf0fac441",
+    "DEPENDENCY_PIN_R2.json": "daa0e45b9b2fa44465656fd5676cf7e227e68fd5",
+    "train_shard.py": "f5c3aa07c8f6f754acd7b071a940c3c88e618d5d",
+    "aggregate_train.py": "4fc9e0508ad5559a5d0f7144326997ead7430bd1",
+    "workflow": "97eeee6564f3a1bc0623bbb786b66c4b0acd3308"
+  },
+  "training_manifest": {
+    "name": "earth_movers_distance_T100ms_n1151_size100_train.jsonl",
+    "oid": "19eac35e67713b6a56ccb7ae500519b8c1b57a3f",
+    "size": 2492842
+  },
+  "test_manifest_metadata_only": {
+    "name": "earth_movers_distance_T100ms_n1151_size100_test.jsonl",
+    "oid": "dd5b455a8ca5b6af0165be7fbd318f331112ff3f",
+    "size": 2492900
+  },
+  "candidate_count": 30,
+  "training_records": 100,
+  "shards": 10,
+  "selection_rule": "100% correctness; performance-gate pass first; then harmonic, minimum, median speedup, stable candidate name",
+  "frozen_default_gate": {"valid_required":100,"harmonic_speedup_minimum":1.5,"minimum_speedup":1.05,"invalid_output_retries":0},
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_changes_after_training_access_allowed": false,
+  "threshold_changes_allowed": false
+}
