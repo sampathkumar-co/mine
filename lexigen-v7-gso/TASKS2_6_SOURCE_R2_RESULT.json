@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_parallel_source_r2_sealed",
+  "status": "success",
+  "workflow_run_id": 32739826254,
+  "head_sha": "53955df6a9657c373b8b166e98ede1e448a9b4fd",
+  "all_five_jobs_succeeded": true,
+  "source_retrieval_revision": 2,
+  "tasks": {
+    "2": {"instance_id":"abetlen__llama-cpp-python-2bc1d97","artifact_id":9524821345,"artifact_digest":"sha256:e9e86233c6c2d29195dd04a96824cfaf042550ffc4fe104531c9f3f0ea57c248"},
+    "3": {"instance_id":"huggingface__tokenizers-bfd9cde","artifact_id":9524754905,"artifact_digest":"sha256:36fd1e4021bc481f8f480dc8a4476ba266a9fd549764d5a50718c1d01c5cf7ad"},
+    "4": {"instance_id":"numpy__numpy-be52f19","artifact_id":9524708842,"artifact_digest":"sha256:4928f27dfe8dc39d01733d79b47d64414f8cb75572f63a5b07ac3dc8f2970718"},
+    "5": {"instance_id":"pandas-dev__pandas-fd43d4b","artifact_id":9524726884,"artifact_digest":"sha256:78acea7bd1a97a01fa13a9c0956f6e11108dc32e5f923d19afa80326f7617b9e"},
+    "6": {"instance_id":"huggingface__transformers-211f93a","artifact_id":9524725340,"artifact_digest":"sha256:97c47a6b7ded2c25406b2f1681e3f3beb3a75a659d6883497f65aa85d34065cf"}
+  },
+  "r1_context_incident_preserved": true,
+  "candidate_generation_started_before_source_seal": false,
+  "candidate_timing_observed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "prior_submissions_accessed": false,
+  "human_task_specific_solver_contribution": false,
+  "next_protocol_action": "Generate exactly six source-only proposals per arm per task and freeze up to three concrete preflight candidates per arm before any candidate timing."
+}
