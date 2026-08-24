@@ -61,16 +61,11 @@ def ingest_v7_gso_preflight_result(
     *,
     require_credit_eligible: bool = True,
 ) -> tuple[EvaluationObservation, ...]:
-    """Convert an already-sealed V7 GSO result into Ω development observations.
+    """Convert an already-sealed V7 Tasks2-6 preflight result into Ω observations.
 
-    Ω does not rerun or reinterpret GSO here. The V7 harness remains the evaluator;
-    this bridge only consumes its recorded outcomes. Diagnostic/contaminated tasks are
-    excluded by default so they cannot silently become learning evidence.
-
-    Infrastructure incidents and partially evaluated rows are intentionally excluded.
-    They are useful engineering evidence, but must not teach Ω that a mechanism is
-    scientifically bad. Only candidate rows that completed without runner errors enter
-    hindsight learning.
+    Ω never reruns or reinterprets GSO here. Diagnostic/contaminated tasks,
+    infrastructure incidents and partially evaluated candidate rows are excluded so
+    they cannot silently become learning evidence.
     """
 
     if payload.get("stage") != "tasks2_6_preflight_r1":
@@ -86,9 +81,9 @@ def ingest_v7_gso_preflight_result(
     task_id = str(payload.get("instance_id") or f"v7-task-{payload.get('task')}")
     observations: list[EvaluationObservation] = []
     for row in payload.get("candidate_results", []):
-        # A row with a runner/install/apply/eqcheck exception has not completed the
-        # same evaluation path as a successful row. Keep it out of learning until a
-        # future explicit failure taxonomy can prove it is a scientific negative.
+        # Runner/install/apply/eqcheck exceptions are not automatically scientific
+        # negatives. A later explicit taxonomy may distinguish them; until then they
+        # stay out of hindsight learning.
         if row.get("error"):
             continue
         candidate = str(row["candidate"])
@@ -117,57 +112,167 @@ def ingest_v7_gso_preflight_result(
     return tuple(observations)
 
 
-def parse_v7_gso_proposals(payload: Mapping[str, Any]) -> tuple[ProposalProvenance, ...]:
-    """Parse the frozen pre-timing V7 proposal pool into mechanism provenance.
+def ingest_v7_gso_task1_revision_result(
+    payload: Mapping[str, Any],
+) -> tuple[EvaluationObservation, ...]:
+    """Ingest the sealed equal-budget Task1 revision-slot feedback as dev evidence.
 
-    The proposal file is intentionally accepted only when it asserts no timing or
-    expert leakage. This prevents post-result descriptions from becoming Ω training
-    labels under the guise of provenance.
+    This is *not* authoritative GSO success evidence and earns no causal credit by
+    itself. It is safe hindsight data because all compared candidates were frozen
+    before the feedback round, all arms had equal revision budget, all equivalence
+    checks completed, and expert targets/diffs/hints remained unopened.
     """
 
-    if bool(payload.get("timing_feedback_used", True)):
-        raise ValueError("proposal provenance used timing feedback")
-    for forbidden in ("expert_opt_commit_accessed", "expert_diff_accessed", "hints_accessed"):
+    if payload.get("stage") != "revision_slot_1_14_test_result_sealed":
+        raise ValueError("unsupported Task1 revision stage")
+    if payload.get("status") != "success":
+        return ()
+    for forbidden in (
+        "expert_target_timing_accessed",
+        "expert_opt_commit_accessed",
+        "expert_diff_accessed",
+        "hints_accessed",
+        "human_task_specific_solver_contribution",
+    ):
         if bool(payload.get(forbidden, True)):
-            raise ValueError(f"proposal provenance crossed forbidden boundary: {forbidden}")
+            raise ValueError(f"Task1 evidence crossed forbidden boundary: {forbidden}")
+    if int(payload.get("revision_slots_consumed_per_arm", -1)) != 1:
+        raise ValueError("Task1 revision did not preserve equal one-slot arm budget")
 
-    schema = tuple(str(x) for x in payload.get("schema", ()))
-    required = (
-        "proposal_id",
-        "arm",
-        "primitive_sequence",
-        "macro_ids",
-        "mechanism",
-        "source_visible_preconditions",
-        "correctness_risk",
-        "files_functions",
-        "expected_performance_mechanism",
-    )
-    if schema != required:
-        raise ValueError("unsupported V7 proposal schema")
+    task_id = str(payload.get("instance_id", ""))
+    if not task_id:
+        raise ValueError("Task1 evidence missing instance identity")
 
-    records: list[ProposalProvenance] = []
-    seen: set[str] = set()
-    for raw in payload.get("proposals", ()):
-        if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)) or len(raw) != len(required):
-            raise ValueError("malformed proposal row")
-        candidate = str(raw[0])
-        if candidate in seen:
-            raise ValueError(f"duplicate proposal id: {candidate}")
-        seen.add(candidate)
-        records.append(
-            ProposalProvenance(
+    observations: list[EvaluationObservation] = []
+    candidates = payload.get("candidates", {})
+    for arm in ("v7_full", "v7_no_library", "v7_random_library"):
+        row = candidates.get(arm)
+        if not isinstance(row, Mapping):
+            raise ValueError(f"Task1 evidence missing arm {arm}")
+        if not bool(row.get("all_14_equivalence_checks_passed", False)):
+            continue
+        candidate = str(row["candidate_id"])
+        harmonic = float(row.get("harmonic_speedup_vs_base", 0.0) or 0.0)
+        minimum = float(row.get("minimum_speedup_vs_base", 0.0) or 0.0)
+        maximum = float(row.get("maximum_speedup_vs_base", 0.0) or 0.0)
+        observations.append(
+            EvaluationObservation(
+                task_id=task_id,
                 candidate_id=candidate,
-                arm=str(raw[1]),
-                primitive_sequence=tuple(str(x) for x in raw[2]),
-                macro_ids=tuple(str(x) for x in raw[3]),
-                mechanism=str(raw[4]),
-                source_visible_preconditions=str(raw[5]),
-                correctness_risk=str(raw[6]),
-                files_functions=tuple(str(x) for x in raw[7]),
-                expected_performance_mechanism=str(raw[8]),
+                artifact_fingerprint=str(row["patch_sha256"]),
+                arm=arm,
+                valid=True,
+                score=harmonic,
+                metrics={
+                    "harmonic_speedup": harmonic,
+                    "minimum_speedup": minimum,
+                    "maximum_speedup": maximum,
+                    "tests_passed": 14.0,
+                    "test_count": 14.0,
+                },
+                credit_eligible=True,
+                source="lexigen-v7-gso-task1-revision1-sealed-dev-feedback",
             )
         )
+    return tuple(observations)
+
+
+def _common_proposal_boundary_ok(payload: Mapping[str, Any]) -> None:
+    if bool(payload.get("timing_feedback_used", True)):
+        raise ValueError("proposal provenance used timing feedback")
+
+    # Tasks2-6 schema.
+    if "schema" in payload:
+        for forbidden in ("expert_opt_commit_accessed", "expert_diff_accessed", "hints_accessed"):
+            if bool(payload.get(forbidden, True)):
+                raise ValueError(f"proposal provenance crossed forbidden boundary: {forbidden}")
+        return
+
+    # Task1 nested-arm schema.
+    if bool(payload.get("correctness_feedback_used", True)):
+        raise ValueError("Task1 proposal provenance used correctness feedback")
+    for forbidden in ("expert_patch_used", "hints_used"):
+        if bool(payload.get(forbidden, True)):
+            raise ValueError(f"Task1 proposal provenance crossed forbidden boundary: {forbidden}")
+
+
+def parse_v7_gso_proposals(payload: Mapping[str, Any]) -> tuple[ProposalProvenance, ...]:
+    """Parse either frozen V7 proposal schema into common mechanism provenance."""
+
+    _common_proposal_boundary_ok(payload)
+    records: list[ProposalProvenance] = []
+    seen: set[str] = set()
+
+    if "schema" in payload:
+        schema = tuple(str(x) for x in payload.get("schema", ()))
+        required = (
+            "proposal_id",
+            "arm",
+            "primitive_sequence",
+            "macro_ids",
+            "mechanism",
+            "source_visible_preconditions",
+            "correctness_risk",
+            "files_functions",
+            "expected_performance_mechanism",
+        )
+        if schema != required:
+            raise ValueError("unsupported V7 proposal schema")
+        rows = payload.get("proposals", ())
+        for raw in rows:
+            if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)) or len(raw) != len(required):
+                raise ValueError("malformed proposal row")
+            candidate = str(raw[0])
+            if candidate in seen:
+                raise ValueError(f"duplicate proposal id: {candidate}")
+            seen.add(candidate)
+            records.append(
+                ProposalProvenance(
+                    candidate_id=candidate,
+                    arm=str(raw[1]),
+                    primitive_sequence=tuple(str(x) for x in raw[2]),
+                    macro_ids=tuple(str(x) for x in raw[3]),
+                    mechanism=str(raw[4]),
+                    source_visible_preconditions=str(raw[5]),
+                    correctness_risk=str(raw[6]),
+                    files_functions=tuple(str(x) for x in raw[7]),
+                    expected_performance_mechanism=str(raw[8]),
+                )
+            )
+        return tuple(records)
+
+    arms = payload.get("arms")
+    if not isinstance(arms, Mapping):
+        raise ValueError("unsupported V7 proposal payload")
+    for arm in ("v7_full", "v7_no_library", "v7_random_library"):
+        rows = arms.get(arm)
+        if not isinstance(rows, Sequence) or isinstance(rows, (str, bytes)):
+            raise ValueError(f"Task1 proposal payload missing arm {arm}")
+        for row in rows:
+            if not isinstance(row, Mapping):
+                raise ValueError("malformed Task1 proposal row")
+            candidate = str(row["candidate_id"])
+            if candidate in seen:
+                raise ValueError(f"duplicate proposal id: {candidate}")
+            seen.add(candidate)
+            preconditions = row.get("source_visible_preconditions", ())
+            if isinstance(preconditions, str):
+                precondition_text = preconditions
+            else:
+                precondition_text = "; ".join(str(x) for x in preconditions)
+            records.append(
+                ProposalProvenance(
+                    candidate_id=candidate,
+                    arm=arm,
+                    primitive_sequence=tuple(str(x) for x in row.get("primitive_sequence", ())),
+                    macro_ids=tuple(str(x) for x in row.get("macro_ids", ())),
+                    mechanism=str(row.get("mechanism", "")),
+                    source_visible_preconditions=precondition_text,
+                    correctness_risk=str(row.get("correctness_risk", "")),
+                    files_functions=tuple(str(x) for x in row.get("files", ())),
+                    expected_performance_mechanism=str(row.get("expected_performance", "")),
+                )
+            )
     return tuple(records)
 
 
@@ -203,12 +308,7 @@ def build_hindsight_preferences(
     *,
     max_pairs: int = 64,
 ) -> tuple[HindsightPreference, ...]:
-    """Create deterministic preference data from executable evaluator feedback.
-
-    Correct candidates dominate incorrect candidates. Among correct candidates,
-    evaluator score then minimum per-test score defines preference. This produces
-    learning data without inventing labels or task-specific human judgements.
-    """
+    """Create deterministic preference data from executable evaluator feedback."""
 
     if max_pairs < 0:
         raise ValueError("max_pairs must be non-negative")
