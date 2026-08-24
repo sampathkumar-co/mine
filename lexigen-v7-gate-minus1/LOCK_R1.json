@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN V7 Gate -1 prospective abstraction feasibility",
+  "stage": "preregistered_before_trigger",
+  "parent_checkpoint": "6267ce2acb7ee22306c61188c956f6c69e996af2",
+  "branch": "lexigen/v7-gate-minus1-preregister-r1",
+  "git_blob_sha1": {
+    "PROTOCOL.md": "88a77d4d41cbfb5e434f131a36ae404a97c1a4a3",
+    "EXPERIMENT_SPEC.json": "ba09089416453e1247351530056362a466dca6f3",
+    "gate_minus1.py": "acef8b7259ca8238d2c5bbd9b416e012c2ceb01e"
+  },
+  "trigger_present_at_lock": false,
+  "execution_performed_before_lock": false,
+  "heldout_target_programs_stored_in_spec": false,
+  "holdout_behavior_signatures_committed": true,
+  "thresholds_frozen_before_execution": true,
+  "random_library_seed_frozen": true,
+  "search_budget_frozen": true,
+  "claim_boundary": "Synthetic architecture-feasibility kill-test only; cannot establish novelty or breakthrough."
+}
