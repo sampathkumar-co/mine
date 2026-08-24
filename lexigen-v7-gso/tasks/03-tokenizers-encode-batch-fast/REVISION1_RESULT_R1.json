@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task": 3,
+  "instance_id": "huggingface__tokenizers-bfd9cde",
+  "stage": "task3_revision1_r1_result_sealed",
+  "workflow_run_id": 32752592208,
+  "artifact_id": 9529862387,
+  "artifact_digest": "sha256:55f981195d59ae1a8c248652edc4358a0aa35562d78b63de80ae29344ac9f048",
+  "revision_slot": 1,
+  "representative_test_indexes": [0, 2, 4],
+  "baseline_times": {"0":0.869318,"2":0.096268,"4":0.44724},
+  "candidate_results": {
+    "F2R1": {"arm":"v7_full","patch_sha256":"7f3b9808b454e3b828be9720d428c8aec4e82085a937c7fb4d6bdace3f8e8b22","install_ok":true,"correct":false,"tests_passed":1,"test_count":3,"test0_speedup":0.9892170406261309,"failure":"test 2 token IDs differ at index 0"},
+    "N4R1": {"arm":"v7_no_library","patch_sha256":"7f3b9808b454e3b828be9720d428c8aec4e82085a937c7fb4d6bdace3f8e8b22","install_ok":true,"correct":false,"tests_passed":1,"test_count":3,"test0_speedup":1.0101242730404774,"failure":"test 2 token IDs differ at index 0"},
+    "R4R1": {"arm":"v7_random_library","patch_sha256":"9b3f9fa3d377aff8380be3246a2bc20dedd318be920f862f089d556d364bf114","install_ok":true,"correct":false,"tests_passed":1,"test_count":3,"test0_speedup":0.9776427747250893,"failure":"test 2 token IDs differ at index 0"}
+  },
+  "full_no_library_patch_byte_identical": true,
+  "full_no_library_both_correct": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "thresholds_changed": false
+}
