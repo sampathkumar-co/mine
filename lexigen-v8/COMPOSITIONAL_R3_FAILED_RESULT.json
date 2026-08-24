@@ -1,0 +1,76 @@
+{
+  "stage": "v8_ipwm_compositional_r3",
+  "classification": "failed_frozen_synthetic_falsification",
+  "source_branch": "lexigen/v8-ipwm-compositional-r3",
+  "source_head_sha": "de235a61bfe0d82bd248bb19c8380eda624c900f",
+  "workflow_run_id": 32759420540,
+  "workflow_job_id": 97534409709,
+  "artifact_id": 9532335796,
+  "artifact_zip_sha256": "42b75d11b25dfa98470786a31e8ad0dfc42d6f663d62884dcb826fed1ad6d062",
+  "real_intervention_data_opened": false,
+  "scientific_transfer_evidence": false,
+  "workflow_status_caveat": "GitHub job concluded success because the gate command was piped through tee without pipefail; the Python gate checker itself raised AssertionError. The scientific result is failure.",
+  "passed_gate_groups": {
+    "repository_holdout_predictive_signal": true,
+    "repository_family_holdout_predictive_signal": true,
+    "language_holdout_predictive_signal": true,
+    "repository_speedup_null_controls": true
+  },
+  "failed_frozen_gates": {
+    "repository_holdout_global_null_max_validity_auroc": {
+      "threshold_max": 0.62,
+      "observed": 0.7448271493514754
+    },
+    "intervention_family_holdout_full_positive_auroc": {
+      "threshold_min": 0.70,
+      "observed": 0.599723836273359
+    },
+    "intervention_family_holdout_full_spearman": {
+      "threshold_min": 0.50,
+      "observed": 0.2986993772252587
+    },
+    "intervention_family_holdout_full_minus_no_alignment_auroc": {
+      "threshold_min": 0.05,
+      "observed": -0.00045788327803630846
+    },
+    "intervention_family_holdout_full_minus_no_alignment_spearman": {
+      "threshold_min": 0.10,
+      "observed": 0.04040861405827645
+    },
+    "intervention_family_holdout_full_minus_stratified_null_auroc": {
+      "threshold_min": 0.10,
+      "observed": 0.06802673480210752
+    },
+    "intervention_family_holdout_full_minus_stratified_null_spearman": {
+      "threshold_min": 0.20,
+      "observed": 0.1346440776860882
+    }
+  },
+  "diagnostic_metrics": {
+    "repository_holdout": {
+      "full_positive_auroc": 0.8868367048082114,
+      "full_spearman": 0.8279926897764058,
+      "full_minus_no_alignment_auroc": 0.10615981033899169,
+      "full_minus_no_alignment_spearman": 0.22925643664115603,
+      "global_null_max_positive_auroc": 0.5376964598373515,
+      "global_null_max_abs_spearman": 0.06297564687975646
+    },
+    "repository_family_holdout": {
+      "full_positive_auroc": 0.8679475580253959,
+      "full_spearman": 0.8250619202419652
+    },
+    "language_holdout": {
+      "full_positive_auroc": 0.8797511340730668,
+      "full_spearman": 0.8477579874339651
+    },
+    "intervention_family_holdout": {
+      "full_positive_auroc": 0.599723836273359,
+      "full_spearman": 0.2986993772252587,
+      "no_alignment_positive_auroc": 0.6001817195513953,
+      "no_alignment_spearman": 0.25829076316698224,
+      "relative_top_k_gain_over_frequency": 0.09092330371782542
+    }
+  },
+  "protocol_consequence": "Per the frozen R3 kill rules, do not open real intervention data and kill the current IPWM compositional route rather than creating R3.1 with weaker gates.",
+  "next_action": "Return to the pre-real-data architecture tournament and select a materially different mechanism class; do not repair this route by threshold relaxation or synthetic-generator tuning."
+}
