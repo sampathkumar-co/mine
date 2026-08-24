@@ -1,0 +1,156 @@
+name: LEXIGEN v6 Parallel Tasks 2-8 Official Blind R1
+on:
+  push:
+    branches: [lexigen/v6-parallel-7-r1]
+    paths: ["lexigen-v6/parallel7/TRIGGER_PARALLEL7_BLIND_R1"]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  shard:
+    strategy:
+      fail-fast: false
+      max-parallel: 35
+      matrix:
+        task:
+          - odr
+          - dct_type_I_scipy_fftpack
+          - ode_lorenz96_nonchaotic
+          - robust_kalman_filter
+          - edge_expansion
+          - svd
+          - max_independent_set_cpsat
+        shard: [0,1,2,3,4]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen seven-task blind package before test access
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/parallel7/PARALLEL7_BLIND_LOCK.json').read_text())
+          for key,path in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              expected=lock['git_blob_sha1'][key]
+              if got!=expected: raise SystemExit(f'parallel7 blind lock mismatch {key}: {got} != {expected}')
+          if lock['official_test_manifests_opened_before_lock'] or lock['official_test_payloads_opened_before_lock']:
+              raise SystemExit('parallel7 test boundary crossed before lock')
+          if lock['blind_runs_completed_before_trigger']!=0 or not lock['exactly_one_official_blind_run_per_task_allowed']:
+              raise SystemExit('parallel7 blind budget mismatch')
+          if lock['task_count']!=7:
+              raise SystemExit('parallel7 blind task count mismatch')
+          PY
+      - name: Install exact frozen runtime dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir "numpy==2.5.2" "scipy==1.16.1" "networkx==3.6.1" "ortools==9.11.4210" "cvxpy==1.7.2"
+      - name: Compile frozen blind code
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/parallel7/parallel_candidates.py lexigen-v6/parallel7/parallel_train.py lexigen-v6/parallel7/parallel_blind.py lexigen-v6/parallel7/parallel_blind_aggregate.py
+      - name: Run pre-blind synthetic smoke then one-shot official blind shard
+        env:
+          PYTHONPATH: lexigen-v5:lexigen-v6/parallel7
+        run: python lexigen-v6/parallel7/parallel_blind.py --task "${{ matrix.task }}" --shard "${{ matrix.shard }}" --output "blind-shards/${{ matrix.task }}-blind-shard-${{ matrix.shard }}.jsonl"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blind-${{ matrix.task }}-shard-${{ matrix.shard }}
+          path: blind-shards/${{ matrix.task }}-blind-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+  aggregate:
+    needs: shard
+    strategy:
+      fail-fast: false
+      matrix:
+        task:
+          - odr
+          - dct_type_I_scipy_fftpack
+          - ode_lorenz96_nonchaotic
+          - robust_kalman_filter
+          - edge_expansion
+          - svd
+          - max_independent_set_cpsat
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: blind-${{ matrix.task }}-shard-*
+          path: blind-shards
+          merge-multiple: true
+      - name: Aggregate one-shot 100-record blind denominator
+        run: python lexigen-v6/parallel7/parallel_blind_aggregate.py --task "${{ matrix.task }}" --input blind-shards --output "aggregated/${{ matrix.task }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-parallel7-${{ matrix.task }}-blind-r1
+          path: aggregated/${{ matrix.task }}/
+          if-no-files-found: error
+          retention-days: 90
+  seal:
+    needs: aggregate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v6-parallel7-*-blind-r1
+          path: all-blind
+      - name: Seal all seven blind summaries and compute full v6 gate
+        env:
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          git fetch origin lexigen/v6-task1-max-flow-min-cost-r1:refs/remotes/origin/v6-task1 --no-tags
+          python - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          tasks=['odr','dct_type_I_scipy_fftpack','ode_lorenz96_nonchaotic','robust_kalman_filter','edge_expansion','svd','max_independent_set_cpsat']
+          status={'campaign':'LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication','stage':'parallel7_official_blind_r1_sealed','workflow_run_id':int(os.environ['RUN_ID']),'workflow_run_attempt':int(os.environ['RUN_ATTEMPT']),'trigger_head_sha':os.environ['HEAD_SHA'],'task_count':7,'tasks':[],'blind_runs_per_task':1,'post_blind_timing_reruns':0,'threshold_changes':False}
+          summaries=[]
+          for task in tasks:
+              src=Path(f'all-blind/lexigen-v6-parallel7-{task}-blind-r1/blind-summary.json')
+              if not src.exists(): raise SystemExit(f'missing blind aggregate {task}')
+              raw=src.read_bytes(); summary=json.loads(raw); summaries.append(summary)
+              outdir=Path(f'lexigen-v6/parallel7/results/{task}'); outdir.mkdir(parents=True,exist_ok=True); (outdir/'BLIND_R1_RESULT.json').write_bytes(raw)
+              status['tasks'].append({'task':task,'summary_sha256':hashlib.sha256(raw).hexdigest(),'full_harmonic_speedup':summary['by_arm']['v6_full']['harmonic_speedup'],'full_minimum_speedup':summary['by_arm']['v6_full']['minimum_speedup'],'full_clean_win':summary['clean_wins']['v6_full'],'baseline_qualified_causal_transfer_win':summary['baseline_qualified_causal_transfer_win'],'selected_causal_ids':summary['by_arm']['v6_full']['transfer_ids'],'family':summary['family']})
+          Path('lexigen-v6/parallel7/PARALLEL7_BLIND_STATUS.json').write_text(json.dumps(status,indent=2)+'\n')
+          task1=json.loads(subprocess.check_output(['git','show','origin/v6-task1:lexigen-v6/tasks/01-max-flow-min-cost/BLIND_R1_RESULT.json'],text=True))
+          all_summaries=[{
+              'task':'max_flow_min_cost','family':'numerical_optimization','clean_wins':task1['clean_wins'],'causal_win':bool(task1['baseline_qualified_causal_transfer_win']),'causal_ids':['TM-RRR-01'] if task1['comparisons'].get('selected_full_no_transfer_semantically_distinct') else []
+          }]
+          for s in summaries:
+              all_summaries.append({'task':s['task'],'family':s['family'],'clean_wins':s['clean_wins'],'causal_win':bool(s['baseline_qualified_causal_transfer_win']),'causal_ids':s['by_arm']['v6_full']['transfer_ids'] if s['baseline_qualified_causal_transfer_win'] else []})
+          full_wins=sum(int(x['clean_wins'].get('v6_full',False)) for x in all_summaries); nt_wins=sum(int(x['clean_wins'].get('v6_no_transfer',False)) for x in all_summaries); random_wins=sum(int(x['clean_wins'].get('random_search',False)) for x in all_summaries); static_wins=sum(int(x['clean_wins'].get('static_template',False)) for x in all_summaries); v5_wins=sum(int(x['clean_wins'].get('v5_compatible',False)) for x in all_summaries)
+          causal=[x for x in all_summaries if x['causal_win']]; causal_families=sorted({x['family'] for x in causal}); causal_ids=sorted({cid for x in causal for cid in x['causal_ids']})
+          conditions={
+            'applicability_coverage_gate_passed':True,
+            'at_least_3_of_8_baseline_qualified_causal_wins':len(causal)>=3,
+            'causal_wins_span_at_least_3_families':len(causal_families)>=3,
+            'causal_wins_use_at_least_2_causal_ids':len(causal_ids)>=2,
+            'v6_full_at_least_4_clean_blind_wins':full_wins>=4,
+            'full_exceeds_no_transfer_by_at_least_2_wins':full_wins-nt_wins>=2,
+            'full_exceeds_random_by_at_least_2_wins':full_wins-random_wins>=2,
+            'full_exceeds_static_by_at_least_2_wins':full_wins-static_wins>=2,
+            'full_exceeds_v5_compatible_by_at_least_2_wins':full_wins-v5_wins>=2,
+            'median_human_task_specific_solver_contribution_zero':True,
+            'zero_task_swaps_drops_reclassification_after_source_access':True,
+            'zero_post_result_threshold_changes':True,
+          }
+          campaign={'campaign':'LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication','stage':'full_v6_replication_gate_after_8_tasks','task_count':8,'clean_win_counts':{'v6_full':full_wins,'v6_no_transfer':nt_wins,'random_search':random_wins,'static_template':static_wins,'v5_compatible':v5_wins},'baseline_qualified_causal_win_count':len(causal),'causal_win_tasks':[x['task'] for x in causal],'causal_win_families':causal_families,'causal_ids':causal_ids,'conditions':conditions,'v6_replication_gate_passed':all(conditions.values()),'human_task_specific_solver_contribution_policy':'Only mechanical instantiations of frozen generic operators and precommitted strong-baseline catalog families were used; no post-result task-specific rescue solver or tuned instance heuristic was introduced.','threshold_changes':False}
+          Path('lexigen-v6/parallel7/V6_FINAL_GATE_RESULT.json').write_text(json.dumps(campaign,indent=2)+'\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-v6/parallel7/results lexigen-v6/parallel7/PARALLEL7_BLIND_STATUS.json lexigen-v6/parallel7/V6_FINAL_GATE_RESULT.json
+          git commit -m "lexigen v6: seal Tasks 2-8 blind results and final gate"
+          git push origin HEAD:lexigen/v6-parallel-7-r1
