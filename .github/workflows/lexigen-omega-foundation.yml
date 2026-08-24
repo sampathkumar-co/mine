@@ -21,7 +21,7 @@ jobs:
           python-version: '3.12'
       - name: Compile Omega core
         run: |
-          python -m compileall -q lexigen-omega/src lexigen-omega/tests
+          python -m compileall -q lexigen-omega/src lexigen-omega/tests lexigen-omega/tools
       - name: Run Omega foundation tests
         env:
           PYTHONPATH: lexigen-omega/src
@@ -39,3 +39,39 @@ jobs:
           assert lock['architecture_commitments']['search_policy_revision_budget_after_final_freeze'] == 0
           print('OMEGA0 lock verified')
           PY
+
+  real-task1-hindsight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - name: Checkout pinned V7 Task1 proposal evidence
+        uses: actions/checkout@v4
+        with:
+          ref: 1aed9ff5b94739e3568cdf9f841e2c42045a380c
+          path: _evidence/task1-proposals
+          fetch-depth: 1
+      - name: Checkout pinned V7 Task1 sealed revision result
+        uses: actions/checkout@v4
+        with:
+          ref: eabee7b2c2385779eeb1b6e856b368aa0265c0fb
+          path: _evidence/task1-result
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build real mechanism-level hindsight report
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python lexigen-omega/tools/verify_v7_task1_hindsight.py \
+            --proposals _evidence/task1-proposals/lexigen-v7-gso/tasks/01-pydantic-setattr/PROPOSALS_R1.json \
+            --result _evidence/task1-result/lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION1_R1_RESULT.json \
+            --output omega-evidence/TASK1_REVISION1_HINDSIGHT.json
+      - name: Upload Omega real hindsight evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-task1-real-hindsight
+          path: omega-evidence/TASK1_REVISION1_HINDSIGHT.json
+          retention-days: 90
