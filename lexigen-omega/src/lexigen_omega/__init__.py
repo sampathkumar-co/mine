@@ -4,10 +4,23 @@ Development-only. Importing this package makes no AGI or breakthrough claim.
 """
 
 from .gene import CausalEvidence, GeneAdmissionPolicy, SemanticGene
-from .ir import Instruction, OpCode, Program, TypeTag, execute_program
+from .ir import (
+    BudgetExceeded,
+    ExecutionBudget,
+    ExecutionResult,
+    Instruction,
+    OpCode,
+    Program,
+    TypeTag,
+    execute_program,
+    execute_program_metered,
+)
 
 __all__ = [
+    "BudgetExceeded",
     "CausalEvidence",
+    "ExecutionBudget",
+    "ExecutionResult",
     "GeneAdmissionPolicy",
     "Instruction",
     "OpCode",
@@ -15,4 +28,5 @@ __all__ = [
     "SemanticGene",
     "TypeTag",
     "execute_program",
+    "execute_program_metered",
 ]
