@@ -1,0 +1,43 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 3,
+  "instance_id": "huggingface__tokenizers-bfd9cde",
+  "stage": "revision1_plan_frozen_before_execution",
+  "revision_slot": 1,
+  "revision_candidates_per_arm": 1,
+  "v7_full": {
+    "candidate_id": "F2R1",
+    "source_proposal_id": "F2",
+    "primitive_sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+    "learned_macro_ids": ["V7M-002"],
+    "repair": "new native encode_batch_fast first certifies that non-pretokenized input extracts as Vec<String> and executes the direct raw-string batch path; mixed raw pairs or pretokenized inputs recover to the existing TextEncodeInput/PreTokenizedEncodeInput conversion semantics"
+  },
+  "v7_no_library": {
+    "candidate_id": "N4R1",
+    "source_proposal_id": "N4",
+    "primitive_sequence": ["REPRESENT", "EXECUTE"],
+    "learned_macro_ids": [],
+    "repair": "independently use one Vec<String> extraction for the raw homogeneous case, while retaining the ordinary dynamic conversion path when that representation does not apply"
+  },
+  "v7_random_library": {
+    "candidate_id": "R4R1",
+    "source_proposal_id": "R4",
+    "primitive_sequence": ["RECOVER", "RECOVER"],
+    "random_macro_ids": ["V7R-003"],
+    "repair": "add a compatibility encode_batch_fast entry that uses the existing dynamic conversion semantics for raw pairs and pretokenized inputs; no special raw-string execution path"
+  },
+  "fairness": {
+    "same_revision_count": true,
+    "same_representative_tests": [0, 2, 4],
+    "same_wall_clock_limits": true,
+    "same_evaluator_access": true,
+    "new_primitives_added": false,
+    "libraries_changed": false
+  },
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "human_task_specific_solver_contribution": false,
+  "thresholds_changed": false,
+  "important_causal_note": "F2R1 and N4R1 are allowed to converge to the same executable patch. If they do, that is negative causal evidence and must not be hidden or repaired away."
+}
