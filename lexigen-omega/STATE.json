@@ -7,7 +7,7 @@
     "OMEGA0": "locked",
     "OMEGA1": "in_progress",
     "OMEGA2": "foundation_started",
-    "OMEGA3": "evaluator_bridge_started",
+    "OMEGA3": "real_evaluator_hindsight_verified",
     "OMEGA4": "not_started",
     "OMEGA5": "foundation_started",
     "OMEGA6": "not_started",
@@ -29,28 +29,46 @@
     "exact proposal expansion verification",
     "sealed V7 GSO evaluator-result ingestion",
     "infrastructure-failure exclusion from hindsight learning",
-    "pre-timing proposal provenance parser with expert/timing boundary checks",
+    "pre-timing proposal provenance parsers for Task1 and Tasks2-6 with expert/timing boundary checks",
     "candidate-outcome to mechanism-provenance join",
     "mechanism-level hindsight preference construction",
+    "pinned cross-branch real-evidence reproduction in GitHub Actions",
     "foundation and search-first CI tests"
   ],
+  "first_real_hindsight_evidence": {
+    "source_instance": "pydantic__pydantic-addf1f9",
+    "proposal_commit": "1aed9ff5b94739e3568cdf9f841e2c42045a380c",
+    "result_commit": "eabee7b2c2385779eeb1b6e856b368aa0265c0fb",
+    "omega_workflow_run_id": 32749616551,
+    "omega_artifact_id": 9528453198,
+    "omega_artifact_digest": "sha256:7ea64cd3ea78550f506644ecc4444d4e83086c4cb177bea851136b72f9bf9287",
+    "status": "verified_negative_learned_macro_example",
+    "candidate_ranking": ["R1", "N2", "F1"],
+    "mechanism_preference_count": 3,
+    "learned_candidate": "F1",
+    "learned_macro_ids": ["V7M-001"],
+    "causal_transfer_credit": false,
+    "interpretation": "Omega correctly converts the historical real evaluator feedback into a negative development preference against the learned EXECUTE->CERTIFY candidate on this task; this is not a causal-memory admission event."
+  },
   "search_first_decisions": [
     "reused the proven v15 anti-unification mechanism instead of rebuilding induction",
     "reused the existing V7 GSO Docker/correctness/timing harness instead of cloning a benchmark evaluator",
     "preserved the v23 lesson that fixed human-authored semantic inventories do not transfer globally",
     "did not expand the fixed opcode catalog after current SOAR/DGM evidence favored learned/evolving search over larger hand-authored DSLs",
     "semantic genesis produces proposals only; it cannot bypass prospective causal memory admission",
-    "real V7 task3/task6 preflight failures caused by missing hf_transfer before baseline execution are infrastructure evidence only and cannot become negative mechanism labels"
+    "real V7 task3/task6 preflight failures caused by missing hf_transfer before baseline execution are infrastructure evidence only and cannot become negative mechanism labels",
+    "did not implement a neural preference trainer from one real task; wait for clean multi-task trajectories so model choice is evidence-driven"
   ],
   "current_external_dependency": {
     "source": "LEXIGEN V7 GSO Tasks2-6 Parallel Preflight R1",
     "workflow_run_id": 32747466819,
-    "status_at_last_check": "in_progress",
+    "status_at_last_check": "in_progress_with_task3_and_task6_infrastructure_baseline_failures",
     "scientific_use": "consume only sealed credit-eligible completed candidate outcomes; never modify or rerun from the Omega branch"
   },
   "next": [
-    "ingest sealed clean V7 GSO preflight results when their source campaign records them",
-    "train/rank mechanism proposals from real evaluator preference trajectories rather than hand-authored labels",
+    "ingest sealed clean V7 GSO Tasks2-6 preflight results when their source campaign records them",
+    "aggregate mechanism-level preferences across distinct repositories and test whether they predict held-out candidate ranking",
+    "only then choose the smallest justified hindsight learner/search-policy update",
     "add a diverse search archive only after real trajectory evidence shows single-lineage search is limiting",
     "close remaining OMEGA1 substrate gaps only when an exposed evaluator failure proves they are required"
   ]
