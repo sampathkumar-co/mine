@@ -1,0 +1,23 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "stage":"official_training_r1_lock",
+  "git_blob_sha1":{
+    "SYNTHETIC_R1_RESULT.json":"ffec34c58e1e38deebffda80bcb6ff3cd5383d0f",
+    "DATASET_METADATA_R1_RESULT.json":"b8d9c40089d85df67cb8a892ce057907ce2c5a5d",
+    "candidates.py":"4e48e434f0e0b9ac02434cb3a0396c1470bd0cc4",
+    "train_shard.py":"59e472bf09537ae39030e2574c3e03a25a9e23c1",
+    "aggregate_train.py":"974039fbd23668cb178bf5e9005287aea71f75df",
+    "workflow":"913735a293309dcf5bbdfa84c60cf9114f85c275"
+  },
+  "training_manifest":{"name":"least_squares_T100ms_n102713_size100_train.jsonl","size":27514,"oid":"5e3908ffef99705acc60fe360b50c76c119c555f"},
+  "test_manifest_metadata_only":{"name":"least_squares_T100ms_n102713_size100_test.jsonl","size":27500,"oid":"a2a05f3b2d737d15c4cb46dc327f3954b78ace31"},
+  "candidate_count":30,
+  "official_training_manifest_opened_before_lock":false,
+  "official_training_payloads_opened_before_lock":0,
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":0,
+  "candidate_changes_after_synthetic":false,
+  "threshold_changes":false
+}
