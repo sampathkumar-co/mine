@@ -1,0 +1,22 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "status": "complete",
+  "v7_full_clean_gso_win": true,
+  "v7_full_authoritative_hm_speedup_patch_base": 2.129344740083751,
+  "v7_full_authoritative_hm_speedup_patch_expert_commit": 1.0124395397107313,
+  "v7_no_library_clean_gso_win": false,
+  "v7_random_library_clean_gso_win": false,
+  "anti_gaming_audit_passed": true,
+  "anti_gaming_workflow_run_id": 32750052006,
+  "anti_gaming_artifact_id": 9528660342,
+  "anti_gaming_artifact_digest": "sha256:9a44657bfb4c89f04d18eb875a0f7c5656c91d5c837d8dbaf54ec919fe144a3b",
+  "anti_gaming_violations": [],
+  "causal_transfer_win": false,
+  "causal_reason": "Causal credit was frozen impossible before authoritative scoring because F1 did not beat equal-budget controls during internal feedback; later expert-relative separation cannot retroactively satisfy the preregistered causal condition.",
+  "expert_diff_opened": false,
+  "hints_opened": false,
+  "post_final_patch_revision": false,
+  "thresholds_changed": false
+}

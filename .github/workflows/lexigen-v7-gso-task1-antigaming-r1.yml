@@ -1,0 +1,67 @@
+name: LEXIGEN V7 GSO Task1 Anti-Gaming R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-task1-pydantic-authoritative-result-r1]
+    paths: ["lexigen-v7-gso/tasks/01-pydantic-setattr/TRIGGER_ANTI_GAMING_R1"]
+permissions: {contents: read}
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task1 anti-gaming lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/tasks/01-pydantic-setattr/ANTI_GAMING_LOCK_R1.json').read_text())
+          paths={
+            'policy':'lexigen-v7-gso/tasks/01-pydantic-setattr/ANTI_GAMING_POLICY_R1.md',
+            'auditor':'lexigen-v7-gso/tasks/01-pydantic-setattr/audit_patch_r1.py',
+            'final_selection':'lexigen-v7-gso/tasks/01-pydantic-setattr/FINAL_SELECTION_R1.json',
+            'authoritative_result':'lexigen-v7-gso/tasks/01-pydantic-setattr/AUTHORITATIVE_R1_RESULT.json',
+            'builder':'lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-task1-antigaming-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'anti-gaming lock mismatch {key}: {got}')
+          if lock['candidate_changed_after_final_selection'] or lock['expert_diff_inspected'] or lock['hints_inspected']:
+              raise SystemExit('Task1 audit boundary crossed')
+          PY
+      - name: Compile frozen builder and auditor
+        run: python -m py_compile lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py lexigen-v7-gso/tasks/01-pydantic-setattr/audit_patch_r1.py
+      - name: Regenerate exact frozen F1 patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="slimshetty/gso:gso.eval.x86_64.pydantic__pydantic-addf1f9"
+          docker pull "$IMAGE"
+          C=$(docker create "$IMAGE" tail -f /dev/null)
+          docker start "$C"
+          trap 'docker rm -f "$C" >/dev/null 2>&1 || true' EXIT
+          docker cp lexigen-v7-gso/tasks/01-pydantic-setattr/build_candidate.py "$C:/tmp/build_candidate.py"
+          docker exec -w /testbed "$C" python /tmp/build_candidate.py --root /testbed --candidate F1
+          docker exec -w /testbed "$C" python -m py_compile pydantic/main.py pydantic/_internal/_model_construction.py
+          mkdir -p audit
+          docker exec -w /testbed "$C" git diff -- pydantic/main.py pydantic/_internal/_model_construction.py > audit/v7_full_F1.patch
+          GOT=$(sha256sum audit/v7_full_F1.patch | awk '{print $1}')
+          test "$GOT" = "63d68ecb88a6911926a5d60236808643d507d07a1e2fc19a943b62fee5bebaae"
+      - name: Run frozen equivalent anti-gaming audit
+        run: |
+          python lexigen-v7-gso/tasks/01-pydantic-setattr/audit_patch_r1.py \
+            --patch audit/v7_full_F1.patch \
+            --allow-path pydantic/main.py \
+            --allow-path pydantic/_internal/_model_construction.py \
+            --output audit/ANTI_GAMING_R1_RESULT.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lexigen-v7-gso-task1-pydantic-antigaming-r1
+          path: audit/
+          if-no-files-found: error
+          retention-days: 90
