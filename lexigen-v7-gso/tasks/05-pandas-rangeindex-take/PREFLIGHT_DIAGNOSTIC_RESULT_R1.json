@@ -1,0 +1,25 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 5,
+  "instance_id": "pandas-dev__pandas-fd43d4b",
+  "stage": "diagnostic_preflight_result_sealed",
+  "workflow_run_id": 32747466819,
+  "artifact_id": 9528656389,
+  "artifact_digest": "sha256:7c77188164c6e9eeb87b1f170f996dcec5d18c6f6210e562d8f2c43885e6a949",
+  "campaign_credit_eligible": false,
+  "representative_test_indexes": [0, 9, 18],
+  "all_nine_candidates_correct": true,
+  "winner_by_arm": {
+    "v7_full": {"candidate_id":"F4","harmonic_speedup":2.018734030841333,"minimum_speedup":0.9451846212409591,"patch_sha256":"b3248551372d0dc9413834c002a5b44eca941522ab558eb57caf954cda7f043e"},
+    "v7_no_library": {"candidate_id":"N2","harmonic_speedup":1.9838598975412653,"minimum_speedup":0.9207663782447466,"patch_sha256":"e29b5d40a02f6f78e0858b2da7bbb3270ecee21f5be9140996fa873cf842d2a0"},
+    "v7_random_library": {"candidate_id":"R6","harmonic_speedup":2.0912180594734235,"minimum_speedup":0.9531669865642993,"patch_sha256":"e29b5d40a02f6f78e0858b2da7bbb3270ecee21f5be9140996fa873cf842d2a0"}
+  },
+  "diagnostic_observation": "Random-library R6 has the highest harmonic speedup on the representative subset; every candidate has minimum per-test speedup below 1.0, so the subset does not show uniformly positive acceleration.",
+  "causal_transfer_credit_eligible": false,
+  "clean_gso_win_campaign_credit_eligible": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "thresholds_changed": false,
+  "selected_instance_swapped_or_dropped": false
+}
