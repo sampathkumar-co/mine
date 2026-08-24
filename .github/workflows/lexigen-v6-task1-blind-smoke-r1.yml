@@ -1,7 +1,7 @@
 name: LEXIGEN v6 Task1 Pre-Blind Smoke R1
 on:
-  pull_request:
-    branches: [lexigen/v6-screening-result-r1]
+  push:
+    branches: [lexigen/v6-task1-max-flow-min-cost-r1]
     paths: ["lexigen-v6/tasks/01-max-flow-min-cost/TRIGGER_BLIND_SMOKE_R1"]
 permissions: {contents: read}
 jobs:
