@@ -1,0 +1,40 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "equal_budget_preflight_r3_sealed",
+  "status": "success",
+  "workflow_run_id": 32703699915,
+  "artifact_id": 9511479649,
+  "artifact_digest": "sha256:6e99de32578c525ba0d3e60849347eaa3eae88fc87d79a9c789edaf4f08fa08d",
+  "test_indexes": [0, 4, 8, 13],
+  "all_frozen_test_hashes_verified_before_execution": true,
+  "all_nine_candidates_passed_preflight_equivalence": true,
+  "base_times_seconds": {"0":0.144735,"4":0.00229,"8":0.385604,"13":0.031213},
+  "candidates": [
+    {"id":"F1","arm":"v7_full","harmonic_speedup":1.002277,"minimum_speedup":0.972812,"passed":true},
+    {"id":"F2","arm":"v7_full","harmonic_speedup":1.003327,"minimum_speedup":0.993001,"passed":true},
+    {"id":"F3","arm":"v7_full","harmonic_speedup":1.015297,"minimum_speedup":0.969928,"passed":true,"patch_sha256":"d34ccea502d6bdba780e596b40d2af6c8f5acb7afd44f347fc5fe982cab33100"},
+    {"id":"N1","arm":"v7_no_library","harmonic_speedup":1.018189,"minimum_speedup":0.996953,"passed":true,"patch_sha256":"d34ccea502d6bdba780e596b40d2af6c8f5acb7afd44f347fc5fe982cab33100"},
+    {"id":"N2","arm":"v7_no_library","harmonic_speedup":0.996554,"minimum_speedup":0.994140,"passed":true},
+    {"id":"N3","arm":"v7_no_library","harmonic_speedup":0.951401,"minimum_speedup":0.902338,"passed":true},
+    {"id":"R1","arm":"v7_random_library","harmonic_speedup":0.985978,"minimum_speedup":0.964617,"passed":true},
+    {"id":"R2","arm":"v7_random_library","harmonic_speedup":0.992030,"minimum_speedup":0.959501,"passed":true},
+    {"id":"R3","arm":"v7_random_library","harmonic_speedup":0.996953,"minimum_speedup":0.958872,"passed":true,"patch_sha256":"0e830b9024d0540be2b78e47ed22a5cefcc4d3a4968fa4d757473544da365eab"}
+  ],
+  "advanced_per_frozen_rule": {
+    "v7_full":"F3",
+    "v7_no_library":"N1",
+    "v7_random_library":"R3"
+  },
+  "causal_status_after_preflight": "no_causal_evidence",
+  "causal_reason": "F3 and N1 are byte-identical patches and therefore the leading learned-library and no-library implementations are mechanistically equivalent. Timing differences cannot earn transfer credit.",
+  "official_gso_evaluator_used": false,
+  "expert_target_timing_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "prior_gso_submission_opened": false,
+  "human_task_specific_solver_contribution": false,
+  "trigger_retired_before_result_commit": true
+}
