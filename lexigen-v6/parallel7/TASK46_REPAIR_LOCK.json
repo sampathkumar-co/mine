@@ -1,0 +1,42 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage":"task46_pretraining_candidate_correction_lock",
+  "tasks":[
+    {"index":4,"task":"ode_lorenz96_nonchaotic","official_training_manifest_opened_before_repair_lock":false,"synthetic_failure":"solve_ivp_fast_rhs_dop853 failed frozen RK45-equivalence certificate","correction":"map rejected DOP853 generic class to already-certified fast-RHS RK45"},
+    {"index":6,"task":"edge_expansion","official_training_manifest_opened_before_repair_lock":false,"synthetic_failure":"outgoing-only boundary interpretation mismatched NetworkX directed edge_expansion","correction":"count directed edges with exactly one endpoint in S, in either direction"}
+  ],
+  "tasks_2_3_5_7_8_candidate_mappings_changed":false,
+  "tasks_2_3_5_7_8_must_use_attempt2_training_only":true,
+  "paths":{
+    "proposal_engine":"lexigen-v5/engine.py",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "base_candidates":"lexigen-v6/parallel7/parallel_candidates.py",
+    "base_train":"lexigen-v6/parallel7/parallel_train.py",
+    "metadata_train":"lexigen-v6/parallel7/parallel_train_v2.py",
+    "repair_overlay":"lexigen-v6/parallel7/parallel_task46_overlay.py",
+    "repair_runner":"lexigen-v6/parallel7/parallel_train_task46_repair.py",
+    "aggregate":"lexigen-v6/parallel7/parallel_aggregate.py",
+    "repair_workflow":".github/workflows/lexigen-v6-parallel7-task46-repair-train-r1.yml",
+    "failure_record":"lexigen-v6/parallel7/PARALLEL7_TASK46_SYNTHETIC_FAILURE.json"
+  },
+  "git_blob_sha1":{
+    "proposal_engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "base_candidates":"aad467b36d0a45f4c6b28334721b7bddb91c953e",
+    "base_train":"866ffa33240631f53f114476a91850173aa2fff2",
+    "metadata_train":"0556b6724ff79e01f66ff8e3b70a696f3950e7f4",
+    "repair_overlay":"b0f1c93e346abe7b5e5cb84760ac465404be0d53",
+    "repair_runner":"9000cd67817edbfca39ee7c2eb2d914bb910f989",
+    "aggregate":"24e4ec136022b6f17ae24357735bd996de3401db",
+    "repair_workflow":"b5a4553af91257ac00ab5a55e5cb25ddf594e96a",
+    "failure_record":"4cab4c67502d22d787facb218578fd76a44bf713"
+  },
+  "runtime_versions":{"python":"3.12","numpy":"2.5.2","scipy":"1.16.1","networkx":"3.6.1","ortools":"9.11.4210","cvxpy":"1.7.2"},
+  "frozen_performance_gate":{"valid_required":100,"harmonic_speedup_minimum":1.50,"minimum_speedup":1.05,"invalid_output_retries":0},
+  "tasks_4_6_official_training_manifests_opened_before_repair_lock":false,
+  "test_manifests_opened_before_repair_lock":false,
+  "test_payloads_opened_before_repair_lock":false,
+  "public_task_specific_solvers_opened":false,
+  "performance_thresholds_changed":false,
+  "post_repair_training_scientific_revision_allowed":false
+}
