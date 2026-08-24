@@ -1,0 +1,45 @@
+name: LEXIGEN V7 Real Library Induction R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gate-minus1-result-r2]
+    paths: ["lexigen-v7-real/TRIGGER_INDUCE_R1"]
+permissions: {contents: read}
+jobs:
+  induce:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify preholdout architecture lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-real/ARCHITECTURE_LOCK_R1.json').read_text())
+          paths={
+            'PROTOCOL.md':'lexigen-v7-real/PROTOCOL.md',
+            'CONTAMINATION_EXCLUSIONS.json':'lexigen-v7-real/CONTAMINATION_EXCLUSIONS.json',
+            'APPRENTICESHIP_TRACES.json':'lexigen-v7-real/APPRENTICESHIP_TRACES.json',
+            'induce_library.py':'lexigen-v7-real/induce_library.py',
+            'selector.py':'lexigen-v7-real/selector.py',
+            'workflow':'.github/workflows/lexigen-v7-real-induce-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'lock mismatch {key}: {got}')
+          if lock['holdout_selection_executed_before_lock'] or lock['holdout_names_known_before_lock'] or lock['holdout_source_opened_before_lock']:
+              raise SystemExit('preholdout boundary crossed')
+          PY
+      - name: Compile frozen V7 induction and selector code
+        run: python -m py_compile lexigen-v7-real/induce_library.py lexigen-v7-real/selector.py
+      - name: Induce learned and random control libraries without holdout access
+        run: python lexigen-v7-real/induce_library.py --traces lexigen-v7-real/APPRENTICESHIP_TRACES.json --output library-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-real-library-r1
+          path: library-evidence/
+          if-no-files-found: error
+          retention-days: 90
