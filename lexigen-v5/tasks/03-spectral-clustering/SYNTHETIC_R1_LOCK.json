@@ -1,0 +1,28 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 3,
+  "task": "spectral_clustering",
+  "stage": "synthetic_r1_lock",
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "f0ae86f26c917cf3bdb4e65e133e099e3f2e1d07",
+    "candidates.py": "9ad2bb2c283c7506551dd80d5ec505bc34d24a96",
+    "DEPENDENCY_PIN.json": "3bb9c567b4a8748731b25d2f56f34651d5a0de11",
+    "validate_synthetic.py": "e80fa20f22b01ae3bd16e75027f96db4386bf644",
+    "workflow": "4c5f658959d26ac89fe06a0c9f8b447b54b9a635"
+  },
+  "candidate_count": 30,
+  "synthetic_case_count": 6,
+  "expected_checks": 180,
+  "determinism_required": true,
+  "quality_gate": "shape/exact-cluster-count + max(ARI,NMI)>=0.50 versus frozen source reference",
+  "performance_is_not_a_synthetic_gate": true,
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "thresholds_changed": false,
+  "human_task_specific_solver_design": false,
+  "candidate_repair_after_synthetic_execution_allowed": false
+}
