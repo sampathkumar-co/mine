@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "source_spec_lock_r1",
+  "remote_image": "slimshetty/gso:gso.eval.x86_64.pydantic__pydantic-addf1f9",
+  "duckdb": "1.4.1",
+  "git_blob_sha1": {
+    "TASK_START.json": "2675c778cc65820a65d6c655c613a9fec834d6f5",
+    "ENGINE_LOCK_R1.json": "6b4283b1baeb8aacfdc13337362ae1ed3ae249f5",
+    "GENERATION_CONTRACT_R1.md": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+    "extract_selected_spec.py": "be2e5daeeedf35bb409dfd50b7d7da5f2d7f8094",
+    "extract_worktree_context.py": "edc00aeebf6ec060ddec1c55b91470ecc4522e35",
+    "workflow": "c1e3e3a34056c02d07e7dcc298141f2f5eb84446"
+  },
+  "selected_spec_projection": ["instance_id", "prob_script", "tests"],
+  "worktree_excludes_git_directory": true,
+  "prob_script_opened_before_lock": false,
+  "tests_opened_before_lock": false,
+  "base_worktree_source_opened_before_lock": false,
+  "expert_opt_commit_opened_before_lock": false,
+  "expert_diff_opened_before_lock": false,
+  "hints_opened_before_lock": false,
+  "prior_gso_submission_opened_before_lock": false,
+  "candidate_patch_generated_before_lock": false,
+  "human_task_specific_solver_idea_before_lock": false
+}
