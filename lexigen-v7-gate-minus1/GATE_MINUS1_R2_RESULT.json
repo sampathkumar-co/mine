@@ -1,0 +1,128 @@
+{
+  "experiment": "LEXIGEN V7 Gate -1 prospective abstraction feasibility R2",
+  "status": "passed",
+  "spec_sha256": "f73b330550e697eae75165d70dfc115a85f1c5b69f0e5e7fa7177b0012680e54",
+  "oracle_sha256": "775035729ae777e3fafe275997190742361c3c6f2e5868ee508c6df24b2a113f",
+  "learned_macros": [
+    {
+      "id": "MG-001",
+      "sequence": ["REVERSE", "CUMSUM"],
+      "source_families": ["coding", "numerical", "scheduling"],
+      "family_count": 3,
+      "occurrences": 3,
+      "mdl_savings": 2
+    },
+    {
+      "id": "MG-002",
+      "sequence": ["SORT", "UNIQUE"],
+      "source_families": ["coding", "geometry", "statistics"],
+      "family_count": 3,
+      "occurrences": 3,
+      "mdl_savings": 2
+    },
+    {
+      "id": "MG-003",
+      "sequence": ["DIFF", "ABS"],
+      "source_families": ["signal", "statistics"],
+      "family_count": 2,
+      "occurrences": 2,
+      "mdl_savings": 1
+    }
+  ],
+  "random_library": [
+    {"id": "RG-001", "sequence": ["NEG", "NEG"]},
+    {"id": "RG-002", "sequence": ["DIFF", "CUMSUM"]},
+    {"id": "RG-003", "sequence": ["CUMSUM", "CLIP_POS"]}
+  ],
+  "holdout_results": [
+    {
+      "family": "combinatorial",
+      "full": {
+        "found": true,
+        "evaluator_calls": 435,
+        "program": ["CLIP_POS", "SORT", "UNIQUE", "REVERSE"],
+        "tokens": ["CLIP_POS", "@MG-002", "REVERSE"],
+        "validation_passed": true,
+        "budget": 500
+      },
+      "no_library": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500},
+      "random_library": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500},
+      "cross_family_macro_ids_used": ["MG-002"],
+      "prospective_transfer_success": true,
+      "specific_macro_removal_replays": {
+        "MG-002": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500}
+      },
+      "specific_macro_removal_failure": true
+    },
+    {
+      "family": "cryptography",
+      "full": {
+        "found": true,
+        "evaluator_calls": 34,
+        "program": ["DIFF", "ABS", "REVERSE", "CUMSUM"],
+        "tokens": ["@MG-003", "@MG-001"],
+        "validation_passed": true,
+        "budget": 500
+      },
+      "no_library": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500},
+      "random_library": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500},
+      "cross_family_macro_ids_used": ["MG-003", "MG-001"],
+      "prospective_transfer_success": true,
+      "specific_macro_removal_replays": {
+        "MG-001": {
+          "found": true,
+          "evaluator_calls": 212,
+          "program": ["DIFF", "ABS", "REVERSE", "CUMSUM"],
+          "tokens": ["@MG-003", "REVERSE", "CUMSUM"],
+          "validation_passed": true,
+          "budget": 500
+        },
+        "MG-003": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500}
+      },
+      "specific_macro_removal_failure": true
+    },
+    {
+      "family": "linear_algebra",
+      "full": {
+        "found": true,
+        "evaluator_calls": 13,
+        "program": ["REVERSE", "CUMSUM", "SORT", "UNIQUE"],
+        "tokens": ["@MG-001", "@MG-002"],
+        "validation_passed": true,
+        "budget": 500
+      },
+      "no_library": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500},
+      "random_library": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500},
+      "cross_family_macro_ids_used": ["MG-001", "MG-002"],
+      "prospective_transfer_success": true,
+      "specific_macro_removal_replays": {
+        "MG-001": {"found": false, "evaluator_calls": 500, "validation_passed": false, "budget": 500},
+        "MG-002": {
+          "found": true,
+          "evaluator_calls": 162,
+          "program": ["REVERSE", "CUMSUM", "SORT", "UNIQUE"],
+          "tokens": ["@MG-001", "SORT", "UNIQUE"],
+          "validation_passed": true,
+          "budget": 500
+        }
+      },
+      "specific_macro_removal_failure": true
+    }
+  ],
+  "aggregate": {
+    "holdout_count": 3,
+    "successful_prospective_transfers": 3,
+    "learned_over_no_library_success_count": 3,
+    "learned_over_random_library_success_count": 3,
+    "specific_macro_removal_failure_count": 3
+  },
+  "gate_checks": {
+    "induced_macros_min": true,
+    "successful_holdout_transfers_min": true,
+    "learned_library_successes_over_no_library_min": true,
+    "learned_library_successes_over_random_library_min": true,
+    "specific_macro_removal_failures_min": true,
+    "human_task_specific_solver_hints_zero": true
+  },
+  "claim_boundary": "Gate -1 is only an architecture-feasibility result on a committed synthetic DSL. Passing does not establish novelty, external generality, or an AI breakthrough."
+}
