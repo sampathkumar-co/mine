@@ -1,0 +1,96 @@
+{
+  "stage": "lexigen_v8_frozen_verified_discovery_capability_protocol_r1",
+  "status": "preregistered_pre_holdout",
+  "parent_failed_result_branch": "lexigen/v8-ipwm-compositional-result-r3",
+  "real_ipwm_intervention_data_opened": false,
+  "official_fvd_holdout_campaign_started": false,
+  "world_breakthrough_claim_allowed": false,
+  "primary_hypothesis": "One frozen autonomous discovery system can use generic experience learned before holdout access to causally improve verified discovery success on genuinely unseen unrelated algorithmic tasks under equal resource budgets.",
+  "claim_boundary": "The primary claim is empirical capability, not architectural novelty. Established retrieval, evolution, synthesis, verification, reformulation and learned-guidance components may be used as infrastructure. Passing internal gates is not a world breakthrough without external novelty and independent reproduction.",
+  "freeze_before_holdout_selection": [
+    "engine_source_and_dependencies",
+    "model_runtime_identity_and_prompts_if_used",
+    "learned_experience_artifact",
+    "task_independent_search_grammar_and_proposal_operators",
+    "verifier_and_correctness_rules",
+    "candidate_evaluator_and_model_call_budgets",
+    "control_arm_definitions",
+    "all_success_thresholds",
+    "task_selection_algorithm",
+    "untouched_candidate_inventory_commitment",
+    "anti_contamination_rules",
+    "result_schema",
+    "strict_gate_checker"
+  ],
+  "minimum_confirmatory_campaign": {
+    "untouched_tasks_min": 6,
+    "unrelated_families_min": 4,
+    "human_task_specific_solver_contribution_median": 0,
+    "same_frozen_engine_for_all_tasks": true,
+    "task_selection_after_engine_freeze": true,
+    "task_swap_after_result_access_allowed": false,
+    "threshold_change_after_freeze_allowed": false,
+    "budget_change_after_freeze_allowed": false
+  },
+  "control_arms": {
+    "fvd_full": "Frozen engine with frozen learned experience artifact.",
+    "fvd_no_experience": "Same engine and equal budgets with learned experience physically removed or zeroed.",
+    "fvd_shuffled_experience": "Same artifact interface/size but reusable-state semantics or task-to-experience associations deterministically permuted where meaningful.",
+    "retrieval_only": "Retrieval from the same apprenticeship corpus without the full learned controller or abstraction machinery.",
+    "evolution_only": "Generic evaluator-guided evolutionary search under the same evaluator budget.",
+    "predecessor_v7": "Frozen predecessor comparison where technically applicable."
+  },
+  "internal_campaign_success_all_required": {
+    "full_clean_win_fraction_min": 0.6666666666666666,
+    "full_clean_wins_min_for_six_task_campaign": 4,
+    "winning_unrelated_families_min": 4,
+    "full_minus_no_experience_task_wins_min": 2,
+    "full_minus_no_experience_percentage_points_min": 20,
+    "full_minus_shuffled_experience_task_wins_min": 2,
+    "full_minus_retrieval_only_task_wins_min": 2,
+    "full_minus_evolution_only_task_wins_min": 2,
+    "full_minus_predecessor_v7_task_wins_min_where_applicable": 2,
+    "causal_transfer_wins_min": 2,
+    "causal_transfer_holdout_families_min": 2,
+    "distinct_causally_implicated_experience_classes_min": 2,
+    "ablation_replay_must_remove_each_qualifying_advantage": true,
+    "authoritative_verifier_acceptance_required": true,
+    "median_human_task_specific_solver_contribution_max": 0,
+    "no_post_result_task_swap_drop_reclassification": true,
+    "no_post_freeze_threshold_or_budget_change": true
+  },
+  "causal_transfer_win_all_required": [
+    "full produces an independently verified qualifying result",
+    "no_experience fails the native gate or is materially worse under the preregistered equal-budget criterion",
+    "shuffled_experience does not explain the gain",
+    "at least one nontrivial learned artifact element used by full has provenance from a different apprenticeship task family",
+    "exact removal or permutation replay removes the qualifying advantage",
+    "retrieval_only does not match within frozen budget",
+    "evolution_only does not match within frozen budget",
+    "all proposal and evaluation logs respect the holdout access boundary"
+  ],
+  "external_frontier_gate_all_required_after_internal_pass": [
+    "at least one objectively new independently verifiable frontier result, preferably two unrelated results",
+    "novelty relative to the frozen literature and data snapshot",
+    "same frozen FVD engine with no frontier-specific rescue branch",
+    "causal dependence on pre-frontier learned experience under clean ablation/control",
+    "independent clean-room reproduction in a separate implementation or environment",
+    "inspectable evidence sufficient for third-party verification"
+  ],
+  "development_plumbing_gates": [
+    "same task-independent engine interface handles all selected development families",
+    "every candidate receives independent correctness verification",
+    "no_experience and shuffled_experience controls are physically effective",
+    "budget accounting is exact and auditable",
+    "hidden task data is inaccessible before commit barrier",
+    "failed scientific gate processes propagate nonzero exit status to CI",
+    "result artifacts record hashes, seeds and allowed randomness"
+  ],
+  "hard_kill_rules": [
+    "Any missing required internal campaign conjunct means campaign failure.",
+    "Do not reinterpret partial causal wins as a campaign pass.",
+    "Do not modify the failed R3 IPWM route or open its blocked real intervention corpus as part of this pivot.",
+    "Do not create task-specific rescue branches after hidden result access.",
+    "Do not make a world-breakthrough claim before the external frontier and independent reproduction gates pass."
+  ]
+}
