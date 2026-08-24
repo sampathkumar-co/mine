@@ -1,0 +1,65 @@
+name: LEXIGEN V8 IPWM Synthetic Pipeline R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-final-audit-r1]
+    paths:
+      - "lexigen-v8/**"
+      - ".github/workflows/lexigen-v8-ipwm-synthetic-r1.yml"
+permissions:
+  contents: read
+jobs:
+  falsification-spine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen synthetic-pipeline lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock = json.loads(Path('lexigen-v8/SYNTHETIC_PIPELINE_LOCK_R1.json').read_text())
+          for key, path in lock['files'].items():
+              got = subprocess.check_output(['git','hash-object',path], text=True).strip()
+              expected = lock['git_blob_sha1'][key]
+              if got != expected:
+                  raise SystemExit(f'V8 synthetic lock mismatch {key}: {got} != {expected}')
+          if lock['scientific_transfer_evidence']:
+              raise SystemExit('synthetic pipeline must not be classified as scientific transfer evidence')
+          PY
+      - name: Compile deterministic V8 spine
+        run: python -m py_compile lexigen-v8/ipwm_eval_r1.py lexigen-v8/generate_synthetic_ipwm_r1.py lexigen-v8/test_ipwm_pipeline_r1.py
+      - name: Run synthetic falsification test
+        run: python lexigen-v8/test_ipwm_pipeline_r1.py
+      - name: Produce inspectable synthetic evidence
+        shell: bash
+        run: |
+          mkdir -p evidence
+          python lexigen-v8/generate_synthetic_ipwm_r1.py --output evidence/synthetic.jsonl --repos 12 --samples-per-repo 18
+          python lexigen-v8/ipwm_eval_r1.py --input evidence/synthetic.jsonl --output evidence/evaluation.json
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          ev = json.loads(Path('evidence/evaluation.json').read_text())
+          payload = {
+            'stage': 'v8_ipwm_synthetic_pipeline_r1',
+            'synthetic_pipeline_only': True,
+            'scientific_transfer_evidence': False,
+            'corpus_sha256': hashlib.sha256(Path('evidence/synthetic.jsonl').read_bytes()).hexdigest(),
+            'evaluation_sha256': hashlib.sha256(Path('evidence/evaluation.json').read_bytes()).hexdigest(),
+            'repository_holdout': ev['repository_holdout'],
+            'repository_family_holdout': ev['repository_family_holdout'],
+            'language_holdout': ev['language_holdout'],
+          }
+          Path('evidence/SYNTHETIC_PIPELINE_RESULT_R1.json').write_text(json.dumps(payload, indent=2, sort_keys=True)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v8-ipwm-synthetic-r1
+          path: evidence/
+          if-no-files-found: error
+          retention-days: 90

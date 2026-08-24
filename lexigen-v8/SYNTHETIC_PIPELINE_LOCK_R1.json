@@ -1,0 +1,28 @@
+{
+  "project": "LEXIGEN V8 Interventional Performance World Model",
+  "stage": "synthetic_pipeline_r1_locked_before_execution",
+  "synthetic_pipeline_only": true,
+  "scientific_transfer_evidence": false,
+  "official_holdout_campaign_started": false,
+  "files": {
+    "architecture_tournament": "lexigen-v8/ARCHITECTURE_TOURNAMENT_R1.md",
+    "falsification_protocol": "lexigen-v8/IPWM_FALSIFICATION_PROTOCOL_R1.json",
+    "evaluator": "lexigen-v8/ipwm_eval_r1.py",
+    "synthetic_generator": "lexigen-v8/generate_synthetic_ipwm_r1.py",
+    "synthetic_test": "lexigen-v8/test_ipwm_pipeline_r1.py",
+    "workflow": ".github/workflows/lexigen-v8-ipwm-synthetic-r1.yml"
+  },
+  "git_blob_sha1": {
+    "architecture_tournament": "492effd516aceb93b88ac4f820b57e6d1a32ca0d",
+    "falsification_protocol": "973d3da454f6546e068e2d6fcfa14b121196d50a",
+    "evaluator": "e0fb7d83e63fa09016ed9e4e0b92be4f3c58a796",
+    "synthetic_generator": "368abab79fc98d4ab1a1e87dbaf1b0d5c0945637",
+    "synthetic_test": "ef48e6f50b231a13439879ebcf28f0e9fa621136",
+    "workflow": "b7fd7c3952eb591d52b5e9cf4e15912a03e63ca6"
+  },
+  "claims": {
+    "passing_synthetic_test_means_pipeline_works_on_constructed_conditional_effects": true,
+    "passing_synthetic_test_means_real_cross_repository_transfer": false,
+    "passing_synthetic_test_means_breakthrough": false
+  }
+}
