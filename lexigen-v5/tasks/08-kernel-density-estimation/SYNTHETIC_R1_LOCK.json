@@ -1,0 +1,23 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":8,
+  "task":"kernel_density_estimation",
+  "stage":"synthetic_r1_lock",
+  "git_blob_sha1":{
+    "SOURCE_R1_RESULT.json":"85153dbfed9c772c332e37a4e6097a8782f7ac6a",
+    "candidates.py":"a7cd45ea26695a1543d158bb256c802013720027",
+    "validate_synthetic.py":"16ede1d2c028425126a795a5198f6ae7e56cfd18",
+    "workflow":"4258d5db841194ca333289e56429f1e13cf173aa"
+  },
+  "python":"3.12",
+  "numpy":"2.3.5",
+  "scipy":"1.17.0",
+  "scikit_learn":"1.8.0",
+  "candidate_count":30,
+  "official_training_manifest_opened_before_lock":false,
+  "official_training_payloads_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":false,
+  "candidate_changes_after_lock":false,
+  "threshold_changes":false
+}
