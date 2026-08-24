@@ -1,0 +1,27 @@
+{
+  "campaign": "LEXIGEN V7 Gate -1 prospective abstraction feasibility R2",
+  "stage": "preregistered_before_r2_trigger",
+  "parent_v5_checkpoint": "6267ce2acb7ee22306c61188c956f6c69e996af2",
+  "r1_pretrigger_checkpoint": "dd32d7f7d3ae2d927480626fd0d2f2172847505f",
+  "r1_invalid_workflow_run_id": 32699545049,
+  "branch": "lexigen/v7-gate-minus1-preregister-r2",
+  "git_blob_sha1": {
+    "PROTOCOL.md": "f5e6cd22021796dee85a0f6ae6cc5f68b8c364f7",
+    "EXPERIMENT_SPEC.json": "f5f16d5ae98add7737ed1cb249ff69ef06d33903",
+    "gate_minus1.py": "4bf7f4356d885ffc67f8cf2534e41359c4a11193",
+    "oracle_r2.py": "c1794d9a546eeac4d2ba1a5cabea23676245a825",
+    "R1_FIXTURE_INCIDENT.json": "3aedbba35b1d534cb47f14eb02ddc33e97586ccf",
+    "workflow": "50e4f1315b6f12a6e99c025d1ed4a8fd5023d653"
+  },
+  "oracle_json_file_sha256": "24885670f765e5de77e4013ef4c258de7494e36eaf3d6c58445820e9d788e9bc",
+  "trigger_present_at_lock": false,
+  "r2_execution_performed_before_lock": false,
+  "scientific_thresholds_changed_from_r1": false,
+  "dsl_changed_from_r1": false,
+  "apprenticeship_changed_from_r1": false,
+  "search_budget_changed_from_r1": false,
+  "random_library_control_changed_from_r1": false,
+  "causal_removal_replay_changed_from_r1": false,
+  "r2_change_is_fixture_consistency_only": true,
+  "claim_boundary": "Synthetic architecture-feasibility kill-test only; passing cannot establish novelty or breakthrough."
+}

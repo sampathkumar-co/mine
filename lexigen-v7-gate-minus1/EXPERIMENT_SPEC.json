@@ -1,0 +1,30 @@
+{
+  "experiment": "LEXIGEN V7 Gate -1 prospective abstraction feasibility R2",
+  "revision": 2,
+  "r1_invalid_run_id": 32699545049,
+  "r1_invalid_reason": "committed holdout inputs and behavior hashes were generated from different deterministic fixture instances; no candidate could match",
+  "atoms": ["ABS", "CLIP_POS", "CUMSUM", "DIFF", "NEG", "REVERSE", "SORT", "UNIQUE"],
+  "apprenticeship": [
+    {"family": "statistics", "program": ["SORT", "UNIQUE", "DIFF", "ABS"]},
+    {"family": "geometry", "program": ["ABS", "SORT", "UNIQUE"]},
+    {"family": "signal", "program": ["DIFF", "ABS", "REVERSE"]},
+    {"family": "scheduling", "program": ["REVERSE", "CUMSUM", "CLIP_POS"]},
+    {"family": "numerical", "program": ["CLIP_POS", "REVERSE", "CUMSUM"]},
+    {"family": "coding", "program": ["SORT", "UNIQUE", "REVERSE", "CUMSUM"]}
+  ],
+  "search_budget_evaluator_calls": 500,
+  "max_expanded_program_length": 4,
+  "macro_lengths": [2, 3],
+  "minimum_source_families_per_macro": 2,
+  "learned_macro_count": 3,
+  "random_library_seed": 7331,
+  "pass_gate": {
+    "induced_macros_min": 3,
+    "successful_holdout_transfers_min": 2,
+    "learned_library_successes_over_no_library_min": 2,
+    "learned_library_successes_over_random_library_min": 2,
+    "specific_macro_removal_failures_min": 2,
+    "human_task_specific_solver_hints": 0
+  },
+  "claim_boundary": "Synthetic architecture-feasibility kill-test only."
+}
