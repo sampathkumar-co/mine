@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "stage": "source_r1_lock",
+  "git_blob_sha1": {
+    "TASK_START.json": "21bd5cb4e588d750ed59d7987f14ff6ee4000886",
+    "prepare_source.py": "a57d564567d1d055d6276da63e480fc5cbc8b3ae",
+    "workflow": "ef52f90e781012dcb23584ca0201dac7edac42f7"
+  },
+  "task_source_opened_before_lock": false,
+  "task_description_opened_before_lock": false,
+  "training_manifest_opened_before_lock": false,
+  "training_payloads_opened_before_lock": false,
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "proposal_budget_per_arm": 6,
+  "human_task_specific_solver_design": false
+}

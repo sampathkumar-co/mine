@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 2,
+  "task": "aes_gcm_encryption",
+  "stage": "synthetic_correctness_r1_lock",
+  "candidate_count": 30,
+  "synthetic_cases": 6,
+  "expected_checks": 180,
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "f4a19beab6a5f825a8fb4b900f3b14d908f5f874",
+    "candidates.py": "9092412db930ac6445008f4b4e142c0685126c62",
+    "CANDIDATE_PROVENANCE.json": "4813916c9bfcd445d5afd7b2f41b2817c2b98281",
+    "requirements.txt": "3d548fbb8c1896246b92fc6f15272402faa6a7e7",
+    "synthetic_validate.py": "3ce418df256bc1632e25d09b4077b4af4eb7ca32",
+    "workflow": "4cde50e5694d6d0c2c6bd17e63d639608f8ae27c"
+  },
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_repair_after_synthetic_permitted": false,
+  "gate": "A candidate is eligible only if all six exact verifier-equivalent checks pass; Task 2 may proceed if at least one v5_full candidate survives."
+}
