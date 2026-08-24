@@ -1,0 +1,62 @@
+name: LEXIGEN V8 IPWM Control Hardening R2
+on:
+  pull_request:
+    branches: [lexigen/v8-ipwm-synthetic-result-r1]
+    paths:
+      - "lexigen-v8/IPWM_CONTROL_HARDENING_R2.json"
+      - "lexigen-v8/ipwm_eval_r2.py"
+      - "lexigen-v8/test_ipwm_controls_r2.py"
+      - "lexigen-v8/R2_EXECUTION_LOCK.json"
+      - ".github/workflows/lexigen-v8-ipwm-controls-r2.yml"
+permissions:
+  contents: read
+jobs:
+  harden-controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen R2 execution lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v8/R2_EXECUTION_LOCK.json').read_text())
+          for key,path in lock['files'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got != lock['git_blob_sha1'][key]:
+                  raise SystemExit(f'R2 lock mismatch {key}: {got}')
+          if lock['real_intervention_data_opened'] or lock['scientific_transfer_evidence']:
+              raise SystemExit('R2 synthetic boundary crossed')
+          PY
+      - name: Compile hardened evaluator
+        run: python -m py_compile lexigen-v8/ipwm_eval_r1.py lexigen-v8/ipwm_eval_r2.py lexigen-v8/generate_synthetic_ipwm_r1.py lexigen-v8/test_ipwm_controls_r2.py
+      - name: Run frozen R2 synthetic control attack once
+        run: python lexigen-v8/test_ipwm_controls_r2.py --output-dir evidence-r2
+      - name: Hash R2 evidence
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          payload={
+            'stage':'v8_ipwm_synthetic_control_hardening_r2',
+            'synthetic_only':True,
+            'scientific_transfer_evidence':False,
+            'corpus_sha256':hashlib.sha256(Path('evidence-r2/synthetic-r2.jsonl').read_bytes()).hexdigest(),
+            'evaluation_sha256':hashlib.sha256(Path('evidence-r2/evaluation-r2.json').read_bytes()).hexdigest(),
+            'result_sha256':hashlib.sha256(Path('evidence-r2/SYNTHETIC_CONTROL_R2_RESULT.json').read_bytes()).hexdigest(),
+          }
+          Path('evidence-r2/HASHES_R2.json').write_text(json.dumps(payload,indent=2,sort_keys=True)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lexigen-v8-ipwm-controls-r2
+          path: evidence-r2/
+          if-no-files-found: error
+          retention-days: 90
