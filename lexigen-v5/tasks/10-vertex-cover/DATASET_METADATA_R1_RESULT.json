@@ -1,0 +1,17 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":10,
+  "task":"vertex_cover",
+  "stage":"dataset_directory_metadata_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32695631001,
+  "artifact_id":9508712452,
+  "artifact_digest":"sha256:fad54c3f3fc6edb8faa9760eea8b13d34b1bcbd4b474b833b9335a639f1d0d88",
+  "dataset_metadata_sha256":"5c9bd936ac49cf3161c2d4eaab45a87f296ebd8bcaa32883e885a6b56e893afa",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "training_manifest":{"name":"vertex_cover_T100ms_n15_size100_train.jsonl","size":1143142,"oid":"96a0ba025ddae33bcd581527cddf3467765cc53f"},
+  "test_manifest":{"name":"vertex_cover_T100ms_n15_size100_test.jsonl","size":1143200,"oid":"a11bc56b01a7ab254843102454d790637b89ec56"},
+  "manifest_contents_opened":false,
+  "payload_contents_opened":false,
+  "resolve_or_download_urls_followed":false
+}
