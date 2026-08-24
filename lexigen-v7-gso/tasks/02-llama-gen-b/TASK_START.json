@@ -1,0 +1,19 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 2,
+  "instance_id": "abetlen__llama-cpp-python-2bc1d97",
+  "repo": "abetlen/llama-cpp-python",
+  "base_commit": "e712cffc0c22d5406c6fe02a1769992f2181f229",
+  "api": "llama_cpp.gen_b",
+  "selection_was_safe_metadata_only": true,
+  "prob_script_opened": false,
+  "tests_opened": false,
+  "base_worktree_source_opened": false,
+  "expert_opt_commit_opened": false,
+  "expert_diff_opened": false,
+  "hints_opened": false,
+  "prior_submissions_opened": false,
+  "human_task_specific_solver_contribution": false,
+  "engine_branch": "lexigen/v7-gso-engine-lock-r1",
+  "engine_head": "e9b808de80aa86d6ca43040ae1d9ce66ea72095d"
+}
