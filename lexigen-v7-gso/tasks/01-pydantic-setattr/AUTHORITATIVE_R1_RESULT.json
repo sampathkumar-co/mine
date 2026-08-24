@@ -1,0 +1,49 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "authoritative_gso_performance_result_sealed",
+  "workflow_run_id": 32735876967,
+  "artifact_id": 9526519706,
+  "artifact_digest": "sha256:ed481ed23586aeeae35e5cae1a99d72537d5409e63f9c04a25882833946eae9b",
+  "gso_harness_commit": "7074865b48123b30a2e61d7dbc4887fcd990e681",
+  "arms": {
+    "v7_full": {
+      "candidate_id": "F1",
+      "learned_macro_ids": ["V7M-001"],
+      "correctness_passed": true,
+      "hm_speedup_patch_base": 2.129344740083751,
+      "hm_speedup_patch_expert_commit": 1.0124395397107313,
+      "native_opt_base": true,
+      "native_opt_commit": true,
+      "authoritative_performance_gate_passed": true
+    },
+    "v7_no_library": {
+      "candidate_id": "N2",
+      "correctness_passed": true,
+      "hm_speedup_patch_base": 1.1649881002388944,
+      "hm_speedup_patch_expert_commit": 0.48447118063695926,
+      "native_opt_base": true,
+      "native_opt_commit": false,
+      "authoritative_performance_gate_passed": false
+    },
+    "v7_random_library": {
+      "candidate_id": "R1",
+      "correctness_passed": true,
+      "hm_speedup_patch_base": 1.1719939674139477,
+      "hm_speedup_patch_expert_commit": 0.4825528018033162,
+      "native_opt_base": true,
+      "native_opt_commit": false,
+      "authoritative_performance_gate_passed": false
+    }
+  },
+  "causal_transfer_win": false,
+  "causal_credit_eligible": false,
+  "causal_reason": "FINAL_SELECTION_R1.json froze causal_transfer_credit_possible_for_task1=false before authoritative scoring because the selected learned-macro full candidate was slower than both equal-budget controls during frozen internal feedback. Later expert-relative timing cannot retroactively establish the preregistered causal superiority condition.",
+  "clean_gso_win_final": false,
+  "clean_gso_win_status": "pending_separate_frozen_anti_gaming_audit",
+  "expert_diff_opened": false,
+  "hints_opened": false,
+  "patches_changed_after_final_selection": false,
+  "thresholds_changed": false
+}
