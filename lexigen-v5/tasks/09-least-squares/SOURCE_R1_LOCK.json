@@ -1,0 +1,21 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "stage":"source_r1_lock",
+  "git_blob_sha1":{
+    "TASK_START.json":"8832ec58f2a949129a8085b9351ba8eb0151d24a",
+    "prepare_source.py":"728541d4802fdc2cac6a646fc0d1680f29c5f27d",
+    "workflow":"4a199231f4f5b85dedeaf8c7975275baf1a46f3e"
+  },
+  "expected_source_git_blob_sha1":"753ded627ad8288bbc91ba64eef3d3b736a881e3",
+  "expected_description_git_blob_sha1":"e45bec7a13705d9624d8a02554bc135fb12fc11a",
+  "task_source_opened_before_lock":false,
+  "task_description_opened_before_lock":false,
+  "training_manifest_opened_before_lock":false,
+  "training_payloads_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "test_payloads_opened_before_lock":false,
+  "reports_opened_before_lock":false,
+  "public_solvers_opened_before_lock":false
+}
