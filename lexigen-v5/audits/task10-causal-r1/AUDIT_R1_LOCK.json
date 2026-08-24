@@ -1,0 +1,25 @@
+{
+  "audit":"LEXIGEN v5 Task 10 causal audit R1",
+  "sealed_task10_checkpoint":"4ae98e50a9e4393f5f0a1498ea99423255f56552",
+  "sealed_blind_run_id":32696527576,
+  "sealed_blind_artifact_id":9509000357,
+  "pre_audit_selftest":{"run_id":32697892386,"status":"passed"},
+  "official_test_manifest":{"name":"vertex_cover_T100ms_n15_size100_test.jsonl","size":1143200,"git_blob_sha1":"a11bc56b01a7ab254843102454d790637b89ec56","already_opened_in_sealed_v5":true},
+  "repetitions_per_algorithm_per_official_record":5,
+  "v5_campaign_score_may_change":false,
+  "post_hoc_audit_only":true,
+  "git_blob_sha1":{
+    "AUDIT_PROTOCOL.md":"a73b54760059e6fa008979186747cf93369e3022",
+    "PRIOR_ART_BOUNDARY.md":"11820befc3c5695ab8f039853656ea85121e5017",
+    "audit_algorithms.py":"b6afb27538b099953464a3e9d157981330ffac87",
+    "run_audit.py":"0a6be0d1e25a917830bf084d9095feebbb316a38",
+    "sealed_candidates.py":"d1f599efbec5014094fd279799f0c5c30d9b6665",
+    "sealed_blind_result":"60309480cbe75fed9134e22f604e3ca655550367",
+    "workflow":"8a643240be303ff4f52cd10976fa0379b38175da"
+  },
+  "claim_constraints":{
+    "algorithmic_novelty_claim_permitted":false,
+    "world_level_breakthrough_claim_permitted":false,
+    "internal_causal_mechanism_selection_claim_may_be_retested":true
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "audit":"LEXIGEN v5 Task 10 causal audit R1",
+  "status":"completed",
+  "workflow_run_id":32698118622,
+  "artifact_id":9509612054,
+  "artifact_digest":"sha256:d7b102862d847fea3fd7bc3d1f067c0c7689ebdf969602982b037219424080e3",
+  "audit_summary_sha256":"409fd4d071d123117c8ffb66cefca367afe271a5d673093fd9101be5faf50290",
+  "audit_results_sha256":"8caa7ca402720debf12248b05e48325c5ddd3e9ac35da2b3f559956aa12a988c",
+  "sealed_task10_checkpoint":"4ae98e50a9e4393f5f0a1498ea99423255f56552",
+  "official_test":{"records":100,"nodes_each":75,"edge_range":[1321,1445],"repetitions_per_algorithm":5},
+  "sealed_bfr":{"valid":100,"harmonic_speedup_vs_pysat":13.539802126582043,"minimum_speedup_vs_pysat":8.306138120410306,"median_speedup_vs_pysat":13.80087144994295},
+  "reproduced_bfr":{"valid":100,"harmonic_speedup_vs_pysat":6.160426283349206,"minimum_speedup_vs_pysat":3.8267664528291347,"median_speedup_vs_pysat":6.29552331585535},
+  "known_style_color_bound_clique":{"valid":100,"harmonic_speedup_vs_pysat":61.018607079043406,"minimum_speedup_vs_pysat":40.06363281990178,"median_speedup_vs_pysat":61.805386807976845},
+  "rc2_exact":{"valid":100,"harmonic_speedup_vs_pysat":1.0104720184181712,"minimum_speedup_vs_pysat":0.4888192446291302},
+  "pairwise":{"sealed_over_color_bound_harmonic":0.22012501449660993,"reproduced_over_color_bound_harmonic":0.10017637718443645,"sealed_over_reproduced_harmonic":2.1968163800789733},
+  "stress":{"cases":37,"all_exact":true},
+  "findings":{
+    "original_timing_effect_reproduced":true,
+    "separate_tm_bfr_reimplementation_exact":true,
+    "separate_tm_bfr_reimplementation_useful":true,
+    "benchmark_reference_is_weak_relative_to_known_style_exact_graph_search":true,
+    "sealed_bfr_is_faster_than_known_style_color_bound_baseline":false,
+    "algorithmic_novelty_supported":false,
+    "internal_causal_mechanism_selection_evidence_survives":true,
+    "v5_campaign_score_changed":false
+  },
+  "scientific_interpretation":"The frozen Task-10 causal-transfer result survives as evidence that transfer memory selected a useful exact graph-search mechanism unavailable to the preregistered no-transfer controls. The 14x headline is not evidence of a novel or state-of-the-art vertex-cover algorithm: a post-hoc established-style coloring-bound bitset clique/MIS baseline is about 4.5x faster than the sealed Lexigen solver and about 61x faster than the benchmark PySAT reference. The separate TM-BFR reimplementation still achieves 6.16x over PySAT and all stress cases remain exact, supporting mechanism-level reproducibility within the same research process.",
+  "claim_boundary":"Preserve Task 10 as one internal causal-transfer success. Do not claim algorithmic novelty, state-of-the-art vertex cover, world-level AI breakthrough, or a passing v5 campaign."
+}

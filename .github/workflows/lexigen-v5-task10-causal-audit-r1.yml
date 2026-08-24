@@ -1,0 +1,46 @@
+name: LEXIGEN v5 Task 10 Causal Audit R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task10-vertex-cover-result-r1]
+    paths: ["lexigen-v5/audits/task10-causal-r1/TRIGGER_AUDIT_R1"]
+permissions: {contents: read}
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen audit package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v5/audits/task10-causal-r1/AUDIT_R1_LOCK.json').read_text())
+          paths={
+            'AUDIT_PROTOCOL.md':'lexigen-v5/audits/task10-causal-r1/AUDIT_PROTOCOL.md',
+            'PRIOR_ART_BOUNDARY.md':'lexigen-v5/audits/task10-causal-r1/PRIOR_ART_BOUNDARY.md',
+            'audit_algorithms.py':'lexigen-v5/audits/task10-causal-r1/audit_algorithms.py',
+            'run_audit.py':'lexigen-v5/audits/task10-causal-r1/run_audit.py',
+            'sealed_candidates.py':'lexigen-v5/tasks/10-vertex-cover/candidates.py',
+            'sealed_blind_result':'lexigen-v5/tasks/10-vertex-cover/BLIND_R1_RESULT.json',
+            'workflow':'.github/workflows/lexigen-v5-task10-causal-audit-r1.yml'
+          }
+          for k,p in paths.items():
+            got=subprocess.check_output(['git','hash-object',p],text=True).strip()
+            if got!=lock['git_blob_sha1'][k]:raise SystemExit(f'audit lock mismatch {k}: {got}')
+          if lock['sealed_task10_checkpoint']!='4ae98e50a9e4393f5f0a1498ea99423255f56552':raise SystemExit('wrong sealed checkpoint')
+          if lock['v5_campaign_score_may_change']:raise SystemExit('audit may not rescore v5')
+          PY
+      - run: python -m pip install --disable-pip-version-check --no-cache-dir python-sat==1.8.dev17
+      - run: python -m py_compile lexigen-v5/audits/task10-causal-r1/audit_algorithms.py lexigen-v5/audits/task10-causal-r1/run_audit.py
+      - name: Execute post-hoc causal robustness audit
+        run: python lexigen-v5/audits/task10-causal-r1/run_audit.py --output audit-output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v5-task10-causal-audit-r1
+          path: audit-output/
+          if-no-files-found: error
+          retention-days: 90

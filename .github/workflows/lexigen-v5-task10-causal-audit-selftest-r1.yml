@@ -1,0 +1,17 @@
+name: LEXIGEN v5 Task 10 Causal Audit Selftest R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task10-vertex-cover-result-r1]
+    paths: ["lexigen-v5/audits/task10-causal-r1/TRIGGER_SELFTEST_R1"]
+permissions: {contents: read}
+jobs:
+  selftest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python -m pip install --disable-pip-version-check --no-cache-dir python-sat==1.8.dev17
+      - run: python -m py_compile lexigen-v5/audits/task10-causal-r1/audit_algorithms.py lexigen-v5/audits/task10-causal-r1/selftest.py
+      - run: python lexigen-v5/audits/task10-causal-r1/selftest.py
