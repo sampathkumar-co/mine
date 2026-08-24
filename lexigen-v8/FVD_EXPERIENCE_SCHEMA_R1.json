@@ -1,0 +1,43 @@
+{
+  "schema": "lexigen-v8-fvd-experience-r1",
+  "status": "development_seed_schema_not_final_holdout_artifact",
+  "purpose": "Represent sealed pre-FVD evidence as auditable search-allocation experience without embedding future holdout payloads or task-specific solver source.",
+  "required_top_level_fields": [
+    "schema",
+    "builder_version",
+    "source_manifest",
+    "proposal_profiles",
+    "global_guards",
+    "negative_lessons",
+    "artifact_sha256",
+    "official_holdout_data_accessed"
+  ],
+  "proposal_profile_fields": {
+    "proposal_class_id": "Stable task-independent proposal class identifier.",
+    "mechanism_sequence": "Sequence drawn only from the generic primitive vocabulary.",
+    "context_tags": "Abstract applicability tags; no benchmark constants or task identities.",
+    "evidence_grade": "One of confirmed_causal, source_learned_unconfirmed, generic_baseline.",
+    "source_families": "Apprenticeship/source evidence families only.",
+    "source_causal_ids": "Historical causal IDs where present.",
+    "confirmed_causal_successes": "Count parsed from sealed final audits.",
+    "performance_only_successes": "Diagnostic non-causal successes; cannot be converted into causal credit.",
+    "risk_tags": "Abstract conditions under which this class should lose allocation priority.",
+    "provenance": "Exact repository paths and Git blob SHA-1s supporting the profile."
+  },
+  "global_guard_semantics": {
+    "semantic_equivalence_dedup_required": "Equivalent implementations remain one mechanism class for causal accounting and should not consume duplicate exploration slots merely because labels differ.",
+    "performance_is_not_causality": "Large speedups without exclusive dependence on experience receive zero causal evidence weight.",
+    "contaminated_or_diagnostic_only_records_excluded_from_positive_learning": "Contaminated/ineligible records may contribute safety lessons but never positive success evidence.",
+    "predictive_signal_is_not_transfer": "Cross-repository predictive accuracy alone is not evidence of unseen-mechanism/action transfer.",
+    "strict_gate_exit_status_required": "Scientific checker nonzero status is authoritative even if surrounding CI plumbing is green."
+  },
+  "forbidden_content": [
+    "future holdout identities",
+    "future holdout source code",
+    "future holdout tests or evaluator payloads",
+    "expert diffs or benchmark answers",
+    "task-specific solver patches",
+    "post-holdout threshold changes"
+  ],
+  "claim_boundary": "This schema and any development artifact built under it are plumbing/apprenticeship infrastructure only. They are not causal-transfer evidence and do not start the official FVD holdout campaign."
+}
