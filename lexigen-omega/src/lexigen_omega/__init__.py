@@ -3,6 +3,13 @@
 Development-only. Importing this package makes no AGI or breakthrough claim.
 """
 
+from .development import (
+    DevelopmentArchive,
+    DevelopmentObservation,
+    MechanismPosterior,
+    mechanism_key,
+    preferences_to_development_observations,
+)
 from .gene import CausalEvidence, GeneAdmissionPolicy, SemanticGene
 from .genesis import GeneProposal, mine_semantic_gene_proposals
 from .ir import (
@@ -33,6 +40,8 @@ from .trajectory import (
 __all__ = [
     "BudgetExceeded",
     "CausalEvidence",
+    "DevelopmentArchive",
+    "DevelopmentObservation",
     "EvaluationObservation",
     "ExecutionBudget",
     "ExecutionResult",
@@ -41,6 +50,7 @@ __all__ = [
     "HindsightPreference",
     "Instruction",
     "MechanismObservation",
+    "MechanismPosterior",
     "MechanismPreference",
     "OpCode",
     "Program",
@@ -55,6 +65,8 @@ __all__ = [
     "execute_program",
     "execute_program_metered",
     "ingest_v7_gso_preflight_result",
+    "mechanism_key",
     "mine_semantic_gene_proposals",
     "parse_v7_gso_proposals",
+    "preferences_to_development_observations",
 ]
