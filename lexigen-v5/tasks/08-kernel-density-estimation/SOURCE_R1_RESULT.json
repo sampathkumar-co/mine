@@ -1,0 +1,40 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":8,
+  "task":"kernel_density_estimation",
+  "family":"miscellaneous",
+  "stage":"source_analysis_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32690865511,
+  "artifact_id":9507186573,
+  "artifact_digest":"sha256:672b99b3733d9b2b5d74c79aa7b3d55f93533dda55f2067b604bd5f3771818f5",
+  "source_git_blob_sha1":"890394497ff7b800a6883a0c3e723c5da3c88f37",
+  "source_sha256":"f706488e7cc27cab63b96d3530aa58079c0ee9a36e420125213d87b7975965bd",
+  "description_git_blob_sha1":"247f25875a3046ef6d76c7319536cc377eaeb9d8",
+  "description_sha256":"131ab363944d54c4424ef69eecfbb6b46d53f0036af870ebd3317caa562af678",
+  "features":["approximate_verifier","array","boolean","certificate","constraints","decomposition","discrete","high_dimensional","iterative","matrix","numeric","set","threshold","tolerance","verifier"],
+  "applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01","TM-PBEB-01"],
+  "proposal_counts":{"v5_full":6,"v5_no_transfer":6,"random_search":6,"static_template":6,"v4_compatible":6},
+  "source_contract":{
+    "reference_backend":"sklearn.neighbors.KernelDensity fit + score_samples",
+    "kernels":["gaussian","tophat","epanechnikov","exponential","linear","cosine"],
+    "output":"one log-density per query point",
+    "nonfinite_mask":"must match reference exactly",
+    "finite_rtol":0.0001,
+    "finite_atol":0.000001
+  },
+  "proposal_mapping_policy":{
+    "TM-PBEB-01":"float32 input specialization plus native SciPy pairwise-distance backend and exact sklearn kernel normalization; accepted only if independent verifier preserves non-finite masks and tolerances",
+    "TM-RRR-01":"float64 vectorized pairwise reduced representation with exact kernel normalization",
+    "TM-BFR-01":"conservative sklearn reference fallback; source has no certified discrete frontier",
+    "TM-CAC-01":"conservative sklearn reference fallback; source has no certifiable active core before density evaluation"
+  },
+  "reports_opened":false,
+  "public_solvers_opened":false,
+  "official_training_manifest_opened":false,
+  "official_training_payloads_opened":0,
+  "official_test_manifest_opened":false,
+  "official_test_payloads_opened":0,
+  "human_task_specific_solver_design":false,
+  "threshold_changes":false
+}
