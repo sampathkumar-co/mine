@@ -34,10 +34,12 @@ def main() -> None:
         subprocess.run(
             [sys.executable, str(HERE / "build_fvd_experience_r1.py"), "--output", str(artifact_path)],
             check=True,
+            stdout=subprocess.DEVNULL,
         )
         subprocess.run(
             [sys.executable, str(HERE / "build_fvd_experience_r1.py"), "--output", str(artifact_path_2)],
             check=True,
+            stdout=subprocess.DEVNULL,
         )
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
         artifact2 = json.loads(artifact_path_2.read_text(encoding="utf-8"))
