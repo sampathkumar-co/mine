@@ -1,0 +1,21 @@
+name: LEXIGEN v6 Preregister Selftest R1
+on:
+  pull_request:
+    branches: [lexigen/v5-task10-causal-audit-result-r1]
+    paths: ["lexigen-v6/TRIGGER_SELFTEST_R1"]
+permissions: {contents: read}
+jobs:
+  selftest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify no v6 selection evidence exists before selftest
+        shell: bash
+        run: |
+          test ! -e lexigen-v6/SCREENING_POOL_SELECTION_R1_RESULT.json
+          test ! -e lexigen-v6/FINAL_SELECTION_R1_RESULT.json
+      - run: python -m py_compile lexigen-v6/selector.py lexigen-v6/final_selector.py lexigen-v6/selftest.py
+      - run: python lexigen-v6/selftest.py
