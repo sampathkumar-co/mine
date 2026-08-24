@@ -1,0 +1,29 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 1,
+  "instance_id": "pydantic__pydantic-addf1f9",
+  "stage": "authoritative_gso_evaluation_preregistered",
+  "search_closed": true,
+  "revision_slots_remaining_per_arm": 0,
+  "gso_harness_repo": "gso-bench/gso",
+  "gso_harness_commit": "7074865b48123b30a2e61d7dbc4887fcd990e681",
+  "gso_dataset_repo": "gso-bench/gso",
+  "gso_dataset_revision": "c2e4f1a58427cccd15e0e542f136bd204fb19284",
+  "docker_image": "slimshetty/gso:gso.eval.x86_64.pydantic__pydantic-addf1f9",
+  "selected_candidates": {
+    "v7_full": {"candidate_id": "F1", "expected_patch_sha256": "63d68ecb88a6911926a5d60236808643d507d07a1e2fc19a943b62fee5bebaae"},
+    "v7_no_library": {"candidate_id": "N2", "expected_patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2"},
+    "v7_random_library": {"candidate_id": "R1", "expected_patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2"}
+  },
+  "authoritative_method": "Generate the three already-frozen patches from build_candidate.py, verify exact SHA-256 against FINAL_SELECTION_R1.json, materialize exactly the selected instance from the pinned Hugging Face dataset revision, then run gso-bench/gso src/gso/harness/run_evaluation.py independently for each arm with max_workers=1 and timeout=3600. The official grader may execute the expert commit for scoring only.",
+  "gso_grading_contract": {
+    "minimum_problem_speedup": 1.2,
+    "opt_commit_threshold": 0.95,
+    "source": "gso constants.py and grading/metrics.py at pinned harness commit"
+  },
+  "candidate_changes_after_authoritative_open": false,
+  "expert_reference_execution_allowed_after_lock": true,
+  "expert_diff_or_hints_allowed_for_patch_changes": false,
+  "human_task_specific_solver_contribution": false,
+  "thresholds_changed": false
+}
