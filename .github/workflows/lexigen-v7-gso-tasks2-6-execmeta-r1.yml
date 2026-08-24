@@ -1,0 +1,50 @@
+name: LEXIGEN V7 GSO Tasks2-6 Execution Metadata R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-source-result-r2]
+    paths: ["lexigen-v7-gso/TRIGGER_TASKS2_6_EXECMETA_R1"]
+permissions: {contents: read}
+jobs:
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen execution-metadata lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/TASKS2_6_EXECMETA_LOCK_R1.json').read_text())
+          paths={
+            'proposal_lock':'lexigen-v7-gso/TASKS2_6_PROPOSAL_LOCK_R1.json',
+            'selection':'lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json',
+            'extractor':'lexigen-v7-gso/extract_execution_metadata_r1.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-tasks2-6-execmeta-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'execmeta lock mismatch {key}: {got}')
+          if lock['candidate_timing_observed_before_lock']:
+              raise SystemExit('candidate timing already observed')
+          PY
+      - name: Install pinned projector dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Project only non-expert execution metadata
+        run: |
+          python lexigen-v7-gso/extract_execution_metadata_r1.py \
+            --instance-id abetlen__llama-cpp-python-2bc1d97 \
+            --instance-id huggingface__tokenizers-bfd9cde \
+            --instance-id numpy__numpy-be52f19 \
+            --instance-id pandas-dev__pandas-fd43d4b \
+            --instance-id huggingface__transformers-211f93a \
+            --output execmeta/EXECUTION_METADATA_R1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-tasks2-6-execution-metadata-r1
+          path: execmeta/
+          if-no-files-found: error
+          retention-days: 90
