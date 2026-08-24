@@ -1,0 +1,31 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":9,
+  "task":"least_squares",
+  "stage":"blind_r1_lock",
+  "git_blob_sha1":{
+    "TRAIN_R1_RESULT.json":"52146370fd00aa62b6fbd7effab81637a3351c85",
+    "BLIND_R1_SELECTION.json":"d5f14775400567f74e78986111f06494f5d7dc36",
+    "candidates.py":"4e48e434f0e0b9ac02434cb3a0396c1470bd0cc4",
+    "blind_shard.py":"3dfc4033c7cb64e9834398d0bb7b5ebf79bca5d9",
+    "aggregate_blind.py":"aad22ec86edb2807aebe167ebcfbdd70a79e4567",
+    "workflow":"5668aaa791115fd725f121ea92ae14c294b654c1"
+  },
+  "test_manifest":{
+    "name":"least_squares_T100ms_n102713_size100_test.jsonl",
+    "size":27500,
+    "oid":"a2a05f3b2d737d15c4cb46dc327f3954b78ace31"
+  },
+  "selected_candidates":{
+    "v5_full":"v5_full_r2_41510e43e8fafb598496",
+    "v5_no_transfer":"v5_no_transfer_r6_66c5848a3c8a4f51b562",
+    "random_search":"random_search_r5_e818498ab004d266d2a1",
+    "static_template":"static_template_r6_d044a19fd4551034dc11",
+    "v4_compatible":"v4_compatible_r3_ec4b9c17aaa3767d4f6d"
+  },
+  "official_test_manifest_opened_before_lock":false,
+  "official_test_payloads_opened_before_lock":false,
+  "post_training_candidate_changes":false,
+  "threshold_changes":false,
+  "blind_rerun_budget":0
+}
