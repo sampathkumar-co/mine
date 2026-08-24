@@ -1,0 +1,76 @@
+{
+  "project": "LEXIGEN V8 Interventional Performance World Model",
+  "stage": "synthetic_control_hardening_r2_result",
+  "status": "completed_frozen_gate_failed",
+  "authoritative_workflow_run_id": 32757803096,
+  "authoritative_head_sha": "7d2d0d945fb2228233542a3656964ff4c039440b",
+  "campaign_gate_passed": false,
+  "real_intervention_data_opened": false,
+  "scientific_transfer_evidence": false,
+  "breakthrough_established": false,
+  "r1_real_top_k_relative_gain_threshold_unchanged": 0.20,
+  "synthetic_generator_changed_from_r1": false,
+  "failed_assertion": {
+    "name": "intervention-family full AUROC",
+    "required_minimum": 0.62,
+    "observed": 0.5849387840375299
+  },
+  "additional_failed_intervention_family_requirement": {
+    "name": "intervention-family full Spearman",
+    "required_minimum": 0.30,
+    "observed": 0.279079889019874
+  },
+  "repository_holdout": {
+    "full_positive_speedup_auroc": 0.8859812571912186,
+    "full_spearman_log_speedup": 0.8488541599674149,
+    "full_validity_auroc": 0.8972573821777141,
+    "full_top_k_mean_observed_speedup": 1.2082185381281054,
+    "relative_top_k_gain_over_frequency": 0.1725828578367028,
+    "full_minus_no_cross_positive_auroc": 0.10908901501299284,
+    "full_minus_no_cross_spearman": 0.24162861491628618,
+    "full_minus_static_positive_auroc": 0.08227530264003824,
+    "full_minus_static_spearman": 0.2462064399510594,
+    "global_null_max_positive_auroc": 0.5281010595913034,
+    "global_null_max_abs_spearman": 0.07222865350397667,
+    "global_null_max_validity_auroc": 0.7615403832154324,
+    "stratified_null_max_positive_auroc": 0.5636012007978665,
+    "stratified_null_max_abs_spearman": 0.14516474800094326
+  },
+  "repository_family_holdout": {
+    "full_positive_speedup_auroc": 0.8763262600509223,
+    "full_spearman_log_speedup": 0.8541179937841603
+  },
+  "language_holdout": {
+    "full_positive_speedup_auroc": 0.8620128595290129,
+    "full_spearman_log_speedup": 0.8494873354302525
+  },
+  "intervention_family_holdout": {
+    "full_positive_speedup_auroc": 0.5849387840375299,
+    "full_spearman_log_speedup": 0.279079889019874,
+    "full_top_k_mean_observed_speedup": 1.0776891792664132,
+    "full_validity_auroc": 0.6979799181364931,
+    "no_cross_positive_speedup_auroc": 0.590799425312069,
+    "no_cross_spearman_log_speedup": 0.23512276878743496,
+    "static_only_positive_speedup_auroc": 0.5676643951887823,
+    "static_only_spearman_log_speedup": 0.1909533931101823,
+    "full_minus_no_cross_positive_auroc": -0.005860641274539113,
+    "full_minus_no_cross_spearman": 0.043957120232439056,
+    "full_minus_stratified_null_positive_auroc": -0.001702923986534488,
+    "full_minus_stratified_null_spearman": 0.2104124245347051,
+    "relative_top_k_gain_over_frequency": 0.08573068993042154
+  },
+  "unresolved_warning": {
+    "name": "global-null validity leakage",
+    "repository_holdout_global_null_mean_validity_auroc": 0.7297766632445415,
+    "repository_holdout_global_null_max_validity_auroc": 0.7615403832154324,
+    "interpretation": "The hardened speedup null behaves near chance, but the validity null remains suspiciously predictive and must be understood before real-data use."
+  },
+  "duplicate_old_workflow": {
+    "run_id": 32757803010,
+    "authoritative": false,
+    "classification": "infrastructure_only_failure",
+    "reason": "Legacy workflow expected obsolete lexigen-v8/R2_EXECUTION_LOCK.json; it failed before compile/evaluation and produced no evidence."
+  },
+  "scientific_conclusion": "The R2 evaluator/model spine is not ready for real intervention data. It predicts within known repository/family/language axes well, but fails the preregistered completely unseen intervention-family stress test and does not show a positive AUROC increment over the no-cross control there. Thresholds and generator remain unchanged; no confirmatory rerun is allowed under R2.",
+  "next_action": "Only a separately preregistered R3 architecture/representation change may proceed; do not lower R2 thresholds or alter the R1 synthetic generator to rescue this result."
+}
