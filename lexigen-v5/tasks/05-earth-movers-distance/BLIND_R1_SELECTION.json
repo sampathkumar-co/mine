@@ -1,0 +1,28 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 5,
+  "task": "earth_movers_distance",
+  "stage": "blind_r1_selection",
+  "selected": {
+    "v5_full": "v5_full_r1_3304c859d463a501bd86",
+    "v5_no_transfer": "v5_no_transfer_r2_b2614109e1a5ccc10c14",
+    "random_search": "random_search_r5_7a22ae1a8866ee0b94da",
+    "static_template": "static_template_r6_d044a19fd4551034dc11",
+    "v4_compatible": "v4_compatible_r4_7c30efb65d2c20ff8cc9"
+  },
+  "selected_v5_learned_transfer": {"causal_id":"TM-BFR-01","learned_template":"bit_frontier_restriction"},
+  "selected_v5_implementation_class": "pot_reference_exact",
+  "selected_no_transfer_implementation_class": "pot_reference_exact",
+  "semantic_equivalence_pre_blind": true,
+  "causal_transfer_credit_possible": false,
+  "causal_transfer_impossibility_reason": "Selected v5_full and v5_no_transfer execute the same exact POT reference implementation; preregistered semantic-distinctness condition cannot be met regardless of blind timing.",
+  "test_manifest": {
+    "name": "earth_movers_distance_T100ms_n1151_size100_test.jsonl",
+    "oid": "dd5b455a8ca5b6af0165be7fbd318f331112ff3f",
+    "size": 2492900
+  },
+  "official_test_manifest_contents_opened": false,
+  "official_test_payloads_opened": 0,
+  "blind_reruns_allowed": false,
+  "threshold_changes_allowed": false
+}
