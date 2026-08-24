@@ -1,0 +1,24 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "task2_materialization_r2_partial_result",
+  "workflow_run_id": 32745632229,
+  "candidate_execution_count": 0,
+  "candidate_timing_observed": false,
+  "successful_before_failure": {
+    "F1": "1b053c99ea6cce4551f52c141037a42c50fa09761b6c5efb9d051d5a99d8bf7d",
+    "F2": "d7a86f9079292b09a00e39a1017034d5fc6111ae3dee4c8eacaa866f5c2b274e",
+    "F4": "5e8b000c05be80f44f7a59d96699748c330fa7510ebb42e8757c4abaad97c7c1",
+    "N1": "d7a86f9079292b09a00e39a1017034d5fc6111ae3dee4c8eacaa866f5c2b274e",
+    "N3": "dae026b5a55515a62b7b6f3fcd53f5d25bd2ef7706b67c144c2787de6bf8583b",
+    "N6": "5e8b000c05be80f44f7a59d96699748c330fa7510ebb42e8757c4abaad97c7c1",
+    "R1": "5e8b000c05be80f44f7a59d96699748c330fa7510ebb42e8757c4abaad97c7c1"
+  },
+  "failure_candidate": "R3",
+  "failure": "construction locator for self._ctx.decode(self._batch) matched two source sites; R3 must scope replacements to Llama.eval",
+  "R6_not_attempted": true,
+  "allowed_r3_repair": "scope R3 local-binding replacements to Llama.eval; leave every candidate mechanism, proposal and selection unchanged",
+  "expert_information_used": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "selections_changed": false
+}
