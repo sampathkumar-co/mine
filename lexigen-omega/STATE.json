@@ -7,7 +7,7 @@
     "OMEGA0": "locked",
     "OMEGA1": "in_progress",
     "OMEGA2": "foundation_started",
-    "OMEGA3": "real_evaluator_hindsight_verified",
+    "OMEGA3": "real_evaluator_hindsight_and_prospective_transfer_test_active",
     "OMEGA4": "not_started",
     "OMEGA5": "foundation_started",
     "OMEGA6": "not_started",
@@ -28,11 +28,14 @@
     "cross-family parameterized semantic-fragment anti-unification miner",
     "exact proposal expansion verification",
     "sealed V7 GSO evaluator-result ingestion",
-    "infrastructure-failure exclusion from hindsight learning",
+    "infrastructure and errored-row exclusion from hindsight learning",
     "pre-timing proposal provenance parsers for Task1 and Tasks2-6 with expert/timing boundary checks",
     "candidate-outcome to mechanism-provenance join",
     "mechanism-level hindsight preference construction",
+    "candidate identifiers excluded from scientific tie breaking",
     "pinned cross-branch real-evidence reproduction in GitHub Actions",
+    "prospectively frozen exact-sequence cross-repository Task2 prediction",
+    "preregistered Task2 transfer scorer with insufficient-evidence path",
     "foundation and search-first CI tests"
   ],
   "first_real_hindsight_evidence": {
@@ -47,29 +50,63 @@
     "mechanism_preference_count": 3,
     "learned_candidate": "F1",
     "learned_macro_ids": ["V7M-001"],
-    "causal_transfer_credit": false,
-    "interpretation": "Omega correctly converts the historical real evaluator feedback into a negative development preference against the learned EXECUTE->CERTIFY candidate on this task; this is not a causal-memory admission event."
+    "causal_transfer_credit": false
+  },
+  "prospective_Task2_transfer_test": {
+    "status": "prediction_and_scoring_rule_frozen_before_target_outcome",
+    "source_task": "pydantic__pydantic-addf1f9",
+    "target_task": "abetlen__llama-cpp-python-2bc1d97",
+    "Task1_final_selection_commit": "3d2aa3c8a1ee9eeb284e3494655c1110078b394e",
+    "Task2_frozen_proposal_commit": "8fb61bb3f320d62f7afaeef5d9c6bc5adf44766a",
+    "Task2_preflight_head_sha": "4075a0372fa744182cdc91c64cc71870ae33ce61",
+    "Task2_preflight_run_id": 32747466819,
+    "prediction_file": "lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json",
+    "prediction_method": "exact primitive-sequence match only; abstain on unseen sequence",
+    "covered_candidate_ranking": ["R1", "N1", "R6", "F2", "R3", "F1"],
+    "abstained_candidates": ["F4", "N3", "N6"],
+    "target_outcome_accessed_before_freeze": false,
+    "verification_workflow_run_id": 32751574194,
+    "verification_status": "success",
+    "scoring_policy": {
+      "primary": "pairwise_concordance",
+      "secondary": ["spearman_rank_correlation", "top1_hit"],
+      "minimum_observed_covered_candidates": 4,
+      "minimum_comparable_pairs": 3,
+      "directional_pairwise_concordance_minimum": 0.70,
+      "directional_spearman_minimum": 0.50,
+      "require_top1_hit": true,
+      "errored_or_infrastructure_rows": "excluded_not_negative"
+    }
+  },
+  "current_V7_preflight_observations": {
+    "run_id": 32747466819,
+    "Task2": "in_progress_after_Omega_prediction_freeze",
+    "Task3": "infrastructure_baseline_failure_missing_hf_transfer_no_candidate_evidence",
+    "Task4": "job_completed_but_all_nine_candidates_install_errors_zero_learning_observations",
+    "Task5": "completed_but_contaminated_diagnostic_only",
+    "Task6": "infrastructure_baseline_failure_missing_hf_transfer_no_candidate_evidence"
+  },
+  "historical_transfer_check": {
+    "source": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+    "task_count": 8,
+    "baseline_qualified_causal_wins": 0,
+    "conclusion": "recipe applicability alone is not evidence of cross-family transfer; do not build an applicability-only Omega learner"
   },
   "search_first_decisions": [
     "reused the proven v15 anti-unification mechanism instead of rebuilding induction",
     "reused the existing V7 GSO Docker/correctness/timing harness instead of cloning a benchmark evaluator",
     "preserved the v23 lesson that fixed human-authored semantic inventories do not transfer globally",
-    "did not expand the fixed opcode catalog after current SOAR/DGM evidence favored learned/evolving search over larger hand-authored DSLs",
+    "did not expand the fixed opcode catalog without real substrate-failure evidence",
     "semantic genesis produces proposals only; it cannot bypass prospective causal memory admission",
-    "real V7 task3/task6 preflight failures caused by missing hf_transfer before baseline execution are infrastructure evidence only and cannot become negative mechanism labels",
-    "did not implement a neural preference trainer from one real task; wait for clean multi-task trajectories so model choice is evidence-driven"
+    "infrastructure failures and errored candidate rows cannot become negative mechanism labels",
+    "did not manually translate V6 recipe IDs into Omega primitives because that mapping would be subjective",
+    "did not implement a neural preference trainer before prospective multi-repository evidence exists"
   ],
-  "current_external_dependency": {
-    "source": "LEXIGEN V7 GSO Tasks2-6 Parallel Preflight R1",
-    "workflow_run_id": 32747466819,
-    "status_at_last_check": "in_progress_with_task3_and_task6_infrastructure_baseline_failures",
-    "scientific_use": "consume only sealed credit-eligible completed candidate outcomes; never modify or rerun from the Omega branch"
-  },
   "next": [
-    "ingest sealed clean V7 GSO Tasks2-6 preflight results when their source campaign records them",
-    "aggregate mechanism-level preferences across distinct repositories and test whether they predict held-out candidate ranking",
-    "only then choose the smallest justified hindsight learner/search-policy update",
-    "add a diverse search archive only after real trajectory evidence shows single-lineage search is limiting",
-    "close remaining OMEGA1 substrate gaps only when an exposed evaluator failure proves they are required"
+    "when V7 Task2 completes, score its sealed result against the already-frozen Omega prospective prediction without revising prediction or scorer",
+    "if Task2 lacks at least four clean covered candidates, record insufficient evidence rather than rescue the run",
+    "if Task2 is interpretable, preserve the exact prospective score before any learner architecture change",
+    "seek additional prospective repositories before admitting any cross-repository mechanism preference to causal memory",
+    "choose the smallest justified hindsight learner only after multiple clean prospective targets exist"
   ]
 }
