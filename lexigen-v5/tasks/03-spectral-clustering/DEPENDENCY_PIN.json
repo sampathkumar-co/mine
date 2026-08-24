@@ -1,0 +1,12 @@
+{
+  "python": "3.12",
+  "ubuntu_runner": "ubuntu-24.04",
+  "packages": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0"
+  },
+  "source": "Frozen before Task 3 synthetic execution; the benchmark source itself declares numpy, scipy and scikit-learn without version constraints.",
+  "official_training_manifest_opened_before_pin": false,
+  "official_test_manifest_opened_before_pin": false
+}

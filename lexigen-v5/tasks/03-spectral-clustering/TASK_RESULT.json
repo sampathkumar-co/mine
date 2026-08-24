@@ -1,0 +1,38 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 3,
+  "task": "spectral_clustering",
+  "family": "signal_processing",
+  "final_status": "resolved_negative_evaluation_harness_failure",
+  "source_stage": "passed",
+  "synthetic_stage": {
+    "status": "passed",
+    "checks_passed": 180,
+    "checks_failed": 0
+  },
+  "official_training_stage": {
+    "status": "failed_evaluation_harness",
+    "workflow_run_id": 32682051065,
+    "successful_shards": 5,
+    "failed_shards": 5,
+    "aggregate_selection": false
+  },
+  "blind_stage_executed": false,
+  "official_test_manifest_opened": false,
+  "official_test_payloads_opened": 0,
+  "clean_unseen_win": false,
+  "v5_over_v4_task_win": false,
+  "causal_transfer_win": false,
+  "causal_transfer_credit": 0,
+  "reason": "Frozen official training could not complete because the authoritative Task-3 solve() result is rejected by its own is_solution() on multiple official records; the preregistered runner therefore aborted and no valid five-arm training selection exists.",
+  "partial_training_speedups_are_non_authoritative": true,
+  "thresholds_changed": false,
+  "candidate_implementation_changed_after_training_access": false,
+  "task_swapped_dropped_or_reclassified": false,
+  "campaign_score_after_task": {
+    "tasks_resolved": 3,
+    "clean_unseen_wins": 1,
+    "v5_over_v4_task_wins": 1,
+    "causal_transfer_wins": 0
+  }
+}

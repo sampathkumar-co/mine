@@ -1,0 +1,23 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 3,
+  "task": "spectral_clustering",
+  "stage": "source_r1_lock",
+  "git_blob_sha1": {
+    "TASK_START.json": "032d190a44fc7c34f2f60dbf27c5bf3261eccd2e",
+    "prepare_source.py": "018ef85d242c3fbc88f26762c16d81199713e532",
+    "workflow": "a52d8d294b8d88946dea146a169fb0af5f3d25a7"
+  },
+  "expected_source_git_blob_sha1": "7e8055db9c069388e4d3fe7468c4a6d4f33c02e8",
+  "expected_description_git_blob_sha1": "948b53b84808b6d7a59564eb58decfb3f1838a35",
+  "task_source_opened_before_lock": false,
+  "task_description_opened_before_lock": false,
+  "training_manifest_opened_before_lock": false,
+  "training_payloads_opened_before_lock": false,
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "reports_opened_before_lock": false,
+  "public_solvers_opened_before_lock": false,
+  "proposal_budget_per_arm": 6,
+  "human_task_specific_solver_design": false
+}

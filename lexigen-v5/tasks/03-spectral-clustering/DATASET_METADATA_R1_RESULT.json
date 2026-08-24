@@ -1,0 +1,37 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 3,
+  "task": "spectral_clustering",
+  "stage": "dataset_directory_metadata_r1_sealed",
+  "status": "passed_after_metadata_only_tooling_fix",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "successful_workflow_run_id": 32681755229,
+  "successful_artifact_id": 9504351078,
+  "successful_artifact_digest_sha256": "58d55c77e87527138e1b32b75d3838e0cb686f5dcd4f733ff6b1e8028a137025",
+  "training_manifest": {
+    "path": "data/spectral_clustering/spectral_clustering_T100ms_n8_size100_train.jsonl",
+    "name": "spectral_clustering_T100ms_n8_size100_train.jsonl",
+    "size": 15658,
+    "oid": "a437767fb704bb4bcccaee3240de0f1080426c90",
+    "lfs": null,
+    "last_commit": "19ec225dbafcd894975494e21811ee141e6d74e9"
+  },
+  "test_manifest": {
+    "path": "data/spectral_clustering/spectral_clustering_T100ms_n8_size100_test.jsonl",
+    "name": "spectral_clustering_T100ms_n8_size100_test.jsonl",
+    "size": 15717,
+    "oid": "dc9082ea69c205b712e98da4b62fb387998e54df",
+    "lfs": null,
+    "last_commit": "19ec225dbafcd894975494e21811ee141e6d74e9"
+  },
+  "failed_metadata_workflow_run_id": 32681693854,
+  "failed_run_reason": "metadata-only inspector attempted to sort dictionaries without a key",
+  "failed_run_crossed_manifest_content_boundary": false,
+  "failed_run_crossed_payload_content_boundary": false,
+  "tooling_fix": "sorted metadata rows by path string only",
+  "manifest_contents_opened": false,
+  "payload_contents_opened": false,
+  "resolve_or_download_urls_followed": false,
+  "official_training_execution_started": false,
+  "official_test_execution_started": false
+}

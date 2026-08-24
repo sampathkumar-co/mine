@@ -1,0 +1,51 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 3,
+  "task": "spectral_clustering",
+  "family": "signal_processing",
+  "stage": "official_training_r1",
+  "status": "failed_evaluation_harness",
+  "workflow_run_id": 32682051065,
+  "workflow_head_sha": "42d55d525b2487b7a57bdc27327ee86047015852",
+  "training_manifest": {
+    "name": "spectral_clustering_T100ms_n8_size100_train.jsonl",
+    "tree_oid": "a437767fb704bb4bcccaee3240de0f1080426c90",
+    "size_bytes": 15658,
+    "records": 100
+  },
+  "test_manifest_metadata_only": {
+    "name": "spectral_clustering_T100ms_n8_size100_test.jsonl",
+    "tree_oid": "dc9082ea69c205b712e98da4b62fb387998e54df",
+    "size_bytes": 15717,
+    "contents_opened": false,
+    "payloads_opened": 0
+  },
+  "shard_outcomes": {
+    "successful_shards": [0, 3, 5, 6, 7],
+    "failed_shards": [1, 2, 4, 8, 9],
+    "aggregate_job": "skipped"
+  },
+  "successful_shard_artifacts": [
+    {"shard": 0, "artifact_id": 9504450555, "digest": "sha256:59e282aeece29585f9230c4875f7a1b674442f48cc5fbb2d3008812a97e0cc4c"},
+    {"shard": 3, "artifact_id": 9504448977, "digest": "sha256:af7979ed79338fe291da316b6a510d5b17e89f0ca56c22209ca1bacfecfab6c9"},
+    {"shard": 5, "artifact_id": 9504444814, "digest": "sha256:fe6e9227157091057de4f09cdf9bc8d8c04098180dec0ff024fe8c7c55dfa845"},
+    {"shard": 6, "artifact_id": 9504448285, "digest": "sha256:6fb8a5e61bede383b997040c3fc85a06a5baa78f9d1e7f222df7f464b6172f8e"},
+    {"shard": 7, "artifact_id": 9504445373, "digest": "sha256:83d4e453f258d0b1526838c07de9b6ef7bf09cf10d1154a9586f932a542113cb"}
+  ],
+  "failure_classification": {
+    "type": "authoritative_reference_self_rejection",
+    "description": "The frozen AlgoTune Task-3 solve() output is rejected by the same frozen task's is_solution() on multiple official training records. The preregistered runner aborts when this occurs, so a complete 100-record five-arm training selection cannot be formed.",
+    "confirmed_self_rejection_records": [5, 9, 23, 42, 90],
+    "candidate_failure": false,
+    "infrastructure_network_failure": false,
+    "scientific_package_lock_failure": false
+  },
+  "partial_speed_measurements_may_not_be_used_for_selection": true,
+  "training_selection_produced": false,
+  "blind_stage_allowed": false,
+  "candidate_implementation_changed_after_training_access": false,
+  "thresholds_changed": false,
+  "task_replaced_or_removed_from_denominator": false,
+  "human_task_specific_solver_repair_after_training_access": false,
+  "causal_transfer_credit_allowed": false
+}
