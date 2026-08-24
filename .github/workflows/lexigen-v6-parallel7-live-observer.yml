@@ -10,7 +10,7 @@ jobs:
   snapshot:
     runs-on: ubuntu-24.04
     env:
-      TARGET_SHA: 163df2faa32eac02a732dcfff2ff851afabb8f2b
+      TARGET_SHA: f15b1f848db78e32dc3c18802cf68784151393ea
       TARGET_WORKFLOW: LEXIGEN v6 Parallel Tasks 2-8 Official Training R1
       GH_TOKEN: ${{ github.token }}
     steps:
