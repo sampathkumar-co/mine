@@ -1,0 +1,41 @@
+{
+  "stage": "parallel7_blind_progress_observation",
+  "workflows": {
+    "unified_train_seal": {
+      "found": true,
+      "head_sha": "069dc5d07452d98d5fd3f59d66a5a8bc5d1e8c22",
+      "run_id": 32739453195,
+      "status": "completed",
+      "conclusion": "success",
+      "counts": {
+        "completed:success": 1
+      },
+      "failed_jobs": [],
+      "running_jobs": []
+    },
+    "parallel7_blind": {
+      "found": true,
+      "head_sha": "5d5374d96910942834f442a4d2edd89d0652d9bb",
+      "run_id": 32739752645,
+      "status": "in_progress",
+      "conclusion": null,
+      "counts": {
+        "completed:success": 28,
+        "in_progress:None": 2
+      },
+      "failed_jobs": [],
+      "running_jobs": [
+        {
+          "id": 97471095916,
+          "name": "shard (dct_type_I_scipy_fftpack, 3)",
+          "status": "in_progress"
+        },
+        {
+          "id": 97471096082,
+          "name": "shard (dct_type_I_scipy_fftpack, 4)",
+          "status": "in_progress"
+        }
+      ]
+    }
+  }
+}

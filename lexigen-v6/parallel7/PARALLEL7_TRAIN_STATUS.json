@@ -1,0 +1,108 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage": "parallel7_all_seven_training_results_sealed",
+  "seal_workflow_run_id": 32739453195,
+  "seal_trigger_head_sha": "069dc5d07452d98d5fd3f59d66a5a8bc5d1e8c22",
+  "task_count": 7,
+  "official_training_source_runs": {
+    "attempt2_five_tasks": 32737033106,
+    "task46_repair": 32738646019,
+    "five_artifact_preservation": 32738733546
+  },
+  "new_official_benchmark_access_during_seal": false,
+  "test_manifest_contents_opened": false,
+  "test_payloads_opened": 0,
+  "tasks": [
+    {
+      "task": "odr",
+      "family": "miscellaneous",
+      "summary_sha256": "ca7149f635697a6ddabd64908d5ddecf19889123c3d880a3cc1c4785476e9749",
+      "results_sha256": "4a7522a0ee1e4f9d1fd65c13842c0c2b0aa80995fc390de47ba5b48e3db53a4f",
+      "train_manifest_name": "odr_T100ms_n31132_size100_train.jsonl",
+      "train_manifest_sha256": "2b04a173dade305233176a1715bf7a241a730a8dd33d8728a0cb90f476f912fa",
+      "expected_test_manifest_name": "odr_T100ms_n31132_size100_test.jsonl",
+      "full_harmonic_speedup": 1.0004160788231686,
+      "full_minimum_speedup": 0.9256390209488976,
+      "full_passes_training_gate": false,
+      "full_no_transfer_semantically_distinct": false
+    },
+    {
+      "task": "dct_type_I_scipy_fftpack",
+      "family": "signal_processing",
+      "summary_sha256": "67f699a0ecba956f6210c93862e9d82af0adeb10d61eb53a1ca4c705843745f8",
+      "results_sha256": "6ad273da7f5290ab3d5c0feac93b6e84b4e6dba41bddd60ac8ae674efc5b6868",
+      "train_manifest_name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_train.jsonl",
+      "train_manifest_sha256": "fbcb17ebb7f0a443689ede506a875d7b6e317cfe0afb695c7ffeaef79ed6ad40",
+      "expected_test_manifest_name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_test.jsonl",
+      "full_harmonic_speedup": 0.9908571323356687,
+      "full_minimum_speedup": 0.8921060495694888,
+      "full_passes_training_gate": false,
+      "full_no_transfer_semantically_distinct": false
+    },
+    {
+      "task": "ode_lorenz96_nonchaotic",
+      "family": "scientific_computing",
+      "summary_sha256": "154de867d64c8ea703cc451866f02453384f09d926d336248373d0006b458fa2",
+      "results_sha256": "a80291e4b1c79314c9d891f2421eb056a87a7451d037d111aa9be1568f0375cd",
+      "train_manifest_name": "ode_lorenz96_nonchaotic_T100ms_n7856_size100_train.jsonl",
+      "train_manifest_sha256": "babff21bed24a20606a3cdd774edb55af3114e7b8642395aacd519b73c7c6e4c",
+      "expected_test_manifest_name": "ode_lorenz96_nonchaotic_T100ms_n7856_size100_test.jsonl",
+      "full_harmonic_speedup": 1.5184606354319665,
+      "full_minimum_speedup": 1.3574303749492445,
+      "full_passes_training_gate": true,
+      "full_no_transfer_semantically_distinct": false
+    },
+    {
+      "task": "robust_kalman_filter",
+      "family": "signal_processing",
+      "summary_sha256": "85c0bf2669efe882de3b2a95a59fd08c65e77f746b01f29e3496b876a1c0233d",
+      "results_sha256": "f79456e37ee1a02608c5c5a59e6b2bad93ec422a8b7488895bf85b65e92a2a61",
+      "train_manifest_name": "robust_kalman_filter_T100ms_n15_size100_train.jsonl",
+      "train_manifest_sha256": "8cc823288dc0c82b71368a3e87ba8d6b26359f53627d25101a7eba0fa713dac5",
+      "expected_test_manifest_name": "robust_kalman_filter_T100ms_n15_size100_test.jsonl",
+      "full_harmonic_speedup": 0.9856888648131538,
+      "full_minimum_speedup": 0.6777299003920897,
+      "full_passes_training_gate": false,
+      "full_no_transfer_semantically_distinct": true
+    },
+    {
+      "task": "edge_expansion",
+      "family": "miscellaneous",
+      "summary_sha256": "f11aef7946c72a0f45e768f8fac53e061691665685e458143b1fbc0ef4f841ad",
+      "results_sha256": "5d792f3c3c7187038eb367de06ff513b97d8acbb2bb47730a4bef141db96a7c6",
+      "train_manifest_name": "edge_expansion_T100ms_n4408_size100_train.jsonl",
+      "train_manifest_sha256": "63df67df3fe544a8c98d6e85a7ed5aa911e95e896777c9f17ecf34014b7b2854",
+      "expected_test_manifest_name": "edge_expansion_T100ms_n4408_size100_test.jsonl",
+      "full_harmonic_speedup": 11.056709847449858,
+      "full_minimum_speedup": 8.657007650468751,
+      "full_passes_training_gate": true,
+      "full_no_transfer_semantically_distinct": true
+    },
+    {
+      "task": "svd",
+      "family": "linear_algebra",
+      "summary_sha256": "146d7271b9a55ff5f95f4c46d2b999c73d1ed4e93b7535c9ee3efd259319015b",
+      "results_sha256": "9a79c57b1a926330f9a9316fc00e305b07d3484c758eaa5bb0eb45d3fe71423d",
+      "train_manifest_name": "svd_T100ms_n474_size100_train.jsonl",
+      "train_manifest_sha256": "dc4fa2ccbb665a70c332c1b72e0ab063f7f54cebd3368bd6a1fba1dd443ac6a3",
+      "expected_test_manifest_name": "svd_T100ms_n474_size100_test.jsonl",
+      "full_harmonic_speedup": 0.7014189827061508,
+      "full_minimum_speedup": 0.3869886506127745,
+      "full_passes_training_gate": false,
+      "full_no_transfer_semantically_distinct": false
+    },
+    {
+      "task": "max_independent_set_cpsat",
+      "family": "combinatorial",
+      "summary_sha256": "35965803b0f6f3499f9a766857e0402fb0abb13b48047d28eeca8f8a4fc0fe68",
+      "results_sha256": "9a5976c2ba43edbdf38cece7518fa218fd001a6b06f1616e13c555af8c72ac20",
+      "train_manifest_name": "max_independent_set_cpsat_T100ms_n12_size100_train.jsonl",
+      "train_manifest_sha256": "cd3e74d2bfe1ad8b841ca03a58d5b612e85cef0a21958a856ea2ca2d848cd3d7",
+      "expected_test_manifest_name": "max_independent_set_cpsat_T100ms_n12_size100_test.jsonl",
+      "full_harmonic_speedup": 2.721169588547552,
+      "full_minimum_speedup": 0.9397980140079636,
+      "full_passes_training_gate": false,
+      "full_no_transfer_semantically_distinct": false
+    }
+  ]
+}

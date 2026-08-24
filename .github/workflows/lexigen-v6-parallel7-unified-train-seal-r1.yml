@@ -1,0 +1,101 @@
+name: LEXIGEN v6 Unified Parallel7 Training Seal R1
+on:
+  push:
+    branches: [lexigen/v6-parallel-7-r1]
+    paths: ["lexigen-v6/parallel7/TRIGGER_UNIFIED_TRAIN_SEAL_R1"]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  seal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Download five preserved Attempt-2 aggregates
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32738733546
+          pattern: preserved-*-train-r1
+          path: five
+      - name: Download repaired Lorenz aggregate
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32738646019
+          name: lexigen-v6-task46-repair-ode_lorenz96_nonchaotic-train-r1
+          path: lorenz
+      - name: Download repaired edge shards
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32738646019
+          pattern: repair-train-edge_expansion-shard-*
+          path: edge-shards
+          merge-multiple: true
+      - name: Recover Task 6 aggregate from frozen signature identity
+        run: python lexigen-v6/parallel7/parallel_aggregate_signature.py --task edge_expansion --input edge-shards --output edge
+      - name: Seal all seven training summaries and freeze blind lock
+        env:
+          SEAL_RUN_ID: ${{ github.run_id }}
+          SEAL_HEAD_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,subprocess
+          from pathlib import Path
+          tasks=['odr','dct_type_I_scipy_fftpack','ode_lorenz96_nonchaotic','robust_kalman_filter','edge_expansion','svd','max_independent_set_cpsat']
+          five={'odr','dct_type_I_scipy_fftpack','robust_kalman_filter','svd','max_independent_set_cpsat'}
+          sources={}
+          for task in tasks:
+              if task in five: p=Path(f'five/preserved-{task}-train-r1/train-summary.json')
+              elif task=='ode_lorenz96_nonchaotic': p=Path('lorenz/train-summary.json')
+              else: p=Path('edge/train-summary.json')
+              if not p.exists(): raise SystemExit(f'missing aggregate summary {task}: {p}')
+              summary=json.loads(p.read_text())
+              if summary['task']!=task or summary['training_records']!=100 or summary['candidate_count']!=31: raise SystemExit(f'invalid training denominator {task}')
+              if summary.get('official_test_manifest_opened') is not False or int(summary.get('official_test_payloads_opened',-1))!=0: raise SystemExit(f'test boundary crossed in training {task}')
+              sources[task]=(p,summary)
+          outroot=Path('lexigen-v6/parallel7/results'); outroot.mkdir(parents=True,exist_ok=True)
+          status={'campaign':'LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication','stage':'parallel7_all_seven_training_results_sealed','seal_workflow_run_id':int(os.environ['SEAL_RUN_ID']),'seal_trigger_head_sha':os.environ['SEAL_HEAD_SHA'],'task_count':7,'official_training_source_runs':{'attempt2_five_tasks':32737033106,'task46_repair':32738646019,'five_artifact_preservation':32738733546},'new_official_benchmark_access_during_seal':False,'test_manifest_contents_opened':False,'test_payloads_opened':0,'tasks':[]}
+          hashes={}
+          for task,(p,summary) in sources.items():
+              raw=p.read_bytes(); d=outroot/task; d.mkdir(parents=True,exist_ok=True); (d/'TRAIN_R1_RESULT.json').write_bytes(raw)
+              h=hashlib.sha256(raw).hexdigest(); hashes[task]=h
+              status['tasks'].append({'task':task,'family':summary['family'],'summary_sha256':h,'results_sha256':summary['results_sha256'],'train_manifest_name':summary['train_manifest_name'],'train_manifest_sha256':summary['train_manifest_sha256'],'expected_test_manifest_name':summary['expected_test_manifest_name'],'full_harmonic_speedup':summary['selected_by_arm']['v6_full']['harmonic_speedup'],'full_minimum_speedup':summary['selected_by_arm']['v6_full']['minimum_speedup'],'full_passes_training_gate':summary['selected_by_arm']['v6_full']['passes_frozen_performance_gate'],'full_no_transfer_semantically_distinct':summary['training_diagnostics']['selected_full_no_transfer_semantically_distinct']})
+          Path('lexigen-v6/parallel7/PARALLEL7_TRAIN_STATUS.json').write_text(json.dumps(status,indent=2)+'\n')
+          paths={
+            'engine':'lexigen-v5/engine.py',
+            'protocol':'lexigen-v6/PROTOCOL.md',
+            'transfer_memory':'lexigen-v6/TRANSFER_MEMORY.json',
+            'strong_baseline_catalog':'lexigen-v6/STRONG_BASELINE_CATALOG.json',
+            'parallel_candidates':'lexigen-v6/parallel7/parallel_candidates.py',
+            'parallel_train':'lexigen-v6/parallel7/parallel_train.py',
+            'parallel_train_v2':'lexigen-v6/parallel7/parallel_train_v2.py',
+            'task46_overlay':'lexigen-v6/parallel7/parallel_task46_overlay.py',
+            'blind_runner':'lexigen-v6/parallel7/parallel_blind_v2.py',
+            'blind_aggregate':'lexigen-v6/parallel7/parallel_blind_aggregate.py',
+            'blind_workflow':'.github/workflows/lexigen-v6-parallel7-blind-r1.yml',
+            'edge_signature_aggregate':'lexigen-v6/parallel7/parallel_aggregate_signature.py',
+          }
+          blobs={k:subprocess.check_output(['git','hash-object',v],text=True).strip() for k,v in paths.items()}
+          lock={'campaign':'LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication','stage':'parallel7_blind_r1_lock','task_count':7,'training_summary_sha256':hashes,'all_seven_training_results_sealed_before_blind':True,'task46_repair_training_used':True,'task46_repair_tasks':['ode_lorenz96_nonchaotic','edge_expansion'],'task6_candidate_identity_recovered_from_frozen_signature':True,'task6_training_rerun_for_aggregation_fix':False,'official_test_manifests_opened_before_lock':False,'official_test_payloads_opened_before_lock':False,'blind_runs_completed_before_trigger':0,'exactly_one_official_blind_run_per_task_allowed':True,'post_blind_candidate_revision_allowed':False,'post_blind_timing_rerun_allowed':False,'threshold_changes':False,'runtime_versions':{'python':'3.12','numpy':'2.5.2','scipy':'1.16.1','networkx':'3.6.1','ortools':'9.11.4210','cvxpy':'1.7.2'},'frozen_clean_blind_gate':{'valid_required':100,'harmonic_speedup_minimum':1.50,'minimum_speedup':1.05,'invalid_output_retries':0},'paths':paths,'git_blob_sha1':blobs}
+          Path('lexigen-v6/parallel7/PARALLEL7_BLIND_LOCK.json').write_text(json.dumps(lock,indent=2)+'\n')
+          print(json.dumps({'training_summary_sha256':hashes,'blind_code_blobs':blobs},indent=2))
+          PY
+      - name: Persist unified training seal and blind lock
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-v6/parallel7/results lexigen-v6/parallel7/PARALLEL7_TRAIN_STATUS.json lexigen-v6/parallel7/PARALLEL7_BLIND_LOCK.json
+          git commit -m "lexigen v6: seal all seven parallel training results and blind lock"
+          git pull --rebase origin lexigen/v6-parallel-7-r1
+          git push origin HEAD:lexigen/v6-parallel-7-r1

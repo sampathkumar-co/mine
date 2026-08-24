@@ -1,0 +1,93 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "stage": "parallel7_official_blind_r1_sealed",
+  "workflow_run_id": 32739752645,
+  "workflow_run_attempt": 1,
+  "trigger_head_sha": "5d5374d96910942834f442a4d2edd89d0652d9bb",
+  "task_count": 7,
+  "tasks": [
+    {
+      "task": "odr",
+      "summary_sha256": "a5c05a1c573fb13793fe065e3a933ed9baf1d69193fc6450d35bba62d20e3174",
+      "full_harmonic_speedup": 1.0043053172075385,
+      "full_minimum_speedup": 0.8203195582345201,
+      "full_clean_win": false,
+      "baseline_qualified_causal_transfer_win": false,
+      "selected_causal_ids": [
+        "TM-BFR-01"
+      ],
+      "family": "miscellaneous"
+    },
+    {
+      "task": "dct_type_I_scipy_fftpack",
+      "summary_sha256": "02fe6dd83f1f3d25a0bf01245b6d185d8e98afcd368fcee0f13214d852427441",
+      "full_harmonic_speedup": 0.9931568458192626,
+      "full_minimum_speedup": 0.9338794170572217,
+      "full_clean_win": false,
+      "baseline_qualified_causal_transfer_win": false,
+      "selected_causal_ids": [],
+      "family": "signal_processing"
+    },
+    {
+      "task": "ode_lorenz96_nonchaotic",
+      "summary_sha256": "1f4a305fb2c65e97fd72a3d88b2e1864db194fbe7945174077e34971e82ba1ec",
+      "full_harmonic_speedup": 1.4987921792843597,
+      "full_minimum_speedup": 1.3463849598042956,
+      "full_clean_win": false,
+      "baseline_qualified_causal_transfer_win": false,
+      "selected_causal_ids": [],
+      "family": "scientific_computing"
+    },
+    {
+      "task": "robust_kalman_filter",
+      "summary_sha256": "3d79c7cf5d154b5a592cd50267136766c6a4d0acdcd9f6f9e1ca4588ecb6d212",
+      "full_harmonic_speedup": 0.9868244789294888,
+      "full_minimum_speedup": 0.6894630238490235,
+      "full_clean_win": false,
+      "baseline_qualified_causal_transfer_win": false,
+      "selected_causal_ids": [
+        "TM-BFR-01"
+      ],
+      "family": "signal_processing"
+    },
+    {
+      "task": "edge_expansion",
+      "summary_sha256": "213a12857589a778b2a88dfc91969da4d26521b2e7c4135b51f074fd6b28987c",
+      "full_harmonic_speedup": 11.11598080736524,
+      "full_minimum_speedup": 9.687799519590024,
+      "full_clean_win": true,
+      "baseline_qualified_causal_transfer_win": false,
+      "selected_causal_ids": [
+        "TM-RRR-01"
+      ],
+      "family": "miscellaneous"
+    },
+    {
+      "task": "svd",
+      "summary_sha256": "a0d169448bd164233cb889718145029acb42d9bd0d0c39d543894c4e24c9887b",
+      "full_harmonic_speedup": 0.8003248064246354,
+      "full_minimum_speedup": 0.30866178761095714,
+      "full_clean_win": false,
+      "baseline_qualified_causal_transfer_win": false,
+      "selected_causal_ids": [
+        "TM-RRR-01"
+      ],
+      "family": "linear_algebra"
+    },
+    {
+      "task": "max_independent_set_cpsat",
+      "summary_sha256": "f43b711c74ef9ba2fc29901495b9e2b641ada9c956b4f35678b79ae880ba6fb2",
+      "full_harmonic_speedup": 2.7175009927305114,
+      "full_minimum_speedup": 1.0198314152862593,
+      "full_clean_win": false,
+      "baseline_qualified_causal_transfer_win": false,
+      "selected_causal_ids": [
+        "TM-BFR-01"
+      ],
+      "family": "combinatorial"
+    }
+  ],
+  "blind_runs_per_task": 1,
+  "post_blind_timing_reruns": 0,
+  "threshold_changes": false
+}
