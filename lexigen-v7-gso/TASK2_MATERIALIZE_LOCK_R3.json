@@ -1,0 +1,21 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "task2_materialization_r3_locked_pre_execution",
+  "repair_scope": "construction locator only; R3 replacements scoped to Llama.eval; no candidate mechanism or selection change",
+  "git_blob_sha1": {
+    "proposal_lock": "d6b129d0122181e9aab41418a41ce9a5a0f2499c",
+    "selection": "be4a61c472151ff48af18fb0329763e14a3572bc",
+    "r1_result": "c993467c02a1fa3fa7d6ceb6520fa2106bd91f03",
+    "r2_result": "c95da9b8319e529b8daf3ca8fdf756fb32db327b",
+    "r1_builder": "5b47dfc5a8fa58bb1cc95ef0ad7f2579d07d8434",
+    "r2_builder": "b01572d435633c0b85000bec7526a6490c0ff299",
+    "r3_builder": "1db7bdb81f0de5488b596c99069585fa3a2772b4",
+    "workflow": "825f06a377ec800f1a58e6650d89530a0b3ad200"
+  },
+  "candidate_timing_observed_before_lock": false,
+  "candidate_execution_count_before_lock": 0,
+  "expert_information_used": false,
+  "thresholds_changed": false,
+  "libraries_changed": false,
+  "selections_changed": false
+}
