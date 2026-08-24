@@ -1,0 +1,63 @@
+name: LEXIGEN v6 Parallel7 Training Observer
+on:
+  push:
+    branches: [lexigen/v6-parallel-7-r1]
+    paths: ["lexigen-v6/parallel7/TRIGGER_OBSERVE_PARALLEL7_TRAIN_R1"]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  observe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    env:
+      TARGET_SHA: 163df2faa32eac02a732dcfff2ff851afabb8f2b
+      TARGET_WORKFLOW: LEXIGEN v6 Parallel Tasks 2-8 Official Training R1
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+      - name: Observe frozen parallel training run
+        run: |
+          python - <<'PY'
+          import json, os, time, urllib.parse, urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']; target_sha=os.environ['TARGET_SHA']; target_name=os.environ['TARGET_WORKFLOW']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'LEXIGEN-v6-parallel7-observer'}
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=60) as r: return json.load(r)
+          observed=None
+          for _ in range(720):
+              q=urllib.parse.urlencode({'head_sha':target_sha,'per_page':100})
+              runs=get(f'https://api.github.com/repos/{repo}/actions/runs?{q}').get('workflow_runs',[])
+              matches=[r for r in runs if r.get('name')==target_name and r.get('event')=='push']
+              if matches:
+                  run=max(matches,key=lambda r:int(r['id']))
+                  jobs=get(run['jobs_url']).get('jobs',[])
+                  snapshot={
+                    'campaign':'LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication','stage':'parallel7_training_observation','target_head_sha':target_sha,
+                    'run_id':run['id'],'run_number':run.get('run_number'),'run_attempt':run.get('run_attempt'),'status':run.get('status'),'conclusion':run.get('conclusion'),'created_at':run.get('created_at'),'updated_at':run.get('updated_at'),
+                    'job_counts':{},'failed_jobs':[], 'artifacts':[], 'observer_changed_training_execution':False,'observer_opened_benchmark_data':False,
+                  }
+                  for j in jobs:
+                      key=f"{j.get('status')}:{j.get('conclusion')}"; snapshot['job_counts'][key]=snapshot['job_counts'].get(key,0)+1
+                      if j.get('status')=='completed' and j.get('conclusion') not in ('success','skipped'):
+                          snapshot['failed_jobs'].append({'id':j['id'],'name':j['name'],'conclusion':j.get('conclusion'),'steps':[{'name':s['name'],'conclusion':s.get('conclusion'),'status':s.get('status')} for s in j.get('steps',[]) if s.get('conclusion') not in (None,'success','skipped')]})
+                  if run.get('status')=='completed':
+                      arts=get(run['artifacts_url']).get('artifacts',[])
+                      snapshot['artifacts']=[{'id':a['id'],'name':a['name'],'size_in_bytes':a['size_in_bytes'],'digest':a.get('digest'),'expired':a.get('expired')} for a in arts]
+                      observed=snapshot; break
+              time.sleep(5)
+          if observed is None: raise SystemExit('parallel7 training did not complete within observer window')
+          Path('lexigen-v6/parallel7/PARALLEL7_TRAIN_OBSERVATION.json').write_text(json.dumps(observed,indent=2)+'\n')
+          print(json.dumps(observed,indent=2))
+          PY
+      - name: Persist observation metadata only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lexigen-v6/parallel7/PARALLEL7_TRAIN_OBSERVATION.json
+          git commit -m "lexigen v6: record parallel7 training observation"
+          git push origin HEAD:lexigen/v6-parallel-7-r1
