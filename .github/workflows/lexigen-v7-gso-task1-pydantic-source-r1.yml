@@ -1,0 +1,77 @@
+name: LEXIGEN V7 GSO Task1 Pydantic Source R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-engine-lock-r1]
+    paths: ["lexigen-v7-gso/tasks/01-pydantic-setattr/TRIGGER_SOURCE_R1"]
+permissions: {contents: read}
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen Task 1 source lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/tasks/01-pydantic-setattr/SOURCE_LOCK_R1.json').read_text())
+          paths={
+            'TASK_START.json':'lexigen-v7-gso/tasks/01-pydantic-setattr/TASK_START.json',
+            'ENGINE_LOCK_R1.json':'lexigen-v7-gso/ENGINE_LOCK_R1.json',
+            'GENERATION_CONTRACT_R1.md':'lexigen-v7-gso/GENERATION_CONTRACT_R1.md',
+            'extract_selected_spec.py':'lexigen-v7-gso/extract_selected_spec.py',
+            'extract_worktree_context.py':'lexigen-v7-gso/extract_worktree_context.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-task1-pydantic-source-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]: raise SystemExit(f'Task1 source lock mismatch {key}: {got}')
+          forbidden=['prob_script_opened_before_lock','tests_opened_before_lock','base_worktree_source_opened_before_lock','expert_opt_commit_opened_before_lock','expert_diff_opened_before_lock','hints_opened_before_lock']
+          if any(lock.get(k) for k in forbidden): raise SystemExit('Task1 source boundary crossed')
+          PY
+      - name: Install frozen spec extractor dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Compile frozen extractors
+        run: python -m py_compile lexigen-v7-gso/extract_selected_spec.py lexigen-v7-gso/extract_worktree_context.py
+      - name: Open selected GSO performance specification only
+        run: |
+          python lexigen-v7-gso/extract_selected_spec.py \
+            --instance-id pydantic__pydantic-addf1f9 \
+            --output task-source/spec
+      - name: Pull frozen GSO base-worktree image
+        run: |
+          docker pull slimshetty/gso:gso.eval.x86_64.pydantic__pydantic-addf1f9
+          docker image inspect slimshetty/gso:gso.eval.x86_64.pydantic__pydantic-addf1f9 \
+            --format '{{json .RepoDigests}}' > task-source/image-repodigests.json
+      - name: Extract API-relevant base working-tree source without .git
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE/lexigen-v7-gso/extract_worktree_context.py:/extract_worktree_context.py:ro" \
+            -v "$GITHUB_WORKSPACE/task-source:/out" \
+            slimshetty/gso:gso.eval.x86_64.pydantic__pydantic-addf1f9 \
+            python /extract_worktree_context.py \
+              --root /testbed \
+              --api 'BaseModel.__setattr__' \
+              --output /out/worktree
+      - name: Seal source artifact inventory
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          root=Path('task-source')
+          rows=[]
+          for p in sorted(root.rglob('*')):
+              if p.is_file():
+                  rows.append({'path':str(p.relative_to(root)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size})
+          (root/'artifact-inventory.json').write_text(json.dumps({'files':rows,'expert_diff_accessed':False,'hints_accessed':False,'git_objects_read':False},indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v7-gso-task1-pydantic-source-r1
+          path: task-source/
+          if-no-files-found: error
+          retention-days: 90
