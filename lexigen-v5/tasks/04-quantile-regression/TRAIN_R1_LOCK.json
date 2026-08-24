@@ -1,0 +1,39 @@
+{
+  "campaign": "LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index": 4,
+  "task": "quantile_regression",
+  "family": "statistics",
+  "stage": "train_r1_lock",
+  "revision": 1,
+  "git_blob_sha1": {
+    "SOURCE_R1_RESULT.json": "a28c2d89ee07e4ecb840f4081e68eac73d76ce85",
+    "SYNTHETIC_R1_RESULT.json": "cee554db9c4a2b9ea54231dceec4bc6773244a78",
+    "DATASET_METADATA_R1_RESULT.json": "d1cef4daf63cd702f231ea3349846bb234c07e3f",
+    "candidates.py": "95e57687ac84ac2f77a2e2f0a82bb7ffd7b153d3",
+    "DEPENDENCY_PIN.json": "7d6c25635d22253062b4e5ca7ddb16f028917328",
+    "train_shard.py": "f205558f7a8a4ad53d80f457ebbcc3f64aa76555",
+    "aggregate_train.py": "13471053efe94e3b2f8a0d0bd9e3b58cc9dc2194",
+    "workflow": "d3a5be4ed287d362173e9b758ab8824e613891b4"
+  },
+  "training_manifest": {
+    "name": "quantile_regression_T100ms_n356_size100_train.jsonl",
+    "oid": "0e0c8234f88d313d8f4e2066c05ba72577e3c161",
+    "size": 691744,
+    "expected_records": 100
+  },
+  "test_manifest_metadata_only": {
+    "name": "quantile_regression_T100ms_n356_size100_test.jsonl",
+    "oid": "fa47823b663ed89c95d00ac4315fb0086000ae80",
+    "size": 691920
+  },
+  "candidate_count": 30,
+  "shard_count": 10,
+  "selection_rule": "100% correctness; performance-gate pass first; then harmonic, minimum, median speedup, stable candidate name",
+  "official_training_manifest_opened_before_lock": false,
+  "official_training_payloads_opened_before_lock": false,
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": false,
+  "candidate_implementation_changes_after_training_access_forbidden": true,
+  "thresholds_changed": false,
+  "human_task_specific_solver_repair_after_training_access_forbidden": true
+}
