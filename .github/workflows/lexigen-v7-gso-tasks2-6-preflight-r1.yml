@@ -1,0 +1,94 @@
+name: LEXIGEN V7 GSO Tasks2-6 Parallel Preflight R1
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-materialization-result-r1]
+    paths: ["lexigen-v7-gso/TRIGGER_TASKS2_6_PREFLIGHT_R1"]
+permissions: {contents: read}
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - task: 2
+            instance: abetlen__llama-cpp-python-2bc1d97
+            image: slimshetty/gso:gso.eval.x86_64.abetlen__llama-cpp-python-2bc1d97
+            target: llama_cpp/llama.py
+          - task: 3
+            instance: huggingface__tokenizers-bfd9cde
+            image: slimshetty/gso:gso.eval.x86_64.huggingface__tokenizers-bfd9cde
+            target: bindings/python/src/tokenizer.rs
+          - task: 4
+            instance: numpy__numpy-be52f19
+            image: slimshetty/gso:gso.eval.x86_64.numpy__numpy-be52f19
+            target: numpy/core/code_generators/generate_umath.py
+          - task: 5
+            instance: pandas-dev__pandas-fd43d4b
+            image: slimshetty/gso:gso.eval.x86_64.pandas-dev__pandas-fd43d4b
+            target: pandas/core/indexes/range.py
+          - task: 6
+            instance: huggingface__transformers-211f93a
+            image: slimshetty/gso:gso.eval.x86_64.huggingface__transformers-211f93a
+            target: src/transformers/models/whisper/tokenization_whisper.py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen preflight lock
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v7-gso/TASKS2_6_PREFLIGHT_LOCK_R1.json').read_text())
+          paths={
+            'engine':'lexigen-v7-gso/ENGINE_LOCK_R1.json',
+            'selection':'lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json',
+            'plan':'lexigen-v7-gso/PREFLIGHT_PLAN_R1.json',
+            'test_hashes':'lexigen-v7-gso/PREFLIGHT_TEST_HASH_LOCK_R1.json',
+            'materialized':'lexigen-v7-gso/TASKS2_6_MATERIALIZATION_COMPLETE_R1.json',
+            'execmeta_result':'lexigen-v7-gso/TASKS2_6_EXECMETA_R1_RESULT.json',
+            'spec_extractor':'lexigen-v7-gso/extract_selected_spec.py',
+            'execmeta_extractor':'lexigen-v7-gso/extract_execution_metadata_r1.py',
+            'builder_r1':'lexigen-v7-gso/build_candidate_r1.py',
+            'builder_task2_r3':'lexigen-v7-gso/build_task2_candidate_r3.py',
+            'runner':'lexigen-v7-gso/run_tasks2_6_preflight_r1.py',
+            'workflow':'.github/workflows/lexigen-v7-gso-tasks2-6-preflight-r1.yml',
+          }
+          for key,path in paths.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got!=lock['git_blob_sha1'][key]:
+                  raise SystemExit(f'preflight lock mismatch {key}: {got}')
+          if lock['candidate_timing_observed_before_lock']:
+              raise SystemExit('candidate timing crossed before preflight lock')
+          PY
+      - name: Compile frozen runners
+        run: python -m py_compile lexigen-v7-gso/build_candidate_r1.py lexigen-v7-gso/build_task2_candidate_r2.py lexigen-v7-gso/build_task2_candidate_r3.py lexigen-v7-gso/run_tasks2_6_preflight_r1.py
+      - name: Install pinned safe-projector dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Recover only already-permitted task spec and tests
+        run: python lexigen-v7-gso/extract_selected_spec.py --instance-id "${{ matrix.instance }}" --output spec
+      - name: Recover only non-expert execution metadata
+        run: python lexigen-v7-gso/extract_execution_metadata_r1.py --instance-id "${{ matrix.instance }}" --output execmeta/EXECUTION_METADATA_R1.json
+      - name: Pull frozen GSO base image
+        run: docker pull "${{ matrix.image }}"
+      - name: Run frozen equal-budget preflight
+        shell: bash
+        run: |
+          python lexigen-v7-gso/run_tasks2_6_preflight_r1.py \
+            --task "${{ matrix.task }}" \
+            --instance-id "${{ matrix.instance }}" \
+            --image "${{ matrix.image }}" \
+            --target "${{ matrix.target }}" \
+            --spec spec \
+            --execmeta execmeta/EXECUTION_METADATA_R1.json \
+            --output "preflight/task-${{ matrix.task }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lexigen-v7-gso-task${{ matrix.task }}-preflight-r1
+          path: preflight/task-${{ matrix.task }}/
+          if-no-files-found: warn
+          retention-days: 90
