@@ -1,0 +1,31 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "stage": "tasks2_6_parallel_source_lock_r2",
+  "task_indexes": [2, 3, 4, 5, 6],
+  "parallel_execution": true,
+  "r1_context_incident_preserved": true,
+  "git_blob_sha1": {
+    "ENGINE_LOCK_R1.json": "6b4283b1baeb8aacfdc13337362ae1ed3ae249f5",
+    "GENERATION_CONTRACT_R1.md": "036dbaeadb222b751b1354e74cdf3eeb7965fbbc",
+    "extract_selected_spec.py": "c736d75b9d4462f80c2475311c3ccbf140e7a2a4",
+    "extract_worktree_context.py": "469a2a8700b6f787382fdafce30099a2c7c56941",
+    "r1_incident": "aac24cfaa2b7e660229a481626615a5494b03e11",
+    "task2_start": "8196e15fb37d19f8fbc9377e3f4ec89a7bf045a6",
+    "task3_start": "65c23772e7374a7549113fd03d09d79d6b1c1c60",
+    "task4_start": "2da7330533458575defcb0d01f946d724b3e8e48",
+    "task5_start": "2bbf974cabe4bc7c64e827ba013bd53182e7d232",
+    "task6_start": "214eca4907eadeb67bfa89bcb95c3f1d7d8694b0",
+    "workflow": "d31e94680b8e4a86ce6a121514f168a33e49a3ed"
+  },
+  "candidate_generation_started_before_r2": false,
+  "candidate_timing_observed_before_r2": false,
+  "expert_opt_commit_accessed_before_r2": false,
+  "expert_diff_accessed_before_r2": false,
+  "hints_accessed_before_r2": false,
+  "task_identities_changed": false,
+  "tests_or_specs_changed": false,
+  "engine_or_library_changed": false,
+  "proposal_budgets_changed": false,
+  "thresholds_changed": false,
+  "trigger_exists_at_lock_commit": false
+}
