@@ -1,0 +1,16 @@
+{
+  "campaign":"LEXIGEN v5 Causal Transfer Generalization Experiment",
+  "task_index":6,
+  "task":"gzip_compression",
+  "stage":"dataset_metadata_r1_lock",
+  "git_blob_sha1":{
+    "SYNTHETIC_R1_RESULT.json":"17d7d3b2fe6265fb9c24cfe88de3320297f2fbe0",
+    "inspect_dataset_metadata.py":"e170fe71ef91ba64cad21263bf742c78cdc6f539",
+    "workflow":"36b565fbee4bd0064ebab029db623937e92e777f"
+  },
+  "training_manifest_opened_before_lock":false,
+  "training_payloads_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "test_payloads_opened_before_lock":false,
+  "resolve_or_download_urls_followed_before_lock":false
+}
