@@ -8,10 +8,15 @@ The learned library is inherited unchanged from `lexigen/v7-real-library-result-
 ## Frozen benchmark
 - GSO harness repository: `gso-bench/gso`
 - pinned harness commit: `7074865b48123b30a2e61d7dbc4887fcd990e681`
-- pinned tree: `ce3b95c80bcf2e1dfbe87311671f7d1b8b4cc3b0`
-- GSO dataset: `gso-bench/gso`, test split, 102 instances
+- pinned harness tree: `ce3b95c80bcf2e1dfbe87311671f7d1b8b4cc3b0`
+- Hugging Face dataset: `gso-bench/gso`
+- pinned dataset revision: `c2e4f1a58427cccd15e0e542f136bd204fb19284`
+- test split row count: 102 instances
+- pinned parquet path: `data/test-00000-of-00001.parquet`
 - pinned parquet SHA-256: `bda458a7b5437c252f6cefdbc896f5f2868de51479e7a221ceda3f3ab74879bc`
-- runner target: reproducible Linux containers / x86_64 where the selected GSO task supports it
+- pinned Xet hash: `59cb48b81dd9033151c35123d78dea99ad1959ed33f737c8523f916643402373`
+- selector dependency: `duckdb==1.4.1`
+- runner target: Ubuntu 24.04 / Python 3.12
 
 GSO is used because it provides real repository-scale optimization tasks, correctness/performance evaluation against expert optimization targets, prebuilt task environments, and a hack-detection layer.
 
@@ -34,18 +39,20 @@ Before selection, V7 may inspect only safe GSO metadata columns:
 - `arch`
 - `instance_image_tag`
 
-The following are forbidden before their protocol stage:
+The following values are forbidden before their protocol stage:
 - `opt_commit`
 - `gt_commit_message`
 - `gt_diff`
 - `hints_text`
 - `prob_script`
 - `tests`
+- `setup_commands`
+- `install_commands`
 - expert patch contents
 - prior model trajectories/submissions
 - leaderboard per-instance solutions
 
-The selection implementation must request only safe metadata columns from the pinned parquet.
+Selection uses DuckDB remote-Parquet projection pushdown. The committed SQL names only the seven safe columns. DuckDB performs Parquet column projection and HTTP partial/range reads, so forbidden column values are not requested by the selection query. Dataset identity is checked through pinned revision/path metadata rather than downloading the full Parquet merely to hash it.
 
 ## Holdout selection
 After protocol, selector, learned/random libraries, comparison arms, budgets, and gates are locked:
@@ -67,7 +74,7 @@ No arm may inspect the expert optimization commit/diff or GSO hints before its f
 ## Search boundary
 For each selected GSO instance:
 1. commit `TASK_START.json` before opening the task performance specification;
-2. open the base repository and GSO performance-test specification only;
+2. open the selected base repository and selected instance's GSO performance-test specification only;
 3. generate bounded proposals under each frozen arm;
 4. run correctness/performance feedback under equal budgets;
 5. freeze one patch per arm;
