@@ -1,0 +1,26 @@
+{
+  "campaign": "LEXIGEN V7 GSO Real Causal-Transfer Pilot R1",
+  "task_index": 3,
+  "stage": "revision1_execution_locked_before_timing",
+  "revision_slot": 1,
+  "candidates": ["F2R1", "N4R1", "R4R1"],
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "libraries_changed": false,
+  "thresholds_changed": false,
+  "task_changed": false,
+  "tests_changed": false,
+  "budget_increased": false,
+  "git_blob_sha1": {
+    "preflight_r2_result": "f8690333b3f43bd736fb5875b396b149f216a09c",
+    "revision_plan": "e9ef28de43d3ac7fbfda036d6221f127dfe98060",
+    "materialization_lock": "edd4866cac2a96d04cbed8ec7dbe0d6d1aaa13de",
+    "builder": "a596db64a913e676c0ad4ea288bb5d3b0c98d77f",
+    "runner": "ebd208a9b9aa66d385894d6cc915ff9cc6f7b8af",
+    "preflight_r2_lock": "920bb465cdd43efc24920026e86b3dfc42c2d887",
+    "core_runner": "1f2208982eaa485a040bbf5640623e2d27f4b420",
+    "transport_r2": "95275c6989b751297202f0a9be38644c265ede02",
+    "workflow": "46185bdb1a5d3611e6d6648ac6fa0c3cd946eb6e"
+  }
+}
