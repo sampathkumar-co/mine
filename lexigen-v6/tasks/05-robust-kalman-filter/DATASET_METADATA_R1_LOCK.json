@@ -1,0 +1,24 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":5,
+  "task":"robust_kalman_filter",
+  "stage":"dataset_metadata_r1_lock",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/05-robust-kalman-filter/TASK_LOCK.json",
+    "synthetic_result":"lexigen-v6/tasks/05-robust-kalman-filter/SYNTHETIC_R1_RESULT.json",
+    "dataset_metadata":"lexigen-v6/tasks/05-robust-kalman-filter/dataset_metadata.py",
+    "workflow":".github/workflows/lexigen-v6-task5-robust-kalman-metadata-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"ead6a9db9a7ac02421605af87d0df23ef9c185bf",
+    "synthetic_result":"fb5e3291f4d1eb7744a7636a2b8055d0e2754bfd",
+    "dataset_metadata":"3745a5bd6f8ce054aacddd82e1b0bcd9b238393b",
+    "workflow":"b02fee8353d3d289cc3ed3f43c072366ba365437"
+  },
+  "train_manifest_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "payloads_opened_before_lock":false,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "threshold_changes":false
+}
