@@ -1,0 +1,61 @@
+name: LEXIGEN OMEGA R5 Runtime Preflight
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-proposals-r1]
+    paths: ["lexigen-omega/TRIGGER_R5_RUNTIME_PREFLIGHT"]
+permissions: {contents: read}
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify official runtime without tests or timing
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE='slimshetty/gso:gso.eval.x86_64.python-pillow__pillow-d8af3fc'
+          docker pull "$IMAGE"
+          C="lexigen-omega-r5-preflight-${GITHUB_RUN_ID}"
+          docker create --name "$C" "$IMAGE" sleep infinity
+          trap 'docker rm -f "$C" >/dev/null 2>&1 || true' EXIT
+          docker start "$C"
+          mkdir -p runtime-preflight/PIL
+          docker cp "$C:/testbed/PIL/Image.py" runtime-preflight/PIL/Image.py
+          test "$(git hash-object runtime-preflight/PIL/Image.py)" = '49c9f6ab204a16044355d1d043c16ecef9e044a4'
+          docker exec -w /testbed "$C" bash -lc 'source .venv/bin/activate && python --version && uv --version && python -c "from PIL import Image; assert hasattr(Image.Image, \"split\")"'
+          docker exec -w /testbed "$C" bash -lc '
+            set -euo pipefail
+            uv venv --python 3.9
+            source .venv/bin/activate
+            which python
+            python --version
+            uv pip install . --reinstall
+            uv pip install requests dill numpy
+            uv pip show pillow
+            python -c "from PIL import Image; assert hasattr(Image.Image, \"split\")"
+          '
+          python - <<'PY'
+          import json
+          payload={
+            'project':'LEXIGEN OMEGA',
+            'stage':'R5_official_runtime_preflight_before_candidate_execution',
+            'status':'runtime_and_reinstall_plumbing_verified',
+            'image':'slimshetty/gso:gso.eval.x86_64.python-pillow__pillow-d8af3fc',
+            'base_git_blob_sha1':'49c9f6ab204a16044355d1d043c16ecef9e044a4',
+            'candidate_execution_count':0,
+            'candidate_timing_accessed':False,
+            'candidate_outcome_accessed':False,
+            'benchmark_tests_executed':False,
+            'performance_script_executed':False,
+            'expert_fields_accessed':False,
+          }
+          open('runtime-preflight/R5_RUNTIME_PREFLIGHT.json','w').write(json.dumps(payload,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(payload,indent=2,sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-r5-runtime-preflight
+          path: runtime-preflight/R5_RUNTIME_PREFLIGHT.json
+          if-no-files-found: error
+          retention-days: 30
