@@ -21,7 +21,7 @@ jobs:
           expected = {
             'proposal': ('lexigen-omega/evidence/PROSPECTIVE_R4_SOURCE_PROPOSALS.json', '95012e5d3643987c40ed30fd6cd9c125cd767257'),
             'contract_manifest': ('lexigen-omega/evidence/PROSPECTIVE_R4_EXECUTION_CONTRACT_MANIFEST.json', '6c5af3c710357dafb8792d4ed9540b5b84ec35de'),
-            'builder': ('lexigen-omega/tools/build_r4_candidates.py', 'f60553fc8cf9bab4e3d0538b2e990101a15db7f0'),
+            'builder': ('lexigen-omega/tools/build_r4_candidates.py', 'b8d3894c9ba176b1ccf6a74e5fee03dcf119df6d'),
             'prediction': ('lexigen-omega/evidence/PROSPECTIVE_R4_TRANSFER_PREDICTION.json', '3bb0d9cca347e7751b56b4c934e210ac18448e4d'),
             'scorer': ('lexigen-omega/tools/score_prospective_exact_sequence.py', 'e870a4c5fb6dc1d9cc4cb28ce265e86d11e8f08f'),
           }
