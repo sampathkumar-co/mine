@@ -1,0 +1,92 @@
+{
+  "stage": "lexigen_v8_fvd_historical_replay_r1",
+  "classification": "development_replay_failed",
+  "source_branch": "lexigen/v8-fvd-engine-dev-r1",
+  "source_head_sha": "bed57dd018df0243d4229c3e53c35715e87a6d6b",
+  "workflow_run_id": 32813990356,
+  "workflow_job_id": 97698585010,
+  "stage1_sha256": "398cf0835708ef685ab76dfb800e56feb701c4ac33e355da9d85f36cf5cf7aa8",
+  "replay_artifact_id": 9550760763,
+  "replay_artifact_digest": "sha256:a3cfe41e41e9cdb8397590dce48d00606178fbb9411db5a816316b100f257d62",
+  "development_artifact_id": 9550760117,
+  "development_artifact_digest": "sha256:79dc2a3f4f6ebc896d8ff9670ebf14c2057dc06b2482f368de7ab8eb9e8b6688",
+  "replay_task_count": 3,
+  "proposal_budget_per_task_per_arm": 16,
+  "integrity": {
+    "source_hashes_verified": true,
+    "all_leave_one_target_out_checks_pass": true,
+    "all_equal_budget_checks_pass": true,
+    "stage1_outcomes_loaded": false,
+    "stage1_outcome_file_opened": false,
+    "official_fvd_holdout_data_accessed": false,
+    "blocked_ipwm_real_intervention_data_accessed": false,
+    "scientific_transfer_evidence": false,
+    "scientific_failure_propagated_nonzero_to_ci": true,
+    "evidence_uploaded_despite_failure": true
+  },
+  "metrics": {
+    "full_mean_success_class_allocation": 5.333333333333333,
+    "no_experience_mean_success_class_allocation": 2.0,
+    "full_minus_no_experience_mean_allocation": 3.333333333333333,
+    "full_success_class_top3_tasks": 3,
+    "full_success_class_allocation_wins_vs_shuffled": 2,
+    "full_mean_best_success_class_rank": 1.6666666666666667,
+    "retrieval_mean_best_success_class_rank": 1.3333333333333333
+  },
+  "gate_checks": {
+    "source_hashes_verified": true,
+    "all_leave_one_target_out_checks_pass": true,
+    "all_equal_budget_checks_pass": true,
+    "full_mean_success_class_allocation_minus_no_experience": true,
+    "full_success_class_top3_tasks": true,
+    "full_success_class_allocation_wins_vs_shuffled": true,
+    "full_mean_best_success_class_rank_not_worse_than_retrieval": false,
+    "stage1_outcomes_loaded_false": true,
+    "official_holdout_data_accessed_false": true,
+    "scientific_transfer_evidence_false": true
+  },
+  "per_task_success_class": {
+    "v5-task1-clustering-outliers": {
+      "class": "PC-REDUCED-REFINE",
+      "full_allocation": 4,
+      "full_rank": 3,
+      "no_experience_allocation": 2,
+      "no_experience_rank": 6,
+      "shuffled_allocation": 0,
+      "shuffled_rank": 7,
+      "retrieval_allocation": 4,
+      "retrieval_rank": 2
+    },
+    "v5-task10-vertex-cover": {
+      "class": "PC-FRONTIER-CERT",
+      "full_allocation": 8,
+      "full_rank": 1,
+      "no_experience_allocation": 2,
+      "no_experience_rank": 3,
+      "shuffled_allocation": 1,
+      "shuffled_rank": 5,
+      "retrieval_allocation": 8,
+      "retrieval_rank": 1
+    },
+    "v7-task6-whisper-preprocess": {
+      "class": "PC-EXEC-CERT",
+      "full_allocation": 4,
+      "full_rank": 1,
+      "no_experience_allocation": 2,
+      "no_experience_rank": 2,
+      "shuffled_allocation": 4,
+      "shuffled_rank": 1,
+      "retrieval_allocation": 4,
+      "retrieval_rank": 1
+    }
+  },
+  "diagnosis": "R1 improves allocation over uniform no-experience and survives shuffled controls on two of three tasks, but its controller does not add demonstrated ranking value beyond context retrieval. The full score is retrieval-like context overlap plus coarse evidence-grade weighting and risk penalties; after correct leave-one-target-out removal, useful target classes are often unconfirmed and retrieval-only matches or outranks full.",
+  "protocol_consequence": "Historical replay R1 is failed and immutable. Do not weaken its retrieval gate or edit its replay tasks after result access. Do not select official FVD holdouts from this result.",
+  "next_action": "Create a separate R2 development revision using outcome-calibrated mechanism utility learned on a disjoint historical apprenticeship partition and evaluate it on different sealed historical replay tasks. Do not tune R2 against these three R1 replay outcomes as its confirmatory development set.",
+  "claim_boundary": {
+    "fvd_historical_replay_r1_passed": false,
+    "official_fvd_holdout_campaign_unlocked": false,
+    "causal_transfer_breakthrough_established": false,
+    "world_level_breakthrough_established": false
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "protocol": "lexigen-v8-fvd-historical-replay-r1",
+  "status": "frozen_before_replay_execution",
+  "development_only": true,
+  "official_fvd_holdout_campaign_started": false,
+  "blocked_ipwm_real_intervention_data_opened": false,
+  "scientific_transfer_evidence": false,
+  "purpose": "Test whether the current frozen experience allocator spends a fixed proposal budget toward historically successful mechanism classes using only pre-result source descriptors, with each target's own outcome-derived evidence removed before allocation.",
+  "files": {
+    "source_only_inputs": "lexigen-v8/FVD_HISTORICAL_REPLAY_INPUT_R1.json",
+    "outcomes_opened_only_after_allocation": "lexigen-v8/FVD_HISTORICAL_REPLAY_OUTCOMES_R1.json",
+    "stage1": "lexigen-v8/prepare_fvd_historical_replay_r1.py",
+    "stage2": "lexigen-v8/score_fvd_historical_replay_r1.py"
+  },
+  "arms": ["fvd_full", "fvd_no_experience", "fvd_shuffled_experience", "retrieval_only", "evolution_only"],
+  "proposal_budget_per_task_per_arm": 16,
+  "replay_task_count": 3,
+  "required_integrity": [
+    "stage1 does not read or import the outcome file",
+    "every source descriptor is hash-pinned to a record created before the target's benchmark result was known",
+    "each target's own outcome-derived positive evidence is excluded from its experience build",
+    "the artifact view passed to the allocator omits historical summaries and task-specific outcome evidence",
+    "all arms consume exactly the same proposal budget",
+    "official FVD holdouts and the blocked IPWM real corpus remain unopened",
+    "stage2 may read outcomes only after the allocation artifact exists"
+  ],
+  "success_gates_all_required": {
+    "source_hashes_verified": true,
+    "all_leave_one_target_out_checks_pass": true,
+    "all_equal_budget_checks_pass": true,
+    "full_mean_success_class_allocation_minus_no_experience_min": 1.0,
+    "full_success_class_top3_tasks_min": 2,
+    "full_success_class_allocation_wins_vs_shuffled_min": 2,
+    "full_mean_best_success_class_rank_not_worse_than_retrieval": true,
+    "stage1_outcomes_loaded": false,
+    "official_holdout_data_accessed": false,
+    "scientific_transfer_evidence": false
+  },
+  "interpretation": {
+    "pass": "Development evidence that the current allocator is worth advancing to broader apprenticeship replay. It is not confirmatory transfer evidence and does not unlock a breakthrough claim.",
+    "fail": "Do not select official FVD holdouts. Diagnose the allocator or experience representation in a new development revision without weakening this frozen replay result."
+  },
+  "threshold_changes_after_execution_allowed": false,
+  "task_changes_after_execution_allowed": false
+}

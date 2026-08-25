@@ -1,0 +1,56 @@
+{
+  "schema": "lexigen-v8-fvd-historical-replay-outcomes-r1",
+  "status": "evaluation_only_open_after_stage1_allocation",
+  "tasks": [
+    {
+      "replay_id": "v5-task1-clustering-outliers",
+      "historical_outcome": "clean_performance_win_noncausal",
+      "successful_proposal_classes": ["PC-REDUCED-REFINE"],
+      "outcome_evidence": [
+        {
+          "path": "lexigen-v5/tasks/01-clustering-outliers/TASK_RESULT.json",
+          "git_blob_sha1": "81628c01d4a945540ecf1ca74e3b8212499b2861"
+        },
+        {
+          "path": "lexigen-v5/tasks/01-clustering-outliers/BLIND_R1_SELECTION.json",
+          "git_blob_sha1": "38535e7b9d2eb92ed28f11ab1b2f7360165c1d5c"
+        }
+      ],
+      "mapping_rationale": "The selected full implementation was generic_reduced_representation; mapped to the common reduced-representation plus refinement class. The result is performance-only because equivalent implementations appeared in other arms."
+    },
+    {
+      "replay_id": "v5-task10-vertex-cover",
+      "historical_outcome": "clean_causal_transfer_win",
+      "successful_proposal_classes": ["PC-FRONTIER-CERT"],
+      "outcome_evidence": [
+        {
+          "path": "lexigen-v5/tasks/10-vertex-cover/TASK_RESULT.json",
+          "git_blob_sha1": "3734be7d6847fa133709cbb9562e5ddb85794dae"
+        },
+        {
+          "path": "lexigen-v5/tasks/10-vertex-cover/TRAIN_R1_RESULT.json",
+          "git_blob_sha1": "1c37370f222b0e8ad8c6447db1454caa3500540d"
+        }
+      ],
+      "mapping_rationale": "The successful full implementation was learned_bit_frontier_exact using TM-BFR-01; mapped directly to frontier restriction with certificate."
+    },
+    {
+      "replay_id": "v7-task6-whisper-preprocess",
+      "historical_outcome": "large_performance_positive_causal_negative",
+      "successful_proposal_classes": ["PC-EXEC-CERT"],
+      "outcome_evidence": [
+        {
+          "path": "lexigen-v7-gso/FINAL_CAMPAIGN_AUDIT_R1.json",
+          "git_blob_sha1": "2bd574e9d2ff212feaf193bf5778eb6e4d433496"
+        },
+        {
+          "repository_commit": "56dd1b4d587c0d71db53e0c0c8b1241b52f49f94",
+          "path": "lexigen-v7-gso/tasks/06-transformers-whisper-preprocess/ANTI_GAMING_R2_RESULT.json",
+          "git_blob_sha1": "20a70e417726576a1d2db198afec53581e7a5cc7"
+        }
+      ],
+      "mapping_rationale": "The selected full winner was F3, whose frozen primitive sequence was EXECUTE -> CERTIFY and whose mechanism cached a timestamp-ID frozenset; mapped to execution-path replacement with certificate. The result remains causal-negative because N2 independently instantiated the same mechanism class."
+    }
+  ],
+  "claim_boundary": "These outcomes are used only to score allocations that were already produced from the separate source-only input file. They are historical development evidence, not new transfer evidence."
+}
