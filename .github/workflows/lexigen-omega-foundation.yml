@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   foundation:
@@ -169,4 +170,70 @@ jobs:
         with:
           name: lexigen-omega-task2-prospective-transfer-r1
           path: omega-evidence/TASK2_PROSPECTIVE_TRANSFER_REGENERATED.json
+          retention-days: 90
+
+  score-sealed-task2-transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download exact sealed V7 Task2 outcome artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lexigen-v7-gso-task2-preflight-r1
+          path: _evidence/task2-outcome
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32747466819
+      - name: Verify exact Task2 source outcome identity
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          manifest = json.loads(Path('lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_OUTCOME_MANIFEST_R1.json').read_text())
+          path = Path('_evidence/task2-outcome/PREFLIGHT_RESULT_R1.json')
+          raw = path.read_bytes()
+          assert hashlib.sha256(raw).hexdigest() == manifest['source']['result_sha256']
+          result = json.loads(raw)
+          assert result['instance_id'] == manifest['target_task']
+          assert result['status'] == 'completed'
+          assert result['campaign_credit_eligible'] is True
+          assert len(result['candidate_results']) == manifest['source_result_checks']['candidate_rows']
+          assert sum(1 for row in result['candidate_results'] if not row.get('error')) == manifest['source_result_checks']['clean_candidate_rows']
+          assert result['expert_opt_commit_accessed'] is False
+          assert result['expert_diff_accessed'] is False
+          assert result['hints_accessed'] is False
+          print('sealed Task2 outcome identity verified')
+          PY
+      - name: Recompute preregistered Task2 prospective score
+        run: |
+          python lexigen-omega/tools/score_task2_prospective_transfer.py \
+            --prediction lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json \
+            --result _evidence/task2-outcome/PREFLIGHT_RESULT_R1.json \
+            --output omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json
+          cmp omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json \
+              lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json
+      - name: Enforce narrow interpretation boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          score = json.loads(Path('omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json').read_text())
+          assert score['status'] == 'sequence_only_transfer_directionally_supported_on_Task2'
+          assert score['observed_covered_candidates'] == 6
+          assert score['pairwise_concordance'] >= 0.70
+          assert score['spearman_rank_correlation'] >= 0.50
+          assert score['top1_hit'] is True
+          assert 'cannot establish general cross-repository transfer' in score['claim_boundary']
+          print(score)
+          PY
+      - name: Upload sealed prospective score verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-task2-prospective-score-r1
+          path: omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json
           retention-days: 90
