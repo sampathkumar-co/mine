@@ -1,0 +1,74 @@
+name: LEXIGEN OMEGA Prospective R2 Selection
+
+on:
+  pull_request:
+    paths:
+      - 'lexigen-omega/evidence/PROSPECTIVE_R2_SELECTION_LOCK.json'
+      - 'lexigen-omega/tools/select_prospective_r2.py'
+      - '.github/workflows/lexigen-omega-prospective-r2-select.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  select-r2-target:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Omega head
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen preselection boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          lock = json.loads(Path('lexigen-omega/evidence/PROSPECTIVE_R2_SELECTION_LOCK.json').read_text())
+          assert lock['status'] == 'frozen_before_selection_execution'
+          assert lock['scientific_role'] == 'prospective_development_replication_not_final_global_blind'
+          assert lock['task_count'] == 1
+          assert not any(lock['preselection_boundary'].values())
+          assert lock['postselection_policy']['selection_may_not_be_rerolled_after_failure'] is True
+          assert lock['postselection_policy']['selected_target_is_not_part_of_eventual_final_global_blind_denominator'] is True
+          print('R2 preselection lock verified')
+          PY
+      - name: Install frozen selector dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Compile selector
+        run: python -m py_compile lexigen-omega/tools/select_prospective_r2.py
+      - name: Execute frozen safe-metadata-only selection
+        run: |
+          python lexigen-omega/tools/select_prospective_r2.py \
+            --lock lexigen-omega/evidence/PROSPECTIVE_R2_SELECTION_LOCK.json \
+            --output omega-r2-selection-evidence
+      - name: Enforce non-leakage output contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x = json.loads(Path('omega-r2-selection-evidence/selection.json').read_text())
+          assert x['status'] == 'selected_from_frozen_safe_metadata_rule'
+          assert x['inventory_row_count'] == 102
+          assert x['target_source_accessed'] is False
+          assert x['target_tests_accessed'] is False
+          assert x['target_hints_accessed'] is False
+          assert x['target_performance_spec_accessed'] is False
+          assert x['target_expert_patch_accessed'] is False
+          assert x['target_outcome_accessed'] is False
+          assert x['target_timing_accessed'] is False
+          assert x['selected']['repo'] not in {
+              'pydantic/pydantic', 'abetlen/llama-cpp-python', 'huggingface/tokenizers',
+              'numpy/numpy', 'pandas-dev/pandas', 'huggingface/transformers'
+          }
+          print(x['selected'])
+          PY
+      - name: Upload immutable R2 selection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-prospective-r2-selection
+          path: omega-r2-selection-evidence/selection.json
+          if-no-files-found: error
+          retention-days: 90
