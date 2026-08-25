@@ -1,0 +1,31 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_execution_contract_manifest",
+  "status": "permitted_contract_projected_and_hash_sealed_after_candidate_freeze",
+  "workflow": {
+    "run_id": 32871786392,
+    "head_sha": "1aae4efa4afd8b0e902d05ea0a8c307c9613a783",
+    "artifact_id": 9572324040,
+    "artifact_name": "lexigen-omega-r5-execution-contract",
+    "artifact_digest": "sha256:af3bb4918804f9fc98e9636cf1526fcbcdf66d9c522f6509964ba8902759f1e1"
+  },
+  "contract": {
+    "sha256": "a89e90e848eb75b0a750fec5a4503e440bf7c1bbbadb38c74a07d4e51c09f21e",
+    "instance_id": "python-pillow__Pillow-d8af3fc",
+    "repo": "python-pillow/Pillow",
+    "base_commit": "d8af3fc23a730dd5e9a6e556263e7be7d8de1c7e^",
+    "api": "Image.split",
+    "dataset_revision": "c2e4f1a58427cccd15e0e542f136bd204fb19284"
+  },
+  "projection": ["instance_id","repo","base_commit","api","install_commands","setup_commands","prob_script","tests"],
+  "forbidden_fields_accessed": false,
+  "expert_opt_commit_accessed": false,
+  "expert_gt_commit_message_accessed": false,
+  "expert_diff_accessed": false,
+  "hints_accessed": false,
+  "candidate_bytes_frozen_before_contract": true,
+  "candidate_timing_accessed_before_contract": false,
+  "candidate_outcome_accessed_before_contract": false,
+  "scientific_boundary": "The R5 execution/performance contract is now exposed and immutable. Candidate mechanisms/patches, transfer ranking, scorer and thresholds were all frozen before this exposure and may not be revised from contract contents.",
+  "claim_boundary": "Execution-contract evidence only; no candidate timing, transfer, AGI or breakthrough credit."
+}
