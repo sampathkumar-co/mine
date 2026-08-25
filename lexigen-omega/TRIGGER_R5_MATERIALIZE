@@ -1,0 +1,9 @@
+LEXIGEN OMEGA R5 zero-execution materialization trigger.
+
+Scientific boundary at trigger:
+- R5 target identity frozen.
+- R5 source-only proposals frozen.
+- R5 exact-sequence prediction frozen.
+- R5 scorer schema repair frozen with unchanged scientific thresholds.
+- No R5 tests, performance specification, timing, outcome, hints, expert patch, or child ground-truth diff/message accessed.
+- This trigger permits candidate patch materialization and hashing only; it does not authorize candidate execution.
