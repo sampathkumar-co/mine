@@ -6,6 +6,10 @@ on:
 permissions: {contents: read}
 jobs:
   project-contract:
+    # The permitted R5 contract was projected once at head
+    # 1aae4efa4afd8b0e902d05ea0a8c307c9613a783 (run 32871786392).
+    # Later PR synchronize events must not reopen/regenerate it.
+    if: github.event.pull_request.head.sha == '1aae4efa4afd8b0e902d05ea0a8c307c9613a783'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
