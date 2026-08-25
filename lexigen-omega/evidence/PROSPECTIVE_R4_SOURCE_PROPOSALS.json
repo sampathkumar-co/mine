@@ -1,0 +1,125 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R4_source_only_candidate_proposals",
+  "status": "frozen_before_performance_spec_timing_or_outcome",
+  "target": {
+    "instance_id": "huggingface__datasets-ef3b5dd",
+    "repo": "huggingface/datasets",
+    "base_parent_sha": "cf71653947cecd84050daf0448dc5a73c2c071f3",
+    "api": "load_dataset_builder"
+  },
+  "source_evidence": {
+    "file": "src/datasets/load.py",
+    "git_blob_sha1": "13562ec82b01898334b2eaa455f4ce38bb7176da",
+    "functions_read": ["dataset_module_factory", "load_dataset_builder", "CachedDatasetModuleFactory.get_module", "get_dataset_builder_class"],
+    "ground_truth_child_commit_message_accessed": false,
+    "ground_truth_diff_accessed": false,
+    "performance_spec_accessed": false,
+    "timing_accessed": false,
+    "outcome_accessed": false
+  },
+  "candidate_contract": "Nine source-only candidates use the same candidate IDs and primitive sequences as the clean Task2 prospective test so the exact-sequence transfer baseline is replicated without changing the predictor after Task2 success.",
+  "candidates": [
+    {
+      "candidate_id": "F1",
+      "arm": "v7_full",
+      "primitive_sequence": ["REDUCE", "EXECUTE"],
+      "macro_ids": ["V7M-004"],
+      "mechanism": "In the remote-script branch, replace the whole-file `f.read()` used only to detect DEFAULT_CONFIG_NAME with a streaming line scan that stops at the first matching declaration, then execute the same branch decision.",
+      "source_visible_precondition": "The code reads the complete remote dataset script only to ask whether DEFAULT_CONFIG_NAME occurs.",
+      "correctness_risk": "low_to_medium: token may occur in unusual multiline/comment text; implementation must preserve the existing substring semantics rather than naïve AST semantics.",
+      "expected_performance_mechanism": "reduce bytes read/allocated and allow early termination for scripts declaring the token near the beginning.",
+      "files_functions": ["src/datasets/load.py:dataset_module_factory"]
+    },
+    {
+      "candidate_id": "F2",
+      "arm": "v7_full",
+      "primitive_sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "macro_ids": ["V7M-002"],
+      "mechanism": "Add a guarded direct packaged-dataset path in load_dataset_builder: when `path in _PACKAGED_DATASETS_MODULES`, execute the packaged factory path directly, certify the same required-data-files condition and constructor inputs, and fall back to the existing generic dataset_module_factory path for any non-packaged case.",
+      "source_visible_precondition": "dataset_module_factory already begins with an explicit packaged-module branch and load_dataset_builder immediately consumes its DatasetModule.",
+      "correctness_risk": "medium: duplicated argument/default handling must exactly match the generic path.",
+      "expected_performance_mechanism": "remove generic filename/path dispatch and unrelated branch checks for packaged builders.",
+      "files_functions": ["src/datasets/load.py:load_dataset_builder", "src/datasets/load.py:dataset_module_factory"]
+    },
+    {
+      "candidate_id": "F4",
+      "arm": "v7_full",
+      "primitive_sequence": ["CERTIFY", "RECOVER"],
+      "macro_ids": ["V7M-003"],
+      "mechanism": "Before entering the remote Hub try/exception path, certify `HF_DATASETS_OFFLINE`; if offline, invoke CachedDatasetModuleFactory directly instead of raising OfflineModeIsEnabled and recovering through two nested exception handlers.",
+      "source_visible_precondition": "The current remote path intentionally throws in offline mode and then attempts the cached factory in the exception recovery block.",
+      "correctness_risk": "low: must preserve the exact not-cached error classification.",
+      "expected_performance_mechanism": "remove exception construction/unwinding on the source-visible offline recovery path.",
+      "files_functions": ["src/datasets/load.py:dataset_module_factory"]
+    },
+    {
+      "candidate_id": "N1",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["SPECIALIZE", "EXECUTE"],
+      "macro_ids": [],
+      "mechanism": "Specialize filename extraction for the overwhelmingly normal non-empty path form with `rstrip('/').rsplit('/', 1)[-1]`, then execute the existing branch tree unchanged.",
+      "source_visible_precondition": "dataset_module_factory materializes a split list, filters empty pieces with a Python lambda, then takes only the final component.",
+      "correctness_risk": "low: Windows separator normalization and empty/root paths must retain existing behavior.",
+      "expected_performance_mechanism": "avoid list allocation, filter object and lambda calls in every dataset_module_factory invocation.",
+      "files_functions": ["src/datasets/load.py:dataset_module_factory"]
+    },
+    {
+      "candidate_id": "N3",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["REPRESENT", "EXECUTE"],
+      "macro_ids": [],
+      "mechanism": "Represent frequently reused builder-config parameters and metadata-config mapping as local variables immediately after module resolution, then use those locals for config-name selection, metadata lookup and builder-class resolution.",
+      "source_visible_precondition": "load_dataset_builder repeatedly traverses `dataset_module.builder_configs_parameters` and its nested mappings.",
+      "correctness_risk": "low: aliases must remain read-only and reflect the same object state.",
+      "expected_performance_mechanism": "reduce repeated Python attribute-chain and mapping access on the builder construction path.",
+      "files_functions": ["src/datasets/load.py:load_dataset_builder"]
+    },
+    {
+      "candidate_id": "N6",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["REDUCE"],
+      "macro_ids": [],
+      "mechanism": "Replace the metadata-config membership test plus second indexed lookup with one `.get(config_name)` lookup and only update the hash when the returned metadata config is not None.",
+      "source_visible_precondition": "load_dataset_builder currently performs `config_name in metadata_configs` and then `metadata_configs[config_name]`.",
+      "correctness_risk": "low: valid metadata config values are mappings rather than None; preserve falsy-but-valid mappings by checking `is not None`.",
+      "expected_performance_mechanism": "remove one hash-table lookup on configured datasets.",
+      "files_functions": ["src/datasets/load.py:load_dataset_builder"]
+    },
+    {
+      "candidate_id": "R1",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "CERTIFY", "RESTRICT"],
+      "macro_ids": ["V7R-002"],
+      "mechanism": "Represent Hub siblings as a lazy equality stream, certify `sibling.rfilename == filename`, and restrict traversal using `any(...)` instead of allocating a complete filename list before membership testing.",
+      "source_visible_precondition": "the remote branch currently constructs `[sibling.rfilename for sibling in dataset_info.siblings]` only for one membership query.",
+      "correctness_risk": "low: preserves equality semantics and first-match truth value.",
+      "expected_performance_mechanism": "avoid list allocation and stop scanning siblings after the first match.",
+      "files_functions": ["src/datasets/load.py:dataset_module_factory"]
+    },
+    {
+      "candidate_id": "R3",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["RECOVER", "REFINE"],
+      "macro_ids": ["V7R-001"],
+      "mechanism": "In CachedDatasetModuleFactory recovery, refine most-recent-hash selection from `sorted(hashes, key=mtime)[-1]` to `max(hashes, key=mtime)` while preserving the chosen hash and warning behavior.",
+      "source_visible_precondition": "recovery needs only the maximum modification-time entry but performs a full sort.",
+      "correctness_risk": "low: equal-mtime tie behavior must be made deterministic and equivalent to the existing sorted ordering.",
+      "expected_performance_mechanism": "reduce cached-module selection from O(n log n) sorting to O(n) scanning.",
+      "files_functions": ["src/datasets/load.py:CachedDatasetModuleFactory.get_module"]
+    },
+    {
+      "candidate_id": "R6",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "REDUCE"],
+      "macro_ids": ["V7R-004"],
+      "mechanism": "Represent the builder metadata-config mapping by a single local `metadata_config = metadata_configs.get(config_name)` value and use that object directly in hash update, eliminating membership-plus-index reconstruction.",
+      "source_visible_precondition": "metadata configuration is consulted only to decide whether and how to update the module hash.",
+      "correctness_risk": "low: distinguish missing key from a valid empty mapping.",
+      "expected_performance_mechanism": "reduce Python mapping operations and repeated nested attribute accesses.",
+      "files_functions": ["src/datasets/load.py:load_dataset_builder"]
+    }
+  ],
+  "human_task_specific_solver_contribution": 0,
+  "claim_boundary": "Source-only proposals. No proposal has seen the R4 ground truth, performance specification, candidate timing or evaluator outcome."
+}
