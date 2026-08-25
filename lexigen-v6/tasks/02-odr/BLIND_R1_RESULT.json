@@ -1,0 +1,171 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 2,
+  "task": "odr",
+  "family": "miscellaneous",
+  "stage": "official_blind_r1_sealed",
+  "status": "completed_negative",
+  "blind_lock_commit": "6a70d058b7dde3322c28ea28036e6ca4813013a6",
+  "blind_trigger_commit": "5208681840e8123447cdd97e5167c1b5cd318c93",
+  "workflow_run_id": 32877461870,
+  "workflow_run_number": 1,
+  "workflow_run_attempt": 1,
+  "workflow_conclusion": "success",
+  "artifact": {
+    "id": 9574498981,
+    "digest": "sha256:f4d40aa3792dbfd821293a6efcd1aa0d174845b0107232c50cf76ec043d33b85",
+    "size_bytes": 23379,
+    "blind_summary_sha256": "424a398ca44bf656c3751f0867bf98c3170b529bed325abd77d9118eb92cb469",
+    "blind_results_jsonl_sha256": "9aa9c5f141fbaa0e478b3b985de073edd7fbca366dcb4531d5a6f293cce816d6"
+  },
+  "test_manifest": {
+    "name": "odr_T100ms_n31132_size100_test.jsonl",
+    "git_blob_sha1": "0fd449c0338949c40279fa93e5f5f9c7aa35c7a0",
+    "sha256": "36a6cf4bc13ef5b286c66b56202dc745787ba3172afb335658c7dd33a6550989",
+    "records": 100
+  },
+  "frozen_clean_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.50,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "by_arm": {
+    "v6_full": {
+      "candidate": "v6_full_r4_b1ef08a2d68a248c0821",
+      "implementation_class": "precision_budgeted_lowlevel_odr",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "transfer_ids": ["TM-PBEB-01"],
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 0.9972603020262772,
+      "minimum_speedup": 0.682691380600845,
+      "median_speedup": 1.0021600025863928,
+      "maximum_speedup": 1.1777403196893927,
+      "passes_clean_blind_gate": false
+    },
+    "v6_no_transfer": {
+      "candidate": "v6_no_transfer_r2_b2614109e1a5ccc10c14",
+      "implementation_class": "scipy_odr_reference",
+      "semantic_implementation_key": "scipy_odr_reference",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 0.9859697510938499,
+      "minimum_speedup": 0.39050813218569036,
+      "median_speedup": 1.0005779740630105,
+      "maximum_speedup": 1.2053315826152402,
+      "passes_clean_blind_gate": false
+    },
+    "random_search": {
+      "candidate": "random_search_r3_4ff38c49ab25e45cbe27",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 0.9926599288110249,
+      "minimum_speedup": 0.4558770722530879,
+      "median_speedup": 1.0026293208082855,
+      "maximum_speedup": 1.2072557256684116,
+      "passes_clean_blind_gate": false
+    },
+    "static_template": {
+      "candidate": "static_template_r5_357e80313b8b9dc3cf36",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.0077338054331177,
+      "minimum_speedup": 0.8632047843595635,
+      "median_speedup": 1.003260538659628,
+      "maximum_speedup": 1.4616323666222046,
+      "passes_clean_blind_gate": false
+    },
+    "v5_compatible": {
+      "candidate": "v5_compatible_r4_7c30efb65d2c20ff8cc9",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.010770818183063,
+      "minimum_speedup": 0.8812411514216465,
+      "median_speedup": 1.0034289894173498,
+      "maximum_speedup": 1.461732807238286,
+      "passes_clean_blind_gate": false
+    },
+    "strong_baseline": {
+      "candidate": "strong_baseline_sb_native_numeric_01_lowlevel_odr",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "baseline_id": "SB-NATIVE-NUMERIC-01",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 0.9787611636279566,
+      "minimum_speedup": 0.3418113350184205,
+      "median_speedup": 1.0026516162896586,
+      "maximum_speedup": 1.463391726638771,
+      "passes_clean_blind_gate": false
+    },
+    "recipe_removal_ablation": {
+      "candidate": "recipe_removal_v6_full_r4_b1ef08a2d68a248c0821",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.0015813236049416,
+      "minimum_speedup": 0.6598138419788283,
+      "median_speedup": 1.0027378044958413,
+      "maximum_speedup": 1.4616521727333074,
+      "passes_clean_blind_gate": false,
+      "preblind_semantic_equivalence_to_full": true,
+      "same_callable_as_full": false
+    }
+  },
+  "comparisons": {
+    "v6_full_over_no_transfer_harmonic_ratio": 1.011451214319609,
+    "v6_full_over_recipe_removal_harmonic_ratio": 0.995685800566736,
+    "strong_baseline_time_over_full_time_harmonic": 1.0189005643927986,
+    "selected_full_no_transfer_semantically_distinct": true,
+    "preblind_equivalent_implementation_available_in_no_transfer": true,
+    "preblind_recipe_removal_semantic_equivalence_to_full": true
+  },
+  "clean_wins": {
+    "v6_full": false,
+    "v6_no_transfer": false,
+    "random_search": false,
+    "static_template": false,
+    "v5_compatible": false,
+    "strong_baseline": false
+  },
+  "causal_conditions": {
+    "full_passes_clean_blind_gate": false,
+    "selected_full_uses_learned_transfer": true,
+    "selected_full_no_transfer_semantically_distinct": true,
+    "source_family_differs_from_current": true,
+    "causal_separation": true,
+    "recipe_removal_eliminates_qualifying_advantage": true,
+    "strong_baseline_valid_same_denominator": true,
+    "strong_baseline_competitiveness_passes": true
+  },
+  "baseline_qualified_causal_transfer_win": false,
+  "causal_transfer_detected_but_baseline_uncompetitive": false,
+  "task2_counts_toward_v6_clean_win_gate": false,
+  "task2_counts_toward_v6_causal_win_gate": false,
+  "failure_reasons": [
+    "v6_full harmonic speedup 0.9972603020262772 is below the frozen 1.50 threshold",
+    "v6_full minimum per-record speedup 0.682691380600845 is below the frozen 1.05 threshold",
+    "recipe-removal ablation harmonic speedup 1.0015813236049416 slightly exceeds v6_full, so the learned PBEB wrapper shows no blind runtime advantage over its frozen removal replay",
+    "an equivalent low-level ODRPACK implementation was frozen pre-blind as available outside the learned-transfer arm, preventing any unique-mechanism interpretation"
+  ],
+  "training_r1_infrastructure_failure_preserved": true,
+  "authoritative_training_run_id": 32876434953,
+  "duplicate_training_outputs_used_for_selection": false,
+  "blind_workflow_archived_after_run": true,
+  "blind_workflow_archive_commit": "1c804bc6c36fa078865a26d81bab3d00055f5e08",
+  "blind_runs_executed": 1,
+  "blind_rerun_permitted": false,
+  "post_blind_candidate_revision_permitted": false,
+  "post_blind_timing_rerun_permitted": false,
+  "threshold_changes": false,
+  "invalid_output_retries_total": 0,
+  "verifier_capacity_loophole_exploited": false
+}
