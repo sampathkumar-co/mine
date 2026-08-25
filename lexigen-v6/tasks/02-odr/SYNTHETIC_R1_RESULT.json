@@ -1,0 +1,29 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":2,
+  "task":"odr",
+  "stage":"synthetic_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32874780338,
+  "artifact_id":9573448233,
+  "artifact_digest":"sha256:dd85afdc86d2236b3cf49f9264e85ccaa09803754b05a4dff38f6e33b7c85c27",
+  "case_count":24,
+  "candidate_count":31,
+  "eligible_count":27,
+  "arm_eligible_count":{"v6_full":5,"v6_no_transfer":4,"random_search":6,"static_template":5,"v5_compatible":6,"strong_baseline":1},
+  "candidate_plan_sha256":"ad7f18eedb5a633f9cf5071371022007fa08c84cbc28eeefcfb95dd116dcb9ac",
+  "results_sha256":"9eb7225daf28e0642ef352a60b4726b78486c8d5baf79d78004afd44f72cf95d",
+  "source_sha256":"076efd6697175397912d5d8e3bc1b121ba7461db3fdbf04263fa6d57f81eb68c",
+  "versions":{"python":"3.12.14","numpy":"2.5.2","scipy":"1.17.0"},
+  "learned_template_screen":{
+    "TM-BFR-01":{"implementation_class":"source_equivalent_fallback","eligible":true,"causal_credit_possible_from_this_implementation":false},
+    "TM-CAC-01":{"implementation_class":"source_equivalent_fallback","eligible":true,"causal_credit_possible_from_this_implementation":false},
+    "TM-RRR-01":{"implementation_class":"reduced_scalar_weighted_odr","semantic_valid":24,"official_valid":0,"eligible":false,"reason":"mathematically reduced optimum does not reproduce frozen ODRPACK stopped coefficients"},
+    "TM-PBEB-01":{"implementation_class":"precision_budgeted_lowlevel_odr","semantic_valid":24,"official_valid":24,"eligible":true,"median_elapsed_ns":541653.5}
+  },
+  "strong_baseline":{"candidate":"strong_baseline_sb_native_numeric_01_lowlevel_odr","baseline_id":"SB-NATIVE-NUMERIC-01","implementation_class":"lowlevel_odrpack_direct_weights","semantic_valid":24,"official_valid":24,"eligible":true,"median_elapsed_ns":537471.0},
+  "official_train_manifest_opened":false,
+  "official_test_manifest_opened":false,
+  "public_task_specific_solvers_opened":false,
+  "threshold_changes":false
+}
