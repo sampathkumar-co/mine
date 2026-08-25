@@ -123,6 +123,9 @@ def transform(before: str, cid: str) -> str:
 
     elif cid == "N1":
         old = '''    filename = list(filter(lambda x: x, path.replace(os.sep, "/").split("/")))[-1]
+    if not filename.endswith(".py"):
+        filename = filename + ".py"
+    combined_path = os.path.join(path, filename)
 '''
         new = '''    normalized_path = path.replace(os.sep, "/")
     stripped_path = normalized_path.rstrip("/")
@@ -130,6 +133,9 @@ def transform(before: str, cid: str) -> str:
         filename = stripped_path.rsplit("/", 1)[-1]
     else:
         filename = list(filter(lambda x: x, normalized_path.split("/")))[-1]
+    if not filename.endswith(".py"):
+        filename = filename + ".py"
+    combined_path = os.path.join(path, filename)
 '''
         after = replace_once(after, old, new, cid)
 
