@@ -1,0 +1,24 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":4,
+  "task":"ode_lorenz96_nonchaotic",
+  "stage":"dataset_metadata_r1_lock",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/TASK_LOCK.json",
+    "synthetic_result":"lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/SYNTHETIC_R1_RESULT.json",
+    "dataset_metadata":"lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/dataset_metadata.py",
+    "workflow":".github/workflows/lexigen-v6-task4-lorenz96-metadata-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"cc6517bf539928be9303d4dfe0a2539c5f0d9c18",
+    "synthetic_result":"fc75119dd185d8420bfbec1bf211491abc2d8723",
+    "dataset_metadata":"e8783bf27ada44fcf8f75f26ef2cca6ccaccf348",
+    "workflow":"bdbbbb762156f71b8d5981892e8064a7d484d728"
+  },
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "train_manifest_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "payloads_opened_before_lock":false,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "threshold_changes":false
+}
