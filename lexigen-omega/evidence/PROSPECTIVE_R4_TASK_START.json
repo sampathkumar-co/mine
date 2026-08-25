@@ -1,0 +1,54 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_R4_task_start",
+  "status": "R4_started_after_clean_parent_identity_preserved",
+  "panel_result_commit": "e012fdac96fb78151188441850e5cfd8af38ddd9",
+  "parent_resolution_result_commit": "c82061c2a481636e7c8137bd595a152569569159",
+  "selected_target": {
+    "instance_id": "huggingface__datasets-ef3b5dd",
+    "repo": "huggingface/datasets",
+    "child_sha": "ef3b5dd3633995c95d77f35fb17f89ff44990bc4",
+    "base_parent_sha": "cf71653947cecd84050daf0448dc5a73c2c071f3",
+    "api": "load_dataset_builder"
+  },
+  "permitted_reads_now": [
+    "base-parent repository source needed to understand load_dataset_builder",
+    "public source-visible API contract"
+  ],
+  "still_forbidden_before_prediction_freeze": [
+    "ground-truth child commit message",
+    "ground-truth changed-file list or diff",
+    "expert optimization commit contents",
+    "GSO hints",
+    "performance test specification unless separately frozen as necessary",
+    "authoritative evaluator outcome",
+    "candidate timing outcome",
+    "prior model trajectories or submissions"
+  ],
+  "proposal_contract": {
+    "max_source_only_proposals_per_arm": 6,
+    "common_primitive_vocabulary": ["REPRESENT", "RESTRICT", "REDUCE", "EXECUTE", "LIFT", "REFINE", "CERTIFY", "RECOVER", "SPECIALIZE"],
+    "learned_macro_sequences": {
+      "V7M-001": ["EXECUTE", "CERTIFY"],
+      "V7M-002": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "V7M-003": ["CERTIFY", "RECOVER"],
+      "V7M-004": ["REDUCE", "EXECUTE"]
+    },
+    "random_macro_sequences": {
+      "V7R-001": ["RECOVER", "REFINE"],
+      "V7R-002": ["REPRESENT", "CERTIFY", "RESTRICT"],
+      "V7R-003": ["RECOVER", "RECOVER"],
+      "V7R-004": ["REPRESENT", "REDUCE"]
+    },
+    "human_task_specific_solver_contribution": 0
+  },
+  "boundary": {
+    "base_source_accessed_before_this_record": false,
+    "gt_commit_message_accessed": false,
+    "gt_patch_accessed": false,
+    "hints_accessed": false,
+    "outcome_accessed": false,
+    "timing_accessed": false
+  },
+  "claim_boundary": "R4 remains prospective-development evidence only."
+}
