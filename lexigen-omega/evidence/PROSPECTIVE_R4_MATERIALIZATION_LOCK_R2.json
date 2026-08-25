@@ -1,0 +1,28 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "R4_materialization_lock_R2_before_candidate_execution",
+  "status": "repaired_materialization_implementation_frozen_zero_execution",
+  "instance_id": "huggingface__datasets-ef3b5dd",
+  "candidate_ids": ["F1", "F2", "F4", "N1", "N3", "N6", "R1", "R3", "R6"],
+  "git_blob_sha1": {
+    "proposal": "95012e5d3643987c40ed30fd6cd9c125cd767257",
+    "prediction": "3bb0d9cca347e7751b56b4c934e210ac18448e4d",
+    "scorer": "e870a4c5fb6dc1d9cc4cb28ce265e86d11e8f08f",
+    "execution_contract_manifest": "6c5af3c710357dafb8792d4ed9540b5b84ec35de",
+    "repaired_builder": "b8d3894c9ba176b1ccf6a74e5fee03dcf119df6d",
+    "repaired_materialization_workflow": "63a5bf1c40e606cbde4991fc41661253c68f2061"
+  },
+  "base_target_git_blob_sha1": "13562ec82b01898334b2eaa455f4ce38bb7176da",
+  "resolved_parent_sha": "cf71653947cecd84050daf0448dc5a73c2c071f3",
+  "prior_failed_materialization_run_id": 32817076981,
+  "prior_failure_preserved": true,
+  "candidate_execution_count_before_lock": 0,
+  "candidate_timing_accessed_before_lock": false,
+  "candidate_outcome_accessed_before_lock": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "expert_gt_commit_message_accessed": false,
+  "hints_accessed": false,
+  "R5_source_accessed": false,
+  "next_legal_step": "rerun zero-execution materialization; if all nine materialize, preserve exact patch hashes before any benchmark timing"
+}

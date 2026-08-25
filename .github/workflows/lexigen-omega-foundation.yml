@@ -1,0 +1,239 @@
+name: LEXIGEN OMEGA Foundation
+
+on:
+  pull_request:
+    paths:
+      - 'lexigen-omega/**'
+      - '.github/workflows/lexigen-omega-foundation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Omega core
+        run: |
+          python -m compileall -q lexigen-omega/src lexigen-omega/tests lexigen-omega/tools
+      - name: Run Omega foundation tests
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python -m unittest discover -s lexigen-omega/tests -p 'test_*.py' -v
+      - name: Verify Omega0 lock parses
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          lock = json.loads(Path('lexigen-omega/OMEGA0_LOCK.json').read_text())
+          assert lock['gate'] == 'OMEGA0 Scientific Lock'
+          assert lock['status'] == 'locked'
+          assert lock['claim_status'] == 'development_only_no_agi_or_breakthrough_claim'
+          assert lock['architecture_commitments']['search_policy_revision_budget_after_final_freeze'] == 0
+          print('OMEGA0 lock verified')
+          PY
+
+  real-task1-hindsight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - name: Checkout pinned V7 Task1 proposal evidence
+        uses: actions/checkout@v4
+        with:
+          ref: 1aed9ff5b94739e3568cdf9f841e2c42045a380c
+          path: _evidence/task1-proposals
+          fetch-depth: 1
+      - name: Checkout pinned V7 Task1 sealed revision result
+        uses: actions/checkout@v4
+        with:
+          ref: eabee7b2c2385779eeb1b6e856b368aa0265c0fb
+          path: _evidence/task1-result
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build real mechanism-level hindsight report
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python lexigen-omega/tools/verify_v7_task1_hindsight.py \
+            --proposals _evidence/task1-proposals/lexigen-v7-gso/tasks/01-pydantic-setattr/PROPOSALS_R1.json \
+            --result _evidence/task1-result/lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION1_R1_RESULT.json \
+            --output omega-evidence/TASK1_REVISION1_HINDSIGHT.json
+      - name: Feed exposed hindsight into development treadmill
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python lexigen-omega/tools/build_development_archive.py \
+            --hindsight omega-evidence/TASK1_REVISION1_HINDSIGHT.json \
+            --output omega-evidence/EXPOSED_DEVELOPMENT_ARCHIVE.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('omega-evidence/EXPOSED_DEVELOPMENT_ARCHIVE.json').read_text())
+          assert report['status'] == 'development_only_never_final_claim_evidence'
+          assert report['claim_boundary']['final_claim_eligible'] is False
+          assert report['claim_boundary']['causal_memory_admission'] is False
+          assert report['task_count'] == 1
+          print(report['mechanism_ranking'])
+          PY
+      - name: Upload Omega real hindsight evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-task1-real-hindsight
+          path: omega-evidence/
+          retention-days: 90
+
+  exposed-v6-development:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - name: Checkout completed V6 evidence
+        uses: actions/checkout@v4
+        with:
+          ref: lexigen/v6-parallel-7-r1
+          path: _evidence/v6
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Import V6 frozen causal verdicts as exposed development memory
+        env:
+          PYTHONPATH: lexigen-omega/src
+        run: |
+          python lexigen-omega/tools/import_v6_exposed_transfer.py \
+            --results-root _evidence/v6/lexigen-v6/parallel7/results \
+            --output omega-evidence/V6_EXPOSED_TRANSFER_ARCHIVE.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('omega-evidence/V6_EXPOSED_TRANSFER_ARCHIVE.json').read_text())
+          assert report['status'] == 'development_only_never_final_claim_evidence'
+          assert report['claim_boundary']['final_claim_eligible'] is False
+          assert report['claim_boundary']['causal_memory_admission'] is False
+          assert report['task_count'] == 7
+          print(report['mechanism_ranking'])
+          PY
+      - name: Upload V6 exposed-development evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-v6-exposed-development
+          path: omega-evidence/V6_EXPOSED_TRANSFER_ARCHIVE.json
+          retention-days: 90
+
+  prospective-task2-transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - name: Checkout immutable Task1 final-selection evidence
+        uses: actions/checkout@v4
+        with:
+          ref: 3d2aa3c8a1ee9eeb284e3494655c1110078b394e
+          path: _evidence/task1-final
+          fetch-depth: 1
+      - name: Checkout immutable Task2 pre-timing proposal evidence
+        uses: actions/checkout@v4
+        with:
+          ref: 8fb61bb3f320d62f7afaeef5d9c6bc5adf44766a
+          path: _evidence/task2-proposals
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regenerate and verify frozen prospective prediction
+        run: |
+          python lexigen-omega/tools/freeze_task2_prospective_transfer.py \
+            --task1-proposals _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/PROPOSALS_R1.json \
+            --task1-full-feedback _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/FULL_FEEDBACK_R2_RESULT.json \
+            --task1-revision1 _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION1_R1_RESULT.json \
+            --task1-revision2 _evidence/task1-final/lexigen-v7-gso/tasks/01-pydantic-setattr/REVISION2_R1_RESULT.json \
+            --task2-proposals _evidence/task2-proposals/lexigen-v7-gso/tasks/02-llama-gen-b/PROPOSALS_R1.json \
+            --task2-selection _evidence/task2-proposals/lexigen-v7-gso/PREFLIGHT_SELECTION_R1.json \
+            --expect lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json \
+            --output omega-evidence/TASK2_PROSPECTIVE_TRANSFER_REGENERATED.json
+      - name: Upload prospective prediction verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-task2-prospective-transfer-r1
+          path: omega-evidence/TASK2_PROSPECTIVE_TRANSFER_REGENERATED.json
+          retention-days: 90
+
+  score-sealed-task2-transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Omega development head
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download exact sealed V7 Task2 outcome artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lexigen-v7-gso-task2-preflight-r1
+          path: _evidence/task2-outcome
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32747466819
+      - name: Verify exact Task2 source outcome identity
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          manifest = json.loads(Path('lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_OUTCOME_MANIFEST_R1.json').read_text())
+          path = Path('_evidence/task2-outcome/PREFLIGHT_RESULT_R1.json')
+          raw = path.read_bytes()
+          assert hashlib.sha256(raw).hexdigest() == manifest['source']['result_sha256']
+          result = json.loads(raw)
+          assert result['instance_id'] == manifest['target_task']
+          assert result['status'] == 'completed'
+          assert result['campaign_credit_eligible'] is True
+          assert len(result['candidate_results']) == manifest['source_result_checks']['candidate_rows']
+          assert sum(1 for row in result['candidate_results'] if not row.get('error')) == manifest['source_result_checks']['clean_candidate_rows']
+          assert result['expert_opt_commit_accessed'] is False
+          assert result['expert_diff_accessed'] is False
+          assert result['hints_accessed'] is False
+          print('sealed Task2 outcome identity verified')
+          PY
+      - name: Recompute preregistered Task2 prospective score
+        run: |
+          python lexigen-omega/tools/score_task2_prospective_transfer.py \
+            --prediction lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json \
+            --result _evidence/task2-outcome/PREFLIGHT_RESULT_R1.json \
+            --output omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json
+          cmp omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json \
+              lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json
+      - name: Enforce narrow interpretation boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          score = json.loads(Path('omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json').read_text())
+          assert score['status'] == 'sequence_only_transfer_directionally_supported_on_Task2'
+          assert score['observed_covered_candidates'] == 6
+          assert score['pairwise_concordance'] >= 0.70
+          assert score['spearman_rank_correlation'] >= 0.50
+          assert score['top1_hit'] is True
+          assert 'cannot establish general cross-repository transfer' in score['claim_boundary']
+          print(score)
+          PY
+      - name: Upload sealed prospective score verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-task2-prospective-score-r1
+          path: omega-evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json
+          retention-days: 90

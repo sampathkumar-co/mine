@@ -1,0 +1,73 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_r2_target_selection",
+  "status": "frozen_before_selection_execution",
+  "scientific_role": "prospective_development_replication_not_final_global_blind",
+  "selection_seed": "LEXIGEN-OMEGA-PROSPECTIVE-TRANSFER-R2-2026-08-25-A",
+  "task_count": 1,
+  "dataset": {
+    "hf_dataset": "gso-bench/gso",
+    "hf_revision": "c2e4f1a58427cccd15e0e542f136bd204fb19284",
+    "parquet_path": "data/test-00000-of-00001.parquet",
+    "expected_parquet_sha256": "bda458a7b5437c252f6cefdbc896f5f2868de51479e7a221ceda3f3ab74879bc",
+    "expected_xet_hash": "59cb48b81dd9033151c35123d78dea99ad1959ed33f737c8523f916643402373",
+    "expected_row_count": 102
+  },
+  "safe_columns": [
+    "instance_id",
+    "repo",
+    "base_commit",
+    "api",
+    "created_at",
+    "arch",
+    "instance_image_tag"
+  ],
+  "forbidden_columns": [
+    "gt_commit_message",
+    "gt_diff",
+    "hints_text",
+    "install_commands",
+    "opt_commit",
+    "prob_script",
+    "setup_commands",
+    "tests"
+  ],
+  "exclude_instance_ids": [
+    "pydantic__pydantic-addf1f9",
+    "abetlen__llama-cpp-python-2bc1d97",
+    "huggingface__tokenizers-bfd9cde",
+    "numpy__numpy-be52f19",
+    "pandas-dev__pandas-fd43d4b",
+    "huggingface__transformers-211f93a"
+  ],
+  "exclude_repositories": [
+    "pydantic/pydantic",
+    "abetlen/llama-cpp-python",
+    "huggingface/tokenizers",
+    "numpy/numpy",
+    "pandas-dev/pandas",
+    "huggingface/transformers"
+  ],
+  "selection_rule": "Project only safe columns from the pinned 102-row snapshot. Remove any row whose instance_id or repository is in the frozen exclusions. For each remaining row compute SHA256(selection_seed + NUL + instance_id). Sort ascending by (selection_score, instance_id) and choose the first row. Exactly one target is selected; no reroll is permitted based on source difficulty, build success, candidate count, timing, correctness or outcome.",
+  "preselection_boundary": {
+    "selection_executed_before_lock": false,
+    "selected_instance_id_known_before_lock": false,
+    "remaining_inventory_rows_inspected_before_lock": false,
+    "target_source_accessed_before_lock": false,
+    "target_tests_accessed_before_lock": false,
+    "target_hints_accessed_before_lock": false,
+    "target_performance_spec_accessed_before_lock": false,
+    "target_expert_patch_accessed_before_lock": false,
+    "target_outcome_accessed_before_lock": false,
+    "target_timing_accessed_before_lock": false
+  },
+  "postselection_policy": {
+    "selected_safe_metadata_may_be_revealed": true,
+    "source_and_public_task_contract_may_be_opened_only_after_selection_is_preserved": true,
+    "prediction_and_scoring_rule_must_be_frozen_before_target_evaluator_outcome": true,
+    "infrastructure_failure_is_zero_scientific_reward_and_zero_scientific_penalty": true,
+    "selection_may_not_be_rerolled_after_failure": true,
+    "selected_target_is_not_part_of_eventual_final_global_blind_denominator": true
+  },
+  "claim_boundary": "This selection consumes one prospective-development target only. It does not earn final blind, AGI, breakthrough or general-transfer credit by itself."
+}

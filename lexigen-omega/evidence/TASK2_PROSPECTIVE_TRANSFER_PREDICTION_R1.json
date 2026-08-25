@@ -1,0 +1,134 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "task2_prospective_exact_sequence_transfer_r1",
+  "status": "frozen_before_Task2_outcome",
+  "scientific_role": "minimal prospective baseline for cross_repository_mechanism_transfer",
+  "prediction_rule": "For each frozen Task2 preflight candidate, if its primitive_sequence exactly matches a Task1 candidate that completed a sealed 14-test feedback round, transfer that Task1 harmonic speedup as the prior score. Otherwise abstain. No fuzzy matching, task-specific reinterpretation, or Task2 timing is allowed.",
+  "source_task": "pydantic__pydantic-addf1f9",
+  "target_task": "abetlen__llama-cpp-python-2bc1d97",
+  "inputs": {
+    "Task1_final_selection_commit": "3d2aa3c8a1ee9eeb284e3494655c1110078b394e",
+    "Task1_git_blob_sha1": {
+      "proposals": "ecc41ef14724a0f1ccbd93bc860cbaf99c783b59",
+      "full_feedback": "65f32f1b2bca7ec8af1d885e20a21ea63c3da961",
+      "revision1": "bf30d9de0129ec90fd7686b3715e6474292c7e53",
+      "revision2": "4bf9cfb165655d08fcc2eaa6c66b70ecc34710b0"
+    },
+    "Task2_frozen_proposal_commit": "8fb61bb3f320d62f7afaeef5d9c6bc5adf44766a",
+    "Task2_git_blob_sha1": {
+      "proposals": "24ad51830d598df47fb25226dba77143a81b373c",
+      "selection": "be4a61c472151ff48af18fb0329763e14a3572bc"
+    },
+    "Task2_preflight_head_sha": "4075a0372fa744182cdc91c64cc71870ae33ce61",
+    "Task2_preflight_run_id": 32747466819
+  },
+  "Task2_outcome_accessed": false,
+  "Task2_timing_accessed": false,
+  "Task2_candidate_logs_accessed_for_prediction": false,
+  "covered_candidate_count": 6,
+  "abstained_candidate_count": 3,
+  "prospective_ranking": [
+    {
+      "candidate_id": "R1",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "CERTIFY", "RESTRICT"],
+      "macro_ids": ["V7R-002"],
+      "transferred_prior_harmonic_speedup": 1.0219844534021152,
+      "transferred_prior_minimum_speedup": 0.9753749493311714,
+      "source_Task1_candidate": "R1",
+      "source_Task1_arm": "v7_random_library",
+      "source_Task1_stage": "revision_slot_1_14_test_result_sealed",
+      "source_Task1_patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2",
+      "prospective_rank": 1
+    },
+    {
+      "candidate_id": "N1",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["SPECIALIZE", "EXECUTE"],
+      "macro_ids": [],
+      "transferred_prior_harmonic_speedup": 1.0102226608970264,
+      "transferred_prior_minimum_speedup": 0.9362435381964388,
+      "source_Task1_candidate": "N2",
+      "source_Task1_arm": "v7_no_library",
+      "source_Task1_stage": "revision_slot_1_14_test_result_sealed",
+      "source_Task1_patch_sha256": "83ea4aac767729ba325b2bb0d7535eb9fc53b494d647236494c90edde52253a2",
+      "prospective_rank": 2
+    },
+    {
+      "candidate_id": "R6",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "REDUCE"],
+      "macro_ids": ["V7R-004"],
+      "transferred_prior_harmonic_speedup": 1.0048687374158451,
+      "transferred_prior_minimum_speedup": 0.9570345673575944,
+      "source_Task1_candidate": "R2",
+      "source_Task1_arm": "v7_random_library",
+      "source_Task1_stage": "revision_slot_2_14_test_result_sealed",
+      "source_Task1_patch_sha256": "9173c0c1b7f77e7f19b5e0c01d5c5bbdabed123b5af7bf5f74dd5c1ec0c3a6dd",
+      "prospective_rank": 3
+    },
+    {
+      "candidate_id": "F2",
+      "arm": "v7_full",
+      "primitive_sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "macro_ids": ["V7M-002"],
+      "transferred_prior_harmonic_speedup": 1.0033802574485906,
+      "transferred_prior_minimum_speedup": 0.9541393795140422,
+      "source_Task1_candidate": "F2",
+      "source_Task1_arm": "v7_full",
+      "source_Task1_stage": "revision_slot_2_14_test_result_sealed",
+      "source_Task1_patch_sha256": "ac5f17b46107ec6612a3680a710c2e86ecd2b2aa0b9dc0fd1cb8830e0f3a349d",
+      "prospective_rank": 4
+    },
+    {
+      "candidate_id": "R3",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["RECOVER", "REFINE"],
+      "macro_ids": ["V7R-001"],
+      "transferred_prior_harmonic_speedup": 1.0028364216880499,
+      "transferred_prior_minimum_speedup": 0.9588584585555017,
+      "source_Task1_candidate": "R3",
+      "source_Task1_arm": "v7_random_library",
+      "source_Task1_stage": "full_14_test_feedback_round0_r2_sealed",
+      "source_Task1_patch_sha256": "0e830b9024d0540be2b78e47ed22a5cefcc4d3a4968fa4d757473544da365eab",
+      "prospective_rank": 5
+    },
+    {
+      "candidate_id": "F1",
+      "arm": "v7_full",
+      "primitive_sequence": ["REDUCE", "EXECUTE"],
+      "macro_ids": ["V7M-004"],
+      "transferred_prior_harmonic_speedup": 0.9967916851707529,
+      "transferred_prior_minimum_speedup": 0.9276226595659841,
+      "source_Task1_candidate": "F3",
+      "source_Task1_arm": "v7_full",
+      "source_Task1_stage": "full_14_test_feedback_round0_r2_sealed",
+      "source_Task1_patch_sha256": "d34ccea502d6bdba780e596b40d2af6c8f5acb7afd44f347fc5fe982cab33100",
+      "prospective_rank": 6
+    }
+  ],
+  "abstentions": [
+    {
+      "candidate_id": "F4",
+      "arm": "v7_full",
+      "primitive_sequence": ["CERTIFY", "RECOVER"],
+      "macro_ids": ["V7M-003"],
+      "reason": "no_exact_Task1_evaluated_sequence"
+    },
+    {
+      "candidate_id": "N3",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["REPRESENT", "EXECUTE"],
+      "macro_ids": [],
+      "reason": "no_exact_Task1_evaluated_sequence"
+    },
+    {
+      "candidate_id": "N6",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["REDUCE"],
+      "macro_ids": [],
+      "reason": "no_exact_Task1_evaluated_sequence"
+    }
+  ],
+  "interpretation_boundary": "This is a deliberately weak exact-sequence transfer baseline, not a learned model and not causal evidence. Near-1.0 Task1 scores may contain timing noise; success or failure is informative about whether primitive-sequence identity alone transfers across repositories."
+}

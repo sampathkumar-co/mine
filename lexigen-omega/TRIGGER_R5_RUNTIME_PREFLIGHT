@@ -1,0 +1,3 @@
+LEXIGEN OMEGA R5 official-runtime preflight trigger.
+
+Authorized only to pull the exact discovered GSO image, verify the frozen base source blob, verify the existing Python environment, and exercise the contract's reinstall commands. Benchmark tests/performance script, candidate patches, candidate timing/outcome, hints and expert solution fields are forbidden in this preflight.

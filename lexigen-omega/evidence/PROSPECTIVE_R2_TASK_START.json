@@ -1,0 +1,51 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_r2_task_start",
+  "status": "task_started_after_target_selection_preserved",
+  "selection_result_commit": "29ddda908d61ade6df9cccb62ba423f261e127e8",
+  "selected_target": {
+    "instance_id": "uploadcare__pillow-simd-7511039",
+    "repo": "uploadcare/pillow-simd",
+    "base_commit": "75110399c150192a233577e1608e2bd06aaecb26^",
+    "api": "Image.reduce"
+  },
+  "permitted_next_reads": [
+    "selected base-repository source",
+    "public API/source-visible contract",
+    "selected task performance specification only if required for bounded proposal construction"
+  ],
+  "still_forbidden_until_candidate_prediction_freeze": [
+    "expert optimization commit or diff",
+    "GSO hints",
+    "prior model trajectories or submissions",
+    "leaderboard per-instance solutions",
+    "authoritative evaluator outcome",
+    "candidate timing outcome"
+  ],
+  "proposal_policy": {
+    "source_only_max_distinct_proposals_per_arm": 6,
+    "primitive_vocabulary": ["REPRESENT", "RESTRICT", "REDUCE", "EXECUTE", "LIFT", "REFINE", "CERTIFY", "RECOVER", "SPECIALIZE"],
+    "learned_macros": {
+      "V7M-001": ["EXECUTE", "CERTIFY"],
+      "V7M-002": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "V7M-003": ["CERTIFY", "RECOVER"],
+      "V7M-004": ["REDUCE", "EXECUTE"]
+    },
+    "random_control_macros": {
+      "V7R-001": ["RECOVER", "REFINE"],
+      "V7R-002": ["REPRESENT", "CERTIFY", "RESTRICT"],
+      "V7R-003": ["RECOVER", "RECOVER"],
+      "V7R-004": ["REPRESENT", "REDUCE"]
+    },
+    "human_task_specific_solver_contribution": 0
+  },
+  "boundary_at_task_start": {
+    "target_source_accessed": false,
+    "target_performance_spec_accessed": false,
+    "target_expert_patch_accessed": false,
+    "target_hints_accessed": false,
+    "target_outcome_accessed": false,
+    "target_timing_accessed": false
+  },
+  "claim_boundary": "Prospective-development replication only; no final blind, AGI, breakthrough or general-transfer claim."
+}

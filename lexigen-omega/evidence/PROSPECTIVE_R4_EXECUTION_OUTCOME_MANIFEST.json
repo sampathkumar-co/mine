@@ -1,0 +1,68 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R4_frozen_execution_outcome_manifest",
+  "status": "sealed_inconclusive_infrastructure_limited_replication",
+  "branch": "lexigen/omega-agi-foundation-r1",
+  "branch_head_at_run": "a9af80dfb3510f9a1018b22c84853ea777c6c450",
+  "workflow": {
+    "run_id": 32818245194,
+    "workflow_name": "LEXIGEN OMEGA R4 Frozen Evaluation",
+    "conclusion": "failure_due_scoring_step_after_successful_execution",
+    "pr_merge_sha": "2bd1845ee86b877d1a52846900ae2e192dfac82a",
+    "execution_step_conclusion": "success",
+    "runner_exit_code": 0
+  },
+  "artifact": {
+    "artifact_id": 9552249476,
+    "artifact_name": "lexigen-omega-r4-frozen-eval",
+    "artifact_digest": "sha256:32a37c2699e0dd927dec24d80a9b19588986fbd5e9a0b1125c2a4973bc2743ed",
+    "contract_sha256": "f08f131a46c9a4d6a490e4a997f2c5045b4af67013bc705845e749ec63fb3e17",
+    "result_sha256": "a1809fb2342caa7d6d5752f3524bf9e67767da0edfc48202bee7acaf451faa69",
+    "score_sha256": null
+  },
+  "execution_result": {
+    "status": "completed_frozen_R4_execution",
+    "instance_id": "huggingface__datasets-ef3b5dd",
+    "candidate_count": 9,
+    "clean_candidate_count": 1,
+    "correct_candidate_count": 1,
+    "scientific_evidence_eligible": true,
+    "clean_candidate": {
+      "candidate_id": "F1",
+      "tests_passed": 5,
+      "test_count": 5,
+      "harmonic_speedup": 1.0083778888213775,
+      "minimum_speedup": 0.9648937619177336
+    },
+    "infrastructure_error_candidates": [
+      "F2",
+      "F4",
+      "N1",
+      "N3",
+      "N6",
+      "R1",
+      "R3",
+      "R6"
+    ],
+    "infrastructure_error_class": "huggingface_hub_HTTP_429_rate_limit",
+    "algorithmic_failure_credit_for_infrastructure_rows": false
+  },
+  "preregistered_evidence_requirement": {
+    "minimum_observed_covered_candidates": 4,
+    "observed_clean_covered_candidates": 1,
+    "minimum_comparable_pairs": 3,
+    "transfer_gate_credit": false,
+    "reason": "insufficient clean covered evidence; infrastructure rows are excluded rather than counted negative"
+  },
+  "integrity": {
+    "expert_opt_commit_accessed": false,
+    "expert_gt_commit_message_accessed": false,
+    "expert_diff_accessed": false,
+    "hints_accessed": false,
+    "R5_source_accessed": false,
+    "same_R4_scientific_rerun_allowed": false,
+    "post_outcome_repair_rule": "Any repair after observed candidate correctness/performance must be a new preregistration or contamination; this R4 run is not silently rerun."
+  },
+  "scientific_interpretation": "R4 is inconclusive for exact-sequence transfer. It is not a clean negative: eight of nine candidate rows were lost to an external Hugging Face API rate limit. The sole clean candidate F1 was correct on all five tests, but one clean covered candidate is below the preregistered minimum of four. R4 earns zero transfer credit and zero negative mechanism credit for the eight infrastructure rows.",
+  "claim_boundary": "One prospective-development R4 execution only; no general-transfer, AGI, recursive-self-improvement or breakthrough claim."
+}

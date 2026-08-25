@@ -1,0 +1,40 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_prospective_development_replication_start",
+  "status": "R5_identity_frozen_before_source_test_hint_expert_outcome_or_timing_access",
+  "replication": "R5",
+  "target": {
+    "instance_id": "python-pillow__Pillow-d8af3fc",
+    "repo": "python-pillow/Pillow",
+    "child_sha": "d8af3fc23a730dd5e9a6e556263e7be7d8de1c7e",
+    "base_parent_sha": "3aea175141cda5efd3460ff6a809068d7913d7bf",
+    "api": "Image.split"
+  },
+  "selection_provenance": {
+    "panel_file": "lexigen-omega/evidence/PROSPECTIVE_R3_R5_PANEL_RESULT.json",
+    "panel_selection_workflow_run_id": 32815216781,
+    "parent_resolution_file": "lexigen-omega/evidence/PROSPECTIVE_R4_R5_PARENT_RESOLUTION_RESULT.json",
+    "parent_resolution_workflow_run_id": 32815412136,
+    "reroll_or_swap_allowed": false
+  },
+  "R4_history_boundary": {
+    "R4_execution_outcome_manifest": "lexigen-omega/evidence/PROSPECTIVE_R4_EXECUTION_OUTCOME_MANIFEST.json",
+    "R4_scoring_incident": "lexigen-omega/evidence/PROSPECTIVE_R4_SCORING_INCIDENT.json",
+    "R4_outcome_may_change_R5_predictor": false,
+    "R4_outcome_may_change_R5_scientific_thresholds": false,
+    "permitted_R5_change": "repair the previously documented scorer schema/plumbing mismatch only, prospectively before R5 source outcome or timing"
+  },
+  "access_boundary_at_freeze": {
+    "target_source_accessed": false,
+    "target_tree_listing_accessed": false,
+    "target_tests_accessed": false,
+    "target_hints_accessed": false,
+    "target_expert_patch_accessed": false,
+    "target_child_commit_message_accessed": false,
+    "target_performance_spec_accessed": false,
+    "target_outcome_accessed": false,
+    "target_timing_accessed": false
+  },
+  "next_legal_step": "Freeze the R5 scorer schema repair with identical scientific thresholds, then open only legal parent source needed for source-only proposals. Freeze all nine source-only candidate mechanisms and the unchanged exact-sequence prediction before any evaluator test, timing, outcome, hint or expert access.",
+  "claim_boundary": "Prospective-development target identity only; zero transfer, AGI or breakthrough credit."
+}

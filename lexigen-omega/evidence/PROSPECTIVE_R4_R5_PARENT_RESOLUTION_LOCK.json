@@ -1,0 +1,40 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R4_R5_blind_parent_resolution",
+  "status": "frozen_before_parent_resolution",
+  "targets": [
+    {
+      "replication": "R4",
+      "repo": "huggingface/datasets",
+      "child_sha": "ef3b5dd3633995c95d77f35fb17f89ff44990bc4",
+      "safe_metadata_base_commit": "ef3b5dd3633995c95d77f35fb17f89ff44990bc4^"
+    },
+    {
+      "replication": "R5",
+      "repo": "python-pillow/Pillow",
+      "child_sha": "d8af3fc23a730dd5e9a6e556263e7be7d8de1c7e",
+      "safe_metadata_base_commit": "d8af3fc23a730dd5e9a6e556263e7be7d8de1c7e^"
+    }
+  ],
+  "resolver_contract": {
+    "transport": "git fetch into disposable empty repository",
+    "fetch_depth": 2,
+    "allowed_git_query": "git rev-parse FETCH_HEAD^",
+    "allowed_output_fields": ["replication", "repo", "child_sha", "parent_sha"],
+    "forbidden_commands": ["git log", "git show", "git diff", "git cat-file -p", "git checkout"],
+    "forbidden_output": ["commit message", "tree listing", "changed filenames", "patch", "source contents", "author text"],
+    "network_fetch_output": "suppressed",
+    "temporary_object_store_deleted_before_artifact_upload": true
+  },
+  "boundary": {
+    "R4_source_accessed": false,
+    "R4_gt_commit_message_accessed": false,
+    "R4_expert_patch_accessed": false,
+    "R4_outcome_or_timing_accessed": false,
+    "R5_source_accessed": false,
+    "R5_gt_commit_message_accessed": false,
+    "R5_expert_patch_accessed": false,
+    "R5_outcome_or_timing_accessed": false
+  },
+  "claim_boundary": "Trusted infrastructure identity resolution only. Emits no scientific target content and earns zero scientific credit."
+}

@@ -1,0 +1,128 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_source_only_candidate_proposals",
+  "status": "frozen_before_performance_spec_timing_or_outcome",
+  "target": {
+    "instance_id": "python-pillow__Pillow-d8af3fc",
+    "repo": "python-pillow/Pillow",
+    "base_parent_sha": "3aea175141cda5efd3460ff6a809068d7913d7bf",
+    "api": "Image.split"
+  },
+  "source_evidence": {
+    "file": "PIL/Image.py",
+    "git_blob_sha1": "49c9f6ab204a16044355d1d043c16ecef9e044a4",
+    "functions_read": ["Image.split", "Image.copy", "Image._new"],
+    "ground_truth_child_commit_message_accessed": false,
+    "ground_truth_diff_accessed": false,
+    "performance_spec_accessed": false,
+    "tests_accessed": false,
+    "hints_accessed": false,
+    "expert_patch_accessed": false,
+    "timing_accessed": false,
+    "outcome_accessed": false
+  },
+  "candidate_contract": "Nine source-only candidates preserve the same candidate IDs and primitive sequences used by the unchanged exact-sequence transfer baseline. R4 outcomes do not alter candidate IDs, sequences, ranking priors or thresholds.",
+  "candidates": [
+    {
+      "candidate_id": "F1",
+      "arm": "v7_full",
+      "primitive_sequence": ["REDUCE", "EXECUTE"],
+      "macro_ids": ["V7M-004"],
+      "mechanism": "Cache the loaded core image and band count, then replace the explicit empty-list plus append loop with one list comprehension before the existing tuple return.",
+      "source_visible_precondition": "Image.split builds an empty Python list, repeatedly appends one wrapped getband result, then converts that list to a tuple.",
+      "correctness_risk": "low: preserve getband order, _new wrapping, single-band semantics and final tuple type.",
+      "expected_performance_mechanism": "reduce Python bytecode dispatch and repeated append-method work while executing the same per-band core operations.",
+      "files_functions": ["PIL/Image.py:Image.split"]
+    },
+    {
+      "candidate_id": "F2",
+      "arm": "v7_full",
+      "primitive_sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "macro_ids": ["V7M-002"],
+      "mechanism": "After split has already loaded the image, execute a direct core copy for the one-band path with self._new(self.im.copy()); certify the one-band condition first and retain self.copy() only as a compatibility recovery if direct core copy is unavailable.",
+      "source_visible_precondition": "Image.split calls self.load() before branching, while Image.copy immediately calls self.load() again and then returns self._new(self.im.copy()).",
+      "correctness_risk": "low_to_medium: the recovery must preserve subclasses or unusual core objects that do not expose copy exactly as expected.",
+      "expected_performance_mechanism": "avoid a redundant Python method call and second load() dispatch on the one-band path while preserving copy semantics.",
+      "files_functions": ["PIL/Image.py:Image.split", "PIL/Image.py:Image.copy"]
+    },
+    {
+      "candidate_id": "F4",
+      "arm": "v7_full",
+      "primitive_sequence": ["CERTIFY", "RECOVER"],
+      "macro_ids": ["V7M-003"],
+      "mechanism": "Certify the one-band case immediately after load and return (self.copy(),) directly; recover to the existing multiband construction only when band count is greater than one.",
+      "source_visible_precondition": "The current one-band branch allocates a one-element list and then converts it to a tuple even though the final shape is known exactly.",
+      "correctness_risk": "low: identical one-band copy object and one-element tuple must be returned.",
+      "expected_performance_mechanism": "remove list allocation and tuple conversion on one-band images.",
+      "files_functions": ["PIL/Image.py:Image.split"]
+    },
+    {
+      "candidate_id": "N1",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["SPECIALIZE", "EXECUTE"],
+      "macro_ids": [],
+      "mechanism": "Specialize the common three-band and four-band cases into direct tuple construction with fixed getband indices, then execute the generic loop only for uncommon band counts.",
+      "source_visible_precondition": "Image modes visible in the same source include common RGB/YCbCr/LAB/HSV three-band and RGBX/RGBA/CMYK four-band representations, while split currently uses a generic Python loop for every multiband count.",
+      "correctness_risk": "low_to_medium: specialization must dispatch only by actual core band count and preserve exact ordering.",
+      "expected_performance_mechanism": "avoid range iteration, list allocation and append dispatch for common 3/4-band images.",
+      "files_functions": ["PIL/Image.py:Image.split"]
+    },
+    {
+      "candidate_id": "N3",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["REPRESENT", "EXECUTE"],
+      "macro_ids": [],
+      "mechanism": "Represent self.im, self._new and the loaded band count as local variables once, then execute the existing branch and loop through those locals.",
+      "source_visible_precondition": "The loop repeatedly resolves self.im.getband and self._new through Python attribute lookup, and self.im.bands is read in both the branch and range setup.",
+      "correctness_risk": "low: locals alias the same loaded objects without mutation.",
+      "expected_performance_mechanism": "reduce repeated Python attribute and bound-method lookup overhead around each core getband call.",
+      "files_functions": ["PIL/Image.py:Image.split"]
+    },
+    {
+      "candidate_id": "N6",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["REDUCE"],
+      "macro_ids": [],
+      "mechanism": "Read self.im.bands once into a local band_count and reuse it for the one-band test and multiband iteration without changing collection construction.",
+      "source_visible_precondition": "Image.split currently accesses self.im.bands once for equality and again to construct range().",
+      "correctness_risk": "low: band count cannot lawfully change between those operations after load within split.",
+      "expected_performance_mechanism": "remove one Python extension-object attribute access from every split call.",
+      "files_functions": ["PIL/Image.py:Image.split"]
+    },
+    {
+      "candidate_id": "R1",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "CERTIFY", "RESTRICT"],
+      "macro_ids": ["V7R-002"],
+      "mechanism": "Represent the loaded core image and wrapper constructor as locals, certify band_count > 1 after the one-band return, and restrict multiband construction to a fixed-size list comprehension over range(band_count) before tuple conversion.",
+      "source_visible_precondition": "The multiband branch has an exact finite band count after load yet uses repeated object traversal and append growth.",
+      "correctness_risk": "low: output remains an ordered tuple of _new(im.getband(i)) for every legal band index.",
+      "expected_performance_mechanism": "combine local representation with bounded comprehension to reduce dynamic lookup and append overhead.",
+      "files_functions": ["PIL/Image.py:Image.split"]
+    },
+    {
+      "candidate_id": "R3",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["RECOVER", "REFINE"],
+      "macro_ids": ["V7R-001"],
+      "mechanism": "Refine the one-band copy recovery by inlining Image.copy's post-load body as self._new(self.im.copy()) because split has already completed self.load().",
+      "source_visible_precondition": "Image.copy consists of self.load() followed by self._new(self.im.copy()), and Image.split invokes self.load() before calling self.copy() in the one-band branch.",
+      "correctness_risk": "low: must preserve _new metadata/palette propagation exactly.",
+      "expected_performance_mechanism": "remove the redundant second load() dispatch and copy-method frame on one-band split.",
+      "files_functions": ["PIL/Image.py:Image.split", "PIL/Image.py:Image.copy", "PIL/Image.py:Image._new"]
+    },
+    {
+      "candidate_id": "R6",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "REDUCE"],
+      "macro_ids": ["V7R-004"],
+      "mechanism": "Represent im.getband and self._new as bound local callables and reduce the multiband loop to tuple(new(getband(i)) for i in range(band_count)), eliminating the explicit temporary list object.",
+      "source_visible_precondition": "The final API requires a tuple, while the current implementation creates an intermediate list solely to populate it before tuple conversion.",
+      "correctness_risk": "low: generator order and element construction must remain identical; performance may trade list allocation for generator overhead.",
+      "expected_performance_mechanism": "remove the intermediate list allocation and repeated bound-method lookup, at the cost of generator dispatch that the evaluator will decide prospectively.",
+      "files_functions": ["PIL/Image.py:Image.split"]
+    }
+  ],
+  "human_task_specific_solver_contribution": 0,
+  "claim_boundary": "Source-only proposals. No proposal has seen R5 tests, performance specification, child diff/message, expert patch, timing or evaluator outcome."
+}

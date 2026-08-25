@@ -1,0 +1,42 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R4_preregistered_scorer_incident",
+  "status": "official_score_missing_due_preexisting_policy_schema_mismatch",
+  "execution_outcome_manifest": "lexigen-omega/evidence/PROSPECTIVE_R4_EXECUTION_OUTCOME_MANIFEST.json",
+  "workflow_run_id": 32818245194,
+  "prediction": {
+    "file": "lexigen-omega/evidence/PROSPECTIVE_R4_TRANSFER_PREDICTION.json",
+    "git_blob_sha1": "3bb0d9cca347e7751b56b4c934e210ac18448e4d",
+    "status": "frozen_before_R4_performance_spec_timing_or_outcome",
+    "scoring_policy_contains_primary_field": true,
+    "primary": "pairwise_concordance"
+  },
+  "scorer": {
+    "file": "lexigen-omega/tools/score_prospective_exact_sequence.py",
+    "git_blob_sha1": "e870a4c5fb6dc1d9cc4cb28ce265e86d11e8f08f",
+    "frozen_before_execution": true,
+    "failure": "ValueError: scoring policy changed",
+    "root_cause": "EXPECTED_POLICY omitted the already-preregistered informational key 'primary', while score_prediction required exact dictionary equality. The scoring thresholds themselves were not changed."
+  },
+  "official_R4_score": {
+    "score_file_created": false,
+    "score_sha256": null,
+    "retroactive_scorer_repair_allowed": false,
+    "same_R4_rerun_allowed": false,
+    "gate_credit": false
+  },
+  "non_official_deterministic_interpretation": {
+    "label": "not_an_official_repaired_score",
+    "observed_clean_covered_candidates": 1,
+    "preregistered_minimum_observed_covered_candidates": 4,
+    "consequence_from_frozen_post_guard_logic": "insufficient_clean_covered_evidence",
+    "reason": "Even if the exact-dictionary guard had accepted the extra 'primary' annotation, the frozen scorer's next gate would fail coverage because 1 < 4. No concordance, Spearman or top-1 claim can be made from this run."
+  },
+  "R5_rule": {
+    "R5_source_accessed": false,
+    "new_preregistration_required": true,
+    "allowed_scorer_change": "schema/plumbing repair only, frozen before R5 source outcome or timing, with identical scientific thresholds and explicit preservation that R4 evidence did not tune the predictor or thresholds",
+    "forbidden": "retroactively overwrite or relabel the R4 score"
+  },
+  "claim_boundary": "Scoring-plumbing incident only. R4 remains preserved as infrastructure-limited, insufficient-evidence prospective development evidence."
+}

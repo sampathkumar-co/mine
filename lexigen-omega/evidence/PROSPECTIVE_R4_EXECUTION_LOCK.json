@@ -1,0 +1,42 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "R4_one_shot_execution_lock_before_any_candidate_timing",
+  "status": "execution_protocol_frozen_ready_to_trigger_once",
+  "instance_id": "huggingface__datasets-ef3b5dd",
+  "git_blob_sha1": {
+    "proposal": "95012e5d3643987c40ed30fd6cd9c125cd767257",
+    "prediction": "3bb0d9cca347e7751b56b4c934e210ac18448e4d",
+    "scorer": "e870a4c5fb6dc1d9cc4cb28ce265e86d11e8f08f",
+    "execution_contract_projector": "281713aae5986625e59c48ae9d1d8e8f28b7c9d5",
+    "execution_contract_manifest": "6c5af3c710357dafb8792d4ed9540b5b84ec35de",
+    "candidate_materializer": "29b9c195709bf646c011eed31ba7e1dc2b953215",
+    "materialization_result_manifest": "7e79b450371f8306147cc0a7b6ea03742f23cac7",
+    "frozen_evaluator": "96f164f17f6d888e7faf0966b21f0ebafa27c247",
+    "frozen_evaluation_workflow": "5ef9a077c1d19a3baef04c34f87652873a9ab098"
+  },
+  "execution_contract_sha256": "f08f131a46c9a4d6a490e4a997f2c5045b4af67013bc705845e749ec63fb3e17",
+  "execution_policy": {
+    "baseline_first": true,
+    "candidate_order": ["F1", "F2", "F4", "N1", "N3", "N6", "R1", "R3", "R6"],
+    "all_five_frozen_contract_tests": true,
+    "fresh_cold_container_per_baseline_and_candidate": true,
+    "shared_writable_cache_between_arms": false,
+    "exact_patch_sha256_required": true,
+    "exact_resulting_source_sha256_required": true,
+    "candidate_execution_parallelism": 1,
+    "scientific_execution_count_authorized": 1,
+    "post_outcome_candidate_or_predictor_repair_authorized": false,
+    "score_with_preregistered_scorer": true
+  },
+  "candidate_execution_count_before_lock": 0,
+  "candidate_timing_accessed_before_lock": false,
+  "candidate_outcome_accessed_before_lock": false,
+  "expert_opt_commit_accessed": false,
+  "expert_diff_accessed": false,
+  "expert_gt_commit_message_accessed": false,
+  "hints_accessed": false,
+  "R5_source_accessed": false,
+  "prior_zero_execution_materialization_failures_preserved": [32817076981, 32817374312],
+  "next_legal_step": "create the dedicated R4 evaluation trigger exactly once and accept the resulting frozen execution outcome without candidate, ranking, threshold, or scorer rescue",
+  "claim_boundary": "This lock authorizes one preregistered R4 prospective-development execution only. It grants no performance, transfer, gate, AGI, or breakthrough credit before the sealed result exists."
+}

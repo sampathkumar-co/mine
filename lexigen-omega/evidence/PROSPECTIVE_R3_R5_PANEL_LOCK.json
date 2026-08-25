@@ -1,0 +1,58 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_panel_r3_r5",
+  "status": "frozen_before_panel_selection_execution",
+  "scientific_role": "fixed_three_target_prospective_development_replication_panel_not_final_global_blind",
+  "slots": [
+    {"replication": "R3", "selection_seed": "LEXIGEN-OMEGA-PROSPECTIVE-TRANSFER-R3-2026-08-25-A"},
+    {"replication": "R4", "selection_seed": "LEXIGEN-OMEGA-PROSPECTIVE-TRANSFER-R4-2026-08-25-A"},
+    {"replication": "R5", "selection_seed": "LEXIGEN-OMEGA-PROSPECTIVE-TRANSFER-R5-2026-08-25-A"}
+  ],
+  "dataset": {
+    "hf_dataset": "gso-bench/gso",
+    "hf_revision": "c2e4f1a58427cccd15e0e542f136bd204fb19284",
+    "parquet_path": "data/test-00000-of-00001.parquet",
+    "expected_parquet_sha256": "bda458a7b5437c252f6cefdbc896f5f2868de51479e7a221ceda3f3ab74879bc",
+    "expected_xet_hash": "59cb48b81dd9033151c35123d78dea99ad1959ed33f737c8523f916643402373",
+    "expected_row_count": 102
+  },
+  "safe_columns": ["instance_id", "repo", "base_commit", "api", "created_at", "arch", "instance_image_tag"],
+  "forbidden_columns": ["gt_commit_message", "gt_diff", "hints_text", "install_commands", "opt_commit", "prob_script", "setup_commands", "tests"],
+  "initial_exclude_instance_ids": [
+    "pydantic__pydantic-addf1f9",
+    "abetlen__llama-cpp-python-2bc1d97",
+    "huggingface__tokenizers-bfd9cde",
+    "numpy__numpy-be52f19",
+    "pandas-dev__pandas-fd43d4b",
+    "huggingface__transformers-211f93a",
+    "uploadcare__pillow-simd-7511039"
+  ],
+  "initial_exclude_repositories": [
+    "pydantic/pydantic",
+    "abetlen/llama-cpp-python",
+    "huggingface/tokenizers",
+    "numpy/numpy",
+    "pandas-dev/pandas",
+    "huggingface/transformers",
+    "uploadcare/pillow-simd"
+  ],
+  "selection_rule": "Read only the seven safe columns from the pinned 102-row snapshot. Begin with the frozen initial exclusions. For each slot R3,R4,R5 in order, score every currently eligible row by SHA256(slot.selection_seed + NUL + instance_id), sort ascending by (score, instance_id), select the first row, then add that selected repository and instance to the exclusions before the next slot. All three selections are made in one execution and preserved together. No slot may be swapped, skipped, rerolled or replaced based on source difficulty, dependency availability, build success, proposal coverage, timing, correctness or outcome.",
+  "base_resolution_rule": "If selected safe metadata encodes base_commit as CHILD_SHA^, resolve only through the Git object endpoint /repos/{owner}/{repo}/git/commits/{CHILD_SHA}; require the response to contain no files/patch/diff fields; take its unique parent SHA. Never use /repos/{owner}/{repo}/commits/{CHILD_SHA} before prediction freeze because that endpoint can expose changed-file patches.",
+  "preselection_boundary": {
+    "panel_selection_executed_before_lock": false,
+    "selected_instance_ids_known_before_lock": false,
+    "remaining_inventory_rows_inspected_before_lock": false,
+    "R3_source_or_outcome_accessed": false,
+    "R4_source_or_outcome_accessed": false,
+    "R5_source_or_outcome_accessed": false
+  },
+  "panel_policy": {
+    "fixed_target_count": 3,
+    "all_three_targets_count_even_if_invalid_or_infrastructure_blocked": true,
+    "prediction_and_scoring_rule_must_be_frozen_per_target_before_evaluator_outcome": true,
+    "expert_patch_hints_prior_trajectories_and_outcome_forbidden_before_prediction_freeze": true,
+    "infrastructure_failure_is_zero_reward_zero_penalty_but_target_still_counts": true,
+    "eventual_final_global_blind_denominator_affected": false
+  },
+  "claim_boundary": "This fixed R3-R5 panel tests prospective-development replication robustness. It cannot by itself establish AGI, breakthrough, final-blind success or general causal transfer."
+}

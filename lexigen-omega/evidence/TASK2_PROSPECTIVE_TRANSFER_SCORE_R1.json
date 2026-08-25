@@ -1,0 +1,41 @@
+{
+  "actual_order_over_observed_covered": [
+    "R1",
+    "R3",
+    "N1",
+    "R6",
+    "F2",
+    "F1"
+  ],
+  "claim_boundary": "One prospective target can falsify the exact-sequence baseline but cannot establish general cross-repository transfer. Positive evidence still requires additional prospective repositories and causal controls.",
+  "covered_candidate_ids_observed": [
+    "R1",
+    "N1",
+    "R6",
+    "F2",
+    "R3",
+    "F1"
+  ],
+  "observed_covered_candidates": 6,
+  "pairwise_comparable_pairs": 15,
+  "pairwise_concordance": 0.8,
+  "pairwise_concordant": 12,
+  "pairwise_discordant": 3,
+  "predicted_top_candidate": "R1",
+  "preregistered_scoring_policy": {
+    "actual_outcome_ties": "excluded_from_pairwise_denominator",
+    "directional_pairwise_concordance_minimum": 0.7,
+    "directional_spearman_minimum": 0.5,
+    "errored_or_infrastructure_rows": "excluded_not_negative",
+    "minimum_comparable_pairs": 3,
+    "minimum_observed_covered_candidates": 4,
+    "require_top1_hit": true
+  },
+  "project": "LEXIGEN OMEGA",
+  "source_prediction_stage": "task2_prospective_exact_sequence_transfer_r1",
+  "spearman_rank_correlation": 0.6571428571428571,
+  "stage": "task2_prospective_exact_sequence_transfer_score_r1",
+  "status": "sequence_only_transfer_directionally_supported_on_Task2",
+  "target_task": "abetlen__llama-cpp-python-2bc1d97",
+  "top1_hit": true
+}

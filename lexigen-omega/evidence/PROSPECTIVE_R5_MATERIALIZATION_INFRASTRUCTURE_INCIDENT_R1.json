@@ -1,0 +1,24 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_zero_execution_materialization",
+  "status": "infrastructure_failure_before_candidate_materialization_or_execution",
+  "workflow_run_id": 32871084737,
+  "failed_step": "Pull frozen GSO image and recover only base target file",
+  "failure": "Docker manifest unknown for guessed tag slimshetty/gso:gso.eval.x86_64.python-pillow__Pillow-d8af3fc",
+  "scientific_boundary": {
+    "pre_execution_identity_checks_passed": true,
+    "materializer_compiled": true,
+    "candidate_materialization_count": 0,
+    "candidate_execution_count": 0,
+    "candidate_timing_observed": false,
+    "candidate_outcome_observed": false,
+    "tests_accessed": false,
+    "performance_spec_accessed": false,
+    "hints_accessed": false,
+    "expert_patch_accessed": false,
+    "child_ground_truth_message_or_diff_accessed": false
+  },
+  "permitted_repair": "Replace the nonexistent Docker-image source-recovery step with retrieval of the already-legally-opened exact parent source file PIL/Image.py at parent SHA 3aea175141cda5efd3460ff6a809068d7913d7bf, then verify the same frozen git blob 49c9f6ab204a16044355d1d043c16ecef9e044a4. Candidate mechanisms, materializer, prediction, scorer and thresholds remain frozen.",
+  "scientific_credit": false,
+  "claim_boundary": "Infrastructure-only pre-execution incident; no R5 scientific observation occurred."
+}

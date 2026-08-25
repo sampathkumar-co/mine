@@ -1,0 +1,107 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_prospective_exact_sequence_transfer",
+  "status": "frozen_before_R5_performance_spec_timing_or_outcome",
+  "scientific_role": "third fixed-panel prospective-development replication using unchanged Task1-only exact-sequence baseline; R4 outcome excluded from predictor and threshold updates",
+  "prediction_rule": "Use the same Task1-only exact primitive-sequence priors and thresholds frozen for the earlier prospective tests. For an R5 candidate, transfer the Task1 harmonic speedup only if its primitive_sequence exactly matches an evaluated Task1 sequence; otherwise abstain. Task2 and R4 outcomes are not used to alter scores, ordering, coverage, thresholds or tie handling.",
+  "source_prior": {
+    "task": "pydantic__pydantic-addf1f9",
+    "prior_file": "lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json",
+    "prior_file_git_blob_sha1": "94e96864e704607402d94368871bc23fc2f5268d",
+    "Task2_score_used_for_predictor_update": false,
+    "R4_result_used_for_predictor_update": false
+  },
+  "target_task": "python-pillow__Pillow-d8af3fc",
+  "target_repo": "python-pillow/Pillow",
+  "target_base_parent_sha": "3aea175141cda5efd3460ff6a809068d7913d7bf",
+  "target_api": "Image.split",
+  "source_proposals_commit": "5f214bb53f361bf9ddd12d03c61330000f265ab2",
+  "source_proposals_git_blob_sha1": "1cbfca32e5e37cddd4ae9cb771058a65e5ad1828",
+  "scorer_file": "lexigen-omega/tools/score_prospective_exact_sequence_r5.py",
+  "scorer_git_blob_sha1": "01aa06da7b1290b0aa5cf2f94dbcbd44c6b90e20",
+  "R5_performance_spec_accessed": false,
+  "R5_outcome_accessed": false,
+  "R5_timing_accessed": false,
+  "R5_ground_truth_message_or_diff_accessed": false,
+  "R5_tests_accessed": false,
+  "R5_hints_accessed": false,
+  "R5_expert_patch_accessed": false,
+  "prospective_ranking": [
+    {
+      "candidate_id": "R1",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "CERTIFY", "RESTRICT"],
+      "macro_ids": ["V7R-002"],
+      "transferred_prior_harmonic_speedup": 1.0219844534021152,
+      "transferred_prior_minimum_speedup": 0.9753749493311714,
+      "source_Task1_candidate": "R1",
+      "prospective_rank": 1
+    },
+    {
+      "candidate_id": "N1",
+      "arm": "v7_no_library",
+      "primitive_sequence": ["SPECIALIZE", "EXECUTE"],
+      "macro_ids": [],
+      "transferred_prior_harmonic_speedup": 1.0102226608970264,
+      "transferred_prior_minimum_speedup": 0.9362435381964388,
+      "source_Task1_candidate": "N2",
+      "prospective_rank": 2
+    },
+    {
+      "candidate_id": "R6",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["REPRESENT", "REDUCE"],
+      "macro_ids": ["V7R-004"],
+      "transferred_prior_harmonic_speedup": 1.0048687374158451,
+      "transferred_prior_minimum_speedup": 0.9570345673575944,
+      "source_Task1_candidate": "R2",
+      "prospective_rank": 3
+    },
+    {
+      "candidate_id": "F2",
+      "arm": "v7_full",
+      "primitive_sequence": ["EXECUTE", "CERTIFY", "RECOVER"],
+      "macro_ids": ["V7M-002"],
+      "transferred_prior_harmonic_speedup": 1.0033802574485906,
+      "transferred_prior_minimum_speedup": 0.9541393795140422,
+      "source_Task1_candidate": "F2",
+      "prospective_rank": 4
+    },
+    {
+      "candidate_id": "R3",
+      "arm": "v7_random_library",
+      "primitive_sequence": ["RECOVER", "REFINE"],
+      "macro_ids": ["V7R-001"],
+      "transferred_prior_harmonic_speedup": 1.0028364216880499,
+      "transferred_prior_minimum_speedup": 0.9588584585555017,
+      "source_Task1_candidate": "R3",
+      "prospective_rank": 5
+    },
+    {
+      "candidate_id": "F1",
+      "arm": "v7_full",
+      "primitive_sequence": ["REDUCE", "EXECUTE"],
+      "macro_ids": ["V7M-004"],
+      "transferred_prior_harmonic_speedup": 0.9967916851707529,
+      "transferred_prior_minimum_speedup": 0.9276226595659841,
+      "source_Task1_candidate": "F3",
+      "prospective_rank": 6
+    }
+  ],
+  "abstentions": [
+    {"candidate_id": "F4", "arm": "v7_full", "primitive_sequence": ["CERTIFY", "RECOVER"], "macro_ids": ["V7M-003"], "reason": "no_exact_Task1_evaluated_sequence"},
+    {"candidate_id": "N3", "arm": "v7_no_library", "primitive_sequence": ["REPRESENT", "EXECUTE"], "macro_ids": [], "reason": "no_exact_Task1_evaluated_sequence"},
+    {"candidate_id": "N6", "arm": "v7_no_library", "primitive_sequence": ["REDUCE"], "macro_ids": [], "reason": "no_exact_Task1_evaluated_sequence"}
+  ],
+  "scoring_policy": {
+    "primary": "pairwise_concordance",
+    "minimum_observed_covered_candidates": 4,
+    "minimum_comparable_pairs": 3,
+    "directional_pairwise_concordance_minimum": 0.70,
+    "directional_spearman_minimum": 0.50,
+    "require_top1_hit": true,
+    "errored_or_infrastructure_rows": "excluded_not_negative",
+    "actual_outcome_ties": "excluded_from_pairwise_denominator"
+  },
+  "interpretation_boundary": "R5 is the remaining untouched member of the fixed R3-R5 prospective-development panel. A positive result is still only another development replication; a negative result is retained and not rescued by changing the predictor. R4's infrastructure-limited outcome and scorer incident do not alter this predictor."
+}

@@ -1,0 +1,65 @@
+name: LEXIGEN OMEGA Prospective R3-R5 Panel Selection
+
+on:
+  pull_request:
+    paths:
+      - 'lexigen-omega/evidence/PROSPECTIVE_R3_R5_PANEL_LOCK.json'
+      - 'lexigen-omega/tools/select_prospective_r3_r5_panel.py'
+      - '.github/workflows/lexigen-omega-prospective-r3-r5-select.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  select-panel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen panel boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-omega/evidence/PROSPECTIVE_R3_R5_PANEL_LOCK.json').read_text())
+          assert lock['status']=='frozen_before_panel_selection_execution'
+          assert lock['panel_policy']['fixed_target_count']==3
+          assert lock['panel_policy']['all_three_targets_count_even_if_invalid_or_infrastructure_blocked'] is True
+          assert not any(lock['preselection_boundary'].values())
+          assert '/git/commits/' in lock['base_resolution_rule']
+          assert '/commits/{CHILD_SHA}' in lock['base_resolution_rule']
+          print('R3-R5 panel lock verified')
+          PY
+      - name: Install frozen selector dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Compile panel selector
+        run: python -m py_compile lexigen-omega/tools/select_prospective_r3_r5_panel.py
+      - name: Execute fixed three-target safe-metadata selection
+        run: |
+          python lexigen-omega/tools/select_prospective_r3_r5_panel.py \
+            --lock lexigen-omega/evidence/PROSPECTIVE_R3_R5_PANEL_LOCK.json \
+            --output omega-r3-r5-panel-evidence
+      - name: Enforce panel non-leakage and distinctness
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('omega-r3-r5-panel-evidence/panel.json').read_text())
+          assert x['status']=='fixed_three_target_panel_selected_from_safe_metadata'
+          assert x['inventory_row_count']==102
+          assert [r['replication'] for r in x['selected']]==['R3','R4','R5']
+          assert len({r['repo'] for r in x['selected']})==3
+          for k in ['forbidden_column_values_accessed','selected_sources_accessed','selected_tests_accessed','selected_hints_accessed','selected_expert_patches_accessed','selected_outcomes_accessed','selected_timings_accessed']:
+              assert x[k] is False, k
+          print(json.dumps(x['selected'], indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-prospective-r3-r5-panel
+          path: omega-r3-r5-panel-evidence/panel.json
+          if-no-files-found: error
+          retention-days: 90

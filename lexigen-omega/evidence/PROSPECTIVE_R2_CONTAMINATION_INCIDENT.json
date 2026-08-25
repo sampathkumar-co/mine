@@ -1,0 +1,31 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_r2",
+  "status": "invalid_experiment_expert_patch_contamination_before_prediction_freeze",
+  "selected_target": "uploadcare__pillow-simd-7511039",
+  "selection_result_commit": "29ddda908d61ade6df9cccb62ba423f261e127e8",
+  "task_start_commit": "70cd7f5963159b64de91e370749e15b35c6f6d29",
+  "incident": {
+    "operation": "resolve caret base commit by fetching child commit metadata",
+    "requested_commit": "75110399c150192a233577e1608e2bd06aaecb26",
+    "intended_base": "75110399c150192a233577e1608e2bd06aaecb26^",
+    "resolved_parent_sha_observed": "f2f88c97b1afd14471a02e357420784d889a60d9",
+    "forbidden_information_exposed": true,
+    "exposed_commit_message": "SIMD Reduce. sse4 implementation",
+    "exposed_changed_file": "src/libImaging/Reduce.c",
+    "exposed_patch_content": true,
+    "exposure_occurred_before_R2_candidate_prediction_freeze": true,
+    "target_outcome_or_timing_accessed": false
+  },
+  "scientific_consequence": {
+    "R2_prospective_transfer_credit": false,
+    "R2_may_be_scored_as_prospective_evidence": false,
+    "R2_may_be_replaced_or_rerolled_within_same_experiment": false,
+    "R2_counts_as_invalid_contaminated_attempt": true,
+    "target_may_later_enter_exposed_development_pool": true,
+    "contaminated_information_may_not_enter_final_causal_memory": true,
+    "eventual_final_global_blind_denominator_affected": false
+  },
+  "repair_rule": "Any future caret-base resolution must obtain the parent SHA through a metadata path that suppresses file patches, or use a precommitted parent SHA supplied by a safe extraction job. Fetching a child commit payload that includes changed-file patches is forbidden before prediction freeze.",
+  "claim_boundary": "R2 earns zero prospective scientific credit. The incident is preserved rather than silently repaired."
+}

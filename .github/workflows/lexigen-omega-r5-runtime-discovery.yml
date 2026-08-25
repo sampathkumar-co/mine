@@ -1,0 +1,47 @@
+name: LEXIGEN OMEGA R5 Runtime Discovery
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-proposals-r1]
+    paths: ["lexigen-omega/TRIGGER_R5_RUNTIME_DISCOVERY"]
+permissions: {contents: read}
+jobs:
+  discover:
+    # Runtime discovery was consumed once at d12d10ca93ee50c49bfa0472a62686f96a1e9661.
+    # Later synchronize events fail closed because the trigger remains in the PR diff.
+    if: github.event.pull_request.head.sha == 'd12d10ca93ee50c49bfa0472a62686f96a1e9661'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Query public GSO Docker tags without executing benchmark code
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runtime-discovery
+          python - <<'PY'
+          import json, urllib.parse, urllib.request
+          base='https://hub.docker.com/v2/repositories/slimshetty/gso/tags'
+          url=base+'?'+urllib.parse.urlencode({'page_size':100,'name':'pillow'})
+          req=urllib.request.Request(url, headers={'User-Agent':'LEXIGEN-OMEGA-R5-runtime-discovery'})
+          with urllib.request.urlopen(req, timeout=30) as r:
+              data=json.load(r)
+          names=[x['name'] for x in data.get('results',[]) if 'pillow' in x.get('name','').lower()]
+          payload={
+              'project':'LEXIGEN OMEGA',
+              'stage':'R5_runtime_registry_discovery_before_execution',
+              'candidate_execution_count':0,
+              'candidate_timing_accessed':False,
+              'candidate_outcome_accessed':False,
+              'registry':'slimshetty/gso',
+              'matching_tags':names,
+              'count':len(names),
+          }
+          open('runtime-discovery/R5_RUNTIME_DISCOVERY.json','w').write(json.dumps(payload,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(payload,indent=2,sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-r5-runtime-discovery
+          path: runtime-discovery/R5_RUNTIME_DISCOVERY.json
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,35 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "task2_prospective_transfer_outcome_manifest_r1",
+  "status": "sealed_source_outcome_after_prospective_freeze",
+  "target_task": "abetlen__llama-cpp-python-2bc1d97",
+  "prediction_file": "lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json",
+  "prediction_frozen_before_outcome": true,
+  "source": {
+    "repository": "sampathkumar-co/mine",
+    "workflow_run_id": 32747466819,
+    "workflow_head_sha": "4075a0372fa744182cdc91c64cc71870ae33ce61",
+    "workflow_conclusion": "failure_due_to_other_parallel_tasks",
+    "task2_job_conclusion": "success",
+    "artifact_id": 9535093999,
+    "artifact_name": "lexigen-v7-gso-task2-preflight-r1",
+    "artifact_digest": "sha256:12617d64a6ea31731e82b0920715248f932941c9a46e7438dfae874bc93a4294",
+    "result_path_in_artifact": "PREFLIGHT_RESULT_R1.json",
+    "result_sha256": "6fa211fea73b4c707302a85f72fa4f084d10ebe39c195e76aa6c9dc22839fb62"
+  },
+  "source_result_checks": {
+    "campaign_credit_eligible": true,
+    "status": "completed",
+    "candidate_rows": 9,
+    "clean_candidate_rows": 9,
+    "expert_opt_commit_accessed": false,
+    "expert_diff_accessed": false,
+    "hints_accessed": false
+  },
+  "claim_boundary": {
+    "final_global_blind_claim_eligible": false,
+    "general_cross_repository_transfer_established": false,
+    "agi_or_breakthrough_claim": false,
+    "allowed_interpretation": "one preregistered prospective cross-repository directional transfer test of an exact primitive-sequence baseline"
+  }
+}

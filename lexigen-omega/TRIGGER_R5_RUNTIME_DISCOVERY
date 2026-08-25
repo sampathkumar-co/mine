@@ -1,0 +1,3 @@
+LEXIGEN OMEGA R5 pre-execution runtime discovery trigger.
+
+This trigger may query only the public Docker registry for GSO image tag names. It authorizes zero candidate execution, timing, outcome, tests, expert solution fields or predictor changes.

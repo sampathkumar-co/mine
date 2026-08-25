@@ -1,0 +1,25 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_official_runtime_preflight",
+  "status": "pre_execution_plumbing_failure_before_reinstall",
+  "workflow_run_id": 32872327137,
+  "image": "slimshetty/gso:gso.eval.x86_64.python-pillow__pillow-d8af3fc",
+  "image_digest": "sha256:aaef268cf3c6a9670d6ecbca6506f160be4925b1a25601f2dfee352989bd24eb",
+  "verified_before_failure": {
+    "base_git_blob_sha1": "49c9f6ab204a16044355d1d043c16ecef9e044a4",
+    "python_version": "3.9.20",
+    "uv_version": "0.5.4"
+  },
+  "failure": "Premature preflight import of PIL before running the contract reinstall produced ImportError for compiled PIL._imaging. The workflow stopped before the reinstall block.",
+  "repair": "Remove only the premature pre-reinstall PIL import. Keep Python/uv checks, then run the frozen contract reinstall commands and verify PIL.Image.split after installation.",
+  "scientific_boundary": {
+    "benchmark_tests_executed": false,
+    "performance_script_executed": false,
+    "candidate_execution_count": 0,
+    "candidate_timing_accessed": false,
+    "candidate_outcome_accessed": false,
+    "expert_fields_accessed": false
+  },
+  "scientific_credit": false,
+  "claim_boundary": "Pre-execution runtime-plumbing incident only."
+}
