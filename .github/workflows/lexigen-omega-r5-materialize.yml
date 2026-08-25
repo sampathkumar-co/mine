@@ -41,16 +41,14 @@ jobs:
           PY
       - name: Compile deterministic R5 materializer
         run: python -m py_compile lexigen-omega/tools/build_r5_candidates.py
-      - name: Pull frozen GSO image and recover only base target file
+      - name: Recover only the already-legal frozen parent source
         shell: bash
         run: |
           set -euo pipefail
-          IMAGE="slimshetty/gso:gso.eval.x86_64.python-pillow__Pillow-d8af3fc"
-          docker pull "$IMAGE"
-          C=$(docker create "$IMAGE" true)
           mkdir -p base/PIL
-          docker cp "$C:/testbed/PIL/Image.py" base/PIL/Image.py
-          docker rm "$C"
+          curl --fail --location --silent --show-error \
+            'https://raw.githubusercontent.com/python-pillow/Pillow/3aea175141cda5efd3460ff6a809068d7913d7bf/PIL/Image.py' \
+            --output base/PIL/Image.py
           test "$(git hash-object base/PIL/Image.py)" = "49c9f6ab204a16044355d1d043c16ecef9e044a4"
       - name: Materialize all nine frozen R5 candidates without execution
         shell: bash
