@@ -1,0 +1,67 @@
+name: LEXIGEN v6 Task 5 Robust Kalman Synthetic R1
+
+on:
+  push:
+    branches:
+      - lexigen/v6-task5-robust-kalman-filter-r1
+    paths:
+      - lexigen-v6/tasks/05-robust-kalman-filter/TRIGGER_SYNTHETIC_R1
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONPATH: ${{ github.workspace }}/lexigen-v5:${{ github.workspace }}/lexigen-v6/tasks/05-robust-kalman-filter
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen synthetic package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          p=Path('lexigen-v6/tasks/05-robust-kalman-filter/SYNTHETIC_R1_LOCK.json')
+          lock=json.loads(p.read_text())
+          for key,path in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              exp=lock['git_blob_sha1'][key]
+              if got!=exp:raise SystemExit(f'lock mismatch {key}: {got} != {exp}')
+          if lock['official_train_manifest_opened_before_lock'] or lock['official_test_manifest_opened_before_lock'] or int(lock['official_payloads_opened_before_lock'])!=0:
+              raise SystemExit('official-data boundary crossed before synthetic lock')
+          PY
+      - name: Install exact frozen runtime dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==2.3.2 scipy==1.16.1 cvxpy==1.7.2 clarabel==0.11.1
+      - name: Fetch exact frozen task source
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,urllib.request
+          from pathlib import Path
+          url='https://raw.githubusercontent.com/oripress/AlgoTune/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/robust_kalman_filter/robust_kalman_filter.py'
+          req=urllib.request.Request(url,headers={'User-Agent':'LEXIGEN-v6-task5-synthetic-r1'})
+          raw=urllib.request.urlopen(req,timeout=120).read()
+          sha=hashlib.sha256(raw).hexdigest()
+          if len(raw)!=9521 or sha!='3c589ba1f0d988f1d89db7a21d2f28a6d588334f881a407fbedc1a2c15a5bec2':
+              raise SystemExit(f'source identity mismatch size={len(raw)} sha={sha}')
+          Path('task-source.py').write_bytes(raw)
+          PY
+      - name: Compile frozen candidate and synthetic code
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/tasks/05-robust-kalman-filter/candidates.py lexigen-v6/tasks/05-robust-kalman-filter/synthetic.py
+      - name: Execute 744 pre-data synthetic evaluations
+        run: python lexigen-v6/tasks/05-robust-kalman-filter/synthetic.py task-source.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task5-robust-kalman-synthetic-r1
+          path: |
+            synthetic-summary.json
+            synthetic-results.jsonl
+            synthetic-candidate-plan.json
+          if-no-files-found: error
+          retention-days: 90
