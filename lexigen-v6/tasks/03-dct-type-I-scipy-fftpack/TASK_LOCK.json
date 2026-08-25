@@ -1,0 +1,77 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 3,
+  "task": "dct_type_I_scipy_fftpack",
+  "family": "signal_processing",
+  "stage": "task_source_lock",
+  "branch": "lexigen/v6-task3-dct-type-I-scipy-fftpack-r1",
+  "base_commit": "d22e9d70d017167fa18c3adc5cb7283ad0fadaf7",
+  "source": {
+    "repository": "oripress/AlgoTune",
+    "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+    "path": "AlgoTuneTasks/dct_type_I_scipy_fftpack/dct_type_I_scipy_fftpack.py",
+    "git_blob_sha1": "eb3086185f5a0929b4ffa033fbe687326050fc25",
+    "sha256": "d9667553f833e9966df0d6fde154c473f7b33285fd67a28f216f9c3df25d4e11"
+  },
+  "description": {
+    "git_blob_sha1": "e344ab7340d20f4f8830e7cd1418245eee9cf28b",
+    "sha256": "aace35ca7455d1e6ab73f4ef81cfafc6e25983cf5a3c14346ca7cdb4884650b0"
+  },
+  "frozen_source_screen": {
+    "workflow_run_id": 32700594617,
+    "artifact_id": 9510350305,
+    "artifact_digest": "sha256:e2daadd9a8f66034935d06c29204950ad3fdeebb1230927605bd85d02f6c6877",
+    "source_screen_result_blob": "434264ae20e4e1eccd593006763205e613799409",
+    "applicability_score": "1d89a3e9c7794ff44382747b9c92c0fa0cea70d05ccb213b89ea8b75dcda8cdb",
+    "fingerprint_features": ["approximate_verifier", "array", "backend", "boolean", "certificate", "discrete", "matrix", "numeric", "threshold", "tolerance"],
+    "dependency_calls": ["__init__", "logging.debug", "logging.error", "np.linalg.norm", "np.random.rand", "np.random.seed", "register_task", "scipy.fftpack.dctn", "super"],
+    "raw_engine_transfer_ids": ["TM-BFR-01", "TM-CAC-01", "TM-RRR-01", "TM-PBEB-01"],
+    "different_family_applicable_transfer_ids": ["TM-BFR-01", "TM-CAC-01", "TM-RRR-01"],
+    "same_family_excluded_from_applicability_credit": ["TM-PBEB-01"],
+    "same_family_exclusion_reason": "TM-PBEB-01 was learned from signal_processing, the same family as this holdout. It may remain in the exact frozen v6_full proposal stream but cannot satisfy the different-family causal-transfer condition."
+  },
+  "source_semantics": {
+    "input": "real square ndarray generated as (n+1) x (n+1)",
+    "reference": "scipy.fftpack.dctn(problem, type=1)",
+    "verifier": "relative L2 error against reference",
+    "relative_l2_tolerance": 1e-6
+  },
+  "pretraining_implementation_policy": {
+    "TM-BFR-01": "source_equivalent_fallback because source exposes no graph/frontier semantics; fingerprint boolean/discrete token is a false-positive stress case",
+    "TM-CAC-01": "source_equivalent_fallback because source exposes no active-constraint optimization semantics",
+    "TM-RRR-01": "exact even-extension plus native multidimensional real FFT, cropped back to DCT-I shape",
+    "TM-PBEB-01": "float32 SciPy pocketfft DCT-I guarded only by the already-frozen 1e-6 verifier tolerance; same-family and therefore ineligible for different-family causal credit",
+    "generic_dtype_specialization": "float32 SciPy pocketfft DCT-I",
+    "generic_native_backend_substitution": "float64 scipy.fft.dctn(type=1)",
+    "generic_reduced_representation": "exact even-extension native rfftn construction",
+    "generic_contiguous_vectorized": "contiguous float64 scipy.fft.dctn(type=1)",
+    "strong_baseline": {
+      "baseline_id": "SB-NATIVE-NUMERIC-01",
+      "implementation": "float32 scipy.fft.dctn(type=1)",
+      "reason": "The frozen catalog permits general-purpose NumPy/SciPy specialized tolerance-equivalent numeric backends. This is the strongest obvious generic confound control and prevents same-family PBEB or generic dtype specialization from receiving fake discovery credit.",
+      "boolean_baseline_rejected": "SB-BOOL-EXACT-01 is a fingerprint false positive; no lawful Boolean optimization formulation is mechanically exposed by source semantics.",
+      "reduced_linalg_baseline_not_separately_instantiated": "The native numeric baseline already supplies the strongest generic public DCT backend; a separate symbolic DCT reformulation under SB-REDUCED-LINALG-01 would exceed its no-task-specific-reformulation restriction."
+    }
+  },
+  "frozen_dependencies": {
+    "protocol_blob": "0b70abf916962f6f0048528d0671a83b38222efc",
+    "proposal_engine_blob": "a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory_blob": "811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog_blob": "2b868c03af77860892d8902bd2666cc1263876f7",
+    "source_screen_lock_blob": "d8de49f69f70b078a86677cd9fb28d02a672b2ae",
+    "screening_pool_result_blob": "90ef23f4b6112faeafc165ea1cdcfc03c2bf41f5"
+  },
+  "frozen_runtime_target": {
+    "python": "3.12",
+    "numpy": "2.5.2",
+    "scipy": "1.17.0",
+    "runner": "ubuntu-24.04"
+  },
+  "official_train_manifest_opened": false,
+  "official_test_manifest_opened": false,
+  "official_train_payloads_opened": 0,
+  "official_test_payloads_opened": 0,
+  "public_task_specific_solvers_opened": false,
+  "candidate_threshold_changes": false,
+  "task_swap_or_reclassification": false
+}
