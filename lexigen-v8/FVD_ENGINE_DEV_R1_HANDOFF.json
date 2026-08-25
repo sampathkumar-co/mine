@@ -1,0 +1,20 @@
+{
+  "stage": "lexigen_v8_fvd_engine_dev_r1_handoff",
+  "r1_branch": "lexigen/v8-fvd-engine-dev-r1",
+  "r1_sealed_head": "24ca61fd507282ffa8865619ebee59efbe366c70",
+  "r1_pr": 325,
+  "r1_replay_passed": false,
+  "r1_failed_gate": "full_mean_best_success_class_rank_not_worse_than_retrieval",
+  "r1_full_mean_rank": 1.6666666666666667,
+  "r1_retrieval_mean_rank": 1.3333333333333333,
+  "official_holdouts_accessed": false,
+  "blocked_ipwm_real_data_accessed": false,
+  "r2_requirement": "Use a separate branch. Do not edit R1 protocol, tasks, thresholds, or result. Build a materially richer outcome-calibrated utility model from a disjoint historical apprenticeship partition and evaluate on different historical replay tasks before any official holdout selection.",
+  "prohibited_r2_shortcuts": [
+    "do not lower the R1 retrieval gate",
+    "do not reuse the three R1 replay tasks as R2 evaluation targets",
+    "do not tune coefficients directly to the R1 outcome ordering",
+    "do not promote performance-only historical records to causal evidence",
+    "do not select official FVD holdouts until a successor development gate explicitly passes"
+  ]
+}
