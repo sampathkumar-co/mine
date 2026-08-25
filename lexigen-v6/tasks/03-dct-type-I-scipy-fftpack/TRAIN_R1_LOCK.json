@@ -1,0 +1,67 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 3,
+  "task": "dct_type_I_scipy_fftpack",
+  "family": "signal_processing",
+  "stage": "train_r1_lock",
+  "paths": {
+    "task_lock": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/TASK_LOCK.json",
+    "synthetic_result": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/SYNTHETIC_R1_RESULT.json",
+    "metadata_result": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/DATASET_METADATA_R1_RESULT.json",
+    "candidates": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/candidates.py",
+    "train_shard": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/train_shard.py",
+    "aggregate_train": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/aggregate_train.py",
+    "engine": "lexigen-v5/engine.py",
+    "transfer_memory": "lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog": "lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "protocol": "lexigen-v6/PROTOCOL.md",
+    "workflow": ".github/workflows/lexigen-v6-task3-dct-train-r1.yml"
+  },
+  "git_blob_sha1": {
+    "task_lock": "06098038fefb64d6a03168288191335dac5eeea0",
+    "synthetic_result": "e67b9a4b7acb080ba32667a569ff6a8b421ef6af",
+    "metadata_result": "5c2037df7bc9e0478feab68a19b0de0b6726ce7f",
+    "candidates": "4991dd8b34e5b768bb5841d064602553313b0970",
+    "train_shard": "2ae2249833d77530a157024f286fdc61cd60e4fd",
+    "aggregate_train": "446ecd754196cf32b5045a0b4a029f561840b02a",
+    "engine": "a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory": "811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog": "2b868c03af77860892d8902bd2666cc1263876f7",
+    "protocol": "0b70abf916962f6f0048528d0671a83b38222efc",
+    "workflow": "2114097cc046a750318d7d1babf312967d41d3e2"
+  },
+  "source_sha256": "d9667553f833e9966df0d6fde154c473f7b33285fd67a28f216f9c3df25d4e11",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "train_manifest": {
+    "name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_train.jsonl",
+    "git_blob_sha1": "8f20ec2c4206d84056af61bd738f94cc8f0c7c1c",
+    "size": 12242
+  },
+  "test_manifest_identity_only": {
+    "name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_test.jsonl",
+    "git_blob_sha1": "5b19ca6d9ca4ae06e6edaab77105e835811ab309",
+    "size": 12300
+  },
+  "candidate_count": 31,
+  "candidate_plan_sha256": "c48f08101cbe79ac017ffff452d99c6b2506b43e2938671c951862347a23690c",
+  "training_records_expected": 100,
+  "candidate_evaluations_expected": 3100,
+  "frozen_default_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "runtime": {"python": "3.12", "numpy": "2.5.2", "scipy": "1.17.0", "runner": "ubuntu-24.04"},
+  "different_family_transfer_ids": ["TM-BFR-01", "TM-CAC-01", "TM-RRR-01"],
+  "same_family_transfer_ids_in_engine_but_ineligible_for_causal_credit": ["TM-PBEB-01"],
+  "training_revision_budget_total": 3,
+  "training_revision_budget_consumed_before_r1": 0,
+  "scientific_candidate_revision_after_synthetic": false,
+  "candidate_set_changed_after_synthetic": false,
+  "verifier_changed_after_synthetic": false,
+  "thresholds_changed_after_synthetic": false,
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "public_task_specific_solvers_opened_before_lock": false
+}
