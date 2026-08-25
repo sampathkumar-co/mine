@@ -1,0 +1,24 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 3,
+  "task": "dct_type_I_scipy_fftpack",
+  "stage": "dataset_metadata_r1_lock",
+  "paths": {
+    "task_lock": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/TASK_LOCK.json",
+    "synthetic_result": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/SYNTHETIC_R1_RESULT.json",
+    "dataset_metadata": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/dataset_metadata.py",
+    "workflow": ".github/workflows/lexigen-v6-task3-dct-metadata-r1.yml"
+  },
+  "git_blob_sha1": {
+    "task_lock": "06098038fefb64d6a03168288191335dac5eeea0",
+    "synthetic_result": "e67b9a4b7acb080ba32667a569ff6a8b421ef6af",
+    "dataset_metadata": "0f731cac004ac089c96dc8e8bc6ff7661e250471",
+    "workflow": "568678d8013d0f26d690e3063fc937c77dadc302"
+  },
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "train_manifest_opened_before_lock": false,
+  "test_manifest_opened_before_lock": false,
+  "payloads_opened_before_lock": false,
+  "public_task_specific_solvers_opened_before_lock": false,
+  "threshold_changes": false
+}
