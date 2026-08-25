@@ -1,0 +1,147 @@
+name: LEXIGEN OMEGA R4 Frozen Evaluation
+
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-proposals-r1]
+    paths:
+      - 'lexigen-omega/TRIGGER_R4_EVAL'
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-r4-eval:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify all pre-timing identities
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          expected = {
+            'proposal': ('lexigen-omega/evidence/PROSPECTIVE_R4_SOURCE_PROPOSALS.json', '95012e5d3643987c40ed30fd6cd9c125cd767257'),
+            'prediction': ('lexigen-omega/evidence/PROSPECTIVE_R4_TRANSFER_PREDICTION.json', '3bb0d9cca347e7751b56b4c934e210ac18448e4d'),
+            'scorer': ('lexigen-omega/tools/score_prospective_exact_sequence.py', 'e870a4c5fb6dc1d9cc4cb28ce265e86d11e8f08f'),
+            'projector': ('lexigen-omega/tools/extract_r4_execution_contract.py', '281713aae5986625e59c48ae9d1d8e8f28b7c9d5'),
+            'contract_manifest': ('lexigen-omega/evidence/PROSPECTIVE_R4_EXECUTION_CONTRACT_MANIFEST.json', '6c5af3c710357dafb8792d4ed9540b5b84ec35de'),
+            'materializer': ('lexigen-omega/tools/build_r4_candidates.py', '29b9c195709bf646c011eed31ba7e1dc2b953215'),
+            'materialized_manifest': ('lexigen-omega/evidence/PROSPECTIVE_R4_MATERIALIZATION_RESULT_MANIFEST.json', '7e79b450371f8306147cc0a7b6ea03742f23cac7'),
+            'runner': ('lexigen-omega/tools/run_r4_frozen_eval.py', '96f164f17f6d888e7faf0966b21f0ebafa27c247'),
+          }
+          for label, (path, want) in expected.items():
+              got = subprocess.check_output(['git', 'hash-object', path], text=True).strip()
+              if got != want:
+                  raise SystemExit(f'{label} drift: {got} != {want}')
+          manifest = json.loads(Path(expected['materialized_manifest'][0]).read_text())
+          assert manifest['status'] == 'all_nine_candidates_materialized_and_hash_verified_zero_execution'
+          assert manifest['candidate_execution_count_before_manifest'] == 0
+          assert manifest['candidate_timing_observed_before_manifest'] is False
+          assert manifest['candidate_outcome_observed_before_manifest'] is False
+          assert manifest['R5_source_accessed'] is False
+          pred = json.loads(Path(expected['prediction'][0]).read_text())
+          assert pred['status'] == 'frozen_before_R4_performance_spec_timing_or_outcome'
+          assert pred['R4_timing_accessed'] is False
+          assert pred['R4_outcome_accessed'] is False
+          print('all R4 pre-timing identities verified')
+          PY
+
+      - name: Compile frozen tools
+        run: |
+          python -m py_compile lexigen-omega/tools/extract_r4_execution_contract.py
+          python -m py_compile lexigen-omega/tools/build_r4_candidates.py
+          python -m py_compile lexigen-omega/tools/run_r4_frozen_eval.py
+          python -m py_compile lexigen-omega/tools/score_prospective_exact_sequence.py
+
+      - name: Regenerate permitted R4 execution contract
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+          python lexigen-omega/tools/extract_r4_execution_contract.py \
+            --instance-id huggingface__datasets-ef3b5dd \
+            --expected-repo huggingface/datasets \
+            --expected-base 'ef3b5dd3633995c95d77f35fb17f89ff44990bc4^' \
+            --expected-api load_dataset_builder \
+            --output omega-r4-contract/R4_EXECUTION_CONTRACT.json
+          echo 'f08f131a46c9a4d6a490e4a997f2c5045b4af67013bc705845e749ec63fb3e17  omega-r4-contract/R4_EXECUTION_CONTRACT.json' | sha256sum -c -
+
+      - name: Pull frozen GSO evaluation image
+        run: docker pull slimshetty/gso:gso.eval.x86_64.huggingface__datasets-ef3b5dd
+
+      - name: Execute R4 exactly once from frozen candidate bytes
+        id: execute
+        shell: bash
+        run: |
+          set +e
+          python lexigen-omega/tools/run_r4_frozen_eval.py \
+            --contract omega-r4-contract/R4_EXECUTION_CONTRACT.json \
+            --output omega-r4-eval
+          rc=$?
+          echo "runner_rc=$rc" >> "$GITHUB_OUTPUT"
+          echo "R4 runner exit code: $rc"
+          exit 0
+
+      - name: Score clean result with preregistered scorer
+        if: ${{ hashFiles('omega-r4-eval/R4_EXECUTION_RESULT.json') != '' }}
+        shell: bash
+        run: |
+          python lexigen-omega/tools/score_prospective_exact_sequence.py \
+            --prediction lexigen-omega/evidence/PROSPECTIVE_R4_TRANSFER_PREDICTION.json \
+            --result omega-r4-eval/R4_EXECUTION_RESULT.json \
+            --output omega-r4-eval/R4_TRANSFER_SCORE.json
+
+      - name: Seal result hashes and boundary
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          out = Path('omega-r4-eval')
+          out.mkdir(parents=True, exist_ok=True)
+          def h(path):
+              p=Path(path)
+              return hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None
+          result_path=out/'R4_EXECUTION_RESULT.json'
+          score_path=out/'R4_TRANSFER_SCORE.json'
+          result=json.loads(result_path.read_text()) if result_path.exists() else None
+          seal={
+              'project':'LEXIGEN OMEGA',
+              'stage':'R4_frozen_execution_artifact_seal',
+              'workflow_head_sha':os.environ.get('GITHUB_SHA'),
+              'runner_rc':'${{ steps.execute.outputs.runner_rc }}',
+              'contract_sha256':h('omega-r4-contract/R4_EXECUTION_CONTRACT.json'),
+              'result_sha256':h(result_path),
+              'score_sha256':h(score_path),
+              'result_status':result.get('status') if result else None,
+              'scientific_evidence_eligible':bool(result.get('scientific_evidence_eligible')) if result else False,
+              'candidate_count':len(result.get('candidate_results',[])) if result else 0,
+              'expert_opt_commit_accessed':False,
+              'expert_gt_commit_message_accessed':False,
+              'expert_diff_accessed':False,
+              'hints_accessed':False,
+              'R5_source_accessed':False,
+              'claim_boundary':'One preregistered R4 prospective-development execution only; no general-transfer, AGI, or breakthrough claim.'
+          }
+          (out/'R4_EXECUTION_SEAL.json').write_text(json.dumps(seal, indent=2, sort_keys=True)+'\n')
+          print(json.dumps(seal, indent=2, sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lexigen-omega-r4-frozen-eval
+          path: |
+            omega-r4-contract/R4_EXECUTION_CONTRACT.json
+            omega-r4-eval/R4_EXECUTION_RESULT.json
+            omega-r4-eval/R4_TRANSFER_SCORE.json
+            omega-r4-eval/R4_EXECUTION_SEAL.json
+          if-no-files-found: warn
+          retention-days: 90
