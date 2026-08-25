@@ -6,9 +6,14 @@ on:
       - "lexigen-v8/FVD_EXPERIENCE_SCHEMA_R1.json"
       - "lexigen-v8/FVD_HISTORICAL_SOURCE_MANIFEST_R1.json"
       - "lexigen-v8/FVD_PROPOSAL_CLASSES_R1.json"
+      - "lexigen-v8/FVD_HISTORICAL_REPLAY_PROTOCOL_R1.json"
+      - "lexigen-v8/FVD_HISTORICAL_REPLAY_INPUT_R1.json"
+      - "lexigen-v8/FVD_HISTORICAL_REPLAY_OUTCOMES_R1.json"
       - "lexigen-v8/build_fvd_experience_r1.py"
       - "lexigen-v8/fvd_allocator_r1.py"
       - "lexigen-v8/test_fvd_engine_dev_r1.py"
+      - "lexigen-v8/prepare_fvd_historical_replay_r1.py"
+      - "lexigen-v8/score_fvd_historical_replay_r1.py"
       - ".github/workflows/lexigen-v8-fvd-engine-dev-r1.yml"
 permissions:
   contents: read
@@ -41,7 +46,32 @@ jobs:
             lexigen-v8/strict_gate_runner.py \
             lexigen-v8/build_fvd_experience_r1.py \
             lexigen-v8/fvd_allocator_r1.py \
-            lexigen-v8/test_fvd_engine_dev_r1.py
+            lexigen-v8/test_fvd_engine_dev_r1.py \
+            lexigen-v8/prepare_fvd_historical_replay_r1.py \
+            lexigen-v8/score_fvd_historical_replay_r1.py
+      - name: Validate frozen historical replay documents
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          protocol=json.loads(Path('lexigen-v8/FVD_HISTORICAL_REPLAY_PROTOCOL_R1.json').read_text())
+          inputs=json.loads(Path('lexigen-v8/FVD_HISTORICAL_REPLAY_INPUT_R1.json').read_text())
+          outcomes=json.loads(Path('lexigen-v8/FVD_HISTORICAL_REPLAY_OUTCOMES_R1.json').read_text())
+          assert protocol['status'] == 'frozen_before_replay_execution'
+          assert protocol['development_only'] is True
+          assert protocol['official_fvd_holdout_campaign_started'] is False
+          assert protocol['blocked_ipwm_real_intervention_data_opened'] is False
+          assert protocol['scientific_transfer_evidence'] is False
+          assert protocol['threshold_changes_after_execution_allowed'] is False
+          assert protocol['task_changes_after_execution_allowed'] is False
+          assert protocol['proposal_budget_per_task_per_arm'] == 16
+          assert inputs['outcome_fields_present'] is False
+          assert inputs['official_holdout_data_accessed'] is False
+          assert len(inputs['tasks']) == protocol['replay_task_count'] == len(outcomes['tasks']) == 3
+          assert {x['replay_id'] for x in inputs['tasks']} == {x['replay_id'] for x in outcomes['tasks']}
+          PY
       - name: Build deterministic historical experience artifact
         shell: bash
         run: |
@@ -89,9 +119,49 @@ jobs:
           }
           Path('evidence-fvd-dev-r1/FVD_ENGINE_DEV_RESULT_R1.json').write_text(json.dumps(payload,indent=2,sort_keys=True)+'\n')
           PY
-      - uses: actions/upload-artifact@v4
+      - name: Upload development canary evidence
+        uses: actions/upload-artifact@v4
         with:
           name: lexigen-v8-fvd-engine-development-r1
           path: evidence-fvd-dev-r1/
           if-no-files-found: error
+          retention-days: 90
+      - name: Stage 1 - source-only historical replay allocations
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence-fvd-replay-r1
+          python lexigen-v8/prepare_fvd_historical_replay_r1.py \
+            --budget 16 \
+            --output evidence-fvd-replay-r1/STAGE1_ALLOCATIONS_R1.json \
+            | tee evidence-fvd-replay-r1/stage1-summary.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('evidence-fvd-replay-r1/STAGE1_ALLOCATIONS_R1.json').read_text())
+          assert p['outcomes_loaded'] is False
+          assert p['outcome_file_opened'] is False
+          assert p['all_source_hashes_verified'] is True
+          assert p['all_leave_one_out_checks_pass'] is True
+          assert p['all_equal_budget_checks_pass'] is True
+          assert p['official_holdout_data_accessed'] is False
+          assert p['blocked_ipwm_real_intervention_data_accessed'] is False
+          assert p['scientific_transfer_evidence'] is False
+          PY
+      - name: Stage 2 - score frozen historical replay gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python lexigen-v8/strict_gate_runner.py \
+            --output evidence-fvd-replay-r1/strict-score-run.json \
+            -- python lexigen-v8/score_fvd_historical_replay_r1.py \
+              --stage1 evidence-fvd-replay-r1/STAGE1_ALLOCATIONS_R1.json \
+              --output evidence-fvd-replay-r1/HISTORICAL_REPLAY_RESULT_R1.json
+      - name: Upload historical replay evidence even on scientific failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v8-fvd-historical-replay-r1
+          path: evidence-fvd-replay-r1/
+          if-no-files-found: warn
           retention-days: 90
