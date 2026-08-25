@@ -1,0 +1,8 @@
+LEXIGEN OMEGA R5 permitted execution-contract projection trigger.
+
+Boundary:
+- all nine candidate patch bytes are already frozen and hash-sealed;
+- exact-sequence ranking/prediction and scorer thresholds are already frozen;
+- this step may expose only instance_id, repo, base_commit, api, install_commands, setup_commands, prob_script, and tests from the pinned GSO dataset;
+- opt_commit, gt_commit_message, gt_diff, hints_text and candidate timing/outcome remain forbidden;
+- no candidate execution is authorized by this trigger.
