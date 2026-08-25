@@ -1,0 +1,38 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R4_R5_blind_parent_resolution_result",
+  "status": "parent_sha_only_resolution_preserved",
+  "source_lock": "lexigen-omega/evidence/PROSPECTIVE_R4_R5_PARENT_RESOLUTION_LOCK.json",
+  "workflow": {
+    "run_id": 32815412136,
+    "head_sha": "961f5eff6fc2838925ce551a41bb1c5c627e3d42",
+    "conclusion": "success",
+    "artifact_id": 9551206593,
+    "artifact_name": "lexigen-omega-r4-r5-parent-sha-only",
+    "artifact_digest": "sha256:71696041a1d98942c953df70b945d8f74c28fe56cdf8db0727f26170e045ade6",
+    "result_sha256": "97f8a368487455a70e4da1da382c689e60dd5f4f892fc5de3565dc8219e7fa7b"
+  },
+  "results": [
+    {
+      "replication": "R4",
+      "repo": "huggingface/datasets",
+      "child_sha": "ef3b5dd3633995c95d77f35fb17f89ff44990bc4",
+      "parent_sha": "cf71653947cecd84050daf0448dc5a73c2c071f3"
+    },
+    {
+      "replication": "R5",
+      "repo": "python-pillow/Pillow",
+      "child_sha": "d8af3fc23a730dd5e9a6e556263e7be7d8de1c7e",
+      "parent_sha": "3aea175141cda5efd3460ff6a809068d7913d7bf"
+    }
+  ],
+  "non_leakage": {
+    "emitted_commit_messages": false,
+    "emitted_changed_filenames": false,
+    "emitted_patches": false,
+    "emitted_source_contents": false,
+    "emitted_tree_listings": false,
+    "temporary_object_store_retained": false
+  },
+  "claim_boundary": "Trusted identity infrastructure only; zero scientific credit. R4 and R5 remain prospectively clean."
+}
