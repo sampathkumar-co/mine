@@ -1,0 +1,44 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_r2_target_selection_result",
+  "status": "selected_and_preserved_before_target_source_access",
+  "selection_lock": "lexigen-omega/evidence/PROSPECTIVE_R2_SELECTION_LOCK.json",
+  "selection_workflow": {
+    "run_id": 32814948164,
+    "head_sha": "ee4bb2d803a186423c172598693bc49f790f5f2f",
+    "conclusion": "success",
+    "artifact_id": 9551062290,
+    "artifact_name": "lexigen-omega-prospective-r2-selection",
+    "artifact_digest": "sha256:eadc0b4edda720a6c42fe48f00cd87a0c72d43d4d8923b8931c44a82ec81a555",
+    "selection_json_sha256": "a1492cb11008eb5d96c25c1074588317c91bec7fd0e247d450fdce5189582d7f"
+  },
+  "inventory": {
+    "row_count": 102,
+    "inventory_sha256": "32607e1322cd38b575d8668b6cf63e84266eb7ef142c06b9866cd369996b8a69",
+    "eligible_row_count_after_frozen_exclusions": 18,
+    "eligible_order_sha256": "15258d6c35f84bba850440af120b42ad911d1fba7228da6fd14e8b235550ede1"
+  },
+  "selected": {
+    "instance_id": "uploadcare__pillow-simd-7511039",
+    "repo": "uploadcare/pillow-simd",
+    "base_commit": "75110399c150192a233577e1608e2bd06aaecb26^",
+    "api": "Image.reduce",
+    "created_at": "2024-08-12 22:06:59",
+    "arch": "x86_64",
+    "instance_image_tag": "latest",
+    "selection_score": "056c50dd59e9d8910eabac192522acb2b24a70314ce4fd6dc2cb19336ff61191"
+  },
+  "selection_boundary": {
+    "forbidden_column_values_accessed": false,
+    "target_source_accessed": false,
+    "target_tests_accessed": false,
+    "target_hints_accessed": false,
+    "target_performance_spec_accessed": false,
+    "target_expert_patch_accessed": false,
+    "target_outcome_accessed": false,
+    "target_timing_accessed": false,
+    "reroll_allowed": false
+  },
+  "next_legal_step": "Open only the selected task source/public contract permitted by the frozen protocol, generate candidate mechanisms, then freeze the R2 prediction and scoring rule before any evaluator outcome or timing access.",
+  "claim_boundary": "Prospective-development target selection only; not final blind, AGI, breakthrough or general-transfer evidence."
+}
