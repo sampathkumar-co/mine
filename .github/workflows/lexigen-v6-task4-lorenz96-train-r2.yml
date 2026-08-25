@@ -1,0 +1,78 @@
+name: LEXIGEN v6 Task 4 Lorenz96 Official Training R2
+on:
+  push:
+    branches: [lexigen/v6-task4-ode-lorenz96-nonchaotic-r1]
+    paths: ["lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/TRIGGER_TRAIN_R2"]
+permissions: {contents: read}
+env:
+  PYTHONPATH: ${{ github.workspace }}/lexigen-v5:${{ github.workspace }}/lexigen-v6/tasks/04-ode-lorenz96-nonchaotic
+jobs:
+  train:
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen training R2 package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/TRAIN_R2_LOCK.json').read_text())
+          for key,path in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip();expected=lock['git_blob_sha1'][key]
+              if got!=expected:raise SystemExit(f'train r2 lock mismatch {key}: {got} != {expected}')
+          if lock['test_manifest_body_opened_before_lock'] or lock['test_payloads_opened_before_lock']:
+              raise SystemExit('test boundary crossed')
+          if lock['training_revision_budget_consumed_before_r2'] != 1:
+              raise SystemExit('revision provenance mismatch')
+          PY
+      - name: Install exact frozen runtime dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==2.5.2 scipy==1.17.0
+      - name: Fetch exact frozen task source
+        shell: bash
+        run: |
+          curl -L --fail --retry 3 -A 'LEXIGEN-v6-task4-train-r2' -o task-source.py 'https://raw.githubusercontent.com/oripress/AlgoTune/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/ode_lorenz96_nonchaotic/ode_lorenz96_nonchaotic.py'
+          python - <<'PY'
+          import hashlib
+          b=open('task-source.py','rb').read();got=hashlib.sha256(b).hexdigest();expected='629456c15f57d932ded725c14d468bee2a513b97d124ad95d38401841bf68621'
+          if got!=expected:raise SystemExit(f'source sha mismatch {got}')
+          PY
+      - name: Compile frozen training R2 package
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/candidates.py lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/train_shard_r2.py lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/aggregate_train_r2.py
+      - name: Evaluate official training R2 shard
+        run: python lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/train_shard_r2.py --shard ${{ matrix.shard }} --source task-source.py --output train-out/train-shard-${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task4-lorenz96-train-r2-shard-${{ matrix.shard }}
+          path: train-out/train-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+  aggregate:
+    needs: train
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v6-task4-lorenz96-train-r2-shard-*
+          path: all-shards
+          merge-multiple: false
+      - name: Aggregate and freeze one candidate per arm
+        run: python lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/aggregate_train_r2.py --input all-shards --output training-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task4-lorenz96-training-r2-complete
+          path: |
+            training-evidence/training-summary.json
+            training-evidence/training-results.jsonl
+          if-no-files-found: error
+          retention-days: 90
