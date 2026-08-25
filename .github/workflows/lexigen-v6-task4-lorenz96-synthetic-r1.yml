@@ -1,0 +1,53 @@
+name: LEXIGEN v6 Task 4 Lorenz96 Synthetic R1
+on:
+  push:
+    branches: [lexigen/v6-task4-ode-lorenz96-nonchaotic-r1]
+    paths: ["lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/TRIGGER_SYNTHETIC_R1"]
+permissions: {contents: read}
+env:
+  PYTHONPATH: ${{ github.workspace }}/lexigen-v5:${{ github.workspace }}/lexigen-v6/tasks/04-ode-lorenz96-nonchaotic
+jobs:
+  synthetic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen synthetic package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/SYNTHETIC_R1_LOCK.json').read_text())
+          for key,path in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip();expected=lock['git_blob_sha1'][key]
+              if got!=expected: raise SystemExit(f'synthetic lock mismatch {key}: {got} != {expected}')
+          if lock['official_train_manifest_opened_before_lock'] or lock['official_test_manifest_opened_before_lock'] or lock['public_task_specific_solvers_opened_before_lock']:
+              raise SystemExit('synthetic boundary crossed')
+          PY
+      - name: Install exact frozen runtime dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==2.5.2 scipy==1.17.0
+      - name: Fetch exact frozen task source
+        shell: bash
+        run: |
+          curl -L --fail --retry 3 -A 'LEXIGEN-v6-task4-synthetic-r1' -o task-source.py 'https://raw.githubusercontent.com/oripress/AlgoTune/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/ode_lorenz96_nonchaotic/ode_lorenz96_nonchaotic.py'
+          python - <<'PY'
+          import hashlib
+          got=hashlib.sha256(open('task-source.py','rb').read()).hexdigest();expected='629456c15f57d932ded725c14d468bee2a513b97d124ad95d38401841bf68621'
+          if got!=expected: raise SystemExit(f'source sha mismatch {got}')
+          PY
+      - name: Compile frozen synthetic package
+        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/candidates.py lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/synthetic.py
+      - name: Execute independent synthetic screen
+        run: python lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/synthetic.py task-source.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task4-lorenz96-synthetic-r1
+          path: |
+            synthetic-summary.json
+            synthetic-results.jsonl
+            synthetic-candidate-plan.json
+          if-no-files-found: error
+          retention-days: 90
