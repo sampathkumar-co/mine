@@ -1,0 +1,52 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_execution_contract_projection_lock",
+  "status": "frozen_before_R5_performance_contract_timing_or_outcome_access",
+  "target": {
+    "instance_id": "python-pillow__Pillow-d8af3fc",
+    "repo": "python-pillow/Pillow",
+    "base_commit": "d8af3fc23a730dd5e9a6e556263e7be7d8de1c7e^",
+    "api": "Image.split"
+  },
+  "frozen_inputs": {
+    "source_proposals_file": "lexigen-omega/evidence/PROSPECTIVE_R5_SOURCE_PROPOSALS.json",
+    "source_proposals_git_blob_sha1": "1cbfca32e5e37cddd4ae9cb771058a65e5ad1828",
+    "prediction_file": "lexigen-omega/evidence/PROSPECTIVE_R5_TRANSFER_PREDICTION.json",
+    "prediction_git_blob_sha1": "44c5e87403b4aa0d639be4c080fab89422d50b72",
+    "scorer_file": "lexigen-omega/tools/score_prospective_exact_sequence_r5.py",
+    "scorer_git_blob_sha1": "01aa06da7b1290b0aa5cf2f94dbcbd44c6b90e20",
+    "materialization_manifest_file": "lexigen-omega/evidence/PROSPECTIVE_R5_MATERIALIZATION_RESULT_MANIFEST.json",
+    "materialization_manifest_commit": "9cc68101577b62ebf673f8309734a3bd3f22e05a",
+    "candidate_count": 9,
+    "candidate_bytes_frozen": true,
+    "projector_file": "lexigen-omega/tools/extract_r5_execution_contract.py",
+    "projector_git_blob_sha1": "8b3542f0f00fdaae4ec7dec8a11faca06de04034"
+  },
+  "allowed_projection": [
+    "instance_id",
+    "repo",
+    "base_commit",
+    "api",
+    "install_commands",
+    "setup_commands",
+    "prob_script",
+    "tests"
+  ],
+  "forbidden_projection": [
+    "opt_commit",
+    "gt_commit_message",
+    "gt_diff",
+    "hints_text"
+  ],
+  "access_boundary_at_lock": {
+    "R5_performance_contract_accessed": false,
+    "R5_tests_accessed": false,
+    "R5_timing_accessed": false,
+    "R5_outcome_accessed": false,
+    "R5_expert_patch_accessed": false,
+    "R5_ground_truth_message_or_diff_accessed": false,
+    "R5_hints_accessed": false
+  },
+  "next_legal_step": "Run the frozen projector exactly against pinned gso-bench/gso revision c2e4f1a58427cccd15e0e542f136bd204fb19284, emit only the permitted execution contract, seal its SHA-256, then build an evaluator against the already-frozen candidate patches without changing candidates, predictor, scorer or thresholds.",
+  "claim_boundary": "Pre-contract integrity lock only; zero scientific or breakthrough credit."
+}
