@@ -1,0 +1,147 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 3,
+  "task": "dct_type_I_scipy_fftpack",
+  "family": "signal_processing",
+  "stage": "blind_r1_lock",
+  "source_sha256": "d9667553f833e9966df0d6fde154c473f7b33285fd67a28f216f9c3df25d4e11",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "test_manifest_identity": {
+    "name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_test.jsonl",
+    "size": 12300,
+    "git_blob_sha1": "5b19ca6d9ca4ae06e6edaab77105e835811ab309"
+  },
+  "selected_by_arm": {
+    "v6_full": {
+      "candidate": "v6_full_r4_b1ef08a2d68a248c0821",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "operators": ["dtype_specialization", "native_backend_substitution", "risk_aware_staging"],
+      "transfer_ids": ["TM-PBEB-01"],
+      "learned_template": "precision_backend_error_budget",
+      "baseline_id": null
+    },
+    "v6_no_transfer": {
+      "candidate": "v6_no_transfer_r4_4a4e1871b7f7b48b9485",
+      "implementation_class": "scipy_fftpack_reference",
+      "operators": ["active_set_decomposition", "bit_parallel_representation", "sort_partition_reduction"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "random_search": {
+      "candidate": "random_search_r1_5d4511cd2a9e13e56d80",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "operators": ["dtype_specialization", "active_set_decomposition", "sparse_frontier_search"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "static_template": {
+      "candidate": "static_template_r6_d044a19fd4551034dc11",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "operators": ["dtype_specialization", "risk_aware_staging"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "v5_compatible": {
+      "candidate": "v5_compatible_r2_9f5f55df04a5ad23f542",
+      "implementation_class": "scipy_fftpack_reference",
+      "operators": ["active_set_decomposition", "bit_parallel_representation", "sparse_frontier_search"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "strong_baseline": {
+      "candidate": "strong_baseline_sb_native_numeric_01_pocketfft_float32",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "operators": ["direct_general_purpose_numeric_backend", "dtype_specialization"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": "SB-NATIVE-NUMERIC-01"
+    }
+  },
+  "recipe_removal_ablation": {
+    "candidate": "recipe_removal_v6_full_r4_b1ef08a2d68a248c0821",
+    "source_candidate": "v6_full_r4_b1ef08a2d68a248c0821",
+    "removed_transfer_ids": ["TM-PBEB-01"],
+    "resulting_transfer_ids": [],
+    "retained_operators": ["dtype_specialization", "native_backend_substitution", "risk_aware_staging"],
+    "resulting_implementation_class": "pocketfft_float32_tolerance_equivalent",
+    "same_callable_as_full": true,
+    "preblind_semantic_equivalence_to_full": true,
+    "mapping_reason": "The frozen Task 3 candidate mapper checks generic dtype_specialization immediately after transfer-ID rules. Removing TM-PBEB-01 while retaining the frozen operators therefore still maps to pocketfft_float32 and the same executable callable as full.",
+    "qualifying_advantage_elimination_rule": "Ablation fails the frozen clean blind gate OR full harmonic speedup is at least 1.25x ablation with equal validity and retry counts."
+  },
+  "causal_preblind_diagnostics": {
+    "selected_full_uses_learned_transfer": true,
+    "selected_causal_id": "TM-PBEB-01",
+    "selected_different_family_transfer_ids": [],
+    "selected_same_family_transfer_ids": ["TM-PBEB-01"],
+    "learned_recipe_source_family": "signal_processing",
+    "current_family": "signal_processing",
+    "source_family_differs_from_current": false,
+    "selected_full_no_transfer_semantically_distinct": true,
+    "equivalent_selected_full_implementation_exists_in_random_static_and_strong_baseline": true,
+    "recipe_removal_same_callable_as_full": true,
+    "task3_causal_win_impossible_preblind": true,
+    "reason": "The selected learned recipe is same-family, so the preregistered different-family causal condition is already false; recipe removal also leaves the same executable implementation."
+  },
+  "frozen_clean_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.50,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "frozen_causal_rules": {
+    "different_family_transfer_required": true,
+    "full_over_no_transfer_ratio_if_no_transfer_clean": 1.25,
+    "full_over_recipe_removal_ratio_if_ablation_clean": 1.25,
+    "strong_baseline_time_over_full_time_minimum": 0.80,
+    "all_conditions_required": true
+  },
+  "paths": {
+    "task_lock": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/TASK_LOCK.json",
+    "synthetic_result": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/SYNTHETIC_R1_RESULT.json",
+    "metadata_result": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/DATASET_METADATA_R1_RESULT.json",
+    "training_lock": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/TRAIN_R1_LOCK.json",
+    "training_result": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/TRAIN_R1_RESULT.json",
+    "candidates": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/candidates.py",
+    "train_shard": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/train_shard.py",
+    "synthetic": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/synthetic.py",
+    "blind_shard": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/blind_shard.py",
+    "aggregate_blind": "lexigen-v6/tasks/03-dct-type-I-scipy-fftpack/aggregate_blind.py",
+    "engine": "lexigen-v5/engine.py",
+    "transfer_memory": "lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog": "lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "protocol": "lexigen-v6/PROTOCOL.md",
+    "blind_workflow": ".github/workflows/lexigen-v6-task3-dct-blind-r1.yml"
+  },
+  "git_blob_sha1": {
+    "task_lock": "06098038fefb64d6a03168288191335dac5eeea0",
+    "synthetic_result": "e67b9a4b7acb080ba32667a569ff6a8b421ef6af",
+    "metadata_result": "5c2037df7bc9e0478feab68a19b0de0b6726ce7f",
+    "training_lock": "370a630a6c1a9a7c5acc168fb946be2589387ee6",
+    "training_result": "731fc5b3a8c8eb7261ee97275f52bd49a7f807f1",
+    "candidates": "4991dd8b34e5b768bb5841d064602553313b0970",
+    "train_shard": "2ae2249833d77530a157024f286fdc61cd60e4fd",
+    "synthetic": "964b25a76ebbefcbb444eb912a9caa3a56e15bf5",
+    "blind_shard": "ba5005b60281b97cb453f76dea7c8e10382748f1",
+    "aggregate_blind": "5e6d1792489642fdadf560e34ced73edee1b5d09",
+    "engine": "a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory": "811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog": "2b868c03af77860892d8902bd2666cc1263876f7",
+    "protocol": "0b70abf916962f6f0048528d0671a83b38222efc",
+    "blind_workflow": "5df78305858da65e9609b71d3d8f3b4e572a2ddd"
+  },
+  "runtime": {"python": "3.12", "numpy": "2.5.2", "scipy": "1.17.0", "runner": "ubuntu-24.04"},
+  "training_artifact_digest": "sha256:ed0d6b6e27170d53db0b7af44c10867f7b4aaac26786bd95feaa228a494cf375",
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": 0,
+  "blind_runs_completed_before_trigger": 0,
+  "exactly_one_official_blind_run_allowed": true,
+  "invalid_output_retries_allowed": 0,
+  "post_blind_candidate_revision_allowed": false,
+  "post_blind_timing_rerun_allowed": false,
+  "threshold_changes": false
+}
