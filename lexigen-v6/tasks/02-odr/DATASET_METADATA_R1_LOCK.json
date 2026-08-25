@@ -1,0 +1,23 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":2,
+  "task":"odr",
+  "stage":"dataset_metadata_r1_lock",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/02-odr/TASK_LOCK.json",
+    "synthetic_result":"lexigen-v6/tasks/02-odr/SYNTHETIC_R1_RESULT.json",
+    "dataset_metadata":"lexigen-v6/tasks/02-odr/dataset_metadata.py",
+    "workflow":".github/workflows/lexigen-v6-task2-odr-metadata-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"778381c761c23bed5c988f76fe148546c78b41e8",
+    "synthetic_result":"eda3c4e0b47eeade94383efd5ca233a36806bd2d",
+    "dataset_metadata":"52fcd5eee958d5a41dea2844e04138a387291388",
+    "workflow":"3b3a5ca61dff223338566bd4f52777c7e095a1c9"
+  },
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "train_manifest_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "payloads_opened_before_lock":false,
+  "public_task_specific_solvers_opened_before_lock":false
+}
