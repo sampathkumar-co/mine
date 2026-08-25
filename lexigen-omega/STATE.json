@@ -7,7 +7,7 @@
     "OMEGA0": "locked",
     "OMEGA1": "in_progress",
     "OMEGA2": "foundation_started",
-    "OMEGA3": "real_evaluator_hindsight_and_prospective_transfer_test_active",
+    "OMEGA3": "first_prospective_cross_repository_directional_support_preserved_more_targets_required",
     "OMEGA4": "not_started",
     "OMEGA5": "foundation_started",
     "OMEGA6": "not_started",
@@ -36,6 +36,8 @@
     "pinned cross-branch real-evidence reproduction in GitHub Actions",
     "prospectively frozen exact-sequence cross-repository Task2 prediction",
     "preregistered Task2 transfer scorer with insufficient-evidence path",
+    "sealed Task2 source-outcome manifest bound to exact workflow artifact and result hash",
+    "byte-for-byte CI recomputation of the frozen Task2 prospective score",
     "exposed development archive separated from final causal memory",
     "per-task-normalized mechanism priority ranking for development search",
     "generic hindsight-to-development-archive builder",
@@ -72,7 +74,7 @@
     "causal_transfer_credit": false
   },
   "prospective_Task2_transfer_test": {
-    "status": "prediction_and_scoring_rule_frozen_before_target_outcome",
+    "status": "sealed_and_scored_directional_support_exact_sequence_baseline",
     "source_task": "pydantic__pydantic-addf1f9",
     "target_task": "abetlen__llama-cpp-python-2bc1d97",
     "Task1_final_selection_commit": "3d2aa3c8a1ee9eeb284e3494655c1110078b394e",
@@ -80,12 +82,21 @@
     "Task2_preflight_head_sha": "4075a0372fa744182cdc91c64cc71870ae33ce61",
     "Task2_preflight_run_id": 32747466819,
     "prediction_file": "lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_PREDICTION_R1.json",
+    "outcome_manifest_file": "lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_OUTCOME_MANIFEST_R1.json",
+    "score_file": "lexigen-omega/evidence/TASK2_PROSPECTIVE_TRANSFER_SCORE_R1.json",
     "prediction_method": "exact primitive-sequence match only; abstain on unseen sequence",
     "covered_candidate_ranking": ["R1", "N1", "R6", "F2", "R3", "F1"],
     "abstained_candidates": ["F4", "N3", "N6"],
     "target_outcome_accessed_before_freeze": false,
-    "verification_workflow_run_id": 32751574194,
-    "verification_status": "success",
+    "prediction_verification_workflow_run_id": 32751574194,
+    "prediction_verification_status": "success",
+    "source_outcome": {
+      "artifact_id": 9535093999,
+      "artifact_digest": "sha256:12617d64a6ea31731e82b0920715248f932941c9a46e7438dfae874bc93a4294",
+      "result_sha256": "6fa211fea73b4c707302a85f72fa4f084d10ebe39c195e76aa6c9dc22839fb62",
+      "candidate_rows": 9,
+      "clean_candidate_rows": 9
+    },
     "scoring_policy": {
       "primary": "pairwise_concordance",
       "secondary": ["spearman_rank_correlation", "top1_hit"],
@@ -95,11 +106,26 @@
       "directional_spearman_minimum": 0.50,
       "require_top1_hit": true,
       "errored_or_infrastructure_rows": "excluded_not_negative"
-    }
+    },
+    "score": {
+      "verdict": "sequence_only_transfer_directionally_supported_on_Task2",
+      "observed_covered_candidates": 6,
+      "pairwise_comparable_pairs": 15,
+      "pairwise_concordant": 12,
+      "pairwise_discordant": 3,
+      "pairwise_concordance": 0.8,
+      "spearman_rank_correlation": 0.6571428571428571,
+      "predicted_top_candidate": "R1",
+      "top1_hit": true,
+      "actual_order_over_observed_covered": ["R1", "R3", "N1", "R6", "F2", "F1"]
+    },
+    "score_reproduction_workflow_run_id": 32814656494,
+    "score_reproduction_status": "success",
+    "interpretation": "positive_one_target_directional_support_only_not_general_transfer_not_agi_evidence"
   },
   "current_V7_preflight_observations": {
     "run_id": 32747466819,
-    "Task2": "in_progress_after_Omega_prediction_freeze_at_last_live_check",
+    "Task2": "completed_clean_9_of_9_candidates_after_Omega_prediction_freeze",
     "Task3": "infrastructure_baseline_failure_missing_hf_transfer_no_candidate_evidence",
     "Task4": "job_completed_but_all_nine_candidates_install_errors_zero_learning_observations",
     "Task5": "completed_but_contaminated_diagnostic_only",
@@ -120,11 +146,15 @@
     "infrastructure failures and errored candidate rows cannot become negative mechanism labels",
     "did not manually translate V6 recipe IDs into Omega primitives because that mapping would be subjective",
     "did not implement a neural preference trainer before prospective multi-repository evidence exists",
-    "after negative V6/V7 evidence, continue iteration on a permanently exposed development pool instead of repeatedly consuming fresh blind denominators"
+    "after negative V6/V7 evidence, continue iteration on a permanently exposed development pool instead of repeatedly consuming fresh blind denominators",
+    "preserved the positive Task2 prospective score before making any learner or search-policy change",
+    "one successful prospective repository is insufficient for a general transfer claim"
   ],
   "next": [
-    "validate the new exposed development archive and Task1 priority report in CI",
-    "move completed failed V6/V7 tasks into the exposed development registry only after their original scientific outcomes are preserved",
+    "preregister a second untouched prospective-development target using only pinned safe metadata and a deterministic selector before source outcome access",
+    "freeze the second target prediction and scorer before its evaluator outcome",
+    "do not migrate Task2 into exposed development until the original V7 scientific status is formally sealed or terminated",
+    "continue multi-task exposed development using only already-consumed V6 and eligible V7/public/synthetic tasks",
     "build multi-task development hindsight and use it to prioritize mechanism/search-policy mutations",
     "add competing searcher lineages once multi-task evidence exists so OMEGA4 self-evolution is evidence-driven",
     "continue exposed development until the treadmill readiness gate is satisfied across at least five families",
