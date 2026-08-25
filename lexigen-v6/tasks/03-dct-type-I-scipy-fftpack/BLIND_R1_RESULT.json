@@ -1,0 +1,143 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 3,
+  "task": "dct_type_I_scipy_fftpack",
+  "family": "signal_processing",
+  "stage": "official_blind_r1_sealed",
+  "status": "completed_clean_positive_causal_negative",
+  "blind_lock_commit": "b4bf5dc1929c87162a05467ad50b63a5f9380d8d",
+  "blind_trigger_commit": "184eb92b7cd2b94e3349c19ba3aeb7002d3b897a",
+  "workflow_run_id": 32880195492,
+  "workflow_run_number": 1,
+  "workflow_run_attempt": 1,
+  "workflow_conclusion": "success",
+  "artifact": {
+    "id": 9575513389,
+    "digest": "sha256:05be219e2186b16a4efa64cf84a9329c01f32b8b31e25484c03026ea103ae854",
+    "size_bytes": 25399,
+    "blind_summary_sha256": "903161115b2e414f4019e6f42908910555acf00a34641452075111a1043ab8bc",
+    "blind_results_jsonl_sha256": "30265914bbf932d8e49bd19b45947bfe795740fa52eb9b1224020b857afe3a69"
+  },
+  "test_manifest": {
+    "name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_test.jsonl",
+    "git_blob_sha1": "5b19ca6d9ca4ae06e6edaab77105e835811ab309",
+    "sha256": "a34c0b34b1b6f4fc06a6dc7a22a8d6f7c3fa86ae3b2a651570222be6725258db",
+    "records": 100
+  },
+  "frozen_clean_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.50,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "by_arm": {
+    "v6_full": {
+      "candidate": "v6_full_r4_b1ef08a2d68a248c0821",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.9165154160821083,
+      "minimum_speedup": 1.8001244469799593,
+      "median_speedup": 1.9124091388635978,
+      "maximum_speedup": 2.055285282012378,
+      "passes_clean_blind_gate": true,
+      "transfer_ids": ["TM-PBEB-01"]
+    },
+    "v6_no_transfer": {
+      "candidate": "v6_no_transfer_r4_4a4e1871b7f7b48b9485",
+      "implementation_class": "scipy_fftpack_reference",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.0021163246777032,
+      "minimum_speedup": 0.9665494061391505,
+      "passes_clean_blind_gate": false
+    },
+    "random_search": {
+      "candidate": "random_search_r1_5d4511cd2a9e13e56d80",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.914722433331729,
+      "minimum_speedup": 1.831965949008669,
+      "passes_clean_blind_gate": true
+    },
+    "static_template": {
+      "candidate": "static_template_r6_d044a19fd4551034dc11",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.9063005772756643,
+      "minimum_speedup": 1.55177429480707,
+      "passes_clean_blind_gate": true
+    },
+    "v5_compatible": {
+      "candidate": "v5_compatible_r2_9f5f55df04a5ad23f542",
+      "implementation_class": "scipy_fftpack_reference",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 0.9994391181374395,
+      "minimum_speedup": 0.8620002122576232,
+      "passes_clean_blind_gate": false
+    },
+    "strong_baseline": {
+      "candidate": "strong_baseline_sb_native_numeric_01_pocketfft_float32",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.9142254960896496,
+      "minimum_speedup": 1.6332929473593754,
+      "passes_clean_blind_gate": true
+    },
+    "recipe_removal_ablation": {
+      "candidate": "recipe_removal_v6_full_r4_b1ef08a2d68a248c0821",
+      "implementation_class": "pocketfft_float32_tolerance_equivalent",
+      "valid": 100,
+      "invalid_output_retries": 0,
+      "harmonic_speedup": 1.9156933464155756,
+      "minimum_speedup": 1.7743532251253065,
+      "passes_clean_blind_gate": true,
+      "preblind_semantic_equivalence_to_full": true,
+      "same_callable_as_full": true
+    }
+  },
+  "comparisons": {
+    "v6_full_over_no_transfer_harmonic_ratio": 1.9124680128312357,
+    "v6_full_over_recipe_removal_harmonic_ratio": 1.0004291238303202,
+    "strong_baseline_time_over_full_time_harmonic": 1.0011962644929433,
+    "selected_full_no_transfer_semantically_distinct": true,
+    "recipe_removal_same_callable_as_full": true,
+    "equivalent_selected_full_implementation_exists_in_random_static_and_strong_baseline": true
+  },
+  "clean_wins": {
+    "v6_full": true,
+    "v6_no_transfer": false,
+    "random_search": true,
+    "static_template": true,
+    "v5_compatible": false,
+    "strong_baseline": true
+  },
+  "causal_conditions": {
+    "full_passes_clean_blind_gate": true,
+    "selected_full_uses_learned_transfer": true,
+    "selected_full_uses_different_family_transfer": false,
+    "selected_full_no_transfer_semantically_distinct": true,
+    "source_family_differs_from_current": false,
+    "causal_separation": true,
+    "recipe_removal_eliminates_qualifying_advantage": false,
+    "strong_baseline_valid_same_denominator": true,
+    "strong_baseline_competitiveness_passes": true
+  },
+  "baseline_qualified_causal_transfer_win": false,
+  "causal_transfer_detected_but_baseline_uncompetitive": false,
+  "task3_counts_toward_v6_clean_win_gate": true,
+  "task3_counts_toward_v6_causal_win_gate": false,
+  "interpretation": "Task 3 is a clean v6_full performance win, but not evidence of cross-family causal transfer. The selected PBEB recipe was learned from the same signal_processing family, the same float32 pocketfft implementation was independently available to random/static/strong-baseline arms, and recipe removal preserved the same callable and essentially identical blind performance.",
+  "blind_workflow_archived_after_success": true,
+  "blind_workflow_archived_commit": "6569312d1e69b877057e04a4ec232967048602ae",
+  "blind_runs_executed": 1,
+  "blind_rerun_permitted": false,
+  "post_blind_candidate_revision_permitted": false,
+  "post_blind_timing_rerun_permitted": false,
+  "threshold_changes": false,
+  "verifier_capacity_loophole_exploited": false
+}
