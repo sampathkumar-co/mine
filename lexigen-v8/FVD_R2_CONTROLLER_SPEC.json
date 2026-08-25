@@ -1,0 +1,48 @@
+{
+  "schema": "lexigen-v8-fvd-r2-controller-spec-r1",
+  "status": "development_controller_frozen_before_r2_calibration_execution",
+  "parent_r1_failed_result": "lexigen-v8/FVD_HISTORICAL_REPLAY_R1_FAILED_RESULT.json",
+  "primary_change_from_r1": "Replace coarse evidence-grade weights with similarity-weighted historical outcome calibration plus source-visible mechanism reachability/bottleneck checks.",
+  "proposal_classes_file": "lexigen-v8/FVD_PROPOSAL_CLASSES_R1.json",
+  "outcome_model": {
+    "method": "beta_smoothed_same_class_similarity_weighted_success_probability",
+    "trait_similarity": "jaccard",
+    "neighbor_weight": "max(0.10, jaccard)^2",
+    "beta_prior_success": 1.0,
+    "beta_prior_failure": 1.0,
+    "utility_multiplier": "0.65 + 0.70 * predicted_success_probability",
+    "no_same_class_records_probability": 0.5
+  },
+  "generic_reachability": {
+    "applies_to_full_no_experience_shuffled_and_retrieval": true,
+    "rules": {
+      "PC-FRONTIER-CERT": {"boost_tags": ["custom_search_hotpath", "explicit_frontier_work"], "blocker_tags": ["opaque_external_solver_dominant"]},
+      "PC-ACTIVE-CORE": {"boost_tags": ["small_active_core_possible", "constraints_or_threshold"], "blocker_tags": []},
+      "PC-REDUCED-REFINE": {"boost_tags": ["redundant_representation_or_modes", "high_dimensional_numeric_structure"], "blocker_tags": []},
+      "PC-PRECISION-BACKEND": {"boost_tags": ["bounded_error_propagation", "precision_change_possible"], "blocker_tags": ["error_amplification_risk"]},
+      "PC-EXEC-CERT": {"boost_tags": ["python_loop_bottleneck", "hot_execution_path"], "blocker_tags": ["opaque_external_solver_dominant"]},
+      "PC-REDUCE-EXEC": {"boost_tags": ["reducible_domain"], "blocker_tags": []},
+      "PC-REP-SPECIALIZE": {"boost_tags": ["specialized_representation_possible", "source_visible_type_shape_or_value_regime"], "blocker_tags": []},
+      "PC-RESTRICT-RECOVER": {"boost_tags": ["provably_irrelevant_work_possible", "local_predicate_available"], "blocker_tags": []}
+    },
+    "boost_factor_per_any_hit": 1.20,
+    "blocker_factor_per_any_hit": 0.35,
+    "floor_factor": 0.20
+  },
+  "arm_semantics": {
+    "fvd_full": "context retrieval * generic reachability * outcome-calibrated utility",
+    "fvd_no_experience": "generic reachability only; no historical outcome or retrieval state",
+    "fvd_shuffled_experience": "context retrieval * generic reachability * deterministically class-permuted outcome records",
+    "retrieval_only": "context retrieval * generic reachability; ignores outcome labels",
+    "evolution_only": "uniform class prior under equal proposal budget"
+  },
+  "anti_overfit_boundary": {
+    "r1_replay_tasks_used_as_r2_calibration_targets": false,
+    "r1_replay_outcomes_imported_into_r2_apprenticeship": false,
+    "official_fvd_holdouts_accessed": false,
+    "blocked_ipwm_real_data_accessed": false,
+    "v4_calibration_is_development_only": true,
+    "future_confirmatory_historical_replay_must_use_different_tasks_after_controller_freeze": true
+  },
+  "claim_boundary": "R2 calibration can only justify freezing this controller for a separate historical confirmatory replay. It is not scientific transfer evidence and cannot unlock official FVD holdouts by itself."
+}
