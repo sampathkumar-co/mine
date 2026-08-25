@@ -1,0 +1,58 @@
+name: LEXIGEN OMEGA R5 Execution Contract
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-proposals-r1]
+    paths: ["lexigen-omega/TRIGGER_R5_CONTRACT"]
+permissions: {contents: read}
+jobs:
+  project-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen pre-contract identities
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          expected = {
+            'proposal': ('lexigen-omega/evidence/PROSPECTIVE_R5_SOURCE_PROPOSALS.json', '1cbfca32e5e37cddd4ae9cb771058a65e5ad1828'),
+            'prediction': ('lexigen-omega/evidence/PROSPECTIVE_R5_TRANSFER_PREDICTION.json', '44c5e87403b4aa0d639be4c080fab89422d50b72'),
+            'scorer': ('lexigen-omega/tools/score_prospective_exact_sequence_r5.py', '01aa06da7b1290b0aa5cf2f94dbcbd44c6b90e20'),
+            'projector': ('lexigen-omega/tools/extract_r5_execution_contract.py', '8b3542f0f00fdaae4ec7dec8a11faca06de04034'),
+          }
+          for label,(path,want) in expected.items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if got != want: raise SystemExit(f'{label} drift: {got} != {want}')
+          m=json.loads(Path('lexigen-omega/evidence/PROSPECTIVE_R5_MATERIALIZATION_RESULT_MANIFEST.json').read_text())
+          assert m['status']=='all_nine_candidates_materialized_and_hash_verified_zero_execution'
+          assert m['candidate_count']==9
+          assert m['independent_verification']['candidate_execution_count_before_manifest']==0
+          lock=json.loads(Path('lexigen-omega/evidence/PROSPECTIVE_R5_EXECUTION_CONTRACT_LOCK.json').read_text())
+          assert lock['access_boundary_at_lock']['R5_performance_contract_accessed'] is False
+          assert lock['access_boundary_at_lock']['R5_tests_accessed'] is False
+          assert lock['access_boundary_at_lock']['R5_timing_accessed'] is False
+          assert lock['access_boundary_at_lock']['R5_outcome_accessed'] is False
+          PY
+      - name: Compile frozen projector
+        run: python -m py_compile lexigen-omega/tools/extract_r5_execution_contract.py
+      - name: Project permitted R5 execution contract only
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+          python lexigen-omega/tools/extract_r5_execution_contract.py \
+            --instance-id python-pillow__Pillow-d8af3fc \
+            --expected-repo python-pillow/Pillow \
+            --expected-base 'd8af3fc23a730dd5e9a6e556263e7be7d8de1c7e^' \
+            --expected-api Image.split \
+            --output r5-contract/R5_EXECUTION_CONTRACT.json
+          sha256sum r5-contract/R5_EXECUTION_CONTRACT.json > r5-contract/R5_EXECUTION_CONTRACT.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-r5-execution-contract
+          path: r5-contract/
+          if-no-files-found: error
+          retention-days: 90
