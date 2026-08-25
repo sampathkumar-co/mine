@@ -1,0 +1,27 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R4_post_seal_integrity_incident",
+  "status": "accidental_automatic_duplicate_execution_non_evidence",
+  "original_authorized_run_id": 32818245194,
+  "original_authorized_branch_head": "a9af80dfb3510f9a1018b22c84853ea777c6c450",
+  "accidental_run_id": 32871084219,
+  "trigger_cause": "GitHub pull_request paths filtering evaluates the aggregate PR diff; because the historical TRIGGER_R4_EVAL file remains part of the PR diff, later synchronize events re-triggered the workflow.",
+  "incident_detection": {
+    "detected_while_accidental_run_in_progress": true,
+    "accidental_result_or_score_read": false,
+    "accidental_outcome_may_enter_scientific_evidence": false,
+    "accidental_outcome_may_update_R5_or_any_predictor": false
+  },
+  "repair": {
+    "workflow_file": ".github/workflows/lexigen-omega-r4-frozen-eval.yml",
+    "repair_commit": "ae2dc7677b8ae6c0092eb3aae80cf8a86800b5b0",
+    "rule": "R4 job now runs only when pull_request.head.sha exactly equals the one authorized scientific head a9af80dfb3510f9a1018b22c84853ea777c6c450; later heads fail closed/skipped."
+  },
+  "scientific_consequence": {
+    "R4_authorized_evidence_count": 1,
+    "accidental_run_credit": false,
+    "accidental_run_must_not_be_ingested": true,
+    "R4_may_not_be_reinterpreted_from_accidental_run": true
+  },
+  "claim_boundary": "Integrity incident only; no scientific, transfer, AGI or breakthrough credit."
+}
