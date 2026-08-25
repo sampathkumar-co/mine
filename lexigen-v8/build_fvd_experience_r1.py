@@ -59,9 +59,19 @@ def verify_manifest(manifest: dict[str, Any]) -> dict[str, str]:
     return verified
 
 
-def make_profiles(classes: dict[str, Any], transfer: dict[str, Any], v5_audit: dict[str, Any], verified: dict[str, str]) -> list[dict[str, Any]]:
+def make_profiles(
+    classes: dict[str, Any],
+    transfer: dict[str, Any],
+    v5_audit: dict[str, Any],
+    verified: dict[str, str],
+    excluded_evidence_tasks: set[str],
+) -> list[dict[str, Any]]:
     learned = transfer["learned_templates"]
-    causal_wins = list(v5_audit.get("causal_transfer_wins", []))
+    causal_wins = [
+        row
+        for row in v5_audit.get("causal_transfer_wins", [])
+        if str(row.get("task", "")) not in excluded_evidence_tasks
+    ]
     causal_count: dict[str, int] = {}
     causal_speedups: dict[str, list[float]] = {}
     target_families: dict[str, set[str]] = {}
@@ -115,7 +125,14 @@ def make_profiles(classes: dict[str, Any], transfer: dict[str, Any], v5_audit: d
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--exclude-evidence-task",
+        action="append",
+        default=[],
+        help="Historical task name whose outcome-derived positive evidence must be removed from this build.",
+    )
     args = parser.parse_args()
+    excluded_evidence_tasks = {str(x) for x in args.exclude_evidence_task}
 
     manifest = load_json(MANIFEST_PATH)
     classes = load_json(CLASSES_PATH)
@@ -126,7 +143,7 @@ def main() -> None:
     r3 = load_json(R3_RESULT_PATH)
     verified = verify_manifest(manifest)
 
-    profiles = make_profiles(classes, transfer, v5_audit, verified)
+    profiles = make_profiles(classes, transfer, v5_audit, verified, excluded_evidence_tasks)
 
     v7_task_ledger = v7_audit.get("task_ledger", {})
     v7_causal_wins = sum(1 for row in v7_task_ledger.values() if row.get("causal_transfer_win") is True)
@@ -156,9 +173,9 @@ def main() -> None:
         "predictive_signal_is_not_transfer": True,
         "strict_gate_exit_status_required": True,
         "evidence": {
-            "v5_task1_clean_performance_win_but_no_causal_transfer": bool(
-                v5_task1.get("v5_full_passed_blind_gate") and not v5_task1.get("causal_transfer_win")
-            ),
+            "v5_task1_clean_performance_win_but_no_causal_transfer": None
+            if "clustering_outliers" in excluded_evidence_tasks
+            else bool(v5_task1.get("v5_full_passed_blind_gate") and not v5_task1.get("causal_transfer_win")),
             "v7_campaign_status": v7_audit.get("status"),
             "v7_confirmed_causal_wins": v7_causal_wins,
             "v7_performance_positive_causal_negative_count": v7_perf_positive_causal_negative,
@@ -199,6 +216,11 @@ def main() -> None:
         "scientific_transfer_evidence_created_by_this_build": False,
         "artifact_sha256": "",
     }
+    if excluded_evidence_tasks:
+        artifact["development_leave_one_out"] = {
+            "excluded_evidence_tasks": sorted(excluded_evidence_tasks),
+            "claim_boundary": "Used only for historical development replay; target outcome-derived positive evidence is excluded before allocation.",
+        }
     artifact_for_hash = dict(artifact)
     artifact_for_hash["artifact_sha256"] = ""
     artifact["artifact_sha256"] = hashlib.sha256(canonical_bytes(artifact_for_hash)).hexdigest()
@@ -209,6 +231,7 @@ def main() -> None:
         "artifact_sha256": artifact["artifact_sha256"],
         "proposal_profile_count": len(profiles),
         "negative_lesson_count": len(negative_lessons),
+        "excluded_evidence_tasks": sorted(excluded_evidence_tasks),
         "v5_confirmed_causal_transfer_wins": artifact["historical_summary"]["v5_confirmed_causal_transfer_wins"],
         "v7_confirmed_causal_transfer_wins": artifact["historical_summary"]["v7_confirmed_causal_transfer_wins"],
         "official_holdout_data_accessed": False,
