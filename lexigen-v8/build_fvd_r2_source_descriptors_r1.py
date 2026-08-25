@@ -171,11 +171,26 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         raw_path = args.algotune_root / str(row["raw_source_path"])
         raw = raw_path.read_bytes()
         raw_sha = sha256_bytes(raw)
+        raw_blob = git_blob_sha1(raw_path)
         if raw_sha != row["raw_source_sha256"]:
             raise RuntimeError(f"raw source sha256 mismatch for {task}: {raw_sha}")
+
+        explicit_raw_blob = row.get("raw_source_git_blob_sha1")
+        if explicit_raw_blob is not None and raw_blob != str(explicit_raw_blob):
+            raise RuntimeError(f"raw source git blob mismatch for {task}: {raw_blob}")
+
+        historical_blob = analysis.get("source_git_blob_sha1")
+        if historical_blob is not None and raw_blob != str(historical_blob):
+            raise RuntimeError(f"historical source git blob disagrees for {task}: {raw_blob} != {historical_blob}")
+
         analysis_sha = analysis.get("source_sha256")
+        historical_sha_mismatch_documented = False
         if analysis_sha is not None and str(analysis_sha) != raw_sha:
-            raise RuntimeError(f"historical source hash disagrees for {task}")
+            if row.get("historical_recorded_source_sha256") != str(analysis_sha):
+                raise RuntimeError(f"historical source sha256 disagrees for {task} without documented provenance anomaly")
+            if explicit_raw_blob is None or str(explicit_raw_blob) != raw_blob:
+                raise RuntimeError(f"historical source sha256 anomaly lacks authoritative Git blob lock for {task}")
+            historical_sha_mismatch_documented = True
 
         source_text = raw.decode("utf-8")
         operators = first_v4_operators(analysis, aux)
@@ -187,7 +202,9 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "source_only_v4_top_operators": operators,
             "source_analysis_blob_sha1": observed_blob,
             "source_aux_blob_sha1": aux_blob,
+            "raw_source_git_blob_sha1": raw_blob,
             "raw_source_sha256": raw_sha,
+            "historical_sha256_mismatch_documented": historical_sha_mismatch_documented,
         })
 
     payload: dict[str, Any] = {
