@@ -1,0 +1,30 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":5,
+  "task":"robust_kalman_filter",
+  "family":"signal_processing",
+  "stage":"task_source_lock",
+  "source_repository":"oripress/AlgoTune",
+  "source_revision":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path":"AlgoTuneTasks/robust_kalman_filter/robust_kalman_filter.py",
+  "source_sha256":"3c589ba1f0d988f1d89db7a21d2f28a6d588334f881a407fbedc1a2c15a5bec2",
+  "source_size_bytes":9521,
+  "campaign_source_screen_blob_sha1":"434264ae20e4e1eccd593006763205e613799409",
+  "task_local_source_screen_result_commit":"d45bd9469b0cac94bac3dba92e6a94106068d3fd",
+  "task_local_source_screen_artifact_id":9576782681,
+  "campaign_preregistered_applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "task_local_later_emitted_but_ineligible_transfer_ids":["TM-PBEB-01"],
+  "transfer_origin_families":{"TM-BFR-01":"graph_discrete","TM-CAC-01":"numerical_optimization","TM-RRR-01":"linear_algebra","TM-PBEB-01":"signal_processing"},
+  "semantic_rules":{
+    "TM-BFR-01":"must fall back to source-equivalent implementation unless a genuine discrete frontier reduction is mechanically derivable; none identified",
+    "TM-CAC-01":"may only receive a distinct implementation if a full convex optimality certificate is independently checkable; no uncertified active-set shortcut allowed",
+    "TM-RRR-01":"may reduce redundant equality-constrained state/noise representation, lift to x/w/v, and must pass full feasibility plus objective certificate",
+    "TM-PBEB-01":"not eligible for transfer instantiation because it was not in the frozen campaign applicability set for Task 5"
+  },
+  "official_verifier":{"feasibility_tolerance":1e-5,"objective_relative_tolerance":0.01,"reference_failure_feasibility_only_fallback":"forbidden_as_candidate_strategy"},
+  "official_train_manifest_opened":false,
+  "official_test_manifest_opened":false,
+  "official_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "threshold_changes":false
+}
