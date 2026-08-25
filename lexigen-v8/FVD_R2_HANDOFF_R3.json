@@ -1,0 +1,15 @@
+{
+  "schema": "lexigen-v8-fvd-r2-handoff-r3",
+  "r2_status": "sealed_failed_immutable",
+  "r2_final_commit_before_handoff": "ead0755a1a5075d21f31642e9a07bfb4cf3ea493",
+  "r2_failure_result": "lexigen-v8/FVD_R2_CALIBRATION_FAILED_RESULT.json",
+  "successor_required": true,
+  "successor_architecture_requirement": "materially different from task-level class outcome weighting",
+  "recommended_r3_thesis": "counterfactual mechanism credit assignment from within-task multi-candidate comparisons",
+  "why": "R2 assigned the same selected-candidate task outcome to every mapped constituent mechanism. The calibration showed only +0.015625 utility versus retrieval/shuffled, zero advantage over no-experience, and worse positive rank than retrieval. A successor should estimate marginal component effects instead of treating all components as equally responsible.",
+  "r2_calibration_tasks_may_be_used_for_r3_apprenticeship": true,
+  "r2_calibration_tasks_may_be_used_for_r3_confirmation": false,
+  "r1_replay_tasks_may_be_used_for_r3_confirmation": false,
+  "official_fvd_holdouts_accessed": false,
+  "breakthrough_claim_allowed": false
+}

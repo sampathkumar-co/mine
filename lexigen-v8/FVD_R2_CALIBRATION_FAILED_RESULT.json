@@ -1,0 +1,102 @@
+{
+  "schema": "lexigen-v8-fvd-r2-calibration-failed-result",
+  "classification": "development_calibration_failed",
+  "r2_controller_status": "killed_no_same_label_retuning_allowed",
+  "workflow_run_id": 32817540942,
+  "workflow_job_id": 97708765844,
+  "trigger_commit": "a0a43e3fc4a9a38800f5e3e2ded1b867929170c5",
+  "execution_lock": "lexigen-v8/FVD_R2_CALIBRATION_LOCK_R2.json",
+  "execution_lock_commit": "af605b6fcd7d7238e6b4b30eb4f4e6e67e2a4bcf",
+  "source_descriptor_sha256": "0f26323c05f1d894f3408d733d879113ca6d2223e00dcbda48dc24ae6548c4b7",
+  "apprenticeship_ledger_sha256": "cfe958c99cebfd72cab12993408373fc468cf38cd61bfcdd53305901d8490de1",
+  "stage1_sha256": "91657576eea0463589e70b3f934150d2606fa265eef0c9ba34d5e1d287d1a7e3",
+  "stage1_allocation_count": 20,
+  "stage1_calibration_outcomes_loaded": false,
+  "result_sha256": "668a3a1d67fb4e51366eacb35f0e4296363d095efb66ac07eedb90436fc7c020",
+  "artifact": {
+    "id": 9551927363,
+    "name": "lexigen-v8-fvd-r2-calibration-r1",
+    "size_bytes": 14445,
+    "zip_sha256": "0a8a5465d6f0491e32dad6ebf94139d23f8aa6012cd19d921e7268e9cdf001c8",
+    "retention_expires_at": "2026-11-23T06:34:12Z"
+  },
+  "gate_checks": {
+    "all_source_hashes_verified": true,
+    "all_split_memberships_verified": true,
+    "stage1_calibration_outcomes_loaded_false": true,
+    "all_equal_budget_checks_pass": true,
+    "full_positive_success_class_top3_tasks": true,
+    "full_mean_positive_best_success_rank_not_worse_than_retrieval": false,
+    "full_mean_positive_best_success_allocation_minus_retrieval": true,
+    "full_mean_negative_max_failed_class_allocation_minus_retrieval": true,
+    "full_mean_task_utility_minus_retrieval": false,
+    "full_mean_task_utility_minus_no_experience": false,
+    "full_mean_task_utility_minus_shuffled": false,
+    "official_fvd_holdouts_accessed_false": true,
+    "scientific_transfer_evidence_false": true
+  },
+  "metrics": {
+    "full_positive_success_class_top3_tasks": 2,
+    "full_mean_positive_best_success_rank": 2.0,
+    "retrieval_mean_positive_best_success_rank": 1.5,
+    "full_mean_positive_best_success_allocation": 3.5,
+    "retrieval_mean_positive_best_success_allocation": 3.0,
+    "full_minus_retrieval_mean_positive_allocation_slots": 0.5,
+    "full_mean_negative_max_failed_class_allocation": 3.5,
+    "retrieval_mean_negative_max_failed_class_allocation": 3.5,
+    "full_minus_retrieval_mean_negative_allocation_slots": 0.0,
+    "mean_task_utility_by_arm": {
+      "fvd_full": 0.5,
+      "fvd_no_experience": 0.5,
+      "fvd_shuffled_experience": 0.484375,
+      "retrieval_only": 0.484375,
+      "evolution_only": 0.5
+    },
+    "full_minus_retrieval_mean_task_utility": 0.015625,
+    "full_minus_no_experience_mean_task_utility": 0.0,
+    "full_minus_shuffled_mean_task_utility": 0.015625
+  },
+  "task_records": [
+    {
+      "task": "communicability",
+      "outcome_type": "positive",
+      "target_classes": ["PC-REDUCE-EXEC", "PC-REP-SPECIALIZE"],
+      "full": {"target_allocation":4,"target_rank":1,"task_utility":0.25},
+      "retrieval_only": {"target_allocation":3,"target_rank":2,"task_utility":0.1875}
+    },
+    {
+      "task": "unit_simplex_projection",
+      "outcome_type": "positive",
+      "target_classes": ["PC-ACTIVE-CORE", "PC-EXEC-CERT", "PC-REDUCE-EXEC"],
+      "full": {"target_allocation":3,"target_rank":3,"task_utility":0.1875},
+      "retrieval_only": {"target_allocation":3,"target_rank":1,"task_utility":0.1875}
+    },
+    {
+      "task": "ode_fitzhughnagumo",
+      "outcome_type": "negative_correctness",
+      "target_classes": ["PC-PRECISION-BACKEND"],
+      "full": {"target_allocation":2,"target_rank":4,"task_utility":0.875},
+      "retrieval_only": {"target_allocation":2,"target_rank":4,"task_utility":0.875}
+    },
+    {
+      "task": "min_dominating_set",
+      "outcome_type": "negative_performance",
+      "target_classes": ["PC-FRONTIER-CERT", "PC-REP-SPECIALIZE", "PC-RESTRICT-RECOVER"],
+      "full": {"target_allocation":5,"target_rank":1,"task_utility":0.6875},
+      "retrieval_only": {"target_allocation":5,"target_rank":1,"task_utility":0.6875}
+    }
+  ],
+  "scientific_diagnosis": "R2 outcome calibration slightly increased allocation to successful classes but did not improve aggregate utility beyond no-experience or evolution-only, did not suppress allocation to historical failure classes relative to retrieval, and worsened mean positive success-class rank relative to retrieval. The learned outcome layer therefore failed to demonstrate useful decision information beyond the source-only controller/retrieval baselines.",
+  "forbidden_next_actions": [
+    "retune R2 controller coefficients on these calibration labels",
+    "weaken R2 calibration thresholds",
+    "replace R2 calibration tasks post hoc",
+    "reinterpret the near-threshold 0.015625 utility margins as passing",
+    "open official FVD holdouts based on R2"
+  ],
+  "allowed_successor": "A materially different R3 architecture on a new branch may use R2 only as historical negative evidence. It must not claim confirmation on R2 calibration tasks after being designed from their labels.",
+  "official_fvd_holdouts_accessed": false,
+  "blocked_ipwm_real_data_accessed": false,
+  "scientific_transfer_evidence": false,
+  "breakthrough_claim_allowed": false
+}

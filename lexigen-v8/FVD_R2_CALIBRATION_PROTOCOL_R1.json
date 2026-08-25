@@ -1,0 +1,45 @@
+{
+  "schema": "lexigen-v8-fvd-r2-calibration-protocol-r1",
+  "status": "frozen_before_calibration_execution",
+  "controller_spec": "lexigen-v8/FVD_R2_CONTROLLER_SPEC.json",
+  "split_file": "lexigen-v8/FVD_R2_V4_SPLIT_R1.json",
+  "source_manifest": "lexigen-v8/FVD_R2_V4_SOURCE_MANIFEST_R1.json",
+  "apprenticeship_outcomes": "lexigen-v8/FVD_R2_APPRENTICESHIP_OUTCOMES_R1.json",
+  "calibration_outcomes": "lexigen-v8/FVD_R2_CALIBRATION_OUTCOMES_R1.json",
+  "proposal_budget_per_task_per_arm": 16,
+  "arms": ["fvd_full","fvd_no_experience","fvd_shuffled_experience","retrieval_only","evolution_only"],
+  "positive_task_count": 2,
+  "negative_task_count": 2,
+  "task_utility": {
+    "positive": "max allocation among successful proposal classes divided by proposal budget",
+    "negative": "1 minus max allocation among failed proposal classes divided by proposal budget"
+  },
+  "frozen_gates": {
+    "all_source_hashes_verified": true,
+    "all_split_memberships_verified": true,
+    "stage1_calibration_outcomes_loaded": false,
+    "all_equal_budget_checks_pass": true,
+    "full_positive_success_class_top3_tasks_min": 2,
+    "full_mean_positive_best_success_rank_not_worse_than_retrieval": true,
+    "full_mean_positive_best_success_allocation_minus_retrieval_min_slots": 0.5,
+    "full_mean_negative_max_failed_class_allocation_minus_retrieval_max_slots": 0.5,
+    "full_mean_task_utility_minus_retrieval_min": 0.02,
+    "full_mean_task_utility_minus_no_experience_min": 0.05,
+    "full_mean_task_utility_minus_shuffled_min": 0.02
+  },
+  "failure_policy": {
+    "threshold_changes_after_execution_allowed": false,
+    "task_changes_after_execution_allowed": false,
+    "reinterpret_failed_gate_as_pass_allowed": false,
+    "r2_controller_retuning_on_same_calibration_labels_allowed": false,
+    "successor_revision_requires_new_branch_and_material_controller_change": true
+  },
+  "pass_policy": {
+    "official_fvd_holdouts_unlocked": false,
+    "scientific_transfer_claim_allowed": false,
+    "next_allowed_step": "freeze R2 controller and run a separate confirmatory historical replay on tasks not used in R1 replay, R2 apprenticeship, or R2 calibration"
+  },
+  "official_fvd_holdouts_accessed": false,
+  "blocked_ipwm_real_data_accessed": false,
+  "scientific_transfer_evidence": false
+}

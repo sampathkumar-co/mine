@@ -1,0 +1,33 @@
+{
+  "schema": "lexigen-v8-fvd-r2-calibration-r1-infra-incident",
+  "classification": "pre_scientific_feedback_source_provenance_hash_incident",
+  "workflow_run_id": 32817139990,
+  "workflow_job_id": 97707612595,
+  "trigger_commit": "7573e8e0c37ed7b7d6330c1ccb80ea07a3861e1e",
+  "failed_step": "Stage 0 - build source-only descriptors",
+  "apprenticeship_ledger_built": false,
+  "stage1_allocations_created": false,
+  "calibration_outcomes_opened": false,
+  "stage2_scoring_started": false,
+  "scientific_feedback_created": false,
+  "official_fvd_holdouts_accessed": false,
+  "blocked_ipwm_real_data_accessed": false,
+  "task": "min_dominating_set",
+  "source_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path": "AlgoTuneTasks/min_dominating_set/min_dominating_set.py",
+  "historical_source_git_blob_sha1": "09fb1538525165ee26fc3ae5f97f55f5936a2a1a",
+  "historical_recorded_source_sha256": "42b577e1a7f839e7a09abbf3c440148bc9c913d84ec6af0f818b08f79cf116f4",
+  "observed_frozen_commit_source_sha256": "4ab79579b796db340a8a2ce10433edb6d6ce0aefc96bb9175aacad333569864c",
+  "diagnosis": "The exact historical Git blob identity resolves correctly at the frozen AlgoTune commit, but the old Task 2 source-analysis auxiliary SHA-256 does not equal the bytes of that blob. This is provenance/hash plumbing, not candidate or outcome evidence.",
+  "allowed_repair": "Preserve all R2 scientific inputs and gates. Replace the anomalous auxiliary SHA-256 expectation with the observed bytes while additionally verifying the authoritative historical Git blob SHA-1. Use a fresh execution lock and trigger.",
+  "forbidden_changes": [
+    "controller retuning",
+    "trait normalization rule changes except source identity verification plumbing",
+    "task split changes",
+    "outcome label changes",
+    "budget changes",
+    "gate threshold changes"
+  ],
+  "artifact_id": 9551796461,
+  "artifact_zip_sha256": "8d5ddba69dad097f3a3e1da7d68ebdbbc4b6af8727f67161a171126136bc4c01"
+}

@@ -1,0 +1,125 @@
+name: LEXIGEN V8 FVD R2 Calibration R1
+
+on:
+  push:
+    branches: [lexigen/v8-fvd-engine-dev-r2]
+    paths:
+      - "lexigen-v8/TRIGGER_FVD_R2_CALIBRATION_R2"
+
+permissions:
+  contents: read
+
+jobs:
+  fvd-r2-calibration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify immutable R1 boundary and R2 execution lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object lexigen-v8/FVD_HISTORICAL_REPLAY_R1_FAILED_RESULT.json)" = "931df4d3ed6a9ad9b635737a6f7e876db50d2d13"
+          test -f lexigen-v8/FVD_ENGINE_DEV_R1_IMMUTABLE
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v8/FVD_R2_CALIBRATION_LOCK_R2.json').read_text())
+          assert lock['status'] == 'frozen_before_trigger'
+          assert lock['scientific_contract_unchanged_from_r1'] is True
+          assert lock['official_fvd_holdouts_accessed'] is False
+          assert lock['blocked_ipwm_real_data_accessed'] is False
+          assert lock['threshold_changes_after_execution_allowed'] is False
+          for row in lock['git_blob_lock']:
+              observed=subprocess.check_output(['git','hash-object',row['path']], text=True).strip()
+              assert observed == row['blob_sha1'], (row['path'], observed, row['blob_sha1'])
+          PY
+
+      - name: Compile frozen R2 implementation
+        run: |
+          python -m py_compile \
+            lexigen-v8/fvd_r2_common.py \
+            lexigen-v8/build_fvd_r2_source_descriptors_r1.py \
+            lexigen-v8/build_fvd_r2_apprenticeship_ledger_r1.py \
+            lexigen-v8/fvd_allocator_r2.py \
+            lexigen-v8/prepare_fvd_r2_calibration_r1.py \
+            lexigen-v8/score_fvd_r2_calibration_r1.py \
+            lexigen-v8/strict_gate_runner.py
+
+      - name: Checkout exact pinned AlgoTune source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p vendor/algotune
+          git -C vendor/algotune init
+          git -C vendor/algotune remote add origin https://github.com/oripress/AlgoTune.git
+          git -C vendor/algotune fetch --depth=1 origin dff9914c10800c7a031c9e8c3d4d1c8cd1b38906
+          git -C vendor/algotune checkout --detach FETCH_HEAD
+          test "$(git -C vendor/algotune rev-parse HEAD)" = "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906"
+
+      - name: Stage 0 - build source-only descriptors
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence-fvd-r2-calibration-r1
+          python lexigen-v8/build_fvd_r2_source_descriptors_r1.py \
+            --algotune-root vendor/algotune \
+            --output evidence-fvd-r2-calibration-r1/SOURCE_DESCRIPTORS_R1.json \
+            | tee evidence-fvd-r2-calibration-r1/source-descriptor-summary.json
+
+      - name: Build apprenticeship-only outcome ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          python lexigen-v8/build_fvd_r2_apprenticeship_ledger_r1.py \
+            --descriptors evidence-fvd-r2-calibration-r1/SOURCE_DESCRIPTORS_R1.json \
+            --output evidence-fvd-r2-calibration-r1/APPRENTICESHIP_LEDGER_R1.json \
+            | tee evidence-fvd-r2-calibration-r1/apprenticeship-summary.json
+
+      - name: Stage 1 - freeze calibration allocations before target outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python lexigen-v8/prepare_fvd_r2_calibration_r1.py \
+            --descriptors evidence-fvd-r2-calibration-r1/SOURCE_DESCRIPTORS_R1.json \
+            --ledger evidence-fvd-r2-calibration-r1/APPRENTICESHIP_LEDGER_R1.json \
+            --output evidence-fvd-r2-calibration-r1/CALIBRATION_STAGE1_R1.json \
+            | tee evidence-fvd-r2-calibration-r1/stage1-summary.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('evidence-fvd-r2-calibration-r1/CALIBRATION_STAGE1_R1.json').read_text())
+          assert p['calibration_outcomes_loaded'] is False
+          assert p['calibration_outcome_file_opened'] is False
+          assert p['all_source_hashes_verified'] is True
+          assert p['all_split_memberships_verified'] is True
+          assert p['all_equal_budget_checks_pass'] is True
+          assert p['official_fvd_holdouts_accessed'] is False
+          assert len(p['allocations']) == 20
+          PY
+
+      - name: Stage 2 - score frozen allocations against sealed calibration outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python lexigen-v8/strict_gate_runner.py \
+            --output evidence-fvd-r2-calibration-r1/strict-score-run.json \
+            -- python lexigen-v8/score_fvd_r2_calibration_r1.py \
+              --stage1 evidence-fvd-r2-calibration-r1/CALIBRATION_STAGE1_R1.json \
+              --output evidence-fvd-r2-calibration-r1/CALIBRATION_RESULT_R1.json
+
+      - name: Upload R2 calibration evidence even on scientific failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v8-fvd-r2-calibration-r1
+          path: evidence-fvd-r2-calibration-r1/
+          if-no-files-found: warn
+          retention-days: 90

@@ -1,0 +1,47 @@
+{
+  "schema": "lexigen-v8-fvd-r2-calibration-outcomes-r1",
+  "status": "sealed_scoring_only_do_not_import_in_stage1",
+  "official_fvd_holdouts_accessed": false,
+  "tasks": [
+    {
+      "task": "communicability",
+      "outcome_evidence": [
+        {"path":"lexigen-v4/tasks/01-communicability/TASK_RESULT.json","blob_sha1":"516a1c15396a7c9997de51fd5b85266d1b18d9b4"},
+        {"path":"lexigen-v4/tasks/01-communicability/TRAINING_RESULT.json","blob_sha1":"116df49f328e60517a6a020cf7bde7840f0c43da"}
+      ],
+      "outcome_type": "positive",
+      "candidate_field": "selected_by_arm.v4_full.candidate",
+      "candidate_source_evidence_index": 1
+    },
+    {
+      "task": "unit_simplex_projection",
+      "outcome_evidence": [
+        {"path":"lexigen-v4/tasks/06-unit-simplex-projection/BLIND_R1_RESULT.json","blob_sha1":"16291261f8ab403f89c804aedacbe5a102affb10"}
+      ],
+      "outcome_type": "positive",
+      "candidate_field": "arms.v4_full.candidate",
+      "candidate_source_evidence_index": 0
+    },
+    {
+      "task": "ode_fitzhughnagumo",
+      "outcome_evidence": [
+        {"path":"lexigen-v4/tasks/07-ode-fitzhughnagumo/TASK_RESULT.json","blob_sha1":"9eaaa6f17a766d5735dbfceec27a5763e253926f"},
+        {"path":"lexigen-v4/tasks/07-ode-fitzhughnagumo/SYNTHETIC_R1_FAILURE.json","blob_sha1":"5c80ca65ec24d2cc69b7323428c90ae8a1de997a"}
+      ],
+      "outcome_type": "negative_correctness",
+      "negative_class_rule": "derive from root_cause text using frozen generic root-cause token mapper",
+      "root_cause_evidence_index": 1
+    },
+    {
+      "task": "min_dominating_set",
+      "outcome_evidence": [
+        {"path":"lexigen-v4/tasks/02-min-dominating-set/TRAINING_R1B_RESULT.json","blob_sha1":"49af936cc0a0a6d630fcedaa96762dd6236b16ec"}
+      ],
+      "outcome_type": "negative_performance",
+      "candidate_field": "selected_by_arm.v4_full.candidate",
+      "candidate_source_evidence_index": 0
+    }
+  ],
+  "class_mapping_rule": "Positive and performance-negative candidate names use the same generic token mapper as apprenticeship. Correctness-negative root causes use the frozen generic root-cause mapper. No manual per-task class labels are stored.",
+  "scientific_transfer_evidence": false
+}

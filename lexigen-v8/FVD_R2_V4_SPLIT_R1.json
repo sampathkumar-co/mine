@@ -1,0 +1,19 @@
+{
+  "schema": "lexigen-v8-fvd-r2-v4-split-r1",
+  "status": "frozen_before_r2_calibration_execution",
+  "seed": "LEXIGEN-V8-FVD-R2-HISTORICAL-SPLIT-2026-08-25-A",
+  "ordering_rule": "sort all eight immutable V4 task names by sha256(seed + NUL + task_name); lowest four are apprenticeship and highest four are development calibration",
+  "ordered": [
+    {"task":"dst_type_II_scipy_fftpack","sha256":"03c11a2c70b018199cbaa63dbdc81793107d268ab6379c4cb30c6e4eafc7ae88","partition":"apprenticeship"},
+    {"task":"tensor_completion_3d","sha256":"464fb2cf00d35dc41ecf45a529113f896609ee60ea8e356a773342c253799563","partition":"apprenticeship"},
+    {"task":"eigenvalues_complex","sha256":"46b735fc39beba528e4e95d333dbd0fd6044d27ce8adbbbf0fb5b93d16dbad91","partition":"apprenticeship"},
+    {"task":"max_common_subgraph","sha256":"51c4e96d06ddaff69710377b35459b8bd4022630a61a24bab324930d2e41109f","partition":"apprenticeship"},
+    {"task":"communicability","sha256":"5974fe880fb0530cd0a3294f21425a38afded11dd7639e7260470724f41570c5","partition":"calibration"},
+    {"task":"unit_simplex_projection","sha256":"8a7ce9fe6bf382e3e749a444fb731433696cc6030d30cbeda9cd6920a85be9ee","partition":"calibration"},
+    {"task":"ode_fitzhughnagumo","sha256":"9d78dfc4d2c1c0368bb6a379688a2cca7faf7e01a2860571c7294feea912944a","partition":"calibration"},
+    {"task":"min_dominating_set","sha256":"a9388de8ee2aa135b3eb1308e1f4c5389ff7fbb7a3bc36d2b464dc2f745f0028","partition":"calibration"}
+  ],
+  "r1_replay_tasks_excluded": ["clustering_outliers","vertex_cover","huggingface__transformers-211f93a"],
+  "official_fvd_holdouts_accessed": false,
+  "scientific_transfer_evidence": false
+}

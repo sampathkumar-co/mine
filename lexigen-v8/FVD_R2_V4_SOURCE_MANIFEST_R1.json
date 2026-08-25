@@ -1,0 +1,85 @@
+{
+  "schema": "lexigen-v8-fvd-r2-v4-source-manifest-r1",
+  "status": "frozen_before_r2_calibration_execution",
+  "algotune_repository": "oripress/AlgoTune",
+  "algotune_commit": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "outcome_paths_present": false,
+  "official_fvd_holdouts_accessed": false,
+  "tasks": [
+    {
+      "task": "dst_type_II_scipy_fftpack",
+      "partition": "apprenticeship",
+      "source_analysis_path": "lexigen-v4/tasks/08-dst-type-II-scipy-fftpack/SOURCE_ANALYSIS_RESULT.json",
+      "source_analysis_blob_sha1": "221e4a2ea2d1c81debd5fe88811241bc8e9c95db",
+      "raw_source_path": "AlgoTuneTasks/dst_type_II_scipy_fftpack/dst_type_II_scipy_fftpack.py",
+      "raw_source_sha256": "2ce2d2171be91aebc31ebcfbc021de7d5775bce3c8ef9cf407b2f902261ecd2b"
+    },
+    {
+      "task": "tensor_completion_3d",
+      "partition": "apprenticeship",
+      "source_analysis_path": "lexigen-v4/tasks/05-tensor-completion-3d/SOURCE_ANALYSIS_RESULT.json",
+      "source_analysis_blob_sha1": "214e4501d2c070326aaa3a68b74929082e76a076",
+      "source_aux_path": "lexigen-v4/tasks/05-tensor-completion-3d/CANDIDATE_PROVENANCE.json",
+      "source_aux_blob_sha1": "1d288c6cef0a04d843a6c2879c3c74f3e73af42d",
+      "raw_source_path": "AlgoTuneTasks/tensor_completion_3d/tensor_completion_3d.py",
+      "raw_source_sha256": "7981f2c627026b29d58d5c066c57d818461fa187883491deca8282b66f96fe7e"
+    },
+    {
+      "task": "eigenvalues_complex",
+      "partition": "apprenticeship",
+      "source_analysis_path": "lexigen-v4/tasks/04-eigenvalues-complex/SOURCE_ANALYSIS_RESULT.json",
+      "source_analysis_blob_sha1": "0b2bbc40f0443282ad74f8ef7fa3570c0f45f0d4",
+      "source_aux_path": "lexigen-v4/tasks/04-eigenvalues-complex/CANDIDATE_PROVENANCE.json",
+      "source_aux_blob_sha1": "6b8e371e920cbc8f7b646d42d608c1ba367b38d0",
+      "raw_source_path": "AlgoTuneTasks/eigenvalues_complex/eigenvalues_complex.py",
+      "raw_source_sha256": "a1035d94f9d998587d0271a2211ff8d0f78bc472c4065141cd5121bdaa68bf6e"
+    },
+    {
+      "task": "max_common_subgraph",
+      "partition": "apprenticeship",
+      "source_analysis_path": "lexigen-v4/tasks/03-max-common-subgraph/SOURCE_ANALYSIS_RESULT.json",
+      "source_analysis_blob_sha1": "e4e5e33050665efa994e4f7f0e70bb9891624745",
+      "raw_source_path": "AlgoTuneTasks/max_common_subgraph/max_common_subgraph.py",
+      "raw_source_sha256": "a3369e7d6cb05f1f8981715a502ea4890d7ed08a0a83668680d08614c3ae2ecf"
+    },
+    {
+      "task": "communicability",
+      "partition": "calibration",
+      "source_analysis_path": "lexigen-v4/tasks/01-communicability/SOURCE_ANALYSIS_LOCK.json",
+      "source_analysis_blob_sha1": "4d602bda77ec30d924cde8d3d4431c4aa7ca621c",
+      "source_aux_path": "lexigen-v4/tasks/01-communicability/CANDIDATE_PROVENANCE.json",
+      "source_aux_blob_sha1": "4b2b311ab4e79c194607617d92fa843e8ffcd96b",
+      "raw_source_path": "AlgoTuneTasks/communicability/communicability.py",
+      "raw_source_sha256": "9eaebde50200ea7de4a332ad92feab591f9db4e9925ab0c06c8a66a15836bf4f"
+    },
+    {
+      "task": "unit_simplex_projection",
+      "partition": "calibration",
+      "source_analysis_path": "lexigen-v4/tasks/06-unit-simplex-projection/SOURCE_ANALYSIS_RESULT.json",
+      "source_analysis_blob_sha1": "5ca25894b2af6097f5b14813e961a8cacb44f135",
+      "raw_source_path": "AlgoTuneTasks/unit_simplex_projection/unit_simplex_projection.py",
+      "raw_source_sha256": "e83f01c31d85d288ad3d631bbc4fe87c1ce4d4e33954ebf9e37d41f93b3ee60b"
+    },
+    {
+      "task": "ode_fitzhughnagumo",
+      "partition": "calibration",
+      "source_analysis_path": "lexigen-v4/tasks/07-ode-fitzhughnagumo/SOURCE_ANALYSIS_RESULT.json",
+      "source_analysis_blob_sha1": "1014d95a1614c8b15d84e564ca7a47d5fa3828be",
+      "source_aux_path": "lexigen-v4/tasks/07-ode-fitzhughnagumo/CANDIDATE_PROVENANCE.json",
+      "source_aux_blob_sha1": "36f49c25eff2a7db05131b92909ee03cb7be0ce1",
+      "raw_source_path": "AlgoTuneTasks/ode_fitzhughnagumo/ode_fitzhughnagumo.py",
+      "raw_source_sha256": "12d5475f73b6b243f0e74fb49c19ccac92a45bb275dd8ee50d52a17dc61c20b2"
+    },
+    {
+      "task": "min_dominating_set",
+      "partition": "calibration",
+      "source_analysis_path": "lexigen-v4/tasks/02-min-dominating-set/SOURCE_ANALYSIS_LOCK.json",
+      "source_analysis_blob_sha1": "450b4e7771933e788aad887a8cc53b39ba974dfa",
+      "raw_source_path": "AlgoTuneTasks/min_dominating_set/min_dominating_set.py",
+      "raw_source_git_blob_sha1": "09fb1538525165ee26fc3ae5f97f55f5936a2a1a",
+      "raw_source_sha256": "4ab79579b796db340a8a2ce10433edb6d6ce0aefc96bb9175aacad333569864c",
+      "historical_recorded_source_sha256": "42b577e1a7f839e7a09abbf3c440148bc9c913d84ec6af0f818b08f79cf116f4",
+      "provenance_note": "Historical Task 2 auxiliary SHA-256 disagrees with the exact Git blob bytes. The authoritative historical source_git_blob_sha1 resolves at the frozen source commit and is verified in the descriptor builder. See FVD_R2_CALIBRATION_R1_INFRA_INCIDENT.json."
+    }
+  ]
+}
