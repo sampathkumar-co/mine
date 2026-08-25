@@ -1,0 +1,30 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":2,
+  "task":"odr",
+  "family":"miscellaneous",
+  "selection_score":"098c15f06d370d41d546387b7c2a2e7b3e05df6298f1ade6a269fb1eeae242d9",
+  "applicability_score":"112ed869171de81c6b1ffe4c865f3a096c89dc293d8056983760453d0d8d6c37",
+  "source_commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path":"AlgoTuneTasks/odr/odr.py",
+  "source_git_blob_sha1":"f2d6b152cf8e8ed391445c33fa857dd3ef91986f",
+  "source_sha256":"076efd6697175397912d5d8e3bc1b121ba7461db3fdbf04263fa6d57f81eb68c",
+  "description_git_blob_sha1":"23ca94df3edb14cfee3932c2cc1666f6e7211be7",
+  "description_sha256":"0faf374aeda6c677158c4bc7e1826000c9c6bb3b2601ac426923adbdb9847233",
+  "applicable_causal_ids":["TM-BFR-01","TM-CAC-01","TM-PBEB-01","TM-RRR-01"],
+  "strong_baseline_ids":["SB-BOOL-EXACT-01","SB-NATIVE-NUMERIC-01","SB-REDUCED-LINALG-01"],
+  "source_semantics":"weighted linear orthogonal-distance regression y = beta0*x + beta1 using scipy.odr.RealData(sx,sy), scipy.odr.Model, and ODR(beta0=[0,1]).run(); verifier requires beta allclose to source solve at rtol=2*eps^(2/3) and effectively-zero atol",
+  "implementation_policy":{
+    "BFR_or_CAC_without_mechanical_structure":"source-equivalent fallback; cannot earn causal credit from timing noise",
+    "RRR":"one-dimensional exact weighted-ODR objective reduction may be attempted but must pass the frozen source-output verifier",
+    "PBEB":"precision/backend staging must respect verifier error budget; float32 is structurally unsafe when its epsilon exceeds the frozen verifier budget and must fall back",
+    "strong_baseline":"direct public general-purpose low-level scipy.odr.odr/ODRPACK call with mechanically equivalent weights; no task-specific external solver inspected"
+  },
+  "official_train_manifest_opened":false,
+  "official_train_payloads_opened":0,
+  "official_test_manifest_opened":false,
+  "official_test_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "human_task_specific_solver_design":false,
+  "threshold_changes":false
+}
