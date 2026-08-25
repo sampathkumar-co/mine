@@ -1,0 +1,40 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_scorer_schema_repair_lock",
+  "status": "frozen_before_R5_source_test_hint_expert_outcome_or_timing_access",
+  "scorer": {
+    "file": "lexigen-omega/tools/score_prospective_exact_sequence_r5.py",
+    "commit": "e02410621f115f551e5e901ef9941e4ce29eb33c",
+    "git_blob_sha1": "01aa06da7b1290b0aa5cf2f94dbcbd44c6b90e20"
+  },
+  "scientific_policy": {
+    "primary": "pairwise_concordance",
+    "minimum_observed_covered_candidates": 4,
+    "minimum_comparable_pairs": 3,
+    "directional_pairwise_concordance_minimum": 0.70,
+    "directional_spearman_minimum": 0.50,
+    "require_top1_hit": true,
+    "errored_or_infrastructure_rows": "excluded_not_negative",
+    "actual_outcome_ties": "excluded_from_pairwise_denominator"
+  },
+  "change_from_R4": {
+    "scientific_thresholds_changed": false,
+    "ranking_rule_changed": false,
+    "coverage_rule_changed": false,
+    "tie_rule_changed": false,
+    "infrastructure_handling_changed": false,
+    "schema_only_change": "EXPECTED_POLICY now includes the already-preregistered primary='pairwise_concordance' field, preventing the exact-dictionary guard mismatch preserved in PROSPECTIVE_R4_SCORING_INCIDENT.json",
+    "R4_result_used_to_tune_policy": false
+  },
+  "access_boundary_at_lock": {
+    "R5_source_accessed": false,
+    "R5_tests_accessed": false,
+    "R5_hints_accessed": false,
+    "R5_expert_patch_accessed": false,
+    "R5_child_commit_message_accessed": false,
+    "R5_performance_spec_accessed": false,
+    "R5_outcome_accessed": false,
+    "R5_timing_accessed": false
+  },
+  "claim_boundary": "Scorer plumbing freeze only; zero scientific or breakthrough credit."
+}
