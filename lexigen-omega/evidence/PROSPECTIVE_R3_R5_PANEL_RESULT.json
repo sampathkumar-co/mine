@@ -1,0 +1,69 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_panel_r3_r5_result",
+  "status": "fixed_panel_selected_and_preserved_before_any_selected_source_access",
+  "panel_lock": "lexigen-omega/evidence/PROSPECTIVE_R3_R5_PANEL_LOCK.json",
+  "selection_workflow": {
+    "run_id": 32815216781,
+    "head_sha": "2a54320357b3a08cf91a8b3becd40ede6fe21d3f",
+    "conclusion": "success",
+    "artifact_id": 9551146476,
+    "artifact_name": "lexigen-omega-prospective-r3-r5-panel",
+    "artifact_digest": "sha256:fff2ab6a5282f97b6c74c82bbf96cc9ae8619f12a2f8af0a7f9c5a1630016d89",
+    "panel_json_sha256": "5bcd6cbc925a3aaa9d32498cfb6dd680d29dc7604a0461c5b1f846393cf8bdd4"
+  },
+  "inventory": {
+    "row_count": 102,
+    "inventory_sha256": "32607e1322cd38b575d8668b6cf63e84266eb7ef142c06b9866cd369996b8a69"
+  },
+  "selected": [
+    {
+      "replication": "R3",
+      "instance_id": "tornadoweb__tornado-ac13ee5",
+      "repo": "tornadoweb/tornado",
+      "base_commit": "ac13ee5f64cd3bceb1628dbcbbfc77445358038f^",
+      "api": "Future.done",
+      "selection_score": "2125085aae5038a5ae81cbaf85f668d055891a0b0f6300d41bf6d658aecf7793",
+      "eligible_row_count_at_slot": 11,
+      "eligible_order_sha256": "7e95bf8e2eafe63da52ccfdce835b188bb0de60190e1e6649f6b99d7139b2049"
+    },
+    {
+      "replication": "R4",
+      "instance_id": "huggingface__datasets-ef3b5dd",
+      "repo": "huggingface/datasets",
+      "base_commit": "ef3b5dd3633995c95d77f35fb17f89ff44990bc4^",
+      "api": "load_dataset_builder",
+      "selection_score": "01da83fa4db6375461372876614ce743b2e6ffbfbcf78b7c8d2a185225df920e",
+      "eligible_row_count_at_slot": 7,
+      "eligible_order_sha256": "90eba5a31bb2e4ff29b84a06c0990285acd6a9fe6d70bdbde46266ca907cb99e"
+    },
+    {
+      "replication": "R5",
+      "instance_id": "python-pillow__Pillow-d8af3fc",
+      "repo": "python-pillow/Pillow",
+      "base_commit": "d8af3fc23a730dd5e9a6e556263e7be7d8de1c7e^",
+      "api": "Image.split",
+      "selection_score": "55eb24d954688c444af60d5793b615aae015a94f689225783a2751d72d9c2008",
+      "eligible_row_count_at_slot": 4,
+      "eligible_order_sha256": "1b5f5d8467a3f7391ed33e5ca03558cc05589cbb1bf4412a9c9b6edb44444a37"
+    }
+  ],
+  "selection_boundary": {
+    "forbidden_column_values_accessed": false,
+    "selected_sources_accessed": false,
+    "selected_tests_accessed": false,
+    "selected_hints_accessed": false,
+    "selected_expert_patches_accessed": false,
+    "selected_outcomes_accessed": false,
+    "selected_timings_accessed": false,
+    "all_three_targets_mandatory": true,
+    "reroll_or_swap_allowed": false
+  },
+  "R2_history": {
+    "status": "counted_invalid_contamination_failure",
+    "incident_file": "lexigen-omega/evidence/PROSPECTIVE_R2_CONTAMINATION_INCIDENT.json",
+    "R2_credit": false
+  },
+  "next_legal_step": "Process R3 first. Resolve caret base through Git object metadata only, preserve the resolved parent identity, open only legal source/public contract, generate and freeze source-only proposals/prediction/scorer before any evaluator outcome. R4 and R5 remain unopened meanwhile.",
+  "claim_boundary": "Fixed prospective-development panel only; not final blind, AGI, breakthrough or general causal-transfer evidence."
+}
