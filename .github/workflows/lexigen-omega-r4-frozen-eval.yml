@@ -11,6 +11,12 @@ permissions:
 
 jobs:
   frozen-r4-eval:
+    # R4 scientific execution was consumed exactly once at branch head
+    # a9af80dfb3510f9a1018b22c84853ea777c6c450 (run 32818245194).
+    # A pull_request paths filter evaluates the aggregate PR diff, so the
+    # historical trigger remains matched on later synchronize events. Fail
+    # closed here: later PR heads must never execute R4 again.
+    if: github.event.pull_request.head.sha == 'a9af80dfb3510f9a1018b22c84853ea777c6c450'
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
@@ -43,8 +49,8 @@ jobs:
           manifest = json.loads(Path(expected['materialized_manifest'][0]).read_text())
           assert manifest['status'] == 'all_nine_candidates_materialized_and_hash_verified_zero_execution'
           assert manifest['candidate_execution_count_before_manifest'] == 0
-          assert manifest['candidate_timing_observed_before_manifest'] is False
-          assert manifest['candidate_outcome_observed_before_manifest'] is False
+          assert manifest['candidate_timing_accessed_before_manifest'] is False
+          assert manifest['candidate_outcome_accessed_before_manifest'] is False
           assert manifest['R5_source_accessed'] is False
           pred = json.loads(Path(expected['prediction'][0]).read_text())
           assert pred['status'] == 'frozen_before_R4_performance_spec_timing_or_outcome'
@@ -76,7 +82,7 @@ jobs:
         run: docker pull slimshetty/gso:gso.eval.x86_64.huggingface__datasets-ef3b5dd
 
       - name: Execute R4 exactly once from frozen candidate bytes
-        id: execute
+        id: runr4
         shell: bash
         run: |
           set +e
@@ -89,8 +95,7 @@ jobs:
           exit 0
 
       - name: Score clean result with preregistered scorer
-        if: ${{ hashFiles('omega-r4-eval/R4_EXECUTION_RESULT.json') != '' }}
-        shell: bash
+        if: always() && hashFiles('omega-r4-eval/R4_EXECUTION_RESULT.json') != ''
         run: |
           python lexigen-omega/tools/score_prospective_exact_sequence.py \
             --prediction lexigen-omega/evidence/PROSPECTIVE_R4_TRANSFER_PREDICTION.json \
@@ -116,7 +121,7 @@ jobs:
               'project':'LEXIGEN OMEGA',
               'stage':'R4_frozen_execution_artifact_seal',
               'workflow_head_sha':os.environ.get('GITHUB_SHA'),
-              'runner_rc':'${{ steps.execute.outputs.runner_rc }}',
+              'runner_rc':'${{ steps.runr4.outputs.runner_rc }}',
               'contract_sha256':h('omega-r4-contract/R4_EXECUTION_CONTRACT.json'),
               'result_sha256':h(result_path),
               'score_sha256':h(score_path),
