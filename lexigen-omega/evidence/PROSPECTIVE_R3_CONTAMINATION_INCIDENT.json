@@ -1,0 +1,33 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_prospective_development_replication_R3",
+  "status": "invalid_experiment_ground_truth_commit_message_contamination_before_prediction_freeze",
+  "panel_result_commit": "e012fdac96fb78151188441850e5cfd8af38ddd9",
+  "selected_target": {
+    "instance_id": "tornadoweb__tornado-ac13ee5",
+    "repo": "tornadoweb/tornado",
+    "base_commit": "ac13ee5f64cd3bceb1628dbcbbfc77445358038f^",
+    "api": "Future.done"
+  },
+  "incident": {
+    "operation": "resolve CHILD_SHA^ through Git object commit REST endpoint",
+    "endpoint_class": "/repos/{owner}/{repo}/git/commits/{CHILD_SHA}",
+    "patch_or_files_exposed": false,
+    "ground_truth_commit_message_exposed": true,
+    "exposed_message_summary": "message described replacing/aligning Tornado Future behavior with asyncio.Future and callback scheduling",
+    "resolved_parent_sha_observed": "42a1d23bf4b11f1575def9875219ee7bc78b2e7e",
+    "exposure_occurred_before_R3_prediction_freeze": true,
+    "target_outcome_or_timing_accessed": false
+  },
+  "scientific_consequence": {
+    "R3_prospective_transfer_credit": false,
+    "R3_may_be_scored_as_prospective_evidence": false,
+    "R3_counts_as_invalid_contaminated_panel_member": true,
+    "R3_may_not_be_swapped_or_replaced": true,
+    "R4_and_R5_remain_valid_unopened_panel_members": true,
+    "R3_target_may_later_enter_exposed_development_pool": true,
+    "contaminated_information_may_not_enter_final_causal_memory": true
+  },
+  "resolver_repair": "For R4/R5 and later, resolve CHILD_SHA^ only inside a non-cognitive CI step: initialize an empty git repo, fetch the child object with depth 2, run git rev-parse FETCH_HEAD^, and emit only the parent SHA plus repository/child identity. Do not call either GitHub commit REST endpoint and do not emit git log/show/cat-file output.",
+  "claim_boundary": "R3 earns zero prospective scientific credit. It remains a counted member of the fixed R3-R5 panel."
+}
