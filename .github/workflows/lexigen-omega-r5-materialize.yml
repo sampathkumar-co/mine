@@ -6,6 +6,11 @@ on:
 permissions: {contents: read}
 jobs:
   materialize:
+    # R5 materialization was consumed successfully at branch head
+    # 0e3855e4b15f48b82b6660c63b59f8b03b49c010 (run 32871469701).
+    # The trigger remains in the aggregate PR diff, so later synchronize
+    # events would otherwise rematerialize automatically. Fail closed.
+    if: github.event.pull_request.head.sha == '0e3855e4b15f48b82b6660c63b59f8b03b49c010'
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
