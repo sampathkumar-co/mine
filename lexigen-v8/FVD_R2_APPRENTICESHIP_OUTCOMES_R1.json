@@ -1,0 +1,38 @@
+{
+  "schema": "lexigen-v8-fvd-r2-apprenticeship-outcomes-r1",
+  "status": "development_training_partition_only",
+  "calibration_outcome_paths_present": false,
+  "official_fvd_holdouts_accessed": false,
+  "tasks": [
+    {
+      "task": "dst_type_II_scipy_fftpack",
+      "outcome_path": "lexigen-v4/tasks/08-dst-type-II-scipy-fftpack/BLIND_R1_RESULT.json",
+      "outcome_blob_sha1": "b4bed81a14ac504c9aa6542e141ded1ada88d4c3",
+      "gate_success": true,
+      "candidate_field": "arms.v4_full.candidate"
+    },
+    {
+      "task": "tensor_completion_3d",
+      "outcome_path": "lexigen-v4/tasks/05-tensor-completion-3d/BLIND_R1_RESULT.json",
+      "outcome_blob_sha1": "b48976ac0638b59d6d365d713a1e55ab7c069651",
+      "gate_success": true,
+      "candidate_field": "arms.v4_full.candidate"
+    },
+    {
+      "task": "eigenvalues_complex",
+      "outcome_path": "lexigen-v4/tasks/04-eigenvalues-complex/TRAIN_R1_RESULT.json",
+      "outcome_blob_sha1": "197a2cccca8457f21f71f111ea8adc9d976d3168",
+      "gate_success": false,
+      "candidate_field": "selected_by_arm.v4_full.candidate"
+    },
+    {
+      "task": "max_common_subgraph",
+      "outcome_path": "lexigen-v4/tasks/03-max-common-subgraph/BLIND_R1_RESULT.json",
+      "outcome_blob_sha1": "8fd97fda873752036404439ec1a0653d9ea4ea82",
+      "gate_success": true,
+      "candidate_field": "arms.v4_full.candidate"
+    }
+  ],
+  "class_mapping_rule": "Candidate names are mapped by the frozen generic token mapper in build_fvd_r2_apprenticeship_ledger_r1.py; no task-specific class labels are stored here.",
+  "scientific_transfer_evidence": false
+}
