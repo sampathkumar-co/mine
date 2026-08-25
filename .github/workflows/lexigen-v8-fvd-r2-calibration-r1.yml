@@ -4,7 +4,7 @@ on:
   push:
     branches: [lexigen/v8-fvd-engine-dev-r2]
     paths:
-      - "lexigen-v8/TRIGGER_FVD_R2_CALIBRATION_R1"
+      - "lexigen-v8/TRIGGER_FVD_R2_CALIBRATION_R2"
 
 permissions:
   contents: read
@@ -31,8 +31,9 @@ jobs:
           python - <<'PY'
           import json, subprocess
           from pathlib import Path
-          lock=json.loads(Path('lexigen-v8/FVD_R2_CALIBRATION_LOCK_R1.json').read_text())
+          lock=json.loads(Path('lexigen-v8/FVD_R2_CALIBRATION_LOCK_R2.json').read_text())
           assert lock['status'] == 'frozen_before_trigger'
+          assert lock['scientific_contract_unchanged_from_r1'] is True
           assert lock['official_fvd_holdouts_accessed'] is False
           assert lock['blocked_ipwm_real_data_accessed'] is False
           assert lock['threshold_changes_after_execution_allowed'] is False
