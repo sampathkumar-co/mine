@@ -1,0 +1,21 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":2,
+  "task":"odr",
+  "stage":"dataset_metadata_r1_sealed",
+  "status":"success",
+  "workflow_run_id":32875089059,
+  "artifact_id":9573558158,
+  "artifact_digest":"sha256:86fce4bc3d78f09f16733f5532dae8b53d1c52f869df4ff9a44e5bbbc0956498",
+  "metadata_sha256":"2200d5db4513ec957e9a850bce90d92b8ebf35446feedca20f087b61bb2da85c",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "directory_response_sha256":"fd4262b85682002a42b8d9da8e4adfa7d90fff208b5b7725032eabfaa2bc90dc",
+  "file_count":2,
+  "train":{"name":"odr_T100ms_n31132_size100_train.jsonl","path":"data/odr/odr_T100ms_n31132_size100_train.jsonl","size":41642,"oid":"ab4be6c0bc48e7b28442544b1152ce79b6bd7b79"},
+  "test":{"name":"odr_T100ms_n31132_size100_test.jsonl","path":"data/odr/odr_T100ms_n31132_size100_test.jsonl","size":41700,"oid":"0fd449c0338949c40279fa93e5f5f9c7aa35c7a0"},
+  "train_manifest_opened":false,
+  "test_manifest_opened":false,
+  "payloads_opened":0,
+  "reports_opened":false,
+  "threshold_changes":false
+}
