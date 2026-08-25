@@ -6,6 +6,9 @@ on:
 permissions: {contents: read}
 jobs:
   discover:
+    # Runtime discovery was consumed once at d12d10ca93ee50c49bfa0472a62686f96a1e9661.
+    # Later synchronize events fail closed because the trigger remains in the PR diff.
+    if: github.event.pull_request.head.sha == 'd12d10ca93ee50c49bfa0472a62686f96a1e9661'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
