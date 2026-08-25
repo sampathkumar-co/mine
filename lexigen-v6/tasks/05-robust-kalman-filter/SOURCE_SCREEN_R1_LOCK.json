@@ -1,0 +1,30 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":5,
+  "task":"robust_kalman_filter",
+  "stage":"source_screen_r1_lock",
+  "source_repository":"oripress/AlgoTune",
+  "source_revision":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path":"AlgoTuneTasks/robust_kalman_filter/robust_kalman_filter.py",
+  "paths":{
+    "source_screen":"lexigen-v6/tasks/05-robust-kalman-filter/source_screen.py",
+    "engine":"lexigen-v5/engine.py",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "workflow":".github/workflows/lexigen-v6-task5-robust-kalman-source-screen-r1.yml"
+  },
+  "git_blob_sha1":{
+    "source_screen":"19eb2e7fcc265a112416bd306f08463c8d5a9968",
+    "engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "workflow":"16ebdca203bc6cef7bc0c926e36fae01fa94e5d0"
+  },
+  "source_hash_known_before_screen":false,
+  "official_train_manifest_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_payloads_opened_before_lock":0,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "candidate_mapper_created_before_source_screen":false,
+  "threshold_changes":false
+}
