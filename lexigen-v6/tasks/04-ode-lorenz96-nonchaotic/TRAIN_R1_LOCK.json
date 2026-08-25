@@ -1,0 +1,72 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 4,
+  "task": "ode_lorenz96_nonchaotic",
+  "family": "scientific_computing",
+  "stage": "train_r1_lock",
+  "paths": {
+    "task_lock": "lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/TASK_LOCK.json",
+    "synthetic_result": "lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/SYNTHETIC_R1_RESULT.json",
+    "metadata_result": "lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/DATASET_METADATA_R1_RESULT.json",
+    "candidates": "lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/candidates.py",
+    "train_shard": "lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/train_shard.py",
+    "aggregate_train": "lexigen-v6/tasks/04-ode-lorenz96-nonchaotic/aggregate_train.py",
+    "engine": "lexigen-v5/engine.py",
+    "transfer_memory": "lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog": "lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "protocol": "lexigen-v6/PROTOCOL.md",
+    "workflow": ".github/workflows/lexigen-v6-task4-lorenz96-train-r1.yml"
+  },
+  "git_blob_sha1": {
+    "task_lock": "cc6517bf539928be9303d4dfe0a2539c5f0d9c18",
+    "synthetic_result": "fc75119dd185d8420bfbec1bf211491abc2d8723",
+    "metadata_result": "46a8272497603d91530bc25ff5e06759166919b2",
+    "candidates": "db28bf29b40cf8b1714318e056657c6f77727119",
+    "train_shard": "9693c4dc2d8604ec7ecc19e13f6c94751bcceffe",
+    "aggregate_train": "7d221c5f457ced4ba5e816b4a8c0f7fb15e6d82e",
+    "engine": "a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory": "811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog": "2b868c03af77860892d8902bd2666cc1263876f7",
+    "protocol": "0b70abf916962f6f0048528d0671a83b38222efc",
+    "workflow": "6094eda19cc097b40be0ad9fd76c7064a5465a1e"
+  },
+  "source_sha256": "629456c15f57d932ded725c14d468bee2a513b97d124ad95d38401841bf68621",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "train_manifest": {
+    "name": "ode_lorenz96_nonchaotic_T100ms_n7856_size100_train.jsonl",
+    "git_blob_sha1": "0a1ba0bc39889f32559e0048d54293915b6deba2",
+    "size": 14552712
+  },
+  "test_manifest_identity_only": {
+    "name": "ode_lorenz96_nonchaotic_T100ms_n7856_size100_test.jsonl",
+    "git_blob_sha1": "201c679a6268ae2f0ef32d75512f29ce9d503b73",
+    "size": 14553050
+  },
+  "candidate_count": 31,
+  "candidate_plan_sha256": "096954486d52240adc3555bad1a4bd3f3603458952454b4316fb5d06f95ff23b",
+  "training_records_expected": 100,
+  "candidate_evaluations_expected": 3100,
+  "frozen_default_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.5,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "runtime": {"python": "3.12", "numpy": "2.5.2", "scipy": "1.17.0", "runner": "ubuntu-24.04"},
+  "source_screen_different_family_transfer_ids": ["TM-BFR-01", "TM-CAC-01"],
+  "source_screen_transfer_interpretation": {
+    "TM-BFR-01": "frozen source-equivalent fallback because no lawful bit-frontier mechanism exists for this continuous ODE",
+    "TM-CAC-01": "frozen source-equivalent fallback because no lawful active-constraint-core mechanism exists for this continuous ODE"
+  },
+  "mechanical_generic_optimization": "Hoist invariant cyclic indices or use fixed cyclic slices while preserving RK45, rtol=1e-8 and atol=1e-8.",
+  "training_revision_budget_total": 3,
+  "training_revision_budget_consumed_before_r1": 0,
+  "scientific_candidate_revision_after_synthetic": false,
+  "candidate_set_changed_after_synthetic": false,
+  "verifier_changed_after_synthetic": false,
+  "thresholds_changed_after_synthetic": false,
+  "train_manifest_opened_before_lock": false,
+  "test_manifest_opened_before_lock": false,
+  "test_payloads_opened_before_lock": false,
+  "public_task_specific_solvers_opened_before_lock": false
+}
