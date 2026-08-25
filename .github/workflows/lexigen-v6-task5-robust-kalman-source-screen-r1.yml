@@ -1,39 +1,14 @@
-name: LEXIGEN v6 Task 5 Robust Kalman Source Screen R1
+name: LEXIGEN v6 Task 5 Robust Kalman Source Screen R1 ARCHIVED
+
 on:
-  push:
-    branches: [lexigen/v6-task5-robust-kalman-filter-r1]
-    paths: ["lexigen-v6/tasks/05-robust-kalman-filter/TRIGGER_SOURCE_SCREEN_R1"]
-permissions: {contents: read}
-env:
-  PYTHONPATH: ${{ github.workspace }}/lexigen-v5:${{ github.workspace }}/lexigen-v6/tasks/05-robust-kalman-filter
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
-  source-screen:
+  archived:
+    if: ${{ false }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - name: Verify frozen source-screen package
-        shell: bash
-        run: |
-          python - <<'PY'
-          import json,subprocess
-          from pathlib import Path
-          lock=json.loads(Path('lexigen-v6/tasks/05-robust-kalman-filter/SOURCE_SCREEN_R1_LOCK.json').read_text())
-          for key,path in lock['paths'].items():
-              got=subprocess.check_output(['git','hash-object',path],text=True).strip();expected=lock['git_blob_sha1'][key]
-              if got!=expected:raise SystemExit(f'source-screen lock mismatch {key}: {got} != {expected}')
-          if lock['official_train_manifest_opened_before_lock'] or lock['official_test_manifest_opened_before_lock'] or lock['official_payloads_opened_before_lock']:
-              raise SystemExit('official-data boundary crossed')
-          PY
-      - name: Compile frozen source screen
-        run: python -m py_compile lexigen-v5/engine.py lexigen-v6/tasks/05-robust-kalman-filter/source_screen.py
-      - name: Execute source-only screening
-        run: python lexigen-v6/tasks/05-robust-kalman-filter/source_screen.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: lexigen-v6-task5-robust-kalman-source-screen-r1
-          path: source-screen.json
-          if-no-files-found: error
-          retention-days: 90
+      - run: echo "Source-screen R1 was consumed exactly once as run 32883779264 and is permanently archived."
