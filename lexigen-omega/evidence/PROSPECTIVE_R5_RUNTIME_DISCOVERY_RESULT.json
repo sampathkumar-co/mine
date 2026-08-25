@@ -1,0 +1,21 @@
+{
+  "project": "LEXIGEN OMEGA",
+  "stage": "omega3_R5_runtime_registry_discovery_before_execution",
+  "status": "official_gso_image_found_without_candidate_execution",
+  "workflow": {
+    "run_id": 32872069781,
+    "head_sha": "d12d10ca93ee50c49bfa0472a62686f96a1e9661",
+    "artifact_id": 9572429119,
+    "artifact_name": "lexigen-omega-r5-runtime-discovery",
+    "artifact_digest": "sha256:465d0102dcefef9708ae4eaf15cedbcfaa4f63b2f1958c1e5ac8c184fd4219a9"
+  },
+  "registry": "slimshetty/gso",
+  "selected_exact_image": "slimshetty/gso:gso.eval.x86_64.python-pillow__pillow-d8af3fc",
+  "discovery_note": "The original guessed tag used uppercase Pillow and did not exist. Docker Hub exposes the exact d8af3fc GSO task under lowercase python-pillow__pillow-d8af3fc.",
+  "matching_tag_count": 11,
+  "candidate_execution_count": 0,
+  "candidate_timing_accessed": false,
+  "candidate_outcome_accessed": false,
+  "scientific_consequence": "Use the official GSO image for baseline and all R5 candidate arms; no substitute runtime is required.",
+  "claim_boundary": "Runtime identity discovery only; zero scientific or breakthrough credit."
+}
