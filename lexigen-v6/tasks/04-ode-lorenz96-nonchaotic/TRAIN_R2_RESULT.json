@@ -1,0 +1,33 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":4,
+  "task":"ode_lorenz96_nonchaotic",
+  "family":"scientific_computing",
+  "stage":"official_training_r2_sealed",
+  "status":"completed",
+  "training_lock_commit":"ea1253708b17bff50cf061d7c1d2b280ca56f270",
+  "training_trigger_commit":"d44213b95baa9b9694fb6f2b979e990b52280725",
+  "workflow_run_id":32882635396,
+  "workflow_run_number":1,
+  "workflow_run_attempt":1,
+  "workflow_conclusion":"success",
+  "artifact":{"id":9576395920,"digest":"sha256:decff480a0fe75bd25a24276c763d8bd4dc5ba6acdd10909401ee34e05ae9754","size_bytes":177618,"training_summary_sha256":"7fd5678766a249b244c56cf2d9cafd71d8133521f3704d9f07177cf3723285d2","training_results_jsonl_sha256":"e975c55432a0d8fadffb1cf6ddfa0f44062777c6f82ed03279677c52dfc46457"},
+  "training_revision":"R2_identity_only_repair",
+  "candidate_evaluations":3100,
+  "selected":{
+    "v6_full":{"candidate":"v6_full_r6_ff3ceb1797f792fdb58e","implementation_class":"sliced_cyclic_rk45_exact","transfer_ids":[],"harmonic_speedup":2.630064987293175,"minimum_speedup":2.0475362176498324},
+    "v6_no_transfer":{"candidate":"v6_no_transfer_r4_d69e86803f54c5a83d06","implementation_class":"sliced_cyclic_rk45_exact","transfer_ids":[],"harmonic_speedup":2.630221068938946,"minimum_speedup":2.112761595784282},
+    "random_search":{"candidate":"random_search_r6_db349a5d7481395a8873","implementation_class":"sliced_cyclic_rk45_exact","transfer_ids":[],"harmonic_speedup":2.6466562966462464,"minimum_speedup":2.1044673624756736},
+    "static_template":{"candidate":"static_template_r5_357e80313b8b9dc3cf36","implementation_class":"sliced_cyclic_rk45_exact","transfer_ids":[],"harmonic_speedup":2.646266903667377,"minimum_speedup":2.1123409738863357},
+    "v5_compatible":{"candidate":"v5_compatible_r4_7c30efb65d2c20ff8cc9","implementation_class":"sliced_cyclic_rk45_exact","transfer_ids":[],"harmonic_speedup":2.635946166086449,"minimum_speedup":2.104057261928668},
+    "strong_baseline":{"candidate":"strong_baseline_sb_native_numeric_01_vectorized_rk45","implementation_class":"sliced_cyclic_rk45_exact","transfer_ids":[],"harmonic_speedup":2.629301357871216,"minimum_speedup":2.1051105894964435}
+  },
+  "architecture_comparison":{"v6_full_over_no_transfer_ratio":0.9999406583546859,"strong_baseline_time_over_full_time_harmonic":1.0002904305433353,"selected_v6_uses_learned_transfer":false,"selected_causal_ids":[],"selected_different_family_transfer_ids":[],"selected_pair_semantically_distinct":false,"equivalent_implementation_available_in_no_transfer":true,"training_causal_separation_condition":false,"training_baseline_qualified_causal_diagnostic":false},
+  "blind_selection_ready":true,
+  "recipe_removal_preblind_semantics":"Selected v6_full has no transfer IDs; removing learned transfer recipes is therefore the same frozen candidate callable and must receive zero causal-transfer credit regardless of timing.",
+  "official_test_manifest_contents_opened":false,
+  "official_test_payloads_opened":0,
+  "scientific_candidate_changes":false,
+  "verifier_changes":false,
+  "threshold_changes":false
+}
