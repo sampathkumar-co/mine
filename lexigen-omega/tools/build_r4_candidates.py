@@ -194,9 +194,15 @@ def transform(before: str, cid: str) -> str:
         after = replace_once(after, old, new, cid)
 
     elif cid == "R3":
-        old = '''        hash = sorted(hashes, key=_get_modification_time)[-1]
+        old = '''        def _get_modification_time(module_hash):
+            return (Path(importable_directory_path) / module_hash / (self.name.split("/")[-1] + ".py")).stat().st_mtime
+
+        hash = sorted(hashes, key=_get_modification_time)[-1]
 '''
-        new = '''        hash = max(
+        new = '''        def _get_modification_time(module_hash):
+            return (Path(importable_directory_path) / module_hash / (self.name.split("/")[-1] + ".py")).stat().st_mtime
+
+        hash = max(
             enumerate(hashes),
             key=lambda item: (_get_modification_time(item[1]), item[0]),
         )[1]
