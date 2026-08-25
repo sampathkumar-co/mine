@@ -1,0 +1,40 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 3,
+  "task": "dct_type_I_scipy_fftpack",
+  "family": "signal_processing",
+  "stage": "dataset_metadata_r1_sealed",
+  "status": "success",
+  "metadata_lock_commit": "83130bb32eb7f784b2543fec28ec2f6102c68137",
+  "trigger_commit": "df41e2ea764187d7858b4eae08d6170df74bd1be",
+  "workflow_run_id": 32879259372,
+  "workflow_run_number": 1,
+  "workflow_run_attempt": 1,
+  "artifact": {
+    "id": 9575119042,
+    "digest": "sha256:295344faef47a634fbab104b22a47c114da39042582ab0c2f9920a5a1c728c4f",
+    "size_bytes": 754,
+    "dataset_metadata_json_sha256": "cfec86ade42748135618dbce331537334b364718ad0014869a159154cdf3ab0e"
+  },
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "directory_response_sha256": "d40e6f362fb272b5a0f42f5adbe23ee72722b4dac54a6b7a795232ae625c3c24",
+  "file_count": 2,
+  "train": {
+    "name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_train.jsonl",
+    "path": "data/dct_type_I_scipy_fftpack/dct_type_I_scipy_fftpack_T100ms_n1958_size100_train.jsonl",
+    "size": 12242,
+    "git_blob_sha1": "8f20ec2c4206d84056af61bd738f94cc8f0c7c1c"
+  },
+  "test": {
+    "name": "dct_type_I_scipy_fftpack_T100ms_n1958_size100_test.jsonl",
+    "path": "data/dct_type_I_scipy_fftpack/dct_type_I_scipy_fftpack_T100ms_n1958_size100_test.jsonl",
+    "size": 12300,
+    "git_blob_sha1": "5b19ca6d9ca4ae06e6edaab77105e835811ab309"
+  },
+  "train_manifest_opened": false,
+  "test_manifest_opened": false,
+  "payloads_opened": 0,
+  "reports_opened": false,
+  "public_task_specific_solvers_opened": false,
+  "threshold_changes": false
+}
