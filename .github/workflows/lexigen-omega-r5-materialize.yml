@@ -1,0 +1,99 @@
+name: LEXIGEN OMEGA R5 Candidate Materialization
+on:
+  pull_request:
+    branches: [lexigen/v7-gso-tasks2-6-proposals-r1]
+    paths: ["lexigen-omega/TRIGGER_R5_MATERIALIZE"]
+permissions: {contents: read}
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify pre-execution R5 identities
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          expected = {
+            'task_start': ('lexigen-omega/evidence/PROSPECTIVE_R5_TASK_START.json', None),
+            'proposal': ('lexigen-omega/evidence/PROSPECTIVE_R5_SOURCE_PROPOSALS.json', '1cbfca32e5e37cddd4ae9cb771058a65e5ad1828'),
+            'prediction': ('lexigen-omega/evidence/PROSPECTIVE_R5_TRANSFER_PREDICTION.json', '44c5e87403b4aa0d639be4c080fab89422d50b72'),
+            'scorer': ('lexigen-omega/tools/score_prospective_exact_sequence_r5.py', '01aa06da7b1290b0aa5cf2f94dbcbd44c6b90e20'),
+            'builder': ('lexigen-omega/tools/build_r5_candidates.py', '7172b5488535a673a4d8ef2e04e633a33035020c'),
+          }
+          for label, (path, want) in expected.items():
+              got = subprocess.check_output(['git','hash-object',path], text=True).strip()
+              if want is not None and got != want:
+                  raise SystemExit(f'{label} drift: {got} != {want}')
+          pred = json.loads(Path(expected['prediction'][0]).read_text())
+          assert pred['status'] == 'frozen_before_R5_performance_spec_timing_or_outcome'
+          assert pred['R5_performance_spec_accessed'] is False
+          assert pred['R5_outcome_accessed'] is False
+          assert pred['R5_timing_accessed'] is False
+          assert pred['R5_ground_truth_message_or_diff_accessed'] is False
+          assert pred['R5_tests_accessed'] is False
+          assert pred['R5_hints_accessed'] is False
+          assert pred['R5_expert_patch_accessed'] is False
+          PY
+      - name: Compile deterministic R5 materializer
+        run: python -m py_compile lexigen-omega/tools/build_r5_candidates.py
+      - name: Pull frozen GSO image and recover only base target file
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="slimshetty/gso:gso.eval.x86_64.python-pillow__Pillow-d8af3fc"
+          docker pull "$IMAGE"
+          C=$(docker create "$IMAGE" true)
+          mkdir -p base/PIL
+          docker cp "$C:/testbed/PIL/Image.py" base/PIL/Image.py
+          docker rm "$C"
+          test "$(git hash-object base/PIL/Image.py)" = "49c9f6ab204a16044355d1d043c16ecef9e044a4"
+      - name: Materialize all nine frozen R5 candidates without execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, shutil, subprocess
+          from pathlib import Path
+          candidates = ['F1','F2','F4','N1','N3','N6','R1','R3','R6']
+          target = Path('PIL/Image.py')
+          out = Path('materialized'); out.mkdir()
+          rows = []
+          for cid in candidates:
+              root = Path('work') / cid
+              dest = root / target
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(Path('base') / target, dest)
+              c_out = out / cid
+              subprocess.run([
+                  'python','lexigen-omega/tools/build_r5_candidates.py',
+                  '--candidate',cid,'--root',str(root),'--output',str(c_out)
+              ], check=True)
+              rows.append(json.loads((c_out / f'R5-{cid}.json').read_text()))
+          payload = {
+              'project':'LEXIGEN OMEGA',
+              'stage':'R5_all_candidates_materialized_before_execution',
+              'instance_id':'python-pillow__Pillow-d8af3fc',
+              'candidate_count':len(rows),
+              'candidate_results':rows,
+              'candidate_execution_count':0,
+              'candidate_timing_observed':False,
+              'candidate_outcome_observed':False,
+              'expert_opt_commit_accessed':False,
+              'expert_diff_accessed':False,
+              'hints_accessed':False,
+              'tests_accessed':False,
+              'status':'materialization_complete_no_execution'
+          }
+          (out/'R5_MATERIALIZATION_RESULT.json').write_text(json.dumps(payload, indent=2, sort_keys=True)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-r5-materialized
+          path: materialized/
+          if-no-files-found: error
+          retention-days: 90
