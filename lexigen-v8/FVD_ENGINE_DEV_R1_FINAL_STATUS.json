@@ -1,0 +1,14 @@
+{
+  "stage": "lexigen_v8_fvd_engine_development_r1_final_status",
+  "status": "sealed_failed_development_replay",
+  "result_commit": "24ca61fd507282ffa8865619ebee59efbe366c70",
+  "handoff_commit_parent": "8bfd5b0b8553fcd6446fbaf598b04ae7bc5da17a",
+  "pr": 325,
+  "workflow_run_id": 32813990356,
+  "failed_scientific_gate_count": 1,
+  "failed_scientific_gate": "full_mean_best_success_class_rank_not_worse_than_retrieval",
+  "official_fvd_holdouts_accessed": false,
+  "blocked_ipwm_real_data_accessed": false,
+  "scientific_transfer_evidence": false,
+  "successor_required": "lexigen/v8-fvd-engine-dev-r2"
+}
