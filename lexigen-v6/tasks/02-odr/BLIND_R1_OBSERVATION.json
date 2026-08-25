@@ -1,0 +1,32 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 2,
+  "task": "odr",
+  "stage": "official_blind_r1_observation",
+  "target_head_sha": "5208681840e8123447cdd97e5167c1b5cd318c93",
+  "run_id": 32877461870,
+  "run_number": 1,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-08-25T17:22:05Z",
+  "updated_at": "2026-08-25T17:23:48Z",
+  "run_attempt": 1,
+  "artifacts": [
+    {"id":9574498981,"name":"lexigen-v6-task2-odr-blind-r1","size_in_bytes":23379,"digest":"sha256:f4d40aa3792dbfd821293a6efcd1aa0d174845b0107232c50cf76ec043d33b85","expired":false},
+    {"id":9574491980,"name":"blind-shard-7","size_in_bytes":3300,"digest":"sha256:f8cee2d27c0eefc0b69e6b6e01fd0d4ccfe2d1c689ab26fe0943a33c4ab2f39b","expired":false},
+    {"id":9574490188,"name":"blind-shard-6","size_in_bytes":3264,"digest":"sha256:9d80e09f2d93e8788a69b4bac55d148ce2f64ed3d69a564218ead375593965dd","expired":false},
+    {"id":9574489710,"name":"blind-shard-1","size_in_bytes":3273,"digest":"sha256:4dd888274b664d6d4ccba990748795aa6dc410f77d2af281251e06f7b04b575e","expired":false},
+    {"id":9574487311,"name":"blind-shard-0","size_in_bytes":3296,"digest":"sha256:f2a582202d6236d4f67dd3c47e3a64897c1aed516578b20de96cbcd6f4b043b2","expired":false},
+    {"id":9574477707,"name":"blind-shard-8","size_in_bytes":3290,"digest":"sha256:fb882f8ce12bba7921d3c7ef81fe8a4575a266e74a06a5cbd427eb93d2dd3b96","expired":false},
+    {"id":9574475886,"name":"blind-shard-5","size_in_bytes":3284,"digest":"sha256:35b79798bcfb9cf9eebbee33558244d911ec4b29eb037c09a24e004417795e75","expired":false},
+    {"id":9574475565,"name":"blind-shard-2","size_in_bytes":3299,"digest":"sha256:4d8c986541cbaa877315dbec9640ccf67734c8585a086dbda2fd13eb56e4eb43","expired":false},
+    {"id":9574475539,"name":"blind-shard-9","size_in_bytes":3263,"digest":"sha256:78074d4dcb0bcd3b7975e0be785b9077b87f76cefbd617cd9c74f6ac76061456","expired":false},
+    {"id":9574475408,"name":"blind-shard-4","size_in_bytes":3282,"digest":"sha256:f7e21d96f9305c5faa07a924f1871e884eca1e0daeb2e45014989fd30a2604e5","expired":false},
+    {"id":9574474294,"name":"blind-shard-3","size_in_bytes":3298,"digest":"sha256:c1e153cfa4a8c413cd432aa6a26f22c05bf2d6ee4fcb1dc171247cd786315e37","expired":false}
+  ],
+  "blind_summary_sha256": "424a398ca44bf656c3751f0867bf98c3170b529bed325abd77d9118eb92cb469",
+  "blind_results_jsonl_sha256": "9aa9c5f141fbaa0e478b3b985de073edd7fbca366dcb4531d5a6f293cce816d6",
+  "observer_changed_blind_execution": false,
+  "observer_opened_benchmark_test_data_before_execution": false
+}

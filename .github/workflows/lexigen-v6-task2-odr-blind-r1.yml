@@ -1,0 +1,13 @@
+name: LEXIGEN v6 Task 2 ODR Official Blind R1 (Archived)
+on:
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  archived:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Blind boundary already consumed
+        run: |
+          echo "Task 2 ODR official blind R1 is sealed by workflow run 32877461870."
+          echo "Do not rerun blind evaluation; this workflow is retained only as provenance."
+          exit 1

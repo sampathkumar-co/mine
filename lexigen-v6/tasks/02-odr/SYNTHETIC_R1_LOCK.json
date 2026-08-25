@@ -1,0 +1,32 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":2,
+  "task":"odr",
+  "stage":"synthetic_r1_lock",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/02-odr/TASK_LOCK.json",
+    "candidates":"lexigen-v6/tasks/02-odr/candidates.py",
+    "synthetic":"lexigen-v6/tasks/02-odr/synthetic.py",
+    "engine":"lexigen-v5/engine.py",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "workflow":".github/workflows/lexigen-v6-task2-odr-synthetic-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"778381c761c23bed5c988f76fe148546c78b41e8",
+    "candidates":"2d0e9497a12fcda9b6dd4d741756fe583889af34",
+    "synthetic":"f8b4a5f5d956375365c4d723e918bcd0817d5212",
+    "engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "workflow":"89d5b29e67521ea3291f692654c5209405589e71"
+  },
+  "runtime":{"python":"3.12","numpy":"2.5.2","scipy":"1.17.0"},
+  "source_sha256":"076efd6697175397912d5d8e3bc1b121ba7461db3fdbf04263fa6d57f81eb68c",
+  "official_train_manifest_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "candidate_mapping_frozen_before_official_training":true,
+  "strong_baseline_instantiation_frozen_before_official_training":true,
+  "threshold_changes":false
+}

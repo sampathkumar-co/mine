@@ -1,0 +1,70 @@
+name: LEXIGEN v6 Task 2 ODR Official Training R1
+on:
+  pull_request:
+    branches: [lexigen/v6-preregister-result-r1]
+    paths: ["lexigen-v6/tasks/02-odr/TRIGGER_TRAIN_R1"]
+permissions: {contents: read}
+jobs:
+  train:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen training package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/tasks/02-odr/TRAIN_R1_LOCK.json').read_text())
+          for k,p in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',p],text=True).strip()
+              if got!=lock['git_blob_sha1'][k]:raise SystemExit(f'train lock mismatch {k}: {got}')
+          if lock['train_manifest_opened_before_lock'] or lock['test_manifest_opened_before_lock'] or lock['test_payloads_opened_before_lock']:
+              raise SystemExit('training boundary crossed')
+          PY
+      - run: python -m pip install --disable-pip-version-check --no-cache-dir numpy==2.5.2 scipy==1.17.0
+      - name: Fetch exact frozen task source
+        shell: bash
+        run: |
+          curl -L --fail --retry 3 -A 'LEXIGEN-v6-task2-train-r1' -o task-source.py 'https://raw.githubusercontent.com/oripress/AlgoTune/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/odr/odr.py'
+          python - <<'PY'
+          import hashlib
+          b=open('task-source.py','rb').read();assert hashlib.sha256(b).hexdigest()=='076efd6697175397912d5d8e3bc1b121ba7461db3fdbf04263fa6d57f81eb68c'
+          PY
+      - run: python -m py_compile lexigen-v6/tasks/02-odr/candidates.py lexigen-v6/tasks/02-odr/train_shard.py lexigen-v6/tasks/02-odr/aggregate_train.py lexigen-v5/engine.py
+      - name: Evaluate official training shard
+        run: python lexigen-v6/tasks/02-odr/train_shard.py --shard ${{ matrix.shard }} --source task-source.py --output train-out/train-shard-${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task2-odr-train-shard-${{ matrix.shard }}
+          path: train-out/train-shard-${{ matrix.shard }}.jsonl
+          if-no-files-found: error
+          retention-days: 90
+  aggregate:
+    needs: train
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lexigen-v6-task2-odr-train-shard-*
+          path: all-shards
+          merge-multiple: false
+      - name: Aggregate and freeze one candidate per arm
+        run: python lexigen-v6/tasks/02-odr/aggregate_train.py --input all-shards --output training-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task2-odr-training-r1-complete
+          path: |
+            training-evidence/training-summary.json
+            training-evidence/training-results.jsonl
+          if-no-files-found: error
+          retention-days: 90

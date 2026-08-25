@@ -1,0 +1,39 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":2,
+  "task":"odr",
+  "stage":"train_r1_lock",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/02-odr/TASK_LOCK.json",
+    "synthetic_result":"lexigen-v6/tasks/02-odr/SYNTHETIC_R1_RESULT.json",
+    "metadata_result":"lexigen-v6/tasks/02-odr/DATASET_METADATA_R1_RESULT.json",
+    "candidates":"lexigen-v6/tasks/02-odr/candidates.py",
+    "train_shard":"lexigen-v6/tasks/02-odr/train_shard.py",
+    "aggregate_train":"lexigen-v6/tasks/02-odr/aggregate_train.py",
+    "engine":"lexigen-v5/engine.py",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "workflow":".github/workflows/lexigen-v6-task2-odr-train-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"778381c761c23bed5c988f76fe148546c78b41e8",
+    "synthetic_result":"eda3c4e0b47eeade94383efd5ca233a36806bd2d",
+    "metadata_result":"cb6b322d518be45a9f697df34b2b5fd773b1e5d2",
+    "candidates":"2d0e9497a12fcda9b6dd4d741756fe583889af34",
+    "train_shard":"c6f7626eaf6d8ec4199d97c7205e75a8e58369a2",
+    "aggregate_train":"e89ad05d38ec1731f389933211d1e600d745411b",
+    "engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "workflow":"f975980eb946b8363b27c7820ad0dbf15080a81a"
+  },
+  "runtime":{"python":"3.12","numpy":"2.5.2","scipy":"1.17.0"},
+  "candidate_count":27,
+  "candidate_plan_sha256":"ad7f18eedb5a633f9cf5071371022007fa08c84cbc28eeefcfb95dd116dcb9ac",
+  "train":{"name":"odr_T100ms_n31132_size100_train.jsonl","size":41642,"oid":"ab4be6c0bc48e7b28442544b1152ce79b6bd7b79"},
+  "test":{"name":"odr_T100ms_n31132_size100_test.jsonl","size":41700,"oid":"0fd449c0338949c40279fa93e5f5f9c7aa35c7a0"},
+  "train_manifest_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "test_payloads_opened_before_lock":false,
+  "threshold_changes":false
+}

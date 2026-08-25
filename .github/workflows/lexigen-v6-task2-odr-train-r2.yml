@@ -1,0 +1,13 @@
+name: LEXIGEN v6 Task 2 ODR Official Training R2 (Archived)
+on:
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  archived:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Training boundary already consumed
+        run: |
+          echo "Task 2 ODR official training R2 is sealed by workflow run 32876434953."
+          echo "Do not rerun training; this workflow is retained only as provenance."
+          exit 1
