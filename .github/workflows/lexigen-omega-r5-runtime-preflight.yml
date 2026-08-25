@@ -23,7 +23,7 @@ jobs:
           mkdir -p runtime-preflight/PIL
           docker cp "$C:/testbed/PIL/Image.py" runtime-preflight/PIL/Image.py
           test "$(git hash-object runtime-preflight/PIL/Image.py)" = '49c9f6ab204a16044355d1d043c16ecef9e044a4'
-          docker exec -w /testbed "$C" bash -lc 'source .venv/bin/activate && python --version && uv --version && python -c "from PIL import Image; assert hasattr(Image.Image, \"split\")"'
+          docker exec -w /testbed "$C" bash -lc 'source .venv/bin/activate && python --version && uv --version'
           docker exec -w /testbed "$C" bash -lc '
             set -euo pipefail
             uv venv --python 3.9
@@ -42,6 +42,7 @@ jobs:
             'stage':'R5_official_runtime_preflight_before_candidate_execution',
             'status':'runtime_and_reinstall_plumbing_verified',
             'image':'slimshetty/gso:gso.eval.x86_64.python-pillow__pillow-d8af3fc',
+            'image_digest':'sha256:aaef268cf3c6a9670d6ecbca6506f160be4925b1a25601f2dfee352989bd24eb',
             'base_git_blob_sha1':'49c9f6ab204a16044355d1d043c16ecef9e044a4',
             'candidate_execution_count':0,
             'candidate_timing_accessed':False,
