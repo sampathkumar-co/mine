@@ -1,0 +1,38 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 4,
+  "task": "ode_lorenz96_nonchaotic",
+  "family": "scientific_computing",
+  "stage": "task_source_lock",
+  "source_repository": "oripress/AlgoTune",
+  "source_revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path": "AlgoTuneTasks/ode_lorenz96_nonchaotic/ode_lorenz96_nonchaotic.py",
+  "source_sha256": "629456c15f57d932ded725c14d468bee2a513b97d124ad95d38401841bf68621",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "source_screen_result_blob": "434264ae20e4e1eccd593006763205e613799409",
+  "source_screen_final_index": 4,
+  "source_screen_applicable_causal_ids": ["TM-BFR-01", "TM-CAC-01"],
+  "source_screen_applicability_score": "20ba979bff739e699ebb6da1b4eb445b010d5bd5bc88957e72a9c57cf8f9ef66",
+  "source_semantics": {
+    "system": "non-chaotic Lorenz-96, F=2",
+    "reference_integrator": "scipy.integrate.solve_ivp RK45",
+    "reference_rtol": 1e-8,
+    "reference_atol": 1e-8,
+    "reference_output": "final state only",
+    "verifier": "numpy.allclose against reference final state",
+    "verifier_rtol": 1e-5,
+    "verifier_atol": 1e-8,
+    "mechanical_optimization_opportunity": "Reference RHS reconstructs three static cyclic index arrays on every derivative call even though N is invariant. Hoisting the arrays or replacing them with fixed cyclic slices preserves the identical algebra and RK45 stopping semantics."
+  },
+  "transfer_interpretation_frozen_before_training": {
+    "TM-BFR-01": "fingerprint false-positive fallback: continuous ODE has no lawful bit-frontier restriction",
+    "TM-CAC-01": "fingerprint false-positive fallback: continuous ODE has no lawful active-constraint core",
+    "different_family_transfer_ids": ["TM-BFR-01", "TM-CAC-01"]
+  },
+  "official_train_manifest_opened": false,
+  "official_test_manifest_opened": false,
+  "official_payloads_opened": 0,
+  "public_task_specific_solvers_opened": false,
+  "task_swap_or_reclassification": false,
+  "threshold_changes": false
+}
