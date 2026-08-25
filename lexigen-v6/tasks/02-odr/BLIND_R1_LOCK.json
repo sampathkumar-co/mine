@@ -1,0 +1,168 @@
+{
+  "campaign": "LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index": 2,
+  "task": "odr",
+  "family": "miscellaneous",
+  "stage": "blind_r1_lock",
+  "source_sha256": "076efd6697175397912d5d8e3bc1b121ba7461db3fdbf04263fa6d57f81eb68c",
+  "dataset_revision": "bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "test_manifest_identity": {
+    "name": "odr_T100ms_n31132_size100_test.jsonl",
+    "size": 41700,
+    "git_blob_sha1": "0fd449c0338949c40279fa93e5f5f9c7aa35c7a0"
+  },
+  "selected_by_arm": {
+    "v6_full": {
+      "candidate": "v6_full_r4_b1ef08a2d68a248c0821",
+      "implementation_class": "precision_budgeted_lowlevel_odr",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "operators": ["dtype_specialization", "native_backend_substitution", "risk_aware_staging"],
+      "transfer_ids": ["TM-PBEB-01"],
+      "learned_template": "precision_backend_error_budget",
+      "baseline_id": null
+    },
+    "v6_no_transfer": {
+      "candidate": "v6_no_transfer_r2_b2614109e1a5ccc10c14",
+      "implementation_class": "scipy_odr_reference",
+      "semantic_implementation_key": "scipy_odr_reference",
+      "operators": ["active_set_decomposition", "bit_parallel_representation", "sparse_frontier_search"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "random_search": {
+      "candidate": "random_search_r3_4ff38c49ab25e45cbe27",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "operators": ["native_backend_substitution", "risk_aware_staging"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "static_template": {
+      "candidate": "static_template_r5_357e80313b8b9dc3cf36",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "operators": ["contiguous_layout", "vectorized_batch_kernel"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "v5_compatible": {
+      "candidate": "v5_compatible_r4_7c30efb65d2c20ff8cc9",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "operators": ["vectorized_batch_kernel", "active_set_decomposition", "bit_parallel_representation"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": null
+    },
+    "strong_baseline": {
+      "candidate": "strong_baseline_sb_native_numeric_01_lowlevel_odr",
+      "implementation_class": "lowlevel_odrpack_direct_weights",
+      "semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+      "operators": ["direct_general_purpose_numeric_backend"],
+      "transfer_ids": [],
+      "learned_template": null,
+      "baseline_id": "SB-NATIVE-NUMERIC-01"
+    }
+  },
+  "recipe_removal_ablation": {
+    "candidate": "recipe_removal_v6_full_r4_b1ef08a2d68a248c0821",
+    "source_candidate": "v6_full_r4_b1ef08a2d68a248c0821",
+    "removed_transfer_ids": ["TM-PBEB-01"],
+    "resulting_transfer_ids": [],
+    "retained_operators": ["dtype_specialization", "native_backend_substitution", "risk_aware_staging"],
+    "resulting_implementation_class": "lowlevel_odrpack_direct_weights",
+    "resulting_semantic_implementation_key": "lowlevel_odrpack_direct_weights",
+    "same_callable_as_full": false,
+    "preblind_semantic_equivalence_to_full": true,
+    "mapping_reason": "The frozen PBEB precision guard deterministically retains float64 at the verifier tolerance and then calls the same low-level ODRPACK direct-weight backend. Removing TM-PBEB-01 leaves native_backend_substitution, whose already-frozen generic mapper invokes the direct low-level callable. The wrapper and direct callable differ syntactically but not in the effective numerical mechanism on the frozen runtime.",
+    "qualifying_advantage_elimination_rule": "Ablation fails the frozen clean blind gate OR full harmonic speedup is at least 1.25x ablation with equal validity and retry counts."
+  },
+  "causal_preblind_diagnostics": {
+    "selected_full_uses_learned_transfer": true,
+    "selected_causal_id": "TM-PBEB-01",
+    "learned_recipe_source_family": "signal_processing",
+    "current_family": "miscellaneous",
+    "source_family_differs_from_current": true,
+    "selected_full_no_transfer_semantically_distinct": true,
+    "selected_full_no_transfer_implementation_class_equal": false,
+    "equivalent_implementation_available_in_no_transfer": true,
+    "recipe_removal_semantically_equivalent_to_full": true,
+    "training_causal_separation_condition": false,
+    "training_baseline_qualified_causal_diagnostic": false,
+    "preblind_claim_caveat": "The selected full and selected no-transfer candidates are distinct, satisfying the literal selected-pair condition, but an equivalent low-level ODRPACK implementation is already available to no-transfer/random/static/v5/baseline pools and the frozen recipe-removal replay is semantically equivalent to full. Blind timing cannot erase this provenance caveat or manufacture unique causal credit."
+  },
+  "training_orchestration_provenance": {
+    "r1_failure_preserved": "lexigen-v6/tasks/02-odr/TRAIN_R1_ATTEMPT1_FAILURE.json",
+    "r1_candidate_executions": 0,
+    "r2_authoritative_workflow_run_id": 32876434953,
+    "r2_trigger_commit": "38af7bda58ec187c6475934bdf25f634c6c5076e",
+    "r2_lock_checkpoint": "2578a1513c8d82746db1941c90d665876f62fb13",
+    "r2_training_artifact_id": 9574125356,
+    "r2_training_artifact_digest": "sha256:1e527cd5d86587b4d586c50a05cb10ea7a652b6e103625b4ace5a9e49987622c",
+    "r2_workflow_archived_after_success": true,
+    "r2_workflow_archive_commit": "ed5cb1ef4350101c4bb159b1caa666de721f0786",
+    "duplicate_r2_outputs_used_for_selection": false,
+    "candidate_selection_changed_after_r2": false,
+    "scientific_effect": "Only the single successful R2 aggregate is authoritative. Later commits cannot retrigger R2 because the PR-path workflow was archived before blind construction."
+  },
+  "frozen_clean_gate": {
+    "valid_required": 100,
+    "harmonic_speedup_minimum": 1.50,
+    "minimum_speedup": 1.05,
+    "invalid_output_retries": 0
+  },
+  "frozen_causal_rules": {
+    "full_over_no_transfer_ratio_if_no_transfer_clean": 1.25,
+    "full_over_recipe_removal_ratio_if_ablation_clean": 1.25,
+    "strong_baseline_time_over_full_time_minimum": 0.80,
+    "all_eight_conditions_required": true
+  },
+  "paths": {
+    "task_lock": "lexigen-v6/tasks/02-odr/TASK_LOCK.json",
+    "training_lock": "lexigen-v6/tasks/02-odr/TRAIN_R2_LOCK.json",
+    "training_result": "lexigen-v6/tasks/02-odr/TRAIN_R2_RESULT.json",
+    "candidates": "lexigen-v6/tasks/02-odr/candidates.py",
+    "train_shard": "lexigen-v6/tasks/02-odr/train_shard.py",
+    "synthetic": "lexigen-v6/tasks/02-odr/synthetic.py",
+    "blind_shard": "lexigen-v6/tasks/02-odr/blind_shard.py",
+    "aggregate_blind": "lexigen-v6/tasks/02-odr/aggregate_blind.py",
+    "proposal_engine": "lexigen-v5/engine.py",
+    "protocol": "lexigen-v6/PROTOCOL.md",
+    "transfer_memory": "lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog": "lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "blind_workflow": ".github/workflows/lexigen-v6-task2-odr-blind-r1.yml"
+  },
+  "git_blob_sha1": {
+    "task_lock": "778381c761c23bed5c988f76fe148546c78b41e8",
+    "training_lock": "ca522a59fd8d25004acdf659b5a8698abd4461cb",
+    "training_result": "2ee961edad9e1c7c3114dbe9920ffb747b88a33e",
+    "candidates": "2d0e9497a12fcda9b6dd4d741756fe583889af34",
+    "train_shard": "c6f7626eaf6d8ec4199d97c7205e75a8e58369a2",
+    "synthetic": "f8b4a5f5d956375365c4d723e918bcd0817d5212",
+    "blind_shard": "3baf948e9ae0475f89ad5b6e3901aa7be63ee2a9",
+    "aggregate_blind": "57f3cf9630aed80af339623ead934d871dc10826",
+    "proposal_engine": "a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "protocol": "0b70abf916962f6f0048528d0671a83b38222efc",
+    "transfer_memory": "811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog": "2b868c03af77860892d8902bd2666cc1263876f7",
+    "blind_workflow": "1b7f032ef49164a03c2cf447c9437ecf9983e267"
+  },
+  "runtime_versions": {
+    "python": "3.12",
+    "numpy": "2.5.2",
+    "scipy": "1.17.0"
+  },
+  "training_result_artifact_digest": "sha256:1e527cd5d86587b4d586c50a05cb10ea7a652b6e103625b4ace5a9e49987622c",
+  "official_test_manifest_opened_before_lock": false,
+  "official_test_payloads_opened_before_lock": 0,
+  "blind_runs_completed_before_trigger": 0,
+  "exactly_one_official_blind_run_allowed": true,
+  "invalid_output_retries_allowed": 0,
+  "post_blind_candidate_revision_allowed": false,
+  "post_blind_timing_rerun_allowed": false,
+  "threshold_changes": false,
+  "verifier_capacity_loophole_exploited": false
+}
