@@ -1,0 +1,85 @@
+{
+  "schema": "lexigen-v8-fvd-historical-replay-input-r1",
+  "status": "source_only_frozen_before_replay",
+  "official_holdout_data_accessed": false,
+  "outcome_fields_present": false,
+  "tasks": [
+    {
+      "replay_id": "v5-task1-clustering-outliers",
+      "historical_task_name_for_exclusion": "clustering_outliers",
+      "source_record_path": "lexigen-v5/tasks/01-clustering-outliers/SOURCE_R1_RESULT.json",
+      "source_record_git_blob_sha1": "e3b19ce4e44f6717a3797ef822b9db95691c0a12",
+      "source_record_pre_result_boundary": {
+        "official_training_manifest_opened": false,
+        "official_training_payloads_opened": 0,
+        "official_test_manifest_opened": false,
+        "official_test_payloads_opened": 0
+      },
+      "task_descriptor": {
+        "task_descriptor_id": "historical-replay-v5-task1",
+        "traits": [
+          "approximate_verifier",
+          "numeric_array",
+          "exact_or_tolerance_certificate",
+          "constraints_or_threshold",
+          "high_dimensional_numeric_structure",
+          "tolerance_verifier",
+          "discrete",
+          "set_or_boolean_structure",
+          "iterative_or_dynamical_long_horizon"
+        ]
+      },
+      "trait_derivation": "Deterministic normalization of the sealed source fingerprint features: approximate_verifier; array+numeric; certificate; threshold; high_dimensional; tolerance; discrete; set/boolean; iterative+scientific_dynamics."
+    },
+    {
+      "replay_id": "v5-task10-vertex-cover",
+      "historical_task_name_for_exclusion": "vertex_cover",
+      "source_record_path": "lexigen-v5/tasks/10-vertex-cover/SOURCE_R1_RESULT.json",
+      "source_record_git_blob_sha1": "352ac699d44264b1a1c86439bea7e107578857c8",
+      "source_record_pre_result_boundary": {
+        "official_training_manifest_opened": false,
+        "official_training_payloads_opened": 0,
+        "official_test_manifest_opened": false,
+        "official_test_payloads_opened": 0
+      },
+      "task_descriptor": {
+        "task_descriptor_id": "historical-replay-v5-task10",
+        "traits": [
+          "discrete",
+          "set_or_boolean_structure",
+          "sparse_or_frontier_search",
+          "exact_or_structural_certificate",
+          "constraints_or_threshold"
+        ]
+      },
+      "trait_derivation": "Normalized from the sealed pre-training source semantics: discrete minimum vertex cover over graph edge/set structure, search over candidate covers, cardinality bound, and exact optimal-cardinality verification."
+    },
+    {
+      "replay_id": "v7-task6-whisper-preprocess",
+      "historical_task_name_for_exclusion": "huggingface__transformers-211f93a",
+      "source_record_path": "lexigen-v7-gso/tasks/06-transformers-whisper-preprocess/PROPOSALS_R1.json",
+      "source_record_git_blob_sha1": "57fbaa300bd9d555317e02dfbb499301f5d5fe85",
+      "source_record_pre_result_boundary": {
+        "timing_feedback_used": false,
+        "expert_opt_commit_accessed": false,
+        "expert_diff_accessed": false,
+        "hints_accessed": false
+      },
+      "task_descriptor": {
+        "task_descriptor_id": "historical-replay-v7-task6",
+        "traits": [
+          "hot_execution_path",
+          "fast_path_possible",
+          "fallback_available",
+          "source_visible_type_shape_or_value_regime",
+          "specialized_representation_possible",
+          "reducible_domain",
+          "equivalence_certificate_possible",
+          "provably_irrelevant_work_possible",
+          "local_predicate_available"
+        ]
+      },
+      "trait_derivation": "Normalized only from source-visible, pre-timing proposal preconditions: repeated timestamp-ID membership in a hot Python filtering path, stable/cached IDs, ordinary list[int] fast paths, fallback compatibility, and removable timestamp/prompt work."
+    }
+  ]
+}
