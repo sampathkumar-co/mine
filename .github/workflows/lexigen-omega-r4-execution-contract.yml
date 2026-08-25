@@ -1,0 +1,74 @@
+name: LEXIGEN OMEGA R4 Execution Contract
+
+on:
+  pull_request:
+    paths:
+      - 'lexigen-omega/evidence/PROSPECTIVE_R4_SOURCE_PROPOSALS.json'
+      - 'lexigen-omega/evidence/PROSPECTIVE_R4_TRANSFER_PREDICTION.json'
+      - 'lexigen-omega/tools/score_prospective_exact_sequence.py'
+      - 'lexigen-omega/tools/extract_r4_execution_contract.py'
+      - '.github/workflows/lexigen-omega-r4-execution-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  project-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify proposal prediction scorer frozen before contract
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          proposals=json.loads(Path('lexigen-omega/evidence/PROSPECTIVE_R4_SOURCE_PROPOSALS.json').read_text())
+          pred=json.loads(Path('lexigen-omega/evidence/PROSPECTIVE_R4_TRANSFER_PREDICTION.json').read_text())
+          assert proposals['status']=='frozen_before_performance_spec_timing_or_outcome'
+          assert pred['status']=='frozen_before_R4_performance_spec_timing_or_outcome'
+          assert pred['R4_performance_spec_accessed'] is False
+          assert pred['R4_outcome_accessed'] is False
+          assert pred['R4_timing_accessed'] is False
+          assert pred['R4_ground_truth_message_or_diff_accessed'] is False
+          assert subprocess.check_output(['git','hash-object','lexigen-omega/evidence/PROSPECTIVE_R4_SOURCE_PROPOSALS.json'],text=True).strip()=='95012e5d3643987c40ed30fd6cd9c125cd767257'
+          print('R4 pre-contract freeze verified')
+          PY
+      - name: Install pinned projector dependency
+        run: python -m pip install --disable-pip-version-check --no-cache-dir duckdb==1.4.1
+      - name: Compile projector and scorer
+        run: |
+          python -m py_compile lexigen-omega/tools/extract_r4_execution_contract.py
+          python -m py_compile lexigen-omega/tools/score_prospective_exact_sequence.py
+      - name: Project only permitted R4 contract fields
+        run: |
+          python lexigen-omega/tools/extract_r4_execution_contract.py \
+            --instance-id huggingface__datasets-ef3b5dd \
+            --expected-repo huggingface/datasets \
+            --expected-base 'ef3b5dd3633995c95d77f35fb17f89ff44990bc4^' \
+            --expected-api load_dataset_builder \
+            --output omega-r4-contract/R4_EXECUTION_CONTRACT.json
+      - name: Enforce no expert metadata
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('omega-r4-contract/R4_EXECUTION_CONTRACT.json').read_text())
+          assert x['status']=='permitted_execution_contract_projected'
+          assert x['instance_id']=='huggingface__datasets-ef3b5dd'
+          for k in ['expert_opt_commit_accessed','expert_gt_commit_message_accessed','expert_diff_accessed','hints_accessed','candidate_timing_accessed_before_contract','candidate_outcome_accessed_before_contract']:
+              assert x[k] is False, k
+          assert x['prob_script']
+          assert x['tests']
+          print('R4 execution contract clean')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-r4-execution-contract
+          path: omega-r4-contract/R4_EXECUTION_CONTRACT.json
+          if-no-files-found: error
+          retention-days: 90
