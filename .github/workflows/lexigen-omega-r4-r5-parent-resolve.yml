@@ -1,0 +1,61 @@
+name: LEXIGEN OMEGA R4-R5 Blind Parent Resolution
+
+on:
+  pull_request:
+    paths:
+      - 'lexigen-omega/evidence/PROSPECTIVE_R4_R5_PARENT_RESOLUTION_LOCK.json'
+      - 'lexigen-omega/tools/resolve_caret_parents_blind.py'
+      - '.github/workflows/lexigen-omega-r4-r5-parent-resolve.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resolve-parent-identities:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify clean resolver boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-omega/evidence/PROSPECTIVE_R4_R5_PARENT_RESOLUTION_LOCK.json').read_text())
+          assert lock['status']=='frozen_before_parent_resolution'
+          assert not any(lock['boundary'].values())
+          assert lock['resolver_contract']['allowed_git_query']=='git rev-parse FETCH_HEAD^'
+          assert lock['resolver_contract']['network_fetch_output']=='suppressed'
+          print('blind parent-resolution boundary verified')
+          PY
+      - name: Compile blind resolver
+        run: python -m py_compile lexigen-omega/tools/resolve_caret_parents_blind.py
+      - name: Resolve only parent SHA identities
+        run: |
+          python lexigen-omega/tools/resolve_caret_parents_blind.py \
+            --lock lexigen-omega/evidence/PROSPECTIVE_R4_R5_PARENT_RESOLUTION_LOCK.json \
+            --output omega-parent-evidence/R4_R5_PARENT_SHA_ONLY.json
+      - name: Enforce no-content output
+        run: |
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          x=json.loads(Path('omega-parent-evidence/R4_R5_PARENT_SHA_ONLY.json').read_text())
+          assert x['status']=='parent_sha_only_resolution_complete'
+          assert [r['replication'] for r in x['results']]==['R4','R5']
+          for row in x['results']:
+              assert re.fullmatch(r'[0-9a-f]{40}', row['parent_sha'])
+          for k in ['emitted_commit_messages','emitted_changed_filenames','emitted_patches','emitted_source_contents','emitted_tree_listings','temporary_object_store_retained']:
+              assert x[k] is False, k
+          print(json.dumps(x['results'], indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-omega-r4-r5-parent-sha-only
+          path: omega-parent-evidence/R4_R5_PARENT_SHA_ONLY.json
+          if-no-files-found: error
+          retention-days: 90
