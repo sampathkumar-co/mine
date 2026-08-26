@@ -1,0 +1,30 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":8,
+  "task":"max_independent_set_cpsat",
+  "family":"combinatorial",
+  "stage":"source_screen_r1_sealed",
+  "status":"success",
+  "trigger_commit":"0a28b0a5a8cbbf501f595d0b850807a92852e6e0",
+  "workflow_run_id":32939333297,
+  "workflow_run_number":1,
+  "workflow_run_attempt":1,
+  "artifact":{"id":9595954537,"digest":"sha256:cc640a417937127664d5b310343e11e51de3c03f40cf50a9c3d39674c09791cb","size_bytes":2245,"source_screen_json_sha256":"3e8cb90951c7d8a3e75473b2a3ff33971e007a17b6ab9ebbd68ff8abdbc2f9b3"},
+  "source_sha256":"c81c015833ed76feb13b0b9e630b6fb5b44b83de64fc9e32facffd45c5fb86fb",
+  "screen_sha256":"eeaf7d057296ad800a8aa3be87d39ed9fa15b80d382e1366c1336feba9976dd4",
+  "raw_applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "campaign_causal_eligible_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "proposal_ids_by_arm":{
+    "v6_full":["3304c859d463a501bd86","41510e43e8fafb598496","a6102573c9f355414229","e909b567bac8aa01b86e","2c6961f9ca6711ce3a3f","7653e3865aa7a6def4dc"],
+    "v6_no_transfer":["66c5848a3c8a4f51b562","b93eda021fe3bc5d89cb","d14c06bd6ae45a8dd009","2c6f67fc6c6a0adc20f9","14a8ffbc5159ff111ac9","477905d60634240ebda9"],
+    "random_search":["7c4dac132492cc8107ce","281d4a03f9bc5812f7af","0e6733607d671edc6f81","3bc5a8394ff6f6de8859","dbe3d89d432a0b803392","737a9f307030542676c2"],
+    "static_template":["dbfcd2af539b0b2636e7","8fd871e046faa7e4d37c","820b1c309b6117eb268d","8f1dafda0d3fbc099aa9","357e80313b8b9dc3cf36","d044a19fd4551034dc11"],
+    "v5_compatible":["bd9a928b0a959b433de2","885bf4f21e819b330732","695b907772d8a69a1186","d9863922b850e9717a05","cdae8cbf0d73bd4d047c","af7d36f83a386b7726b9"]
+  },
+  "strong_baseline_applicable_ids":["SB-BOOL-EXACT-01","SB-GRAPH-BITSET-01","SB-NATIVE-NUMERIC-01"],
+  "official_train_manifest_opened":false,
+  "official_test_manifest_opened":false,
+  "official_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "threshold_changes":false
+}
