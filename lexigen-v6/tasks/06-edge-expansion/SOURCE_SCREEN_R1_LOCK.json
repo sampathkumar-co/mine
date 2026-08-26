@@ -1,0 +1,34 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":6,
+  "task":"edge_expansion",
+  "family":"miscellaneous",
+  "stage":"source_screen_r1_lock",
+  "paths":{
+    "source_screen":"lexigen-v6/tasks/06-edge-expansion/source_screen.py",
+    "engine":"lexigen-v5/engine.py",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "global_source_screen_result":"lexigen-v6/SOURCE_SCREEN_R1_RESULT.json",
+    "workflow":".github/workflows/lexigen-v6-task6-edge-expansion-source-screen-r1.yml"
+  },
+  "git_blob_sha1":{
+    "source_screen":"431d5fbe98b986db9d59f064b0be2e8446977662",
+    "engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "global_source_screen_result":"434264ae20e4e1eccd593006763205e613799409",
+    "workflow":"1644c97cdecc716461a7cabae82ba15cd3f1c392"
+  },
+  "source_repository":"oripress/AlgoTune",
+  "source_commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path":"AlgoTuneTasks/edge_expansion/edge_expansion.py",
+  "source_sha256":"24d194fbf8f604d318b9f330e61ad084ff4ea498de2c0a299835ad7ecce55d9a",
+  "campaign_preregistered_applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "official_train_manifest_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_payloads_opened_before_lock":0,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "candidate_mapping_frozen_before_lock":false,
+  "threshold_changes":false
+}
