@@ -1,0 +1,23 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":6,
+  "task":"edge_expansion",
+  "stage":"networkx_3_5_semantic_audit_after_synthetic_r1_failure",
+  "reason":"Synthetic R1 exposed a disagreement between the precommitted outgoing-only certificate and the actual frozen NetworkX reference before official data access.",
+  "networkx":{"version":"3.5","tag":"networkx-3.5","annotated_tag_sha":"cd59914a6e46b04f006633f203ee7b4878d53159","verified_tag_target_commit":"4fa222d2fb157e1b7f8c753c9f92e5907d1ddeb4","cuts_path":"networkx/algorithms/cuts.py","cuts_blob_sha1":"e9514312765c25bfc64041165f8afda84d92e3e2"},
+  "verified_semantics":{
+    "directed_cut_size":"Counts unique DiGraph edges from S to T and also edges from T to S.",
+    "default_T":"set(G) - set(S)",
+    "edge_expansion_denominator":"min(len(S), len(T))",
+    "parallel_edge_note":"Task reconstructs nx.DiGraph, not MultiDiGraph, so repeated adjacency entries collapse to one directed edge.",
+    "task_source_edge_cases":"The task returns 0.0 before graph construction when n==0, S is empty, or len(set(S))==n."
+  },
+  "contradiction_with_task_docstring":"The task prose states |E(S,V-S)|/|S|, but its executable reference calls nx.edge_expansion on a directed graph; frozen NetworkX 3.5 instead counts both cut directions and divides by the smaller side cardinality.",
+  "scoring_policy":"Do not revise any frozen candidate solve implementation based on this audit. Correct only the independent verifier/certificate in a versioned Synthetic R2. Candidates whose outgoing-only realization disagrees with the executable reference remain scientific failures/ineligible.",
+  "candidate_solver_blob_remains":"67d5fe2269ce48c7ada57eda6b042ac2f174f2f5",
+  "official_train_manifest_opened":false,
+  "official_test_manifest_opened":false,
+  "official_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "threshold_changes":false
+}
