@@ -1,0 +1,43 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":6,
+  "task":"edge_expansion",
+  "stage":"synthetic_r1_lock",
+  "paths":{
+    "task_lock":"lexigen-v6/tasks/06-edge-expansion/TASK_LOCK.json",
+    "source_screen_result":"lexigen-v6/tasks/06-edge-expansion/SOURCE_SCREEN_R2_RESULT.json",
+    "candidates":"lexigen-v6/tasks/06-edge-expansion/candidates.py",
+    "synthetic":"lexigen-v6/tasks/06-edge-expansion/synthetic.py",
+    "engine":"lexigen-v5/engine.py",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "workflow":".github/workflows/lexigen-v6-task6-edge-expansion-synthetic-r1.yml"
+  },
+  "git_blob_sha1":{
+    "task_lock":"7d75a5cf683b7db54cc5ecfd98c4816774b2a93b",
+    "source_screen_result":"98552824a05f68f69e872a092c5feece2a33b4d8",
+    "candidates":"67d5fe2269ce48c7ada57eda6b042ac2f174f2f5",
+    "synthetic":"29d22c0c6046a30c2471104070bfb48de956177a",
+    "engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "workflow":"875561a886343e1a113428c28e6dae24934675b0"
+  },
+  "runtime":{"python":"3.12","ubuntu":"24.04","networkx":"3.5"},
+  "source_sha256":"24d194fbf8f604d318b9f330e61ad084ff4ea498de2c0a299835ad7ecce55d9a",
+  "case_count":24,
+  "candidate_count":31,
+  "expected_evaluations":744,
+  "eligibility_is_correctness_only":true,
+  "timing_is_diagnostic_only":true,
+  "independent_certificate_required":true,
+  "candidate_mapping_frozen_before_synthetic":true,
+  "strong_baseline_frozen_before_synthetic":true,
+  "official_train_manifest_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_payloads_opened_before_lock":0,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "threshold_changes":false
+}
