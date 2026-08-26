@@ -1,0 +1,26 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":7,
+  "task":"svd",
+  "stage":"dataset_metadata_r1_lock",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "metadata_scope":"directory listing metadata only; no train/test manifest body fetch",
+  "paths":{
+    "metadata_reader":"lexigen-v6/tasks/07-svd/dataset_metadata.py",
+    "metadata_workflow":".github/workflows/lexigen-v6-task7-svd-metadata-r1.yml",
+    "synthetic_result":"lexigen-v6/tasks/07-svd/SYNTHETIC_R1_RESULT.json"
+  },
+  "git_blob_sha1":{
+    "metadata_reader":"815b24cd95ddfd5ae3c7592fb4e5ebb50f54d3be",
+    "metadata_workflow":"b9ca4843448ca3ece92b970c477e47492e641b89",
+    "synthetic_result":"TO_BE_VERIFIED_BEFORE_TRIGGER"
+  },
+  "expected_pair_rule":"exactly one matching _T100ms_*_size100_train.jsonl / _test.jsonl stem pair",
+  "train_manifest_opened_before_lock":false,
+  "test_manifest_opened_before_lock":false,
+  "payloads_opened_before_lock":0,
+  "reports_opened_before_lock":false,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "candidate_revisions_after_synthetic":0,
+  "threshold_changes":false
+}
