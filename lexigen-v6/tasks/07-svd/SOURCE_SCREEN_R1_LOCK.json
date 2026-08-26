@@ -1,0 +1,36 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":7,
+  "task":"svd",
+  "family":"linear_algebra",
+  "stage":"source_screen_r1_lock",
+  "paths":{
+    "source_screen":"lexigen-v6/tasks/07-svd/source_screen.py",
+    "engine":"lexigen-v5/engine.py",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "global_source_screen_result":"lexigen-v6/SOURCE_SCREEN_R1_RESULT.json",
+    "strong_baseline_catalog":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "workflow":".github/workflows/lexigen-v6-task7-svd-source-screen-r1.yml"
+  },
+  "git_blob_sha1":{
+    "source_screen":"d0b1f40a4e5f03b5f60dd5be96b5e87af0d55950",
+    "engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "global_source_screen_result":"434264ae20e4e1eccd593006763205e613799409",
+    "strong_baseline_catalog":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "workflow":"3c0829f8425684eefe4e0194cfcf8e11da22f67c"
+  },
+  "source_repository":"oripress/AlgoTune",
+  "source_commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+  "source_path":"AlgoTuneTasks/svd/svd.py",
+  "source_sha256":"8f7771e5618509c0b8af73390440dd7258a253983cdf8cc03b0208fa4218b018",
+  "campaign_preregistered_applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-PBEB-01"],
+  "official_train_manifest_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_payloads_opened_before_lock":0,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "candidate_mapping_frozen_before_lock":false,
+  "threshold_changes":false
+}
