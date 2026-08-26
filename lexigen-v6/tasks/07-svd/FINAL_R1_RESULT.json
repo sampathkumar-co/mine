@@ -1,0 +1,23 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":7,
+  "task":"svd",
+  "family":"linear_algebra",
+  "stage":"task7_final_r1_sealed",
+  "status":"completed",
+  "source_sha256":"8f7771e5618509c0b8af73390440dd7258a253983cdf8cc03b0208fa4218b018",
+  "blind_result_blob_sha1":"aa0f242ffe1e7027a23c22affa5f7b41ce01cbaf",
+  "blind_workflow_run_id":32938958488,
+  "blind_artifact_id":9595850409,
+  "v6_full_clean_win":true,
+  "baseline_qualified_causal_transfer_win":false,
+  "causal_transfer_credit":false,
+  "final_full_metrics":{"valid":100,"harmonic_speedup":2.424801206239523,"minimum_speedup":1.6450818145260748,"invalid_output_retries":0},
+  "final_causal_failure_reasons":["selected_full_no_transfer_semantically_distinct","learned_source_family_differs_from_holdout","causal_separation","recipe_removal_eliminates_advantage"],
+  "scientific_interpretation":"Task 7 is a valid clean optimization win but not evidence that learned transfer caused the improvement. Full, no-transfer, random, and static controls all used the same guarded Gram/eigh SVD mechanism; the selected RRR transfer is same-family; recipe removal retains the same mechanism.",
+  "campaign_denominator_after_task7":{"completed_tasks":7,"v6_full_clean_wins":3,"baseline_qualified_causal_transfer_wins":0},
+  "post_blind_candidate_revisions":0,
+  "blind_reruns":0,
+  "task_swaps":0,
+  "threshold_changes":false
+}
