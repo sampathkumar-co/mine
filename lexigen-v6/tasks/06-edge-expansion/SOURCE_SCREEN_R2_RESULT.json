@@ -1,0 +1,39 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":6,
+  "task":"edge_expansion",
+  "family":"miscellaneous",
+  "stage":"source_screen_r2_sealed",
+  "status":"success_after_serialization_only_repair",
+  "r1_infrastructure_failure_run_id":32934721936,
+  "r2_trigger_commit":"38edf7071af74217c00cbc8df5b163bd68ce71e8",
+  "workflow_run_id":32934846518,
+  "workflow_run_number":1,
+  "workflow_run_attempt":1,
+  "artifact":{"id":9594473365,"digest":"sha256:fcc95e50f2cf8f278489fd71ac68d4259c1aa868edbb6546c6ad9aa2ad3482e1","size_bytes":2410,"source_screen_json_sha256":"6204eba8a456a0d95baf498112666c513dedfdeea656a74b82107d584013ac7c","source_screen_json_size_bytes":14964},
+  "source_sha256":"24d194fbf8f604d318b9f330e61ad084ff4ea498de2c0a299835ad7ecce55d9a",
+  "screen_sha256":"713347697446521887b429d3a2829822194bf35b94ecde1e16ddaa64bb7801ac",
+  "features":["approximate_verifier","backend","boolean","certificate","decomposition","discrete","graph","iterative","matrix","numeric","order_statistic","scientific_dynamics","set","sparse","threshold","tolerance"],
+  "applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "proposal_ids_by_arm":{
+    "v6_full":["3304c859d463a501bd86","41510e43e8fafb598496","a6102573c9f355414229","4abf2b51384c560522e8","c50e493c5549a408f3e5","514b3e8a41ba1f8b73a1"],
+    "v6_no_transfer":["91e027e622f2d9a98240","b2614109e1a5ccc10c14","20375ceceffce4d406a4","4a4e1871b7f7b48b9485","d69e86803f54c5a83d06","66c5848a3c8a4f51b562"],
+    "random_search":["ab5099e7cf797b5be3a3","9cc21cbcfa3c6abe6747","bd45c68d790c5c6d3ab0","57b17f2971c60d7d437b","0df835c1573eed74eae2","192099fe1882f0c12235"],
+    "static_template":["dbfcd2af539b0b2636e7","8fd871e046faa7e4d37c","820b1c309b6117eb268d","8f1dafda0d3fbc099aa9","357e80313b8b9dc3cf36","d044a19fd4551034dc11"],
+    "v5_compatible":["f9f3239b6866512e4f68","9f5f55df04a5ad23f542","ec4b9c17aaa3767d4f6d","7c30efb65d2c20ff8cc9","3df5ed91505aea4ed6cb","0dde88a4a159a3ad0e40"]
+  },
+  "full_learned_proposals":[
+    {"rank":1,"proposal_id":"3304c859d463a501bd86","causal_id":"TM-BFR-01","template":"bit_frontier_restriction","operators":["bit_parallel_representation","sparse_frontier_search","early_certificate_exit"]},
+    {"rank":2,"proposal_id":"41510e43e8fafb598496","causal_id":"TM-RRR-01","template":"reduced_representation_refinement","operators":["reduced_representation","bounded_exact_refinement","risk_aware_staging"]},
+    {"rank":3,"proposal_id":"a6102573c9f355414229","causal_id":"TM-CAC-01","template":"certified_active_core","operators":["active_set_decomposition","early_certificate_exit","risk_aware_staging"]}
+  ],
+  "strong_baseline_applicable_ids":["SB-BOOL-EXACT-01","SB-GRAPH-BITSET-01","SB-NATIVE-NUMERIC-01","SB-REDUCED-LINALG-01"],
+  "preferred_strong_baseline_id":"SB-GRAPH-BITSET-01",
+  "preferred_strong_baseline_reason":"graph+discrete exact word-parallel adjacency/frontier preconditions are satisfied; chosen independently from transfer memory before official training",
+  "official_train_manifest_opened":false,
+  "official_test_manifest_opened":false,
+  "official_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "candidate_mapping_frozen":false,
+  "threshold_changes":false
+}
