@@ -1,0 +1,29 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":6,
+  "task":"edge_expansion",
+  "family":"miscellaneous",
+  "stage":"task_and_candidate_realization_policy_lock",
+  "source":{"repository":"oripress/AlgoTune","commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906","path":"AlgoTuneTasks/edge_expansion/edge_expansion.py","sha256":"24d194fbf8f604d318b9f330e61ad084ff4ea498de2c0a299835ad7ecce55d9a"},
+  "source_screen":{"result_path":"lexigen-v6/tasks/06-edge-expansion/SOURCE_SCREEN_R2_RESULT.json","result_blob_sha1":"98552824a05f68f69e872a092c5feece2a33b4d8","screen_sha256":"713347697446521887b429d3a2829822194bf35b94ecde1e16ddaa64bb7801ac","successful_run_id":32934846518,"r1_infrastructure_failure_preserved":true},
+  "campaign_applicable_transfer_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],
+  "arm_name_mapping":{"v5_full":"v6_full","v5_no_transfer":"v6_no_transfer","random_search":"random_search","static_template":"static_template","v4_compatible":"v5_compatible"},
+  "implementation_policy":[
+    {"condition":"proposal transfer_ids contains TM-BFR-01","implementation":"guarded_direct_sparse_frontier_boundary_exact","semantic_key":"direct_sparse_frontier_boundary","reason":"BFR's sparse-frontier restriction mechanically maps to scanning only outgoing adjacency rows of S; generator-shape fast path is guarded and falls back to duplicate-safe exact counting."},
+    {"condition":"proposal transfer_ids contains TM-CAC-01","implementation":"networkx_source_reference","semantic_key":"networkx_source_formulation","reason":"active-core recipe is a source-fingerprint false positive for this scalar graph-boundary count; no task-specific rescue implementation is invented."},
+    {"condition":"proposal transfer_ids contains TM-RRR-01","implementation":"networkx_source_reference","semantic_key":"networkx_source_formulation","reason":"reduced-representation recipe is a source-fingerprint false positive caused by incidental matrix/decomposition tokens; no task-specific rescue implementation is invented."},
+    {"condition":"generic proposal operators contains sparse_frontier_search","implementation":"guarded_direct_sparse_frontier_boundary_exact","semantic_key":"direct_sparse_frontier_boundary","reason":"the same frozen generic sparse-frontier operator independently permits the direct S-frontier scan, so equivalent no-transfer implementations are not suppressed."},
+    {"condition":"generic proposal operators contains bit_parallel_representation but not sparse_frontier_search","implementation":"python_int_bitset_boundary_exact","semantic_key":"python_int_bitset_boundary","reason":"mechanical word-parallel graph/set instantiation."},
+    {"condition":"otherwise","implementation":"networkx_source_reference","semantic_key":"networkx_source_formulation","reason":"no mechanically justified optimization from the frozen operators."}
+  ],
+  "strong_baseline":{"baseline_id":"SB-GRAPH-BITSET-01","catalog_blob_sha1":"2b868c03af77860892d8902bd2666cc1263876f7","implementation":"python_int_bitset_boundary_exact","semantic_key":"python_int_bitset_boundary","coverage_limited":false,"reason":"graph+discrete preconditions satisfied; word-parallel adjacency/frontier representation is explicitly allowed by the independently frozen catalog."},
+  "reference_semantics":"For non-edge cases, construct a DiGraph from adjacency_list and compute |E(S,V-S)|/|S|; duplicate adjacency entries collapse as one DiGraph edge. For n=0, empty S, or len(set(S))==n, return 0.0 before graph construction.",
+  "independent_certificate":"Canonical unique directed-edge set boundary count divided by |set(S)|, with the same explicit source edge cases; must agree with candidate and NetworkX reference on synthetic cases.",
+  "runtime":{"python":"3.12","ubuntu":"24.04","networkx":"3.5"},
+  "official_train_manifest_opened":false,
+  "official_test_manifest_opened":false,
+  "official_payloads_opened":0,
+  "public_task_specific_solvers_opened":false,
+  "candidate_source_files_created":false,
+  "threshold_changes":false
+}
