@@ -1,0 +1,38 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":7,
+  "task":"svd",
+  "stage":"dataset_metadata_r1_sealed",
+  "status":"success",
+  "dataset_revision":"bb02811fa47ca1c833baaa344949bcd8fb307ac8",
+  "trigger_commit":"893b000a1000b74e2553194d77016c78535416f7",
+  "workflow_run_id":32938073840,
+  "workflow_run_number":1,
+  "workflow_run_attempt":1,
+  "artifact":{
+    "id":9595539535,
+    "digest":"sha256:dc1610c603048a1dc35f4f3b0d02b3e8159d5611fc749abc01f2c15ab5a70f52",
+    "size_bytes":737,
+    "dataset_metadata_json_sha256":"750494843e856e185c11118472359349a46cb52b3016a453ebe900000b1d4fdc"
+  },
+  "directory_response_sha256":"e2e3a09d5936589c72b367f755485ff81e2b095eb7b13357f7c482a4bc3ac9e8",
+  "train":{
+    "path":"data/svd/svd_T100ms_n474_size100_train.jsonl",
+    "name":"svd_T100ms_n474_size100_train.jsonl",
+    "size":13242,
+    "oid":"79143bfc7daeb9a395640025020aca44dc985560"
+  },
+  "test":{
+    "path":"data/svd/svd_T100ms_n474_size100_test.jsonl",
+    "name":"svd_T100ms_n474_size100_test.jsonl",
+    "size":13300,
+    "oid":"f977b820009f4c9672b51c291904a39e5fbfd941"
+  },
+  "train_manifest_opened":false,
+  "test_manifest_opened":false,
+  "official_payloads_opened":0,
+  "reports_opened":false,
+  "public_task_specific_solvers_opened":false,
+  "candidate_revisions_after_synthetic":0,
+  "threshold_changes":false
+}
