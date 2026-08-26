@@ -13,7 +13,7 @@
   "git_blob_sha1":{
     "metadata_reader":"815b24cd95ddfd5ae3c7592fb4e5ebb50f54d3be",
     "metadata_workflow":"b9ca4843448ca3ece92b970c477e47492e641b89",
-    "synthetic_result":"TO_BE_VERIFIED_BEFORE_TRIGGER"
+    "synthetic_result":"8407144d468b4a7579267501fcfb5dbd3ccc2e6b"
   },
   "expected_pair_rule":"exactly one matching _T100ms_*_size100_train.jsonl / _test.jsonl stem pair",
   "train_manifest_opened_before_lock":false,
