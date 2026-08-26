@@ -1,0 +1,38 @@
+{
+  "campaign":"LEXIGEN v6 Applicability-Conditioned Causal Transfer Replication",
+  "task_index":8,
+  "task":"max_independent_set_cpsat",
+  "family":"combinatorial",
+  "stage":"source_screen_r1_lock",
+  "preregister_base_commit":"d22e9d70d017167fa18c3adc5cb7283ad0fadaf7",
+  "source":{
+    "repository":"oripress/AlgoTune",
+    "commit":"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+    "path":"AlgoTuneTasks/max_independent_set_cpsat/max_independent_set_cpsat.py",
+    "sha256":"c81c015833ed76feb13b0b9e630b6fb5b44b83de64fc9e32facffd45c5fb86fb"
+  },
+  "global_selector_row":{"applicable_causal_ids":["TM-BFR-01","TM-CAC-01","TM-RRR-01"],"applicability_score":"2c3b16147bb3eb727db753ed3659b5fe369ed07d4a50bd243f8828e404308cb5"},
+  "paths":{
+    "source_screen":"lexigen-v6/tasks/08-max-independent-set-cpsat/source_screen.py",
+    "source_screen_workflow":".github/workflows/lexigen-v6-task8-max-independent-set-source-screen-r1.yml",
+    "engine":"lexigen-v5/engine.py",
+    "protocol":"lexigen-v6/PROTOCOL.md",
+    "transfer_memory":"lexigen-v6/TRANSFER_MEMORY.json",
+    "strong_baseline_catalog":"lexigen-v6/STRONG_BASELINE_CATALOG.json",
+    "global_source_screen_result":"lexigen-v6/SOURCE_SCREEN_R1_RESULT.json"
+  },
+  "git_blob_sha1":{
+    "source_screen":"4b5d460c186d5b08dcc20d3b88706f1ad027b3e2",
+    "source_screen_workflow":"df2438ecb8d64275ded29e8accd4a956f739855c",
+    "engine":"a0899a3297216c1056741aa4808fbe7840d8d94c",
+    "protocol":"0b70abf916962f6f0048528d0671a83b38222efc",
+    "transfer_memory":"811a7e87454c95a4d469f363d66f00902b19cac3",
+    "strong_baseline_catalog":"2b868c03af77860892d8902bd2666cc1263876f7",
+    "global_source_screen_result":"434264ae20e4e1eccd593006763205e613799409"
+  },
+  "official_train_manifest_opened_before_lock":false,
+  "official_test_manifest_opened_before_lock":false,
+  "official_payloads_opened_before_lock":0,
+  "public_task_specific_solvers_opened_before_lock":false,
+  "threshold_changes":false
+}
