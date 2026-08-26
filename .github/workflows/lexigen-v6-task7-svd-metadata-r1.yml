@@ -1,0 +1,37 @@
+name: LEXIGEN v6 Task 7 SVD Dataset Metadata R1
+on:
+  push:
+    branches: [lexigen/v6-task7-svd-r1]
+    paths: ["lexigen-v6/tasks/07-svd/TRIGGER_METADATA_R1"]
+permissions: {contents: read}
+jobs:
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify frozen metadata package
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          lock=json.loads(Path('lexigen-v6/tasks/07-svd/DATASET_METADATA_R1_LOCK.json').read_text())
+          for key,path in lock['paths'].items():
+              got=subprocess.check_output(['git','hash-object',path],text=True).strip();expected=lock['git_blob_sha1'][key]
+              if got!=expected:raise SystemExit(f'metadata lock mismatch {key}: {got} != {expected}')
+          if lock['train_manifest_opened_before_lock'] or lock['test_manifest_opened_before_lock'] or lock['payloads_opened_before_lock']:
+              raise SystemExit('dataset boundary crossed')
+          PY
+      - name: Compile frozen metadata reader
+        run: python -m py_compile lexigen-v6/tasks/07-svd/dataset_metadata.py
+      - name: Read dataset directory metadata only
+        run: python lexigen-v6/tasks/07-svd/dataset_metadata.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lexigen-v6-task7-svd-metadata-r1
+          path: dataset-metadata.json
+          if-no-files-found: error
+          retention-days: 90
