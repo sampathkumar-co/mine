@@ -1,50 +1,14 @@
-name: LEXIGEN v6 Task 7 SVD Source Screen R1
+name: LEXIGEN v6 Task 7 SVD Source Screen R1 ARCHIVED
 on:
-  push:
-    branches: [lexigen/v6-task7-svd-r1]
-    paths: ["lexigen-v6/tasks/07-svd/TRIGGER_SOURCE_SCREEN_R1"]
-permissions: {contents: read}
+  workflow_dispatch:
+    inputs:
+      archived:
+        description: "Source screen sealed; do not execute"
+        required: true
+        default: "archived"
 jobs:
-  source-screen:
+  archived:
+    if: ${{ false }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - name: Verify frozen source-screen package
-        shell: bash
-        run: |
-          python - <<'PY'
-          import json,subprocess
-          from pathlib import Path
-          lock=json.loads(Path('lexigen-v6/tasks/07-svd/SOURCE_SCREEN_R1_LOCK.json').read_text())
-          for key,path in lock['paths'].items():
-              got=subprocess.check_output(['git','hash-object',path],text=True).strip();exp=lock['git_blob_sha1'][key]
-              if got!=exp:raise SystemExit(f'lock mismatch {key}: {got} != {exp}')
-          if lock['official_train_manifest_opened_before_lock'] or lock['official_test_manifest_opened_before_lock'] or lock['official_payloads_opened_before_lock']:
-              raise SystemExit('official-data boundary crossed')
-          PY
-      - name: Fetch exact frozen task source only
-        shell: bash
-        run: |
-          python - <<'PY'
-          import hashlib,urllib.request
-          url='https://raw.githubusercontent.com/oripress/AlgoTune/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/svd/svd.py'
-          raw=urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'LEXIGEN-v6-task7-source-screen-r1'}),timeout=120).read()
-          got=hashlib.sha256(raw).hexdigest();exp='8f7771e5618509c0b8af73390440dd7258a253983cdf8cc03b0208fa4218b018'
-          if got!=exp:raise SystemExit(f'source sha mismatch {got} != {exp}')
-          open('task-source.py','wb').write(raw)
-          PY
-      - name: Compile frozen source screen
-        run: python -m py_compile lexigen-v6/tasks/07-svd/source_screen.py lexigen-v5/engine.py
-      - name: Execute source-only screen
-        env:
-          PYTHONPATH: ${{ github.workspace }}/lexigen-v5
-        run: python lexigen-v6/tasks/07-svd/source_screen.py task-source.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: lexigen-v6-task7-svd-source-screen-r1
-          path: source-screen.json
-          if-no-files-found: error
-          retention-days: 90
+      - run: echo "Task 7 source screen sealed in SOURCE_SCREEN_R1_RESULT.json"
