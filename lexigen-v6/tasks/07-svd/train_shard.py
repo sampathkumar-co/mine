@@ -70,7 +70,7 @@ def evaluate_candidate(c,p):
     else:
         valid,reason,metrics=False,'exception',{}
     del got;gc.collect()
-    return {'arm':c.arm,'candidate':c.name,'implementation_class':c.implementation_class,'semantic_implementation_key':c.semantic_implementation_key,'operators':list(c.operators),'transfer_ids':list(c.transfer_ids),'learned_template':c.learned_template,'baseline_id':c.baseline_id,'valid':bool(valid and error is None),'failure_reason':error or reason,'candidate_ns':cand_ns,**metrics}
+    return {'arm':c.arm,'candidate':c.name,'rank':c.rank,'proposal_id':c.proposal_id,'implementation_class':c.implementation_class,'semantic_implementation_key':c.semantic_implementation_key,'operators':list(c.operators),'transfer_ids':list(c.transfer_ids),'learned_template':c.learned_template,'baseline_id':c.baseline_id,'valid':bool(valid and error is None),'failure_reason':error or reason,'candidate_ns':cand_ns,**metrics}
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--shard',type=int,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--source',type=Path,required=True);args=ap.parse_args()
